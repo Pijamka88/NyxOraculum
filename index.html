@@ -1,51 +1,158 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
-    <link rel="stylesheet" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="telegram-web-app-bot-url" content="your_bot_username">
+    <style>
+        :root {
+            --bg-color: #1a1a2e;
+            --text-color: #e6e6fa;
+            --accent: #4b0082;
+            --particle: #9370db;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Mystical', sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .game-btn {
+            background: var(--accent);
+            border: none;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--particle);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: explode 0.8s forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--x, 0), var(--y, 0)); opacity: 0; }
+        }
+
+        .stats {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.7);
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
-    <div class="main-container">
-         <!-- Главное меню -->
-        <div class="card main-menu">
-            <h1 class="title">🌀 NyxOraculum 🌀</h1>
-            
-            <button class="game-btn" onclick="startGame('telepathy')">
-                <span class="icon">🔢</span> Числовая магия
-            </button>
-
-            <button class="game-btn" onclick="startGame('zener')">
-                <span class="icon">🜄</span> Карты Зенера
-            </button>
-
-            <button class="game-btn" onclick="startGame('color')">
-                <span class="icon">🎨</span> Цветовая интуиция
-            </button>
-
-            <button class="game-btn" onclick="startGame('psi')">
-                <span class="icon">⚡</span> Пси-контроль
-            </button>
-
-            <button class="game-btn" onclick="showStats()">
-                <span class="icon">📊</span> Статистика
-            </button>
+    <div class="container">
+        <div class="stats" id="stats"></div>
+        <h1>NyxOraculum</h1>
+        
+        <!-- Меню -->
+        <div id="menu">
+            <button class="game-btn" data-game="numerical">Числовая магия</button>
+            <button class="game-btn" data-game="zener">Карты Зенера</button>
+            <button class="game-btn" data-game="color">Цветовая интуиция</button>
+            <button class="game-btn" data-game="psi">Пси-контроль</button>
         </div>
 
-        <!-- Игровые экраны -->
-        <div id="game-screen" class="card hidden">
-            <div id="game-content"></div>
-            <button class="back-btn" onclick="showMainMenu()">← Назад</button>
-        </div>
-
-        <!-- Статистика -->
-        <div id="stats-screen" class="card hidden">
-            <h2>📊 Статистика</h2>
-            <div id="stats-content"></div>
-        </div>
+        <!-- Игры -->
+        <div id="game-container" style="display: none;"></div>
     </div>
 
-    <script src="scripts/app.js"></script>
+    <script>
+        // Инициализация Telegram Web App
+        Telegram.WebApp.ready();
+        
+        // Статистика
+        let stats = JSON.parse(localStorage.getItem('nyx_stats') || '{}');
+
+        // Анимация частиц
+        document.addEventListener('click', (e) => {
+            if(e.target.classList.contains('game-btn')) {
+                createParticles(e.target, 10);
+            }
+        });
+
+        function createParticles(element, count) {
+            const rect = element.getBoundingClientRect();
+            for(let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = rect.left + rect.width/2 + 'px';
+                particle.style.top = rect.top + rect.height/2 + 'px';
+                particle.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
+                particle.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
+
+        // Игра: Числовая магия
+        function numericalMagic() {
+            return `
+                <div class="game">
+                    <h3>Угадай число от 1 до 10</h3>
+                    <input type="number" id="guess" min="1" max="10">
+                    <button onclick="checkNumber()">Проверить</button>
+                </div>
+            `;
+        }
+
+        // Обновление статистики
+        function updateStats(game, result) {
+            if(!stats[game]) stats[game] = { attempts: 0, correct: 0 };
+            stats[game].attempts++;
+            if(result) stats[game].correct++;
+            localStorage.setItem('nyx_stats', JSON.stringify(stats));
+            showStats();
+        }
+
+        // Показ статистики
+        function showStats() {
+            const statsDiv = document.getElementById('stats');
+            statsDiv.innerHTML = Object.entries(stats).map(([game, data]) => `
+                <div>${game}: ${data.correct}/${data.attempts}</div>
+            `).join('');
+        }
+
+        // Инициализация
+        showStats();
+        document.querySelectorAll('.game-btn').forEach(btn => {
+            btn.addEventListener('click', () => loadGame(btn.dataset.game));
+        });
+
+        function loadGame(game) {
+            document.getElementById('menu').style.display = 'none';
+            const container = document.getElementById('game-container');
+            container.style.display = 'block';
+            
+            switch(game) {
+                case 'numerical':
+                    container.innerHTML = numericalMagic();
+                    break;
+                // Добавить другие игры
+            }
+        }
+    </script>
 </body>
 </html>
