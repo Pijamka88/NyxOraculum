@@ -64,21 +64,17 @@ function startGame(type) {
             gameContent.appendChild(grid);
             break;
 
-        case 'color':
-            gameContent.innerHTML = `<h3>🎨 Выберите загаданный цвет</h3>`;
-            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
-            colors.forEach(color => {
-                const btn = document.createElement('button');
-                btn.className = 'game-button color-button';
-                btn.style.backgroundColor = color;
-                btn.innerHTML = `
-                    <div class="color-preview"></div>
-                    <span class="color-name">${color.toUpperCase()}</span>
-                `;
-                btn.onclick = () => checkAnswer(type, color, answer);
-                gameContent.appendChild(btn);
-            });
-            break;
+        // Добавить в функцию startGame для цветовых кнопок
+case 'color':
+    gameContent.innerHTML = `
+        <h3 style="color: var(--gold); text-align: center;">
+            ✦ Выберите Сияющий Цвет ✦
+        </h3>
+    `;
+    // ... остальной код ...
+    break;
+
+
     }
 }
 
@@ -121,19 +117,19 @@ function showResult(message) {
     setTimeout(() => resultDiv.remove(), 2000);
 }
 
+// Обновить showStats
 function showStats() {
-    showScreen('stats-screen');
     const content = document.getElementById('stats-content');
     content.innerHTML = Object.entries(stats)
-        .filter(([key]) => key !== 'streak')
         .map(([type, data]) => `
             <div class="stats-item">
-                <h4>${type.toUpperCase()}</h4>
-                <p>Правильно: ${data.correct}/${data.total}</p>
-                <p>Процент: ${data.total ? ((data.correct/data.total)*100).toFixed(1) : 0}%</p>
+                <h4 style="color: var(--gold);">${type.toUpperCase()}</h4>
+                <p>Попадания: <span style="color: var(--gold);">${data.correct}</span></p>
+                <p>Точность: <span style="color: var(--gold);">${data.total ? ((data.correct/data.total)*100).toFixed(1) : 0}%</span></p>
             </div>
         `).join('');
 }
+
 
 function showAchievements() {
     showScreen('achievements-screen');
