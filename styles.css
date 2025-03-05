@@ -91,3 +91,8 @@ body {
         background: #3c3c3c;
     }
 }
+
+@keyframes glow {
+    0% { box-shadow: 0 0 5px rgba(0,255,0,0.4); }
+    100% { box-shadow: 0 0 20px rgba(0,255,0,0.8); }
+}
