@@ -1,0 +1,93 @@
+:root {
+    --primary: #2c3e50;
+    --secondary: #3498db;
+    --background: #f8f9fa;
+    --text: #2c3e50;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--background);
+    padding: 15px;
+    color: var(--text);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    margin: 10px 0;
+    animation: fadeIn 0.5s ease;
+}
+
+.game-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.game-button:hover {
+    transform: translateY(-2px);
+}
+
+.symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.symbol-item {
+    font-size: 2em;
+    padding: 15px;
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+}
+
+.symbol-item:hover {
+    background: var(--primary);
+    color: white;
+}
+
+.achievement-item {
+    padding: 10px;
+    margin: 5px 0;
+    background: #f0f0f0;
+    border-radius: 8px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #3498db;
+        --background: #1a1a1a;
+        --text: #ffffff;
+    }
+    
+    .card {
+        background: #2c2c2c;
+    }
+    
+    .achievement-item {
+        background: #3c3c3c;
+    }
+}
