@@ -3,39 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Nyx Oraculum</title>
+    <title>Тёмный Оракул</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div id="main-menu" class="card">
-        <h1 class="main-title">🜟 ORACULUM OCCULTUM 🜟</h1>
+        <h1 class="main-title">🜟 ТЁМНЫЙ ОРАКУЛ 🜟</h1>
         
         <div class="grid-container">
             <button class="game-button" onclick="startGame('telepathy')">
-                <span class="button-icon">🜞</span>
-                <span class="button-text">Ars Numerorum</span>
+                <span class="button-icon">⌛</span>
+                <span class="button-text">Числовая магия</span>
             </button>
 
             <button class="game-button" onclick="startGame('zener')">
-                <span class="button-icon">🜍</span>
-                <span class="button-text">Sigillum Fatī</span>
+                <span class="button-icon">🜄</span>
+                <span class="button-text">Руны Судьбы</span>
             </button>
 
             <button class="game-button" onclick="startGame('color')">
-                <span class="button-icon">🝋</span>
-                <span class="button-text">Chromatis Vis</span>
+                <span class="button-icon">🝇</span>
+                <span class="button-text">Хроматический дар</span>
             </button>
 
             <button class="game-button" onclick="showStats()">
-                <span class="button-icon">🝰</span>
-                <span class="button-text">Annales</span>
+                <span class="button-icon">📜</span>
+                <span class="button-text">Статистика</span>
             </button>
 
             <button class="game-button" onclick="showAchievements()">
-                <span class="button-icon">⚚</span>
-                <span class="button-text">Tropaea</span>
+                <span class="button-icon">🏆</span>
+                <span class="button-text">Достижения</span>
             </button>
         </div>
     </div>
@@ -45,12 +44,12 @@
     </div>
 
     <div id="stats-screen" class="card hidden">
-        <h2 class="section-title">⚖ Arcana Statistica ⚖</h2>
+        <h2 class="section-title">⚖ Книга Судеб ⚖</h2>
         <div id="stats-content"></div>
     </div>
 
     <div id="achievements-screen" class="card hidden">
-        <h2 class="section-title">🜚 Gloria Aeterna 🜚</h2>
+        <h2 class="section-title">🜚 Сокровищница Знаний 🜚</h2>
         <div id="achievements-content"></div>
     </div>
 
