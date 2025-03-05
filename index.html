@@ -8,71 +8,53 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="animated-bg"></div>
+    <div class="esoteric-bg">
+        <div class="runes-overlay"></div>
+        <div class="energy-grid"></div>
+    </div>
     
     <div id="main-menu" class="card">
-        <h1 class="main-title">🌀 NYX ORACULUM 🌀</h1>
+        <h1 class="main-title glitch">🌀NyxOraculum🌀</h1>
         
         <div class="grid-container">
-            <button class="game-button" onclick="startGame('telepathy')">
-                <span class="button-icon">🔢</span>
-                <span class="button-text">Числовая магия</span>
+            <button class="game-button occult" onclick="startGame('telepathy')">
+                <span class="icon">🜇</span>Числовая магия
             </button>
 
-            <button class="game-button" onclick="startGame('zener')">
-                <span class="button-icon">🜄</span>
-                <span class="button-text">Руны Судьбы</span>
+            <button class="game-button occult" onclick="startGame('zener')">
+                <span class="icon">🜍</span>Руны Судьбы
             </button>
 
-            <button class="game-button" onclick="startGame('color')">
-                <span class="button-icon">🎨</span>
-                <span class="button-text">Хроматический дар</span>
+            <button class="game-button occult" onclick="startGame('color')">
+                <span class="icon">🎨</span>Хроматика
             </button>
 
-            <button class="game-button" onclick="startGame('psi_control')">
-                <span class="button-icon">🜏</span>
-                <span class="button-text">Пси-контроль</span>
+            <button class="game-button occult" onclick="startGame('psi')">
+                <span class="icon">🜏</span>Пси-контроль
             </button>
 
-            <button class="game-button" onclick="showStats()">
-                <span class="button-icon">📊</span>
-                <span class="button-text">Статистика</span>
-            </button>
-
-            <button class="game-button" onclick="showAchievements()">
-                <span class="button-icon">🏆</span>
-                <span class="button-text">Достижения</span>
+            <button class="game-button occult" onclick="showStats()">
+                <span class="icon">📜</span>Хроники
             </button>
         </div>
     </div>
 
-    <div id="game-screen" class="card hidden">
-        <div id="game-content"></div>
-    </div>
-
-    <div id="psi-control-screen" class="card hidden">
-        <div class="game-field">
-            <div id="psi-ball"></div>
-            <div class="control-info">
-                <span>Сила: </span><span id="force-value">0%</span>
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
+    <!-- Контейнеры игровых режимов -->
+    <div id="game-container" class="hidden">
+        <div id="telepathy-game" class="game-screen"></div>
+        <div id="zener-game" class="game-screen"></div>
+        <div id="color-game" class="game-screen"></div>
+        <div id="psi-game" class="game-screen">
+            <div class="psi-field"></div>
+            <div class="psi-info">
+                <span>Энергия: <span id="psi-energy">0%</span></span>
+                <div class="psi-progress"></div>
             </div>
         </div>
     </div>
 
-    <div id="stats-screen" class="card hidden">
-        <h2 class="section-title">📜 Книга Судеб 📜</h2>
-        <div id="stats-content"></div>
-    </div>
-
-    <div id="achievements-screen" class="card hidden">
-        <h2 class="section-title">🏆 Сокровищница Знаний 🏆</h2>
-        <div id="achievements-content"></div>
-    </div>
-
-    <canvas id="particle-canvas"></canvas>
+    <!-- Система частиц -->
+    <canvas id="particles"></canvas>
 
     <script src="scripts/app.js"></script>
 </body>
