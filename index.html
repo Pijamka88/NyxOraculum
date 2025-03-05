@@ -1,38 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="main-menu" class="card">
-        <h1 class="main-title">🌀NyxOraculum🌀</h1>
-        
-        <div class="grid-container">
-            <button class="game-button" onclick="startGame('telepathy')">
-                <span class="icon">🔢</span>Числовая магия
+    <div class="main-container">
+        <!-- Главное меню -->
+        <div class="card main-menu">
+            <h1 class="title">🌀 NyxOraculum 🌀</h1>
+            
+            <button class="game-btn" onclick="startGame('telepathy')">
+                <span class="icon">🔢</span> Числовая магия
             </button>
 
-            <button class="game-button" onclick="startGame('zener')">
-                <span class="icon">🜄</span>Руны Судьбы
+            <button class="game-btn" onclick="startGame('zener')">
+                <span class="icon">🜄</span> Карты Зенера
             </button>
 
-            <button class="game-button" onclick="startGame('color')">
-                <span class="icon">🎨</span>Хроматика
+            <button class="game-btn" onclick="startGame('color')">
+                <span class="icon">🎨</span> Цветовая интуиция
             </button>
 
-            <button class="game-button" onclick="showStats()">
-                <span class="icon">📊</span>Статистика
+            <button class="game-btn" onclick="showStats()">
+                <span class="icon">📊</span> Статистика
             </button>
         </div>
-    </div>
 
-    <!-- Контейнеры игровых режимов -->
-    <div id="game-container" class="hidden">
-        <!-- ... остальное содержимое ... -->
+        <!-- Игровые экраны -->
+        <div id="game-screen" class="card hidden">
+            <div id="game-content"></div>
+            <button class="back-btn" onclick="showMainMenu()">← Назад</button>
+        </div>
+
+        <!-- Статистика -->
+        <div id="stats-screen" class="card hidden">
+            <h2>📊 Статистика</h2>
+            <div id="stats-content"></div>
+        </div>
     </div>
 
     <script src="scripts/app.js"></script>
