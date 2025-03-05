@@ -34,6 +34,9 @@
             max-width: 100%;
             margin: 0 auto;
             padding: 10px;
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 20px);
         }
 
         h1 {
@@ -77,21 +80,22 @@
             display: none;
             position: relative;
             backdrop-filter: blur(5px);
-            min-height: 60vh;
+            flex-grow: 1;
+            overflow: auto;
         }
 
         .stats {
             background: rgba(0,0,0,0.5);
             padding: 15px;
             border-radius: 15px;
-            margin-top: auto;
+            margin-top: 20px;
             font-size: 1.2rem;
         }
 
         /* Числовая магия */
         .number-grid {
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             padding: 10px;
         }
@@ -99,9 +103,14 @@
         /* Карты Зенера */
         .zener-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             padding: 10px;
+        }
+
+        .zener-btn {
+            font-size: 3rem;
+            padding: 20px;
         }
 
         /* Цветовая интуиция */
@@ -193,7 +202,8 @@
                 isDragging: false,
                 startTime: null,
                 totalSuccess: 0,
-                touchId: null
+                touchId: null,
+                timer: null
             }
         };
 
@@ -262,10 +272,9 @@
             container.innerHTML = `
                 <h3>🃏 Выбери увиденную карту</h3>
                 <div class="zener-grid">
-                    ${ZENER_SYMBOLS.sort(() => Math.random() - 0.5)
-                        .map(s => `
-                            <button class="game-btn" onclick="checkZener('${s}')">${s}</button>
-                        `).join('')}
+                    ${ZENER_SYMBOLS.map(s => `
+                        <button class="game-btn zener-btn" onclick="checkZener('${s}')">${s}</button>
+                    `).join('')}
                 </div>
                 <p class="result-text" id="zener-result"></p>
                 <div class="stats"></div>
@@ -278,14 +287,13 @@
             container.innerHTML = `
                 <h3>🎨 Выбери загаданный цвет</h3>
                 <div class="color-grid">
-                    ${COLORS.sort(() => Math.random() - 0.5)
-                        .map(c => `
-                            <button 
-                                class="color-btn" 
-                                style="background:${c}" 
-                                onclick="checkColor('${c}')"
-                            ></button>
-                        `).join('')}
+                    ${COLORS.map(c => `
+                        <button 
+                            class="color-btn" 
+                            style="background:${c}" 
+                            onclick="checkColor('${c}')"
+                        ></button>
+                    `).join('')}
                 </div>
                 <p class="result-text" id="color-result"></p>
                 <div class="stats"></div>
@@ -366,6 +374,15 @@
             currentGame.psi.startTime = Date.now();
             currentGame.psi.totalSuccess = 0;
             updatePsiPosition(x, y);
+            
+            // Start timer
+            currentGame.psi.timer = setInterval(() => {
+                if(currentGame.psi.isDragging) {
+                    stats.psi.successTime += 1;
+                    saveStats();
+                    updateStats(document.getElementById('game-container'), 'psi');
+                }
+            }, 1000);
         }
 
         function updatePsiPosition(x, y) {
@@ -391,8 +408,10 @@
             const targetRect = currentGame.psi.target.getBoundingClientRect();
             
             if(checkCollision(circleRect, targetRect)) {
-                currentGame.psi.totalSuccess += Date.now() - currentGame.psi.startTime;
-                currentGame.psi.startTime = Date.now();
+                currentGame.psi.totalSuccess += 100;
+                document.getElementById('psi-result').textContent = '🌀 Удерживайте!';
+            } else {
+                document.getElementById('psi-result').textContent = '🌀 Верните шар в круг!';
             }
         }
 
@@ -404,11 +423,15 @@
         }
 
         function endPsiDrag() {
+            if(!currentGame.psi.isDragging) return;
+            
             currentGame.psi.isDragging = false;
             stats.psi.attempts++;
-            stats.psi.successTime += Math.round(currentGame.psi.totalSuccess / 1000);
             saveStats();
             updateStats(document.getElementById('game-container'), 'psi');
+            
+            clearInterval(currentGame.psi.timer);
+            currentGame.psi.timer = null;
         }
 
         function checkNumber(selected) {
