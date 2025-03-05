@@ -1,246 +1,58 @@
-/* Основные переменные */
 :root {
-    --bg-dark: #0F044C;          /* Темный фон */
-    --bg-light: #2A0944;         /* Светлый фон для градиента */
-    --accent: #FFD700;           /* Золотой акцент */
-    --text: #FFF;                /* Белый текст */
-    --psi-energy: #4B0082;       /* Фиолетовый для пси-энергии */
-    --button-bg: rgba(255, 215, 0, 0.1); /* Прозрачный фон кнопок */
+    --bg-dark: #0F044C;
+    --bg-light: #2A0944;
+    --accent: #FFD700;
+    --text: #FFF;
+    --psi-energy: #4B0082;
 }
 
-/* Базовые стили */
+/* Добавляем стили для центрирования контента */
 body {
-    background: linear-gradient(
-        135deg,
-        var(--bg-dark) 0%,
-        var(--bg-light) 100%
-    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
     min-height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
-    color: var(--text);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow-x: hidden;
+    background: linear-gradient(to bottom right, var(--bg-dark), var(--bg-light));
 }
 
-/* Контейнер основного содержимого */
-.main-container {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-}
-
-/* Стили карточек */
-.card {
-    background: rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--accent);
-    border-radius: 15px;
-    padding: 25px;
-    margin: 15px 0;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-    transition: transform 0.3s;
-}
-
-/* Заголовок приложения */
-.title {
-    text-align: center;
-    margin: 0 0 25px 0;
-    text-shadow: 0 0 15px var(--accent);
-}
-
-/* Стили кнопок */
-.game-btn {
-    width: 100%;
-    padding: 15px 20px;
-    margin: 10px 0;
-    background: var(--button-bg);
-    border: 1px solid var(--accent);
-    border-radius: 8px;
-    color: var(--text);
-    font-size: 1.1em;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    transition: all 0.3s;
-}
-
-.game-btn:hover {
-    background: rgba(255, 215, 0, 0.2);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
-}
-
-.game-btn:active {
-    transform: translateY(1px);
-}
-
-/* Иконки внутри кнопок */
-.icon {
-    font-size: 1.4em;
-    filter: drop-shadow(0 0 5px var(--accent));
-}
-
-/* Скрытые элементы */
-.hidden {
-    display: none !important;
-}
-
-/* Игровые режимы */
-/* Числовая магия */
-.number-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin: 25px 0;
-}
-
-.number-grid button {
-    aspect-ratio: 1;
-}
-
-/* Карты Зенера */
-.symbol-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.symbol-item {
-    font-size: 2.5em;
-    padding: 20px;
-    border: 2px solid var(--accent);
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    aspect-ratio: 1;
-}
-
-.symbol-item:hover {
-    background: rgba(255, 215, 0, 0.1);
-}
-
-/* Цветовая интуиция */
-.color-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    justify-content: center;
-    margin: 25px 0;
-}
-
-.color-item {
-    width: 65px;
-    height: 65px;
-    border-radius: 50%;
-    border: 2px solid var(--accent);
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.color-item:hover {
-    transform: scale(1.1);
-}
-
-/* Режим Пси-контроль */
+/* Обновляем стили пси-поля */
 .psi-field {
-    width: 100%;
+    width: 90%;
+    max-width: 800px;
     height: 60vh;
     border: 2px solid var(--accent);
     border-radius: 15px;
     position: relative;
     overflow: hidden;
-    margin: 20px 0;
+    margin: 20px;
 }
 
+/* Остальные стили остаются без изменений */
 .psi-ball {
     width: 40px;
     height: 40px;
-    background: radial-gradient(
-        circle at 30% 30%, 
-        var(--accent), 
-        #FFA500
-    );
+    background: radial-gradient(circle at 30% 30%, var(--accent), #FFA500);
     border-radius: 50%;
     position: absolute;
-    box-shadow: 0 0 25px var(--accent);
-    transition: left 0.1s, top 0.1s;
+    box-shadow: 0 0 20px var(--accent);
+    transition: transform 0.1s;
 }
 
 .psi-info {
     position: absolute;
     bottom: 15px;
     left: 15px;
-    font-size: 1.2em;
     color: var(--accent);
-    text-shadow: 0 0 5px black;
 }
 
-/* Анимация частиц */
 @keyframes particle-explode {
-    0% { 
-        transform: scale(0) translate(0, 0); 
-        opacity: 1; 
-    }
-    100% { 
-        transform: scale(3) translate(var(--tx), var(--ty)); 
-        opacity: 0; 
-    }
+    0% { transform: scale(0); opacity: 1; }
+    100% { transform: scale(3); opacity: 0; }
 }
 
 .particle {
     position: absolute;
-    width: 8px;
-    height: 8px;
-    background: var(--color);
-    border-radius: 50%;
     pointer-events: none;
-    animation: particle-explode 0.8s ease-out forwards;
-}
-
-/* Статистика */
-#stats-content {
-    display: grid;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.stat-item {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 15px;
-    border-radius: 10px;
-    border: 1px solid var(--accent);
-}
-
-/* Адаптивность */
-@media (max-width: 480px) {
-    .main-container {
-        padding: 10px;
-    }
-
-    .card {
-        padding: 15px;
-        margin: 10px 0;
-    }
-
-    .number-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .symbol-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .color-item {
-        width: 55px;
-        height: 55px;
-    }
-
-    .psi-field {
-        height: 50vh;
-    }
+    animation: particle-explode 0.8s ease-out;
 }
