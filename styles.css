@@ -7,12 +7,27 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle at center, #0a0a0a, var(--dark-bg));
-    min-height: 100vh;
-    padding: 20px;
     color: var(--text-light);
-    position: relative;
+    margin: 0;
     overflow-x: hidden;
+}
+
+.animated-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(-45deg, #0F044C, #2A0944, #3B185F, #4C0B5E);
+    background-size: 400% 400%;
+    animation: gradient-flow 15s ease infinite;
+    z-index: -2;
+}
+
+@keyframes gradient-flow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 .card {
@@ -20,13 +35,13 @@ body {
     border: 2px solid var(--gold);
     border-radius: 12px;
     padding: 25px;
-    margin: 15px 0;
+    margin: 15px;
     box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
-    backdrop-filter: blur(8px);
-    animation: cardRise 0.6s ease-out;
+    backdrop-filter: blur(10px);
+    animation: card-appear 0.6s ease-out;
 }
 
-@keyframes cardRise {
+@keyframes card-appear {
     from { opacity: 0; transform: translateY(30px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
@@ -47,9 +62,12 @@ body {
     transition: all 0.3s;
 }
 
+.game-button:hover {
+    box-shadow: 0 0 15px var(--gold);
+}
+
 .game-button:active {
     background: rgba(255, 215, 0, 0.1);
-    box-shadow: 0 0 30px var(--gold);
     transform: scale(0.97);
 }
 
@@ -70,25 +88,20 @@ body {
     transition: all 0.3s;
 }
 
-.symbol-item:hover {
-    background: rgba(255, 215, 0, 0.1);
-}
-
-.chroma-grid {
+.color-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: center;
 }
 
-.chroma-orb {
-    width: 60px;
-    height: 60px;
+.color-item {
+    width: 70px;
+    height: 70px;
     border-radius: 50%;
     border: 2px solid var(--gold);
     cursor: pointer;
     transition: transform 0.3s;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
 #particle-canvas {
@@ -96,11 +109,16 @@ body {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 9999;
+    z-index: -1;
 }
 
 @media (max-width: 480px) {
     .symbol-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .game-button {
+        padding: 15px;
+        font-size: 1em;
     }
 }
