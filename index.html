@@ -3,10 +3,10 @@
 <head>
     <title>NyxOraculum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="telegram-web-app-bot-url" content="your_bot_username">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #1a1a2e;
+            --bg-color: #0a0a1a;
             --text-color: #e6e6fa;
             --accent: #4b0082;
             --particle: #9370db;
@@ -15,26 +15,31 @@
         body {
             background: var(--bg-color);
             color: var(--text-color);
-            font-family: 'Mystical', sans-serif;
+            font-family: 'MedievalSharp', cursive;
             overflow: hidden;
+            margin: 0;
+            padding: 20px;
         }
 
         .container {
-            padding: 20px;
-            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
         }
 
         .game-btn {
-            background: var(--accent);
-            border: none;
+            background: linear-gradient(45deg, #2b1055, #4b0082);
+            border: 2px solid #7b68ee;
             padding: 15px 30px;
             margin: 10px;
-            border-radius: 25px;
+            border-radius: 15px;
             color: white;
             cursor: pointer;
             position: relative;
             overflow: hidden;
             transition: transform 0.3s;
+            font-family: inherit;
+            font-size: 1.1em;
         }
 
         .particle {
@@ -59,66 +64,185 @@
             background: rgba(0,0,0,0.7);
             padding: 10px;
             border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+        }
+
+        .game-container {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid #4b0082;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .zener-card {
+            width: 100px;
+            height: 150px;
+            margin: 10px;
+            border: 2px solid #7b68ee;
+            border-radius: 10px;
+            cursor: pointer;
+            background: rgba(255,255,255,0.1);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .color-option {
+            width: 80px;
+            height: 80px;
+            margin: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: transform 0.3s;
+        }
+
+        .psi-target {
+            width: 100px;
+            height: 100px;
+            background: #ff4444;
+            border-radius: 50%;
+            margin: 20px auto;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.5s;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="stats" id="stats"></div>
-        <h1>NyxOraculum</h1>
+        <button class="game-btn back-btn" onclick="showMenu()" style="display: none;">← Назад</button>
+        <h1>🔮 NyxOraculum</h1>
         
-        <!-- Меню -->
         <div id="menu">
-            <button class="game-btn" data-game="numerical">Числовая магия</button>
-            <button class="game-btn" data-game="zener">Карты Зенера</button>
-            <button class="game-btn" data-game="color">Цветовая интуиция</button>
-            <button class="game-btn" data-game="psi">Пси-контроль</button>
+            <button class="game-btn" data-game="numerical">🔢 Числовая магия</button>
+            <button class="game-btn" data-game="zener">🃏 Карты Зенера</button>
+            <button class="game-btn" data-game="color">🎨 Цветовая интуиция</button>
+            <button class="game-btn" data-game="psi">🌀 Пси-контроль</button>
+            <button class="game-btn" onclick="clearStats()">❌ Очистить статистику</button>
         </div>
 
-        <!-- Игры -->
-        <div id="game-container" style="display: none;"></div>
+        <div id="game-container" class="game-container" style="display: none;"></div>
     </div>
 
     <script>
-        // Инициализация Telegram Web App
-        Telegram.WebApp.ready();
+        const ZENER_SYMBOLS = ['○', '+', '≈', '□', '★'];
+        const COLORS = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'];
         
-        // Статистика
+        let currentGame = {};
         let stats = JSON.parse(localStorage.getItem('nyx_stats') || '{}');
+        let psiStartTime;
 
-        // Анимация частиц
-        document.addEventListener('click', (e) => {
-            if(e.target.classList.contains('game-btn')) {
-                createParticles(e.target, 10);
-            }
-        });
-
-        function createParticles(element, count) {
-            const rect = element.getBoundingClientRect();
-            for(let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = rect.left + rect.width/2 + 'px';
-                particle.style.top = rect.top + rect.height/2 + 'px';
-                particle.style.setProperty('--x', `${Math.random() * 200 - 100}px`);
-                particle.style.setProperty('--y', `${Math.random() * 200 - 100}px`);
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 800);
-            }
+        // Инициализация
+        function init() {
+            showStats();
+            document.querySelectorAll('.game-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if(btn.dataset.game) loadGame(btn.dataset.game);
+                    createParticles(e.target, 8);
+                });
+            });
         }
 
-        // Игра: Числовая магия
+        // Игры
         function numericalMagic() {
             return `
-                <div class="game">
-                    <h3>Угадай число от 1 до 10</h3>
-                    <input type="number" id="guess" min="1" max="10">
-                    <button onclick="checkNumber()">Проверить</button>
-                </div>
+                <h3>🔢 Угадай число от 1 до 10</h3>
+                <input type="number" id="guess" min="1" max="10" style="font-size: 1.2em;">
+                <button class="game-btn" onclick="checkNumber()">Проверить</button>
+                <p id="numerical-result"></p>
             `;
         }
 
-        // Обновление статистики
+        function zenerCards() {
+            currentGame.target = ZENER_SYMBOLS[Math.floor(Math.random()*5)];
+            return `
+                <h3>🃏 Выбери увиденную карту</h3>
+                <div>${ZENER_SYMBOLS.map(s => `
+                    <div class="zener-card" onclick="checkZener('${s}')">${s}</div>
+                `).join('')}</div>
+                <p id="zener-result"></p>
+            `;
+        }
+
+        function colorIntuition() {
+            currentGame.target = COLORS[Math.floor(Math.random()*5)];
+            return `
+                <h3>🎨 Выбери цвет который я загадал</h3>
+                <div>${COLORS.map(c => `
+                    <div class="color-option" style="background:${c}" 
+                         onclick="checkColor('${c}')"></div>
+                `).join('')}</div>
+                <p id="color-result"></p>
+            `;
+        }
+
+        function psiControl() {
+            return `
+                <h3>🌀 Нажми когда свечение станет красным</h3>
+                <div class="psi-target" id="psi-target"></div>
+                <p id="psi-result"></p>
+                <button class="game-btn" onclick="startPsiTest()">Начать тест</button>
+            `;
+        }
+
+        // Проверки
+        function checkNumber() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const correct = Math.ceil(Math.random()*10);
+            const result = guess === correct;
+            document.getElementById('numerical-result').innerHTML = result ? 
+                '🎯 Верно! Ты видишь сквозь время!' : 
+                `❌ Неверно! Я загадал ${correct}`;
+            updateStats('numerical', result);
+        }
+
+        function checkZener(symbol) {
+            const result = symbol === currentGame.target;
+            document.getElementById('zener-result').innerHTML = result ?
+                '🔮 Верно! Твой третий глаз открыт!' :
+                '👁️ Неверно! Сосредоточься сильнее...';
+            updateStats('zener', result);
+        }
+
+        function checkColor(color) {
+            const result = color === currentGame.target;
+            document.getElementById('color-result').innerHTML = result ?
+                '🌈 Верно! Ты чувствуешь энергии!' :
+                '🎨 Неверно! Настрой свою ауру...';
+            updateStats('color', result);
+        }
+
+        function startPsiTest() {
+            const target = document.getElementById('psi-target');
+            target.style.opacity = '0';
+            setTimeout(() => {
+                target.style.opacity = '1';
+                psiStartTime = Date.now();
+            }, Math.random()*3000 + 1000);
+        }
+
+        function psiClick() {
+            if(!psiStartTime) return;
+            const reactionTime = Date.now() - psiStartTime;
+            const result = reactionTime < 500;
+            document.getElementById('psi-result').innerHTML = result ?
+                `⚡ Молниеносно! ${reactionTime}ms` :
+                `🐢 Слишком медленно! ${reactionTime}ms`;
+            updateStats('psi', result);
+            psiStartTime = null;
+        }
+
+        // Система статистики
         function updateStats(game, result) {
             if(!stats[game]) stats[game] = { attempts: 0, correct: 0 };
             stats[game].attempts++;
@@ -127,32 +251,80 @@
             showStats();
         }
 
-        // Показ статистики
         function showStats() {
             const statsDiv = document.getElementById('stats');
-            statsDiv.innerHTML = Object.entries(stats).map(([game, data]) => `
-                <div>${game}: ${data.correct}/${data.attempts}</div>
-            `).join('');
+            statsDiv.innerHTML = '<h4>📊 Статистика:</h4>' + 
+                Object.entries(stats).map(([game, data]) => `
+                    <div>${gameIcon(game)} ${data.correct}/${data.attempts} 
+                    (${Math.round(data.correct/data.attempts*100 || 0}%)</div>
+                `).join('');
         }
 
-        // Инициализация
-        showStats();
-        document.querySelectorAll('.game-btn').forEach(btn => {
-            btn.addEventListener('click', () => loadGame(btn.dataset.game));
-        });
+        function gameIcon(game) {
+            return {
+                numerical: '🔢',
+                zener: '🃏',
+                color: '🎨',
+                psi: '🌀'
+            }[game];
+        }
+
+        // Вспомогательные функции
+        function createParticles(element, count) {
+            const rect = element.getBoundingClientRect();
+            for(let i = 0; i < count; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = rect.left + rect.width/2 + 'px';
+                particle.style.top = rect.top + rect.height/2 + 'px';
+                particle.style.setProperty('--x', `${Math.random()*200 - 100}px`);
+                particle.style.setProperty('--y', `${Math.random()*200 - 100}px`);
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 800);
+            }
+        }
 
         function loadGame(game) {
             document.getElementById('menu').style.display = 'none';
+            document.querySelector('.back-btn').style.display = 'block';
             const container = document.getElementById('game-container');
             container.style.display = 'block';
+            container.innerHTML = {
+                numerical: numericalMagic,
+                zener: zenerCards,
+                color: colorIntuition,
+                psi: psiControl
+            }[game]();
             
-            switch(game) {
-                case 'numerical':
-                    container.innerHTML = numericalMagic();
-                    break;
-                // Добавить другие игры
+            if(game === 'psi') {
+                document.getElementById('psi-target').addEventListener('click', psiClick);
             }
         }
+
+        function showMenu() {
+            document.getElementById('menu').style.display = 'block';
+            document.querySelector('.back-btn').style.display = 'none';
+            document.getElementById('game-container').style.display = 'none';
+        }
+
+        function clearStats() {
+            if(confirm('Очистить всю статистику?')) {
+                localStorage.removeItem('nyx_stats');
+                stats = {};
+                showStats();
+            }
+        }
+
+        // Инициализация
+        init();
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                Telegram.WebApp.ready();
+                Telegram.WebApp.expand();
+            } catch(e) {
+                // Работаем вне Telegram
+            }
+        });
     </script>
 </body>
 </html>
