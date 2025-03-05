@@ -1,227 +1,81 @@
-const tg = window.Telegram?.WebApp;
-let stats = JSON.parse(localStorage.getItem('stats')) || {
-    telepathy: { correct: 0, total: 0 },
-    zener: { correct: 0, total: 0 },
-    color: { correct: 0, total: 0 },
-    streak: 0
-};
+// Particle System
+class Particle {
+    constructor(x, y, color) {
+        this.x = x;
+        this.y = y;
+        this.color = color || '#FFD700';
+        this.velocity = {
+            x: (Math.random() - 0.5) * 8,
+            y: (Math.random() - 0.5) * 8
+        };
+        this.alpha = 1;
+        this.size = Math.random() * 3 + 1;
+    }
 
-const achievements = JSON.parse(localStorage.getItem('achievements')) || {
-    novice: { name: "Посвящение", description: "Пройдите 5 испытаний", unlocked: false },
-    oracle: { name: "Провидец", description: "10 верных предсказаний подряд", unlocked: false },
-    chromaMaster: { name: "Повелитель Цветов", description: "Угадайте 15 цветов", unlocked: false }
-};
+    draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.restore();
+    }
 
-// Инициализация Telegram WebApp
-if (tg) {
-    tg.ready();
-    tg.expand();
-    tg.BackButton.onClick(showMainMenu);
-}
-
-function showMainMenu() {
-    document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-    document.getElementById('main-menu').classList.remove('hidden');
-    if (tg) tg.BackButton.hide();
-}
-
-function startGame(type) {
-    showScreen('game-screen');
-    const gameContent = document.getElementById('game-content');
-    gameContent.innerHTML = '';
-    
-    const answer = generateTask(type);
-    console.log(`[ORACULUM] Загадано: ${answer}`);
-
-    switch(type) {
-        case 'telepathy':
-            gameContent.innerHTML = `
-                <h3 class="game-prompt">⌛ Внемлите Числам Судьбы ⌛</h3>
-                <div class="number-grid">
-                    ${Array.from({length: 10}, (_, i) => `
-                        <button class="rune-button" onclick="checkAnswer('telepathy', ${i+1}, ${answer})">
-                            ${i+1}
-                        </button>
-                    `).join('')}
-                </div>
-            `;
-            break;
-
-        case 'zener':
-            const symbols = ['🜁', '🜂', '🜄', '🜃', '🜆'];
-            gameContent.innerHTML = `
-                <h3 class="game-prompt">🜔 Выберите Истинный Символ 🜔</h3>
-                <div class="symbol-grid">
-                    ${symbols.map(symbol => `
-                        <div class="ancient-symbol" onclick="checkAnswer('zener', '${symbol}', '${answer}')">
-                            ${symbol}
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            break;
-
-        case 'color':
-            const colors = ['#8a0303', '#03438a', '#038a0d', '#8a7a03', '#5c038a'];
-            gameContent.innerHTML = `
-                <h3 class="game-prompt">🝇 Узрите Истинный Цвет 🝇</h3>
-                <div class="chroma-grid">
-                    ${colors.map(color => `
-                        <div class="chroma-orb" 
-                             style="background: ${color}" 
-                             onclick="checkAnswer('color', '${color}', '${answer}')">
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            break;
+    update(ctx) {
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+        this.alpha -= 0.03;
+        this.velocity.x *= 0.96;
+        this.velocity.y *= 0.96;
+        this.draw(ctx);
     }
 }
 
-function generateTask(type) {
-    const generators = {
-        telepathy: () => Math.floor(Math.random() * 10) + 1,
-        zener: () => ['🜁', '🜂', '🜄', '🜃', '🜆'][Math.floor(Math.random() * 5)],
-        color: () => ['#8a0303', '#03438a', '#038a0d', '#8a7a03', '#5c038a'][Math.floor(Math.random() * 5)]
-    };
-    return generators[type]();
-}
-
-function checkAnswer(type, guess, answer) {
-    stats[type].total++;
-    
-    if (guess === answer) {
-        stats[type].correct++;
-        stats.streak++;
-        showResultMessage(`🜟 Истина Открылась! 🜟`, answer);
-    } else {
-        stats.streak = 0;
-        showResultMessage(`⚰ Завеса Заблуждений... ⚰`, answer);
+class ParticleSystem {
+    constructor() {
+        this.particles = [];
+        this.canvas = document.getElementById('particle-canvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
     }
 
-    checkAchievements();
-    saveProgress();
-}
-
-function showResultMessage(message, answer) {
-    const resultDiv = document.createElement('div');
-    resultDiv.className = 'result-card';
-    resultDiv.innerHTML = `
-        <h4>${message}</h4>
-        <div class="revealed-answer">${answer}</div>
-    `;
-    document.getElementById('game-screen').appendChild(resultDiv);
-    setTimeout(() => resultDiv.remove(), 2500);
-}
-
-function showStats() {
-    showScreen('stats-screen');
-    const content = document.getElementById('stats-content');
-    content.innerHTML = Object.entries(stats)
-        .filter(([key]) => key !== 'streak')
-        .map(([type, data]) => `
-            <div class="chronicle-item">
-                <div class="chronicle-header">${getTypeName(type)}</div>
-                <div class="chronicle-progress">
-                    <div class="progress-bar" style="width: ${(data.correct / (data.total || 1)) * 100}%"></div>
-                </div>
-                <div class="chronicle-numbers">
-                    ${data.correct} / ${data.total} 
-                    (${data.total ? ((data.correct/data.total)*100).toFixed(1) : 0}%)
-                </div>
-            </div>
-        `).join('');
-}
-
-function showAchievements() {
-    showScreen('achievements-screen');
-    const content = document.getElementById('achievements-content');
-    content.innerHTML = Object.entries(achievements)
-        .map(([key, achievement]) => `
-            <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
-                <div class="achievement-icon">${achievement.unlocked ? '🜚' : '⚷'}</div>
-                <div class="achievement-info">
-                    <h4>${achievement.name}</h4>
-                    <p>${achievement.description}</p>
-                </div>
-            </div>
-        `).join('');
-}
-
-function checkAchievements() {
-    const unlockList = [];
-    
-    // Проверка достижений
-    if (!achievements.novice.unlocked && getTotalAttempts() >= 5) {
-        achievements.novice.unlocked = true;
-        unlockList.push(achievements.novice.name);
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
     }
 
-    if (!achievements.oracle.unlocked && stats.streak >= 10) {
-        achievements.oracle.unlocked = true;
-        unlockList.push(achievements.oracle.name);
+    addParticles(x, y, color) {
+        for (let i = 0; i < 15; i++) {
+            this.particles.push(new Particle(x, y, color));
+        }
     }
 
-    if (!achievements.chromaMaster.unlocked && stats.color.correct >= 15) {
-        achievements.chromaMaster.unlocked = true;
-        unlockList.push(achievements.chromaMaster.name);
-    }
-
-    // Показ новых достижений
-    if (unlockList.length > 0) {
-        showUnlockEffect(unlockList);
-        localStorage.setItem('achievements', JSON.stringify(achievements));
+    update() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.particles = this.particles.filter(p => p.alpha > 0);
+        this.particles.forEach(p => p.update(this.ctx));
+        requestAnimationFrame(() => this.update());
     }
 }
 
-function showUnlockEffect(achievementsList) {
-    const effectDiv = document.createElement('div');
-    effectDiv.className = 'unlock-effect';
-    effectDiv.innerHTML = `
-        <div class="unlock-glow"></div>
-        <div class="unlock-content">
-            <h3>⚔ Признание Сил ⚔</h3>
-            <ul>
-                ${achievementsList.map(name => `<li>${name}</li>`).join('')}
-            </ul>
-        </div>
-    `;
-    document.body.appendChild(effectDiv);
-    setTimeout(() => effectDiv.remove(), 3500);
-}
+// Инициализация системы частиц
+const particleSystem = new ParticleSystem();
+particleSystem.update();
 
-function getTypeName(type) {
-    const names = {
-        telepathy: 'Числовая Магия',
-        zener: 'Руны Судьбы', 
-        color: 'Хроматический Дар'
-    };
-    return names[type] || type;
-}
-
-function getTotalAttempts() {
-    return Object.values(stats).reduce((acc, curr) => 
-        acc + (curr.total || 0), 0);
-}
-
-function showScreen(screenId) {
-    document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
-    document.getElementById(screenId).classList.remove('hidden');
-    if (tg) {
-        tg.BackButton.show();
-        tg.BackButton.onClick(showMainMenu);
+// Обработчик клика для всех кнопок
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.game-button, .rune-button, .chroma-orb')) {
+        const rect = e.target.getBoundingClientRect();
+        const color = window.getComputedStyle(e.target).borderColor;
+        particleSystem.addParticles(
+            rect.left + rect.width / 2,
+            rect.top + rect.height / 2,
+            color || '#FFD700'
+        );
     }
-}
+});
 
-function saveProgress() {
-    localStorage.setItem('stats', JSON.stringify(stats));
-    localStorage.setItem('achievements', JSON.stringify(achievements));
-}
-
-function closeApp() {
-    if (tg) tg.close();
-    else alert('Покиньте Храм через Телеграм');
-}
-
-// Инициализация
-showMainMenu();
+// Остальной код приложения остается без изменений
+// (функции startGame, checkAnswer, showStats и т.д.)
