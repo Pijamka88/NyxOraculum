@@ -16,9 +16,9 @@
             background: var(--bg-color);
             color: var(--text-color);
             font-family: 'MedievalSharp', cursive;
-            overflow: hidden;
             margin: 0;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
@@ -37,24 +37,47 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s;
+            transition: transform 0.2s;
             font-family: inherit;
             font-size: 1.1em;
+            box-shadow: 0 4px 15px rgba(75,0,130,0.3);
+        }
+
+        .game-btn:active {
+            transform: scale(0.95);
+            transition: transform 0.1s;
         }
 
         .particle {
             position: absolute;
-            width: 8px;
-            height: 8px;
-            background: var(--particle);
-            border-radius: 50%;
             pointer-events: none;
-            animation: explode 0.8s forwards;
+            background: radial-gradient(circle at center, 
+                rgba(255,255,255,0.8) 0%, 
+                rgba(148,87,235,0.8) 50%, 
+                rgba(75,0,130,0.8) 100%);
+            border-radius: 50%;
+            animation: nox-explode 1s ease-out forwards;
+            mix-blend-mode: screen;
+            filter: brightness(1.2);
         }
 
-        @keyframes explode {
-            0% { transform: translate(0, 0); opacity: 1; }
-            100% { transform: translate(var(--x, 0), var(--y, 0)); opacity: 0; }
+        @keyframes nox-explode {
+            0% {
+                transform: 
+                    translate(-50%, -50%) 
+                    scale(0.5) 
+                    rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: 
+                    translate(
+                        calc(-50% + var(--tx, 0)), 
+                        calc(-50% + var(--ty, 0))
+                    scale(2.5) 
+                    rotate(360deg);
+                opacity: 0;
+            }
         }
 
         .stats {
@@ -65,12 +88,14 @@
             padding: 10px;
             border-radius: 10px;
             backdrop-filter: blur(5px);
+            z-index: 1000;
         }
 
         .back-btn {
             position: fixed;
             top: 10px;
             left: 10px;
+            z-index: 1000;
         }
 
         .game-container {
@@ -79,6 +104,7 @@
             border: 2px solid #4b0082;
             border-radius: 15px;
             background: rgba(0,0,0,0.3);
+            min-height: 300px;
         }
 
         .zener-card {
@@ -93,6 +119,11 @@
             align-items: center;
             justify-content: center;
             font-size: 40px;
+            transition: transform 0.3s;
+        }
+
+        .zener-card:hover {
+            transform: scale(1.05);
         }
 
         .color-option {
@@ -105,6 +136,10 @@
             transition: transform 0.3s;
         }
 
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
         .psi-target {
             width: 100px;
             height: 100px;
@@ -113,7 +148,22 @@
             margin: 20px auto;
             cursor: pointer;
             opacity: 0;
-            transition: opacity 0.5s;
+            transition: opacity 0.5s, transform 0.3s;
+        }
+
+        #psi-result {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        input[type="number"] {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #7b68ee;
+            color: white;
+            font-size: 1.2em;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin: 10px;
         }
     </style>
 </head>
@@ -142,22 +192,54 @@
         let stats = JSON.parse(localStorage.getItem('nyx_stats') || '{}');
         let psiStartTime;
 
-        // Инициализация
         function init() {
             showStats();
             document.querySelectorAll('.game-btn').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     if(btn.dataset.game) loadGame(btn.dataset.game);
-                    createParticles(e.target, 8);
+                    createParticles(e.target);
                 });
             });
         }
 
-        // Игры
+        function createParticles(element, count = 15) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width/2;
+            const centerY = rect.top + rect.height/2;
+            
+            for(let i = 0; i < count; i++) {
+                const angle = (Math.PI * 2 * i) / count;
+                const velocity = 1 + Math.random() * 3;
+                const tx = Math.cos(angle) * 100 * velocity;
+                const ty = Math.sin(angle) * 100 * velocity;
+                
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                particle.style.cssText = `
+                    left: ${centerX}px;
+                    top: ${centerY}px;
+                    width: ${5 + Math.random() * 10}px;
+                    height: ${5 + Math.random() * 10}px;
+                    --tx: ${tx}px;
+                    --ty: ${ty}px;
+                    animation-duration: ${0.6 + Math.random() * 0.4}s;
+                    filter: hue-rotate(${Math.random() * 360}deg);
+                `;
+
+                document.body.appendChild(particle);
+                
+                particle.addEventListener('animationend', () => {
+                    particle.remove();
+                });
+            }
+        }
+
+        // Реализации игр
         function numericalMagic() {
             return `
                 <h3>🔢 Угадай число от 1 до 10</h3>
-                <input type="number" id="guess" min="1" max="10" style="font-size: 1.2em;">
+                <input type="number" id="guess" min="1" max="10">
                 <button class="game-btn" onclick="checkNumber()">Проверить</button>
                 <p id="numerical-result"></p>
             `;
@@ -177,7 +259,7 @@
         function colorIntuition() {
             currentGame.target = COLORS[Math.floor(Math.random()*5)];
             return `
-                <h3>🎨 Выбери цвет который я загадал</h3>
+                <h3>🎨 Выбери загаданный цвет</h3>
                 <div>${COLORS.map(c => `
                     <div class="color-option" style="background:${c}" 
                          onclick="checkColor('${c}')"></div>
@@ -195,7 +277,7 @@
             `;
         }
 
-        // Проверки
+        // Логика игр
         function checkNumber() {
             const guess = parseInt(document.getElementById('guess').value);
             const correct = Math.ceil(Math.random()*10);
@@ -242,7 +324,7 @@
             psiStartTime = null;
         }
 
-        // Система статистики
+        // Статистика
         function updateStats(game, result) {
             if(!stats[game]) stats[game] = { attempts: 0, correct: 0 };
             stats[game].attempts++;
@@ -269,21 +351,7 @@
             }[game];
         }
 
-        // Вспомогательные функции
-        function createParticles(element, count) {
-            const rect = element.getBoundingClientRect();
-            for(let i = 0; i < count; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = rect.left + rect.width/2 + 'px';
-                particle.style.top = rect.top + rect.height/2 + 'px';
-                particle.style.setProperty('--x', `${Math.random()*200 - 100}px`);
-                particle.style.setProperty('--y', `${Math.random()*200 - 100}px`);
-                document.body.appendChild(particle);
-                setTimeout(() => particle.remove(), 800);
-            }
-        }
-
+        // Навигация
         function loadGame(game) {
             document.getElementById('menu').style.display = 'none';
             document.querySelector('.back-btn').style.display = 'block';
@@ -322,7 +390,7 @@
                 Telegram.WebApp.ready();
                 Telegram.WebApp.expand();
             } catch(e) {
-                // Работаем вне Telegram
+                // Работа вне Telegram
             }
         });
     </script>
