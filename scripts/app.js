@@ -7,19 +7,18 @@ let stats = JSON.parse(localStorage.getItem('stats')) || {
 };
 
 const achievements = JSON.parse(localStorage.getItem('achievements')) || {
-    novice: { name: "Новичок", description: "Выполните 5 тестов", unlocked: false },
-    streak3: { name: "Серия удач", description: "3 правильных ответа подряд", unlocked: false },
-    masterZener: { name: "Мастер Зенера", description: "10 правильных ответов с картами", unlocked: false }
+    novice: { name: "Посвящение", description: "Пройдите 5 испытаний", unlocked: false },
+    oracle: { name: "Провидец", description: "10 верных предсказаний подряд", unlocked: false },
+    chromaMaster: { name: "Повелитель Цветов", description: "Угадайте 15 цветов", unlocked: false }
 };
 
-// Инициализация Telegram Web App
+// Инициализация Telegram WebApp
 if (tg) {
     tg.ready();
     tg.expand();
     tg.BackButton.onClick(showMainMenu);
 }
 
-// Основные функции
 function showMainMenu() {
     document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
     document.getElementById('main-menu').classList.remove('hidden');
@@ -32,65 +31,60 @@ function startGame(type) {
     gameContent.innerHTML = '';
     
     const answer = generateTask(type);
-    console.log(`Загаданный ответ (${type}):`, answer);
+    console.log(`[ORACULUM] Загадано: ${answer}`);
 
     switch(type) {
         case 'telepathy':
-            gameContent.innerHTML = `<h3>🔢 Угадайте число от 1 до 10</h3>`;
-            for (let i = 1; i <= 10; i++) {
-                const btn = document.createElement('button');
-                btn.className = 'game-button';
-                btn.innerHTML = `
-                    <span class="button-icon">${i}</span>
-                    <span class="button-text">${i}</span>
-                `;
-                btn.onclick = () => checkAnswer(type, i, answer);
-                gameContent.appendChild(btn);
-            }
+            gameContent.innerHTML = `
+                <h3 class="game-prompt">⌛ Внемлите Числам Судьбы ⌛</h3>
+                <div class="number-grid">
+                    ${Array.from({length: 10}, (_, i) => `
+                        <button class="rune-button" onclick="checkAnswer('telepathy', ${i+1}, ${answer})">
+                            ${i+1}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
             break;
 
         case 'zener':
-            gameContent.innerHTML = `<h3>🃏 Выберите загаданный символ</h3>`;
-            const symbols = ['○', '□', '～', '✚', '★'];
-            const grid = document.createElement('div');
-            grid.className = 'symbol-grid';
-            symbols.forEach(symbol => {
-                const div = document.createElement('div');
-                div.className = 'symbol-item';
-                div.textContent = symbol;
-                div.onclick = () => checkAnswer(type, symbol, answer);
-                grid.appendChild(div);
-            });
-            gameContent.appendChild(grid);
+            const symbols = ['🜁', '🜂', '🜄', '🜃', '🜆'];
+            gameContent.innerHTML = `
+                <h3 class="game-prompt">🜔 Выберите Истинный Символ 🜔</h3>
+                <div class="symbol-grid">
+                    ${symbols.map(symbol => `
+                        <div class="ancient-symbol" onclick="checkAnswer('zener', '${symbol}', '${answer}')">
+                            ${symbol}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
             break;
 
-        // Добавить в функцию startGame для цветовых кнопок
-case 'color':
-    gameContent.innerHTML = `
-        <h3 style="color: var(--gold); text-align: center;">
-            ✦ Выберите Сияющий Цвет ✦
-        </h3>
-    `;
-    // ... остальной код ...
-    break;
-
-
+        case 'color':
+            const colors = ['#8a0303', '#03438a', '#038a0d', '#8a7a03', '#5c038a'];
+            gameContent.innerHTML = `
+                <h3 class="game-prompt">🝇 Узрите Истинный Цвет 🝇</h3>
+                <div class="chroma-grid">
+                    ${colors.map(color => `
+                        <div class="chroma-orb" 
+                             style="background: ${color}" 
+                             onclick="checkAnswer('color', '${color}', '${answer}')">
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            break;
     }
 }
 
 function generateTask(type) {
-    switch(type) {
-        case 'telepathy': 
-            return Math.floor(Math.random() * 10) + 1;
-            
-        case 'zener': 
-            const symbols = ['○','□','～','✚','★'];
-            return symbols[Math.floor(Math.random() * symbols.length)];
-            
-        case 'color': 
-            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
-            return colors[Math.floor(Math.random() * colors.length)];
-    }
+    const generators = {
+        telepathy: () => Math.floor(Math.random() * 10) + 1,
+        zener: () => ['🜁', '🜂', '🜄', '🜃', '🜆'][Math.floor(Math.random() * 5)],
+        color: () => ['#8a0303', '#03438a', '#038a0d', '#8a7a03', '#5c038a'][Math.floor(Math.random() * 5)]
+    };
+    return generators[type]();
 }
 
 function checkAnswer(type, guess, answer) {
@@ -99,83 +93,115 @@ function checkAnswer(type, guess, answer) {
     if (guess === answer) {
         stats[type].correct++;
         stats.streak++;
-        showResult(`✅ Верно! Правильный ответ: ${answer}`);
+        showResultMessage(`🜟 Истина Открылась! 🜟`, answer);
     } else {
         stats.streak = 0;
-        showResult(`❌ Неверно. Правильный ответ: ${answer}`);
+        showResultMessage(`⚰ Завеса Заблуждений... ⚰`, answer);
     }
 
     checkAchievements();
-    saveStats();
+    saveProgress();
 }
 
-function showResult(message) {
+function showResultMessage(message, answer) {
     const resultDiv = document.createElement('div');
-    resultDiv.className = 'card';
-    resultDiv.innerHTML = `<h3>${message}</h3>`;
+    resultDiv.className = 'result-card';
+    resultDiv.innerHTML = `
+        <h4>${message}</h4>
+        <div class="revealed-answer">${answer}</div>
+    `;
     document.getElementById('game-screen').appendChild(resultDiv);
-    setTimeout(() => resultDiv.remove(), 2000);
+    setTimeout(() => resultDiv.remove(), 2500);
 }
 
-// Обновить showStats
 function showStats() {
+    showScreen('stats-screen');
     const content = document.getElementById('stats-content');
     content.innerHTML = Object.entries(stats)
+        .filter(([key]) => key !== 'streak')
         .map(([type, data]) => `
-            <div class="stats-item">
-                <h4 style="color: var(--gold);">${type.toUpperCase()}</h4>
-                <p>Попадания: <span style="color: var(--gold);">${data.correct}</span></p>
-                <p>Точность: <span style="color: var(--gold);">${data.total ? ((data.correct/data.total)*100).toFixed(1) : 0}%</span></p>
+            <div class="chronicle-item">
+                <div class="chronicle-header">${getTypeName(type)}</div>
+                <div class="chronicle-progress">
+                    <div class="progress-bar" style="width: ${(data.correct / (data.total || 1)) * 100}%"></div>
+                </div>
+                <div class="chronicle-numbers">
+                    ${data.correct} / ${data.total} 
+                    (${data.total ? ((data.correct/data.total)*100).toFixed(1) : 0}%)
+                </div>
             </div>
         `).join('');
 }
-
 
 function showAchievements() {
     showScreen('achievements-screen');
     const content = document.getElementById('achievements-content');
     content.innerHTML = Object.entries(achievements)
         .map(([key, achievement]) => `
-            <div class="achievement-item ${achievement.unlocked ? 'unlocked' : ''}">
-                <h4>${achievement.unlocked ? '🔓' : '🔒'} ${achievement.name}</h4>
-                <p>${achievement.description}</p>
+            <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                <div class="achievement-icon">${achievement.unlocked ? '🜚' : '⚷'}</div>
+                <div class="achievement-info">
+                    <h4>${achievement.name}</h4>
+                    <p>${achievement.description}</p>
+                </div>
             </div>
         `).join('');
 }
 
 function checkAchievements() {
-    const newAchievements = [];
+    const unlockList = [];
     
-    if (!achievements.novice.unlocked && stats.telepathy.total + stats.zener.total + stats.color.total >= 5) {
+    // Проверка достижений
+    if (!achievements.novice.unlocked && getTotalAttempts() >= 5) {
         achievements.novice.unlocked = true;
-        newAchievements.push(achievements.novice.name);
+        unlockList.push(achievements.novice.name);
     }
 
-    if (!achievements.streak3.unlocked && stats.streak >= 3) {
-        achievements.streak3.unlocked = true;
-        newAchievements.push(achievements.streak3.name);
+    if (!achievements.oracle.unlocked && stats.streak >= 10) {
+        achievements.oracle.unlocked = true;
+        unlockList.push(achievements.oracle.name);
     }
 
-    if (!achievements.masterZener.unlocked && stats.zener.correct >= 10) {
-        achievements.masterZener.unlocked = true;
-        newAchievements.push(achievements.masterZener.name);
+    if (!achievements.chromaMaster.unlocked && stats.color.correct >= 15) {
+        achievements.chromaMaster.unlocked = true;
+        unlockList.push(achievements.chromaMaster.name);
     }
 
-    if (newAchievements.length > 0) {
-        showAchievementPopup(newAchievements);
+    // Показ новых достижений
+    if (unlockList.length > 0) {
+        showUnlockEffect(unlockList);
         localStorage.setItem('achievements', JSON.stringify(achievements));
     }
 }
 
-function showAchievementPopup(names) {
-    const popup = document.createElement('div');
-    popup.className = 'card';
-    popup.innerHTML = `
-        <h3>🎉 Новые достижения!</h3>
-        <ul>${names.map(name => `<li>${name}</li>`).join('')}</ul>
+function showUnlockEffect(achievementsList) {
+    const effectDiv = document.createElement('div');
+    effectDiv.className = 'unlock-effect';
+    effectDiv.innerHTML = `
+        <div class="unlock-glow"></div>
+        <div class="unlock-content">
+            <h3>⚔ Признание Сил ⚔</h3>
+            <ul>
+                ${achievementsList.map(name => `<li>${name}</li>`).join('')}
+            </ul>
+        </div>
     `;
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 3000);
+    document.body.appendChild(effectDiv);
+    setTimeout(() => effectDiv.remove(), 3500);
+}
+
+function getTypeName(type) {
+    const names = {
+        telepathy: 'Числовая Магия',
+        zener: 'Руны Судьбы', 
+        color: 'Хроматический Дар'
+    };
+    return names[type] || type;
+}
+
+function getTotalAttempts() {
+    return Object.values(stats).reduce((acc, curr) => 
+        acc + (curr.total || 0), 0);
 }
 
 function showScreen(screenId) {
@@ -187,8 +213,14 @@ function showScreen(screenId) {
     }
 }
 
-function saveStats() {
+function saveProgress() {
     localStorage.setItem('stats', JSON.stringify(stats));
+    localStorage.setItem('achievements', JSON.stringify(achievements));
+}
+
+function closeApp() {
+    if (tg) tg.close();
+    else alert('Покиньте Храм через Телеграм');
 }
 
 // Инициализация
