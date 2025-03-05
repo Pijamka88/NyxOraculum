@@ -19,6 +19,7 @@ if (tg) {
     tg.BackButton.onClick(showMainMenu);
 }
 
+// Основные функции
 function showMainMenu() {
     document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
     document.getElementById('main-menu').classList.remove('hidden');
@@ -29,19 +30,19 @@ function startGame(type) {
     showScreen('game-screen');
     const gameContent = document.getElementById('game-content');
     gameContent.innerHTML = '';
-
+    
     const answer = generateTask(type);
     console.log(`Загаданный ответ (${type}):`, answer);
 
     switch(type) {
         case 'telepathy':
-            gameContent.innerHTML = `<h3>Угадайте число от 1 до 10</h3>`;
+            gameContent.innerHTML = `<h3>🔢 Угадайте число от 1 до 10</h3>`;
             for (let i = 1; i <= 10; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'game-button';
                 btn.innerHTML = `
                     <span class="button-icon">${i}</span>
-                    <span class="button-text">Число ${i}</span>
+                    <span class="button-text">${i}</span>
                 `;
                 btn.onclick = () => checkAnswer(type, i, answer);
                 gameContent.appendChild(btn);
@@ -49,7 +50,7 @@ function startGame(type) {
             break;
 
         case 'zener':
-            gameContent.innerHTML = `<h3>Выберите загаданный символ</h3>`;
+            gameContent.innerHTML = `<h3>🃏 Выберите загаданный символ</h3>`;
             const symbols = ['○', '□', '～', '✚', '★'];
             const grid = document.createElement('div');
             grid.className = 'symbol-grid';
@@ -64,13 +65,12 @@ function startGame(type) {
             break;
 
         case 'color':
-            gameContent.innerHTML = `<h3>Выберите загаданный цвет</h3>`;
+            gameContent.innerHTML = `<h3>🎨 Выберите загаданный цвет</h3>`;
             const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
             colors.forEach(color => {
                 const btn = document.createElement('button');
                 btn.className = 'game-button color-button';
                 btn.style.backgroundColor = color;
-                btn.style.border = `3px solid ${color === 'yellow' ? '#333' : '#fff'}`;
                 btn.innerHTML = `
                     <div class="color-preview"></div>
                     <span class="color-name">${color.toUpperCase()}</span>
@@ -86,10 +86,14 @@ function generateTask(type) {
     switch(type) {
         case 'telepathy': 
             return Math.floor(Math.random() * 10) + 1;
+            
         case 'zener': 
-            return ['○','□','～','✚','★'][Math.floor(Math.random() * 5)];
+            const symbols = ['○','□','～','✚','★'];
+            return symbols[Math.floor(Math.random() * symbols.length)];
+            
         case 'color': 
-            return ['red', 'blue', 'green', 'yellow', 'purple'][Math.floor(Math.random() * 5)];
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+            return colors[Math.floor(Math.random() * colors.length)];
     }
 }
 
@@ -191,5 +195,5 @@ function saveStats() {
     localStorage.setItem('stats', JSON.stringify(stats));
 }
 
-// Инициализация приложения
+// Инициализация
 showMainMenu();
