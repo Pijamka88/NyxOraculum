@@ -9,59 +9,52 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Главное меню -->
     <div id="main-menu" class="card">
-        <h1 class="main-title">🜟 NYX ORACULUM 🜟</h1>
+        <h1 class="main-title">🜟 ORACULUM OCCULTUM 🜟</h1>
         
         <div class="grid-container">
             <button class="game-button" onclick="startGame('telepathy')">
                 <span class="button-icon">🜞</span>
-                <span class="button-text">Числовая магия</span>
+                <span class="button-text">Ars Numerorum</span>
             </button>
 
             <button class="game-button" onclick="startGame('zener')">
                 <span class="button-icon">🜍</span>
-                <span class="button-text">Руны Судьбы</span>
+                <span class="button-text">Sigillum Fatī</span>
             </button>
 
             <button class="game-button" onclick="startGame('color')">
                 <span class="button-icon">🝋</span>
-                <span class="button-text">Хроматический дар</span>
+                <span class="button-text">Chromatis Vis</span>
             </button>
 
             <button class="game-button" onclick="showStats()">
                 <span class="button-icon">🝰</span>
-                <span class="button-text">Хроники</span>
+                <span class="button-text">Annales</span>
             </button>
 
             <button class="game-button" onclick="showAchievements()">
                 <span class="button-icon">⚚</span>
-                <span class="button-text">Регалии</span>
-            </button>
-
-            <button class="game-button" onclick="closeApp()">
-                <span class="button-icon">⚰</span>
-                <span class="button-text">Выход</span>
+                <span class="button-text">Tropaea</span>
             </button>
         </div>
     </div>
 
-    <!-- Игровой экран -->
     <div id="game-screen" class="card hidden">
         <div id="game-content"></div>
     </div>
 
-    <!-- Статистика -->
     <div id="stats-screen" class="card hidden">
-        <h2 class="section-title">⚖ Хроники Предсказаний ⚖</h2>
+        <h2 class="section-title">⚖ Arcana Statistica ⚖</h2>
         <div id="stats-content"></div>
     </div>
 
-    <!-- Достижения -->
     <div id="achievements-screen" class="card hidden">
-        <h2 class="section-title">🜚 Признанные Достижения 🜚</h2>
+        <h2 class="section-title">🜚 Gloria Aeterna 🜚</h2>
         <div id="achievements-content"></div>
     </div>
+
+    <canvas id="particle-canvas"></canvas>
 
     <script src="scripts/app.js"></script>
 </body>
