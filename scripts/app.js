@@ -103,6 +103,20 @@ function checkAnswer(type, guess, answer) {
     checkAchievements();
     saveStats();
 }
+// Добавьте анимацию угадывания цвета
+function checkAnswer(type, guess, answer) {
+    // ... предыдущий код ...
+    
+    if (type === 'color') {
+        const allButtons = document.querySelectorAll('.game-button');
+        allButtons.forEach(btn => {
+            if (btn.style.backgroundColor === answer) {
+                btn.style.animation = 'glow 1.5s ease-out';
+            }
+        });
+    }
+}
+
 
 function showResult(message) {
     const resultDiv = document.createElement('div');
