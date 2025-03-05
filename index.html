@@ -1,355 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>NyxOraculum</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <style>
-        :root {
-            --bg-color: #0a0a1a;
-            --text-color: #e6e6fa;
-            --accent: #4b0082;
-            --button-size: 4.5rem;
-        }
-
-        body {
-            background: linear-gradient(-45deg, #0a0a1a, #2b1055, #4b0082, #7b68ee);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: var(--text-color);
-            margin: 0;
-            padding: 10px;
-            overflow-x: hidden;
-            min-height: 100vh;
-            font-size: 20px;
-            touch-action: manipulation;
-        }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 20px);
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 2.2rem;
-            margin: 15px 0;
-        }
-
-        .game-btn {
-            background: rgba(75, 0, 130, 0.7);
-            border: 2px solid #7b68ee;
-            padding: 15px;
-            margin: 5px;
-            border-radius: 15px;
-            color: white;
-            cursor: pointer;
-            transition: background 0.3s;
-            backdrop-filter: blur(5px);
-            font-size: 1.8rem;
-            width: var(--button-size);
-            height: var(--button-size);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            -webkit-tap-highlight-color: transparent;
-            flex-shrink: 0;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .game-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            margin-top: 10px;
-            padding: 15px;
-            border: 2px solid #4b0082;
-            border-radius: 15px;
-            background: rgba(0,0,0,0.3);
-            display: none;
-            position: relative;
-            backdrop-filter: blur(5px);
-            overflow: hidden;
-        }
-
-        .stats {
-            background: rgba(0,0,0,0.5);
-            padding: 15px;
-            border-radius: 15px;
-            margin-top: auto;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        /* Числовая магия */
-        .number-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            padding: 10px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* Карты Зенера */
-        .zener-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
-
-        /* Цветовая интуиция */
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .color-btn {
-            width: 100%;
-            height: 100px;
-            border-radius: 15px;
-            border: 3px solid transparent;
-        }
-
-        /* Пси-контроль */
-        .psi-area {
-            position: relative;
-            width: 100%;
-            height: 300px;
-            margin: 20px 0;
-        }
-
-        .psi-circle {
-            width: 70px;
-            height: 70px;
-            background: #ff4444;
-            border-radius: 50%;
-            position: absolute;
-            transition: transform 0.1s;
-            box-shadow: 0 0 15px #ff4444;
-            touch-action: none;
-        }
-
-        .psi-target {
-            width: 120px;
-            height: 120px;
-            border: 3px solid #7b68ee;
-            border-radius: 50%;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 15px #7b68ee;
-        }
-
-        .result-text {
-            text-align: center;
-            font-size: 1.5rem;
-            margin: 15px 0;
-        }
-    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <button class="game-btn back-btn" onclick="showMenu()" style="display: none;">←</button>
-        <h1>🔮 NyxOraculum</h1>
-        
-        <div id="menu">
-            <div class="menu-grid">
-                <button class="game-btn" data-game="numerical">🔢<br><span style="font-size: 1rem">Числа</span></button>
-                <button class="game-btn" data-game="zener">🃏<br><span style="font-size: 1rem">Карты</span></button>
-                <button class="game-btn" data-game="color">🎨<br><span style="font-size: 1rem">Цвета</span></button>
-                <button class="game-btn" data-game="psi">🌀<br><span style="font-size: 1rem">Контроль</span></button>
-            </div>
-        </div>
-
-        <div id="game-container" class="game-container"></div>
+    <!-- Главное меню -->
+    <div id="main-menu" class="card">
+        <h1>🌀 NyxOraculum</h1>
+        <button class="game-button" onclick="startGame('telepathy')">🔢 Телепатия чисел</button>
+        <button class="game-button" onclick="startGame('zener')">🃏 Карты Зенера</button>
+        <button class="game-button" onclick="startGame('color')">🎨 Цветовая интуиция</button>
+        <button class="game-button" onclick="showStats()">📊 Статистика</button>
+        <button class="game-button" onclick="showAchievements()">🏆 Достижения</button>
     </div>
 
-    <script>
-        const ZENER_SYMBOLS = ['○', '+', '≈', '□', '★'];
-        const COLORS = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'];
-        
-        let stats = JSON.parse(localStorage.getItem('nyx_stats')) || {
-            numerical: { attempts: 0, correct: 0 },
-            zener: { attempts: 0, correct: 0 },
-            color: { attempts: 0, correct: 0 },
-            psi: { attempts: 0, successTime: 0 }
-        };
+    <!-- Игровой экран -->
+    <div id="game-screen" class="card hidden">
+        <div id="game-content"></div>
+    </div>
 
-        let currentGame = {
-            target: null,
-            psi: {
-                circle: null,
-                target: null,
-                isDragging: false,
-                startTime: null,
-                totalSuccess: 0,
-                touchId: null,
-                interval: null
-            }
-        };
+    <!-- Статистика -->
+    <div id="stats-screen" class="card hidden">
+        <h2>📊 Статистика</h2>
+        <div id="stats-content"></div>
+    </div>
 
-        function init() {
-            setupEventListeners();
-        }
+    <!-- Достижения -->
+    <div id="achievements-screen" class="card hidden">
+        <h2>🏆 Достижения</h2>
+        <div id="achievements-content"></div>
+    </div>
 
-        function setupEventListeners() {
-            document.querySelectorAll('.game-btn[data-game]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const game = e.target.closest('button').dataset.game;
-                    loadGame(game);
-                });
-            });
-        }
-
-        function loadGame(game) {
-            const menu = document.getElementById('menu');
-            const container = document.getElementById('game-container');
-            
-            menu.style.display = 'none';
-            document.querySelector('.back-btn').style.display = 'block';
-            container.style.display = 'flex';
-            container.innerHTML = '';
-
-            switch(game) {
-                case 'numerical':
-                    initNumerical(container);
-                    break;
-                case 'zener':
-                    initZener(container);
-                    break;
-                case 'color':
-                    initColor(container);
-                    break;
-                case 'psi':
-                    initPsi(container);
-                    break;
-            }
-
-            updateStats(container, game);
-        }
-
-        function initNumerical(container) {
-            currentGame.target = Math.floor(Math.random() * 10) + 1;
-            
-            const numbers = Array.from({length: 10}, (_, i) => i + 1)
-                .sort(() => Math.random() - 0.5);
-
-            container.innerHTML = `
-                <h3>🔢 Выбери число от 1 до 10</h3>
-                <div class="number-grid">
-                    ${numbers.map(num => `
-                        <button class="game-btn" onclick="checkNumber(${num})">${num}</button>
-                    `).join('')}
-                </div>
-                <p class="result-text" id="numerical-result"></p>
-                <div class="stats"></div>
-            `;
-        }
-
-        function initZener(container) {
-            currentGame.target = ZENER_SYMBOLS[Math.floor(Math.random() * 5)];
-            
-            container.innerHTML = `
-                <h3>🃏 Выбери увиденную карту</h3>
-                <div class="zener-grid">
-                    ${ZENER_SYMBOLS.sort(() => Math.random() - 0.5)
-                        .map(s => `
-                            <button class="game-btn" onclick="checkZener('${s}')">${s}</button>
-                        `).join('')}
-                </div>
-                <p class="result-text" id="zener-result"></p>
-                <div class="stats"></div>
-            `;
-        }
-
-        function initColor(container) {
-            currentGame.target = COLORS[Math.floor(Math.random() * 5)];
-            
-            container.innerHTML = `
-                <h3>🎨 Выбери загаданный цвет</h3>
-                <div class="color-grid">
-                    ${COLORS.sort(() => Math.random() - 0.5)
-                        .map(c => `
-                            <button 
-                                class="color-btn" 
-                                style="background:${c}" 
-                                onclick="checkColor('${c}')"
-                            ></button>
-                        `).join('')}
-                </div>
-                <p class="result-text" id="color-result"></p>
-                <div class="stats"></div>
-            `;
-        }
-
-        function initPsi(container) {
-            container.innerHTML = `
-                <h3>🌀 Управляй шаром силой мысли!</h3>
-                <div class="psi-area">
-                    <div class="psi-target"></div>
-                </div>
-                <p class="result-text" id="psi-result">Удерживайте шар в круге</p>
-                <div class="stats"></div>
-            `;
-
-            const psiArea = container.querySelector('.psi-area');
-            currentGame.psi.circle = document.createElement('div');
-            currentGame.psi.circle.className = 'psi-circle';
-            psiArea.appendChild(currentGame.psi.circle);
-
-            // Touch events
-            psiArea.addEventListener('touchstart', handleTouchStart, {passive: false});
-            psiArea.addEventListener('touchmove', handleTouchMove, {passive: false});
-            psiArea.addEventListener('touchend', handleTouchEnd);
-
-            // Mouse events
-            psiArea.addEventListener('mousedown', handleMouseDown);
-            document.addEventListener('mousemove', handleMouseMove);
-            document.addEventListener('mouseup', handleMouseUp);
-
-            // Start timer
-            currentGame.psi.interval = setInterval(updatePsiTimer, 100);
-        }
-
-        function updatePsiTimer() {
-            if(currentGame.psi.isDragging && checkCollision(
-                currentGame.psi.circle.getBoundingClientRect(),
-                currentGame.psi.target.getBoundingClientRect()
-            )) {
-                currentGame.psi.totalSuccess += 100;
-                updateStats(document.getElementById('game-container'), 'psi');
-            }
-        }
-
-        // Остальные функции остаются без изменений
-        // (handleTouchStart, handleTouchMove, handleTouchEnd,
-        // handleMouseDown, handleMouseMove, handleMouseUp,
-        // updatePsiPosition, checkCollision, endPsiDrag,
-        // checkNumber, checkZener, checkColor, updateStats,
-        // saveStats, showMenu)
-
-        // Инициализация
-        init();
-    </script>
+    <script src="scripts/app.js"></script>
 </body>
 </html>
