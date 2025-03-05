@@ -1,15 +1,13 @@
 :root {
-    --neon-blue: #4dabf7;
-    --neon-purple: #9c36b5;
-    --neon-pink: #f06595;
-    --dark-bg: #1a1a2e;
-    --button-bg: rgba(255, 255, 255, 0.1);
-    --text-light: #e0e0e0;
+    --gold: #FFD700;
+    --dark-bg: #1a1a1a;
+    --button-bg: rgba(30, 30, 30, 0.9);
+    --text-light: #ffffff;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background: radial-gradient(circle at center, #0f0c29, var(--dark-bg));
+    background: radial-gradient(circle at center, #0a0a0a, var(--dark-bg));
     min-height: 100vh;
     padding: 20px;
     color: var(--text-light);
@@ -18,17 +16,17 @@ body {
 }
 
 .card {
-    background: rgba(26, 26, 46, 0.9);
-    border: 2px solid var(--neon-blue);
+    background: var(--button-bg);
+    border: 2px solid var(--gold);
     border-radius: 12px;
     padding: 25px;
     margin: 15px 0;
-    box-shadow: 0 0 25px rgba(77, 171, 247, 0.2);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
     backdrop-filter: blur(8px);
-    animation: cardAppear 0.6s ease-out;
+    animation: cardRise 0.6s ease-out;
 }
 
-@keyframes cardAppear {
+@keyframes cardRise {
     from { opacity: 0; transform: translateY(30px) scale(0.95); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
@@ -41,24 +39,17 @@ body {
     padding: 18px;
     margin: 10px 0;
     background: var(--button-bg);
-    color: var(--text-light);
-    border: 2px solid var(--neon-blue);
+    color: var(--gold);
+    border: 2px solid var(--gold);
     border-radius: 8px;
     font-size: 1.1em;
     cursor: pointer;
     transition: all 0.3s;
-    position: relative;
-    overflow: hidden;
-}
-
-.game-button:hover {
-    border-color: var(--neon-purple);
-    box-shadow: 0 0 20px rgba(156, 54, 181, 0.4);
 }
 
 .game-button:active {
-    background: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 0 30px var(--neon-pink);
+    background: rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 30px var(--gold);
     transform: scale(0.97);
 }
 
@@ -72,7 +63,7 @@ body {
 .symbol-item {
     font-size: 2.5em;
     padding: 20px;
-    border: 2px solid var(--neon-purple);
+    border: 2px solid var(--gold);
     border-radius: 10px;
     background: rgba(0, 0, 0, 0.3);
     cursor: pointer;
@@ -80,7 +71,7 @@ body {
 }
 
 .symbol-item:hover {
-    background: rgba(156, 54, 181, 0.1);
+    background: rgba(255, 215, 0, 0.1);
 }
 
 .chroma-grid {
@@ -94,14 +85,10 @@ body {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    border: 2px solid var(--neon-blue);
+    border: 2px solid var(--gold);
     cursor: pointer;
     transition: transform 0.3s;
-    box-shadow: 0 0 15px rgba(77, 171, 247, 0.3);
-}
-
-.chroma-orb:hover {
-    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
 #particle-canvas {
@@ -115,10 +102,5 @@ body {
 @media (max-width: 480px) {
     .symbol-grid {
         grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .game-button {
-        padding: 15px;
-        font-size: 1em;
     }
 }
