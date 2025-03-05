@@ -8,12 +8,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Главное меню -->
     <div id="main-menu" class="card">
-        <h1 class="main-title">🜟 ТЁМНЫЙ ОРАКУЛ 🜟</h1>
+        <h1 class="main-title">🌀 ТЁМНЫЙ ОРАКУЛ 🌀</h1>
         
         <div class="grid-container">
             <button class="game-button" onclick="startGame('telepathy')">
-                <span class="button-icon">⌛</span>
+                <span class="button-icon">🔢</span>
                 <span class="button-text">Числовая магия</span>
             </button>
 
@@ -23,12 +24,12 @@
             </button>
 
             <button class="game-button" onclick="startGame('color')">
-                <span class="button-icon">🝇</span>
+                <span class="button-icon">🎨</span>
                 <span class="button-text">Хроматический дар</span>
             </button>
 
             <button class="game-button" onclick="showStats()">
-                <span class="button-icon">📜</span>
+                <span class="button-icon">📊</span>
                 <span class="button-text">Статистика</span>
             </button>
 
@@ -39,20 +40,22 @@
         </div>
     </div>
 
+    <!-- Игровые экраны -->
     <div id="game-screen" class="card hidden">
         <div id="game-content"></div>
     </div>
 
     <div id="stats-screen" class="card hidden">
-        <h2 class="section-title">⚖ Книга Судеб ⚖</h2>
+        <h2 class="section-title">📜 Книга Судеб 📜</h2>
         <div id="stats-content"></div>
     </div>
 
     <div id="achievements-screen" class="card hidden">
-        <h2 class="section-title">🜚 Сокровищница Знаний 🜚</h2>
+        <h2 class="section-title">🏆 Сокровищница Знаний 🏆</h2>
         <div id="achievements-content"></div>
     </div>
 
+    <!-- Холст для частиц -->
     <canvas id="particle-canvas"></canvas>
 
     <script src="scripts/app.js"></script>
