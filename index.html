@@ -4,95 +4,378 @@
     <title>NyxOraculum</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        /* Добавляем стили для космического фона */
-        .space-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-            background: linear-gradient(to bottom, #000000 0%, #1a1a2e 100%);
+        :root {
+            --bg-color: #0a0a1a;
+            --text-color: #e6e6fa;
+            --accent: #4b0082;
         }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: fall linear infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) translateX(0) scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) translateX(100vw) scale(1);
-                opacity: 0;
-            }
-        }
-
-        /* Модифицируем основной контейнер */
-        .container {
-            position: relative;
-            z-index: 1;
-            background: rgba(0, 0, 0, 0.7);
+        body {
+            background: linear-gradient(-45deg, #0a0a1a, #2b1055, #4b0082, #7b68ee);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: var(--text-color);
+            margin: 0;
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 50px rgba(75,0,130,0.3);
+            overflow-x: hidden;
+            min-height: 100vh;
         }
 
-        /* Остальные стили остаются без изменений */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .game-btn {
+            background: rgba(75, 0, 130, 0.7);
+            border: 2px solid #7b68ee;
+            padding: 15px 30px;
+            margin: 10px;
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-btn:hover {
+            background: rgba(123, 104, 238, 0.7);
+            transform: translateY(-2px);
+        }
+
+        .stats {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .game-container {
+            margin-top: 30px;
+            padding: 20px;
+            border: 2px solid #4b0082;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.3);
+            display: none;
+            position: relative;
+            backdrop-filter: blur(5px);
+        }
+
+        .psi-circle {
+            width: 50px;
+            height: 50px;
+            background: #ff4444;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 0 15px #ff4444;
+        }
+
+        .psi-target {
+            width: 100px;
+            height: 100px;
+            border: 3px solid #7b68ee;
+            border-radius: 50%;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 15px #7b68ee;
+        }
+
+        input[type="number"] {
+            background: rgba(255,255,255,0.1);
+            border: 2px solid #7b68ee;
+            color: white;
+            padding: 8px;
+            border-radius: 5px;
+            margin: 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="space-background" id="space"></div>
-    
     <div class="container">
-        <!-- Весь предыдущий контент остается здесь -->
+        <button class="game-btn back-btn" onclick="showMenu()" style="display: none;">← Назад</button>
+        <h1>🔮 NyxOraculum</h1>
+        
+        <div id="menu">
+            <button class="game-btn" data-game="numerical">🔢 Числовая магия</button>
+            <button class="game-btn" data-game="zener">🃏 Карты Зенера</button>
+            <button class="game-btn" data-game="color">🎨 Цветовая интуиция</button>
+            <button class="game-btn" data-game="psi">🌀 Пси-контроль</button>
+        </div>
+
+        <div id="game-container" class="game-container"></div>
     </div>
 
     <script>
-        // Добавляем генератор звезд
-        function createStars() {
-            const space = document.getElementById('space');
-            const starCount = 50;
+        const ZENER_SYMBOLS = ['○', '+', '≈', '□', '★'];
+        const COLORS = ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF'];
+        
+        let stats = JSON.parse(localStorage.getItem('nyx_stats')) || {
+            numerical: { attempts: 0, correct: 0 },
+            zener: { attempts: 0, correct: 0 },
+            color: { attempts: 0, correct: 0 },
+            psi: { attempts: 0, successTime: 0 }
+        };
 
-            for(let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                
-                // Случайные параметры звезды
-                const size = Math.random() * 3;
-                const left = Math.random() * 100;
-                const duration = 2 + Math.random() * 8;
-                const delay = Math.random() * 5;
+        let currentGame = {
+            target: null,
+            psi: {
+                circle: null,
+                target: null,
+                isDragging: false,
+                startTime: null,
+                totalSuccess: 0
+            }
+        };
 
-                star.style.cssText = `
-                    width: ${size}px;
-                    height: ${size}px;
-                    left: ${left}%;
-                    animation-duration: ${duration}s;
-                    animation-delay: ${delay}s;
-                `;
+        function init() {
+            setupEventListeners();
+            updateStatsDisplay();
+        }
 
-                space.appendChild(star);
+        function setupEventListeners() {
+            document.querySelectorAll('.game-btn[data-game]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const game = e.target.dataset.game;
+                    loadGame(game);
+                });
+            });
+        }
+
+        function loadGame(game) {
+            const menu = document.getElementById('menu');
+            const container = document.getElementById('game-container');
+            
+            menu.style.display = 'none';
+            document.querySelector('.back-btn').style.display = 'block';
+            container.style.display = 'block';
+            container.innerHTML = '';
+
+            switch(game) {
+                case 'numerical':
+                    initNumerical(container);
+                    break;
+                case 'zener':
+                    initZener(container);
+                    break;
+                case 'color':
+                    initColor(container);
+                    break;
+                case 'psi':
+                    initPsi(container);
+                    break;
             }
         }
 
-        // Запускаем генерацию звезд при загрузке
-        document.addEventListener('DOMContentLoaded', () => {
-            createStars();
-            // Обновляем звезды каждые 10 секунд
-            setInterval(() => {
-                document.getElementById('space').innerHTML = '';
-                createStars();
-            }, 10000);
-        });
+        // Числовая магия
+        function initNumerical(container) {
+            container.innerHTML = `
+                <h3>🔢 Угадай число от 1 до 10</h3>
+                <input type="number" id="guess" min="1" max="10">
+                <button class="game-btn" onclick="checkNumber()">Проверить</button>
+                <p id="numerical-result"></p>
+                <div class="stats">
+                    Попытки: ${stats.numerical.attempts}<br>
+                    Угадано: ${stats.numerical.correct}
+                </div>
+            `;
+        }
 
-        // Остальной JavaScript код остается без изменений
+        // Карты Зенера
+        function initZener(container) {
+            currentGame.target = ZENER_SYMBOLS[Math.floor(Math.random()*5)];
+            container.innerHTML = `
+                <h3>🃏 Выбери увиденную карту</h3>
+                <div class="zener-cards">
+                    ${ZENER_SYMBOLS.map(s => `
+                        <button class="game-btn" onclick="checkZener('${s}')">${s}</button>
+                    `).join('')}
+                </div>
+                <p id="zener-result"></p>
+                <div class="stats">
+                    Попытки: ${stats.zener.attempts}<br>
+                    Угадано: ${stats.zener.correct}
+                </div>
+            `;
+        }
+
+        // Цветовая интуиция
+        function initColor(container) {
+            currentGame.target = COLORS[Math.floor(Math.random()*5)];
+            container.innerHTML = `
+                <h3>🎨 Выбери загаданный цвет</h3>
+                <div class="color-grid">
+                    ${COLORS.map(c => `
+                        <button 
+                            class="color-btn" 
+                            style="background:${c}" 
+                            onclick="checkColor('${c}')"
+                        ></button>
+                    `).join('')}
+                </div>
+                <p id="color-result"></p>
+                <div class="stats">
+                    Попытки: ${stats.color.attempts}<br>
+                    Угадано: ${stats.color.correct}
+                </div>
+            `;
+        }
+
+        // Пси-контроль
+        function initPsi(container) {
+            container.innerHTML = `
+                <h3>🌀 Управляй шаром силой мысли!</h3>
+                <div class="psi-target"></div>
+                <div class="stats">
+                    Попытки: ${stats.psi.attempts}<br>
+                    Время: ${stats.psi.successTime}s
+                </div>
+                <p id="psi-result">Удерживайте шар в круге</p>
+            `;
+
+            currentGame.psi.circle = document.createElement('div');
+            currentGame.psi.circle.className = 'psi-circle';
+            currentGame.psi.target = container.querySelector('.psi-target');
+            container.appendChild(currentGame.psi.circle);
+
+            container.addEventListener('mousedown', startPsiDrag);
+            document.addEventListener('mouseup', stopPsiDrag);
+            document.addEventListener('mousemove', handlePsiDrag);
+        }
+
+        function startPsiDrag(e) {
+            currentGame.psi.isDragging = true;
+            currentGame.psi.startTime = Date.now();
+            currentGame.psi.totalSuccess = 0;
+        }
+
+        function stopPsiDrag() {
+            currentGame.psi.isDragging = false;
+            stats.psi.attempts++;
+            stats.psi.successTime += Math.round(currentGame.psi.totalSuccess / 1000);
+            saveStats();
+            updateStatsDisplay();
+        }
+
+        function handlePsiDrag(e) {
+            if (currentGame.psi.isDragging) {
+                const rect = currentGame.psi.circle.parentElement.getBoundingClientRect();
+                const x = e.clientX - rect.left - 25;
+                const y = e.clientY - rect.top - 25;
+                
+                currentGame.psi.circle.style.left = `${Math.max(0, Math.min(x, rect.width - 50))}px`;
+                currentGame.psi.circle.style.top = `${Math.max(0, Math.min(y, rect.height - 50))}px`;
+                
+                if (checkCollision()) {
+                    currentGame.psi.totalSuccess += Date.now() - currentGame.psi.startTime;
+                    currentGame.psi.startTime = Date.now();
+                }
+            }
+        }
+
+        function checkCollision() {
+            const circleRect = currentGame.psi.circle.getBoundingClientRect();
+            const targetRect = currentGame.psi.target.getBoundingClientRect();
+            
+            return !(circleRect.right < targetRect.left || 
+                    circleRect.left > targetRect.right || 
+                    circleRect.bottom < targetRect.top || 
+                    circleRect.top > targetRect.bottom);
+        }
+
+        // Общие функции
+        function checkNumber() {
+            const guess = parseInt(document.getElementById('guess').value);
+            const correct = Math.ceil(Math.random()*10);
+            const result = guess === correct;
+            
+            stats.numerical.attempts++;
+            if(result) stats.numerical.correct++;
+            saveStats();
+            
+            const resultElement = document.getElementById('numerical-result');
+            resultElement.textContent = result ? '🎯 Верно!' : `❌ Неверно! Число: ${correct}`;
+            resultElement.style.color = result ? '#7b68ee' : '#ff4444';
+            
+            initNumerical(document.getElementById('game-container'));
+        }
+
+        function checkZener(symbol) {
+            const result = symbol === currentGame.target;
+            
+            stats.zener.attempts++;
+            if(result) stats.zener.correct++;
+            saveStats();
+            
+            const resultElement = document.getElementById('zener-result');
+            resultElement.textContent = result ? '🔮 Верно!' : '❌ Неверно!';
+            resultElement.style.color = result ? '#7b68ee' : '#ff4444';
+            
+            initZener(document.getElementById('game-container'));
+        }
+
+        function checkColor(color) {
+            const result = color === currentGame.target;
+            
+            stats.color.attempts++;
+            if(result) stats.color.correct++;
+            saveStats();
+            
+            const resultElement = document.getElementById('color-result');
+            resultElement.textContent = result ? '🌈 Верно!' : '❌ Неверно!';
+            resultElement.style.color = result ? '#7b68ee' : '#ff4444';
+            
+            initColor(document.getElementById('game-container'));
+        }
+
+        function saveStats() {
+            localStorage.setItem('nyx_stats', JSON.stringify(stats));
+            updateStatsDisplay();
+        }
+
+        function updateStatsDisplay() {
+            const statsElements = document.querySelectorAll('.stats');
+            statsElements.forEach(element => {
+                if(element.innerHTML.includes('Попытки')) {
+                    element.innerHTML = `
+                        Попытки: ${stats[getCurrentGame()].attempts}<br>
+                        ${getCurrentGame() === 'psi' ? 
+                            `Время: ${stats.psi.successTime}s` : 
+                            `Угадано: ${stats[getCurrentGame()].correct}`}
+                    `;
+                }
+            });
+        }
+
+        function getCurrentGame() {
+            const container = document.getElementById('game-container');
+            if(container.innerHTML.includes('Числовая')) return 'numerical';
+            if(container.innerHTML.includes('Карты')) return 'zener';
+            if(container.innerHTML.includes('цвет')) return 'color';
+            return 'psi';
+        }
+
+        function showMenu() {
+            document.getElementById('menu').style.display = 'block';
+            document.querySelector('.back-btn').style.display = 'none';
+            document.getElementById('game-container').style.display = 'none';
+        }
+
+        // Инициализация
+        init();
     </script>
 </body>
 </html>
