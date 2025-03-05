@@ -29,6 +29,11 @@
                 <span class="button-text">Хроматический дар</span>
             </button>
 
+            <button class="game-button" onclick="startGame('psi_control')">
+                <span class="button-icon">🜏</span>
+                <span class="button-text">Пси-контроль</span>
+            </button>
+
             <button class="game-button" onclick="showStats()">
                 <span class="button-icon">📊</span>
                 <span class="button-text">Статистика</span>
@@ -43,6 +48,18 @@
 
     <div id="game-screen" class="card hidden">
         <div id="game-content"></div>
+    </div>
+
+    <div id="psi-control-screen" class="card hidden">
+        <div class="game-field">
+            <div id="psi-ball"></div>
+            <div class="control-info">
+                <span>Сила: </span><span id="force-value">0%</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="stats-screen" class="card hidden">
