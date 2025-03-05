@@ -1,18 +1,124 @@
 :root {
-    --dark: #0a0a0a;
-    --gold: #FFD700;
-    --void: #12071F;
-    --text: #e0e0e0;
+    --neon-blue: #4dabf7;
+    --neon-purple: #9c36b5;
+    --neon-pink: #f06595;
+    --dark-bg: #1a1a2e;
+    --button-bg: rgba(255, 255, 255, 0.1);
+    --text-light: #e0e0e0;
 }
 
 body {
     font-family: Arial, sans-serif;
-    background: radial-gradient(ellipse at center, #1a0a2e 0%, #040109 100%);
+    background: radial-gradient(circle at center, #0f0c29, var(--dark-bg));
     min-height: 100vh;
     padding: 20px;
-    color: var(--text);
+    color: var(--text-light);
     position: relative;
     overflow-x: hidden;
 }
 
-/* Остальные стили остаются без изменений */
+.card {
+    background: rgba(26, 26, 46, 0.9);
+    border: 2px solid var(--neon-blue);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 15px 0;
+    box-shadow: 0 0 25px rgba(77, 171, 247, 0.2);
+    backdrop-filter: blur(8px);
+    animation: cardAppear 0.6s ease-out;
+}
+
+@keyframes cardAppear {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.game-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 18px;
+    margin: 10px 0;
+    background: var(--button-bg);
+    color: var(--text-light);
+    border: 2px solid var(--neon-blue);
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.game-button:hover {
+    border-color: var(--neon-purple);
+    box-shadow: 0 0 20px rgba(156, 54, 181, 0.4);
+}
+
+.game-button:active {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px var(--neon-pink);
+    transform: scale(0.97);
+}
+
+.symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.symbol-item {
+    font-size: 2.5em;
+    padding: 20px;
+    border: 2px solid var(--neon-purple);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.symbol-item:hover {
+    background: rgba(156, 54, 181, 0.1);
+}
+
+.chroma-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.chroma-orb {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-blue);
+    cursor: pointer;
+    transition: transform 0.3s;
+    box-shadow: 0 0 15px rgba(77, 171, 247, 0.3);
+}
+
+.chroma-orb:hover {
+    transform: scale(1.1);
+}
+
+#particle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@media (max-width: 480px) {
+    .symbol-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .game-button {
+        padding: 15px;
+        font-size: 1em;
+    }
+}
