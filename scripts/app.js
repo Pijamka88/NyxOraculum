@@ -1,4 +1,3 @@
-// Инициализация приложения
 const tg = window.Telegram?.WebApp;
 let stats = JSON.parse(localStorage.getItem('stats')) || {
     telepathy: { correct: 0, total: 0 },
@@ -20,7 +19,6 @@ if (tg) {
     tg.BackButton.onClick(showMainMenu);
 }
 
-// Основные функции
 function showMainMenu() {
     document.querySelectorAll('.card').forEach(el => el.classList.add('hidden'));
     document.getElementById('main-menu').classList.remove('hidden');
@@ -32,17 +30,19 @@ function startGame(type) {
     const gameContent = document.getElementById('game-content');
     gameContent.innerHTML = '';
 
-    // Генерация задания
     const answer = generateTask(type);
-    
-    // Создание интерфейса
+    console.log(`Загаданный ответ (${type}):`, answer);
+
     switch(type) {
         case 'telepathy':
             gameContent.innerHTML = `<h3>Угадайте число от 1 до 10</h3>`;
             for (let i = 1; i <= 10; i++) {
                 const btn = document.createElement('button');
                 btn.className = 'game-button';
-                btn.textContent = i;
+                btn.innerHTML = `
+                    <span class="button-icon">${i}</span>
+                    <span class="button-text">Число ${i}</span>
+                `;
                 btn.onclick = () => checkAnswer(type, i, answer);
                 gameContent.appendChild(btn);
             }
@@ -63,28 +63,33 @@ function startGame(type) {
             gameContent.appendChild(grid);
             break;
 
-    case 'color':
-    gameContent.innerHTML = `<h3>Выберите загаданный цвет</h3>`;
-    const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
-    const answer = colors[Math.floor(Math.random() * colors.length)]; // Исправлено
-    
-    colors.forEach(color => {
-        const btn = document.createElement('button');
-        btn.className = 'game-button';
-        btn.style.backgroundColor = color;
-        btn.onclick = () => checkAnswer(type, color, answer); // answer теперь уникален для каждой игры
-        gameContent.appendChild(btn);
-    });
-    break;
+        case 'color':
+            gameContent.innerHTML = `<h3>Выберите загаданный цвет</h3>`;
+            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+            colors.forEach(color => {
+                const btn = document.createElement('button');
+                btn.className = 'game-button color-button';
+                btn.style.backgroundColor = color;
+                btn.style.border = `3px solid ${color === 'yellow' ? '#333' : '#fff'}`;
+                btn.innerHTML = `
+                    <div class="color-preview"></div>
+                    <span class="color-name">${color.toUpperCase()}</span>
+                `;
+                btn.onclick = () => checkAnswer(type, color, answer);
+                gameContent.appendChild(btn);
+            });
+            break;
     }
 }
 
 function generateTask(type) {
-    const rand = Math.random();
     switch(type) {
-        case 'telepathy': return Math.floor(rand * 10) + 1;
-        case 'zener': return ['○','□','～','✚','★'][Math.floor(rand * 5)];
-        case 'color': return ['red','blue','green','yellow','purple'][Math.floor(rand * 5)];
+        case 'telepathy': 
+            return Math.floor(Math.random() * 10) + 1;
+        case 'zener': 
+            return ['○','□','～','✚','★'][Math.floor(Math.random() * 5)];
+        case 'color': 
+            return ['red', 'blue', 'green', 'yellow', 'purple'][Math.floor(Math.random() * 5)];
     }
 }
 
@@ -103,20 +108,6 @@ function checkAnswer(type, guess, answer) {
     checkAchievements();
     saveStats();
 }
-// Добавьте анимацию угадывания цвета
-function checkAnswer(type, guess, answer) {
-    // ... предыдущий код ...
-    
-    if (type === 'color') {
-        const allButtons = document.querySelectorAll('.game-button');
-        allButtons.forEach(btn => {
-            if (btn.style.backgroundColor === answer) {
-                btn.style.animation = 'glow 1.5s ease-out';
-            }
-        });
-    }
-}
-
 
 function showResult(message) {
     const resultDiv = document.createElement('div');
@@ -200,5 +191,5 @@ function saveStats() {
     localStorage.setItem('stats', JSON.stringify(stats));
 }
 
-// Инициализация
+// Инициализация приложения
 showMainMenu();
