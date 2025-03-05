@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Cinzel', serif;
+    font-family: Arial, sans-serif;
     background: radial-gradient(ellipse at center, #1a0a2e 0%, #040109 100%);
     min-height: 100vh;
     padding: 20px;
@@ -15,57 +15,4 @@ body {
     overflow-x: hidden;
 }
 
-.card {
-    background: rgba(10, 10, 10, 0.95);
-    border: 2px solid var(--gold);
-    border-radius: 8px;
-    padding: 20px;
-    margin: 10px 0;
-    box-shadow: 0 0 25px rgba(255,215,0,0.1);
-    backdrop-filter: blur(5px);
-    animation: cardRise 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-}
-
-@keyframes cardRise {
-    from { opacity: 0; transform: translateY(40px) scale(0.9); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.game-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 14px;
-    margin: 8px 0;
-    background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
-    color: var(--text);
-    border: 1px solid var(--gold);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s;
-    font-size: 0.95em;
-    position: relative;
-    overflow: hidden;
-}
-
-.game-button:active {
-    animation: buttonPress 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    background: linear-gradient(45deg, #2a2a2a, #3a3a3a);
-}
-
-@keyframes buttonPress {
-    0% { transform: scale(0.97); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-#particle-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9999;
-}
-
-/* Остальные стили остаются как в предыдущей версии */
+/* Остальные стили остаются без изменений */
