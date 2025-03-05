@@ -1,120 +1,102 @@
 :root {
     --gold: #FFD700;
-    --dark-bg: #1a1a1a;
-    --button-bg: rgba(30, 30, 30, 0.9);
-    --text-light: #ffffff;
-    --progress-bg: rgba(255,215,0,0.2);
+    --blood: #8A0303;
+    --void: #0a0a0a;
+    --energy: #4B0082;
 }
 
 body {
+    background: radial-gradient(ellipse at center, 
+        #000 0%, 
+        #0F044C 60%, 
+        #2A0944 100%);
     font-family: Arial, sans-serif;
-    color: var(--text-light);
+    color: var(--gold);
     margin: 0;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
-.animated-bg {
+.esoteric-bg {
     position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(-45deg, #0F044C, #2A0944, #3B185F, #4C0B5E);
-    background-size: 400% 400%;
-    animation: gradient-flow 15s ease infinite;
-    z-index: -2;
+    background: 
+        repeating-linear-gradient(45deg, 
+            transparent, 
+            transparent 10px, 
+            rgba(255,215,0,0.1) 11px),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="10" y="90" font-size="20" fill="rgba(139,0,139,0.1)">ᚠᚢᚦᚨᚱᚲᚷᚹ</text></svg>');
+    animation: gridFlow 20s linear infinite;
+    z-index: -1;
 }
 
-@keyframes gradient-flow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+@keyframes gridFlow {
+    from { background-position: 0 0; }
+    to { background-position: 1000px 1000px; }
 }
 
 .card {
-    background: var(--button-bg);
-    border: 2px solid var(--gold);
-    border-radius: 12px;
+    background: rgba(15,4,76,0.95);
+    border: 3px solid var(--gold);
+    border-radius: 15px;
     padding: 25px;
-    margin: 15px;
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.1);
+    margin: 20px;
+    box-shadow: 0 0 40px rgba(255,215,0,0.2);
     backdrop-filter: blur(10px);
-    animation: card-appear 0.6s ease-out;
 }
 
-@keyframes card-appear {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.game-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 18px;
-    margin: 10px 0;
-    background: var(--button-bg);
-    color: var(--gold);
+.occult {
+    background: linear-gradient(45deg, 
+        rgba(0,0,0,0.8), 
+        rgba(42,9,68,0.9));
     border: 2px solid var(--gold);
+    color: var(--gold);
+    padding: 15px 25px;
+    margin: 10px;
     border-radius: 8px;
-    font-size: 1.1em;
     cursor: pointer;
     transition: all 0.3s;
-}
-
-.game-button:hover {
-    box-shadow: 0 0 15px var(--gold);
-}
-
-/* Стили для пси-контроля */
-#psi-control-screen {
-    position: relative;
-    height: 70vh;
-}
-
-.game-field {
-    width: 100%;
-    height: 100%;
-    border: 2px solid var(--gold);
-    border-radius: 15px;
     position: relative;
     overflow: hidden;
 }
 
-#psi-ball {
-    width: 40px;
-    height: 40px;
-    background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
-    border-radius: 50%;
-    position: absolute;
-    box-shadow: 0 0 20px rgba(255,215,0,0.5);
-    transition: transform 0.1s, left 0.3s ease-out, top 0.3s ease-out;
+.occult:hover {
+    box-shadow: 0 0 25px var(--gold);
+    transform: translateY(-2px);
 }
 
-.control-info {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: var(--gold);
-    font-size: 1.2em;
+.occult:active {
+    background: linear-gradient(45deg, 
+        rgba(255,215,0,0.1), 
+        rgba(75,0,130,0.2));
+}
+
+.game-screen {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 90%;
+    max-width: 600px;
+    background: rgba(15,4,76,0.95);
+    border: 3px solid var(--gold);
+    padding: 20px;
+    border-radius: 15px;
 }
 
-.progress-bar {
+/* Стили для пси-контроля */
+.psi-field {
     width: 100%;
-    height: 10px;
-    background: var(--progress-bg);
-    border-radius: 5px;
-    margin-top: 10px;
+    height: 60vh;
+    border: 2px solid var(--gold);
+    border-radius: 15px;
+    position: relative;
 }
 
-.progress-fill {
-    height: 100%;
-    background: var(--gold);
-    width: 0%;
-    border-radius: 5px;
-    transition: width 0.2s;
+#particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 999;
 }
-
-/* Остальные стили остаются без изменений */
