@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>NyxOraculum</title>
+    <title>Nyx Oraculum</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Главное меню -->
     <div id="main-menu" class="card">
-        <h1>🌀 NyxOraculum</h1>
-        <button class="game-button" onclick="startGame('telepathy')">
-            <span class="button-icon">🔢</span>
-            <span class="button-text">Телепатия чисел</span>
-        </button>
+        <h1 class="main-title">🜟 NYX ORACULUM 🜟</h1>
         
-        <button class="game-button" onclick="startGame('zener')">
-            <span class="button-icon">🃏</span>
-            <span class="button-text">Карты Зенера</span>
-        </button>
-        
-        <button class="game-button" onclick="startGame('color')">
-            <span class="button-icon">🎨</span>
-            <span class="button-text">Цветовая интуиция</span>
-        </button>
-        
-        <button class="game-button" onclick="showStats()">
-            <span class="button-icon">📊</span>
-            <span class="button-text">Статистика</span>
-        </button>
-        
-        <button class="game-button" onclick="showAchievements()">
-            <span class="button-icon">🏆</span>
-            <span class="button-text">Достижения</span>
-        </button>
+        <div class="grid-container">
+            <button class="game-button" onclick="startGame('telepathy')">
+                <span class="button-icon">🜞</span>
+                <span class="button-text">Числовая магия</span>
+            </button>
+
+            <button class="game-button" onclick="startGame('zener')">
+                <span class="button-icon">🜍</span>
+                <span class="button-text">Руны Судьбы</span>
+            </button>
+
+            <button class="game-button" onclick="startGame('color')">
+                <span class="button-icon">🝋</span>
+                <span class="button-text">Хроматический дар</span>
+            </button>
+
+            <button class="game-button" onclick="showStats()">
+                <span class="button-icon">🝰</span>
+                <span class="button-text">Хроники</span>
+            </button>
+
+            <button class="game-button" onclick="showAchievements()">
+                <span class="button-icon">⚚</span>
+                <span class="button-text">Регалии</span>
+            </button>
+
+            <button class="game-button" onclick="closeApp()">
+                <span class="button-icon">⚰</span>
+                <span class="button-text">Выход</span>
+            </button>
+        </div>
     </div>
 
     <!-- Игровой экран -->
@@ -44,13 +53,13 @@
 
     <!-- Статистика -->
     <div id="stats-screen" class="card hidden">
-        <h2>📊 Статистика</h2>
+        <h2 class="section-title">⚖ Хроники Предсказаний ⚖</h2>
         <div id="stats-content"></div>
     </div>
 
     <!-- Достижения -->
     <div id="achievements-screen" class="card hidden">
-        <h2>🏆 Достижения</h2>
+        <h2 class="section-title">🜚 Признанные Достижения 🜚</h2>
         <div id="achievements-content"></div>
     </div>
 
