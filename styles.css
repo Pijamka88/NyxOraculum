@@ -26,16 +26,21 @@ body {
 }
 
 .game-button {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    padding: 15px;
-    margin: 10px 0;
+    padding: 20px;
+    margin: 15px 0;
+    font-size: 1.2em;
     background: var(--secondary);
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     transition: transform 0.2s;
+    min-height: 60px;
+    gap: 10px;
 }
 
 .game-button:hover {
@@ -44,19 +49,23 @@ body {
 
 .symbol-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
     margin: 20px 0;
 }
 
 .symbol-item {
-    font-size: 2em;
-    padding: 15px;
+    font-size: 3em;
+    padding: 25px;
     border: 2px solid var(--primary);
-    border-radius: 8px;
+    border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s;
     text-align: center;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .symbol-item:hover {
@@ -65,10 +74,31 @@ body {
 }
 
 .achievement-item {
-    padding: 10px;
-    margin: 5px 0;
+    padding: 15px;
+    margin: 10px 0;
     background: #f0f0f0;
-    border-radius: 8px;
+    border-radius: 12px;
+}
+
+.color-button {
+    position: relative;
+    flex-direction: column;
+    gap: 15px;
+    padding: 25px;
+}
+
+.color-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: inherit;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.color-name {
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    color: white;
 }
 
 @keyframes fadeIn {
@@ -90,9 +120,25 @@ body {
     .achievement-item {
         background: #3c3c3c;
     }
+    
+    .color-name {
+        color: var(--text);
+        text-shadow: none;
+    }
 }
 
-@keyframes glow {
-    0% { box-shadow: 0 0 5px rgba(0,255,0,0.4); }
-    100% { box-shadow: 0 0 20px rgba(0,255,0,0.8); }
+@media (max-width: 480px) {
+    .game-button {
+        padding: 25px;
+        font-size: 1.3em;
+    }
+    
+    .symbol-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .symbol-item {
+        font-size: 2.5em;
+        padding: 20px;
+    }
 }
