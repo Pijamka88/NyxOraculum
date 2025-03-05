@@ -1,145 +1,115 @@
-// Particle System (остается без изменений)
+class ParticleSystem {
+    constructor() {
+        this.canvas = document.getElementById('particles');
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+    }
 
-// Новые переменные для пси-контроля
-let psiBall;
-let isControlling = false;
-let force = 0;
-let targetX = 50;
-let targetY = 50;
-let controlStartTime = 0;
-let bestTime = 0;
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
 
-// Обновленный объект stats
-let stats = JSON.parse(localStorage.getItem('stats')) || {
-    telepathy: { correct: 0, total: 0 },
-    zener: { correct: 0, total: 0 },
-    color: { correct: 0, total: 0 },
-    psi_control: { best_time: 0, total_sessions: 0 },
-    streak: 0
+    createParticles(x, y, count = 30) {
+        for(let i = 0; i < count; i++) {
+            this.particles.push({
+                x, y,
+                size: Math.random() * 3 + 1,
+                angle: Math.random() * Math.PI * 2,
+                speed: Math.random() * 3 + 1,
+                alpha: 1,
+                color: `hsl(${Math.random() * 60 + 30}, 70%, 50%)`
+            });
+        }
+    }
+
+    update() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.particles = this.particles.filter(p => {
+            p.x += Math.cos(p.angle) * p.speed;
+            p.y += Math.sin(p.angle) * p.speed;
+            p.alpha -= 0.02;
+            
+            this.ctx.fillStyle = p.color;
+            this.ctx.globalAlpha = p.alpha;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            
+            return p.alpha > 0;
+        });
+        requestAnimationFrame(() => this.update());
+    }
+}
+
+const psi = {
+    ball: null,
+    energy: 0,
+    maxEnergy: 100,
+    field: null,
+    particles: new ParticleSystem()
 };
 
-// В функцию startGame добавить:
-case 'psi_control':
-    startPsiControl();
-    break;
-
-// Функции пси-контроля
-function startPsiControl() {
+function startGame(type) {
     document.getElementById('main-menu').classList.add('hidden');
-    document.getElementById('psi-control-screen').classList.remove('hidden');
+    const container = document.getElementById('game-container');
+    container.classList.remove('hidden');
     
-    psiBall = document.getElementById('psi-ball');
-    psiBall.style.left = '50%';
-    psiBall.style.top = '50%';
-    force = 0;
-    controlStartTime = Date.now();
-    
-    updateProgress(0);
-    initControlHandlers();
-    gameLoop();
-}
-
-function initControlHandlers() {
-    const gameField = document.querySelector('.game-field');
-    
-    // Touch events
-    gameField.addEventListener('touchstart', (e) => {
-        isControlling = true;
-        updateTargetPosition(e.touches[0]);
-        e.preventDefault();
-    });
-    
-    gameField.addEventListener('touchmove', (e) => {
-        updateTargetPosition(e.touches[0]);
-        e.preventDefault();
-    });
-    
-    gameField.addEventListener('touchend', () => {
-        endControlSession();
-    });
-
-    // Mouse events
-    gameField.addEventListener('mousedown', (e) => {
-        isControlling = true;
-        updateTargetPosition(e);
-    });
-    
-    gameField.addEventListener('mousemove', (e) => {
-        if(isControlling) updateTargetPosition(e);
-    });
-    
-    gameField.addEventListener('mouseup', () => {
-        endControlSession();
-    });
-}
-
-function updateTargetPosition(event) {
-    const rect = event.target.getBoundingClientRect();
-    targetX = ((event.clientX - rect.left) / rect.width) * 100;
-    targetY = ((event.clientY - rect.top) / rect.height) * 100;
-    force = Math.min(100, force + 0.5);
-    updateProgress(force);
-}
-
-function updateProgress(value) {
-    document.getElementById('force-value').textContent = `${Math.round(value)}%`;
-    document.querySelector('.progress-fill').style.width = `${value}%`;
-}
-
-function endControlSession() {
-    isControlling = false;
-    const sessionTime = (Date.now() - controlStartTime) / 1000;
-    if(sessionTime > stats.psi_control.best_time) {
-        stats.psi_control.best_time = sessionTime;
-        bestTime = sessionTime;
+    switch(type) {
+        case 'psi':
+            initPsiControl();
+            break;
+        // Реализация других режимов
     }
-    stats.psi_control.total_sessions++;
-    force = 0;
-    updateProgress(0);
-    saveProgress();
 }
 
-function gameLoop() {
-    if(isControlling) {
-        const currentX = parseFloat(psiBall.style.left);
-        const currentY = parseFloat(psiBall.style.top);
-        
-        const dx = targetX - currentX;
-        const dy = targetY - currentY;
-        
-        psiBall.style.left = currentX + dx * 0.1 + '%';
-        psiBall.style.top = currentY + dy * 0.1 + '%';
-        
-        psiBall.style.transform = `scale(${1 + force/200})`;
-    }
+function initPsiControl() {
+    psi.field = document.querySelector('.psi-field');
+    psi.ball = document.createElement('div');
+    psi.ball.className = 'psi-ball';
+    psi.field.appendChild(psi.ball);
     
-    requestAnimationFrame(gameLoop);
+    // Обработчики событий
+    const handleStart = (e) => {
+        psi.isActive = true;
+        psi.startX = e.touches ? e.touches[0].clientX : e.clientX;
+        psi.startY = e.touches ? e.touches[0].clientY : e.clientY;
+    };
+    
+    const handleMove = (e) => {
+        if(!psi.isActive) return;
+        const x = e.touches ? e.touches[0].clientX : e.clientX;
+        const y = e.touches ? e.touches[0].clientY : e.clientY;
+        
+        psi.energy = Math.min(psi.maxEnergy, psi.energy + 0.5);
+        updatePsiDisplay();
+        
+        // Создание частиц
+        psi.particles.createParticles(x, y);
+    };
+    
+    psi.field.addEventListener('touchstart', handleStart);
+    psi.field.addEventListener('mousedown', handleStart);
+    psi.field.addEventListener('touchmove', handleMove);
+    psi.field.addEventListener('mousemove', handleMove);
 }
 
-// Обновленная функция showStats
-function showStats() {
-    const content = document.getElementById('stats-content');
-    content.innerHTML = `
-        ${Object.entries(stats)
-            .filter(([key]) => key !== 'streak')
-            .map(([type, data]) => {
-                if(type === 'psi_control') {
-                    return `
-                        <div class="stat-item">
-                            <h4>Пси-контроль</h4>
-                            <p>Рекорд: ${data.best_time.toFixed(1)} сек</p>
-                            <p>Сессий: ${data.total_sessions}</p>
-                        </div>
-                    `;
-                }
-                return `
-                    <div class="stat-item">
-                        <h4>${type.toUpperCase()}</h4>
-                        <p>Правильно: ${data.correct}/${data.total}</p>
-                        <p>Точность: ${data.total ? (data.correct/data.total*100).toFixed(1) : 0}%</p>
-                    </div>
-                `;
-            }).join('')}
-    `;
-    // Остальной код функции
+function updatePsiDisplay() {
+    document.getElementById('psi-energy').textContent = `${Math.round(psi.energy)}%`;
+    document.querySelector('.psi-progress').style.width = `${psi.energy}%`;
 }
+
+// Инициализация
+window.onload = () => {
+    psi.particles.update();
+    document.querySelectorAll('.game-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            psi.particles.createParticles(
+                btn.offsetLeft + btn.offsetWidth/2,
+                btn.offsetTop + btn.offsetHeight/2
+            );
+        });
+    });
+};
