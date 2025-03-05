@@ -3,6 +3,7 @@
     --dark-bg: #1a1a1a;
     --button-bg: rgba(30, 30, 30, 0.9);
     --text-light: #ffffff;
+    --progress-bg: rgba(255,215,0,0.2);
 }
 
 body {
@@ -66,59 +67,54 @@ body {
     box-shadow: 0 0 15px var(--gold);
 }
 
-.game-button:active {
-    background: rgba(255, 215, 0, 0.1);
-    transform: scale(0.97);
+/* Стили для пси-контроля */
+#psi-control-screen {
+    position: relative;
+    height: 70vh;
 }
 
-.symbol-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    margin: 20px 0;
-}
-
-.symbol-item {
-    font-size: 2.5em;
-    padding: 20px;
+.game-field {
+    width: 100%;
+    height: 100%;
     border: 2px solid var(--gold);
-    border-radius: 10px;
-    background: rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: all 0.3s;
+    border-radius: 15px;
+    position: relative;
+    overflow: hidden;
 }
 
-.color-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-.color-item {
-    width: 70px;
-    height: 70px;
+#psi-ball {
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
     border-radius: 50%;
-    border: 2px solid var(--gold);
-    cursor: pointer;
-    transition: transform 0.3s;
+    position: absolute;
+    box-shadow: 0 0 20px rgba(255,215,0,0.5);
+    transition: transform 0.1s, left 0.3s ease-out, top 0.3s ease-out;
 }
 
-#particle-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: -1;
+.control-info {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: var(--gold);
+    font-size: 1.2em;
+    width: 90%;
 }
 
-@media (max-width: 480px) {
-    .symbol-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .game-button {
-        padding: 15px;
-        font-size: 1em;
-    }
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: var(--progress-bg);
+    border-radius: 5px;
+    margin-top: 10px;
 }
+
+.progress-fill {
+    height: 100%;
+    background: var(--gold);
+    width: 0%;
+    border-radius: 5px;
+    transition: width 0.2s;
+}
+
+/* Остальные стили остаются без изменений */
