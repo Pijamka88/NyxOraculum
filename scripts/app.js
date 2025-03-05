@@ -63,17 +63,19 @@ function startGame(type) {
             gameContent.appendChild(grid);
             break;
 
-        case 'color':
-            gameContent.innerHTML = `<h3>Выберите загаданный цвет</h3>`;
-            const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
-            colors.forEach(color => {
-                const btn = document.createElement('button');
-                btn.className = 'game-button';
-                btn.style.backgroundColor = color;
-                btn.onclick = () => checkAnswer(type, color, answer);
-                gameContent.appendChild(btn);
-            });
-            break;
+    case 'color':
+    gameContent.innerHTML = `<h3>Выберите загаданный цвет</h3>`;
+    const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+    const answer = colors[Math.floor(Math.random() * colors.length)]; // Исправлено
+    
+    colors.forEach(color => {
+        const btn = document.createElement('button');
+        btn.className = 'game-button';
+        btn.style.backgroundColor = color;
+        btn.onclick = () => checkAnswer(type, color, answer); // answer теперь уникален для каждой игры
+        gameContent.appendChild(btn);
+    });
+    break;
     }
 }
 
