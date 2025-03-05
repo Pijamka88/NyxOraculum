@@ -27,6 +27,7 @@
             position: relative;
         }
 
+        /* Стили кнопок и анимаций */
         .game-btn {
             background: linear-gradient(45deg, #2b1055, #4b0082);
             border: 2px solid #7b68ee;
@@ -37,7 +38,7 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: transform 0.2s;
+            transition: transform 0.2s, filter 0.3s;
             font-family: inherit;
             font-size: 1.1em;
             box-shadow: 0 4px 15px rgba(75,0,130,0.3);
@@ -48,6 +49,7 @@
             transition: transform 0.1s;
         }
 
+        /* Анимация частиц */
         .particle {
             position: absolute;
             pointer-events: none;
@@ -63,23 +65,56 @@
 
         @keyframes nox-explode {
             0% {
-                transform: 
-                    translate(-50%, -50%) 
-                    scale(0.5) 
-                    rotate(0deg);
+                transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
                 opacity: 1;
             }
             100% {
-                transform: 
-                    translate(
-                        calc(-50% + var(--tx, 0)), 
-                        calc(-50% + var(--ty, 0))
-                    scale(2.5) 
-                    rotate(360deg);
+                transform: translate(calc(-50% + var(--tx, 0)), calc(-50% + var(--ty, 0))) scale(2.5) rotate(360deg);
                 opacity: 0;
             }
         }
 
+        /* Анимации переходов */
+        #menu, #game-container {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .menu-hidden {
+            opacity: 0 !important;
+            transform: translateY(-20px) scale(0.95);
+            pointer-events: none;
+        }
+
+        .game-enter {
+            animation: gameEnter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes gameEnter {
+            0% { opacity: 0; transform: translateY(50px) rotateX(-30deg); }
+            100% { opacity: 1; transform: translateY(0) rotateX(0); }
+        }
+
+        .magic-fog {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, 
+                rgba(75,0,130,0.4) 0%, 
+                rgba(75,0,130,0) 70%);
+            pointer-events: none;
+            animation: fogSpread 0.8s ease-out;
+            z-index: 999;
+        }
+
+        @keyframes fogSpread {
+            0% { opacity: 0; transform: scale(0.5); }
+            50% { opacity: 1; transform: scale(1.2); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+
+        /* Остальные стили */
         .stats {
             position: fixed;
             top: 10px;
@@ -105,6 +140,8 @@
             border-radius: 15px;
             background: rgba(0,0,0,0.3);
             min-height: 300px;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .zener-card {
@@ -122,10 +159,6 @@
             transition: transform 0.3s;
         }
 
-        .zener-card:hover {
-            transform: scale(1.05);
-        }
-
         .color-option {
             width: 80px;
             height: 80px;
@@ -134,10 +167,6 @@
             cursor: pointer;
             border: 3px solid transparent;
             transition: transform 0.3s;
-        }
-
-        .color-option:hover {
-            transform: scale(1.1);
         }
 
         .psi-target {
@@ -149,21 +178,6 @@
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.5s, transform 0.3s;
-        }
-
-        #psi-result {
-            font-size: 1.2em;
-            margin-top: 20px;
-        }
-
-        input[type="number"] {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid #7b68ee;
-            color: white;
-            font-size: 1.2em;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin: 10px;
         }
     </style>
 </head>
@@ -181,7 +195,7 @@
             <button class="game-btn" onclick="clearStats()">❌ Очистить статистику</button>
         </div>
 
-        <div id="game-container" class="game-container" style="display: none;"></div>
+        <div id="game-container" class="game-container"></div>
     </div>
 
     <script>
@@ -192,16 +206,30 @@
         let stats = JSON.parse(localStorage.getItem('nyx_stats') || '{}');
         let psiStartTime;
 
+        // Инициализация
         function init() {
             showStats();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
             document.querySelectorAll('.game-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    if(btn.dataset.game) loadGame(btn.dataset.game);
+                btn.addEventListener('click', async (e) => {
+                    if(btn.dataset.game) {
+                        await loadGame(btn.dataset.game);
+                    }
                     createParticles(e.target);
                 });
             });
+
+            document.addEventListener('click', (e) => {
+                if(e.target.classList.contains('game-btn')) {
+                    createParticles(e.target);
+                }
+            });
         }
 
+        // Анимация частиц
         function createParticles(element, count = 15) {
             const rect = element.getBoundingClientRect();
             const centerX = rect.left + rect.width/2;
@@ -235,7 +263,62 @@
             }
         }
 
-        // Реализации игр
+        // Анимация переходов
+        async function loadGame(game) {
+            const menu = document.getElementById('menu');
+            const container = document.getElementById('game-container');
+            
+            menu.classList.add('menu-hidden');
+            createFogEffect();
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            container.style.display = 'block';
+            container.innerHTML = getGameHTML(game);
+            container.classList.add('game-enter');
+            container.style.opacity = '1';
+            container.style.transform = 'translateY(0)';
+            
+            document.querySelector('.back-btn').style.display = 'block';
+            
+            if(game === 'psi') {
+                document.getElementById('psi-target').addEventListener('click', psiClick);
+            }
+        }
+
+        async function showMenu() {
+            const menu = document.getElementById('menu');
+            const container = document.getElementById('game-container');
+            
+            container.classList.remove('game-enter');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            createFogEffect();
+            
+            await new Promise(resolve => setTimeout(resolve, 300));
+            
+            container.style.display = 'none';
+            menu.classList.remove('menu-hidden');
+            document.querySelector('.back-btn').style.display = 'none';
+        }
+
+        function createFogEffect() {
+            const fog = document.createElement('div');
+            fog.className = 'magic-fog';
+            document.body.appendChild(fog);
+            setTimeout(() => fog.remove(), 800);
+        }
+
+        // Игры
+        function getGameHTML(game) {
+            return {
+                numerical: numericalMagic(),
+                zener: zenerCards(),
+                color: colorIntuition(),
+                psi: psiControl()
+            }[game];
+        }
+
         function numericalMagic() {
             return `
                 <h3>🔢 Угадай число от 1 до 10</h3>
@@ -261,8 +344,7 @@
             return `
                 <h3>🎨 Выбери загаданный цвет</h3>
                 <div>${COLORS.map(c => `
-                    <div class="color-option" style="background:${c}" 
-                         onclick="checkColor('${c}')"></div>
+                    <div class="color-option" style="background:${c}" onclick="checkColor('${c}')"></div>
                 `).join('')}</div>
                 <p id="color-result"></p>
             `;
@@ -349,30 +431,6 @@
                 color: '🎨',
                 psi: '🌀'
             }[game];
-        }
-
-        // Навигация
-        function loadGame(game) {
-            document.getElementById('menu').style.display = 'none';
-            document.querySelector('.back-btn').style.display = 'block';
-            const container = document.getElementById('game-container');
-            container.style.display = 'block';
-            container.innerHTML = {
-                numerical: numericalMagic,
-                zener: zenerCards,
-                color: colorIntuition,
-                psi: psiControl
-            }[game]();
-            
-            if(game === 'psi') {
-                document.getElementById('psi-target').addEventListener('click', psiClick);
-            }
-        }
-
-        function showMenu() {
-            document.getElementById('menu').style.display = 'block';
-            document.querySelector('.back-btn').style.display = 'none';
-            document.getElementById('game-container').style.display = 'none';
         }
 
         function clearStats() {
