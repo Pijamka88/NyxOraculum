@@ -1,58 +1,101 @@
 :root {
-    --primary-dark: #0F044C;
-    --primary-light: #2A0944;
-    --accent-gold: #FFD700;
-    --text-light: #FFF5E1;
+    --bg-dark: #0F044C;
+    --bg-light: #2A0944;
+    --accent: #FFD700;
+    --text: #FFF;
 }
 
 body {
-    background: linear-gradient(
-        135deg,
-        var(--primary-dark) 0%,
-        var(--primary-light) 100%
-    );
+    background: linear-gradient(135deg, var(--bg-dark), var(--bg-light));
     min-height: 100vh;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: var(--text-light);
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
+.main-container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px;
+}
+
 .card {
     background: rgba(0, 0, 0, 0.3);
-    border: 2px solid var(--accent-gold);
+    border: 2px solid var(--accent);
     border-radius: 15px;
-    padding: 2rem;
+    padding: 25px;
+    margin: 15px 0;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
 }
 
-.game-button {
+.game-btn {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
     background: rgba(255, 215, 0, 0.1);
-    border: 1px solid var(--accent-gold);
-    color: var(--text-light);
-    padding: 1rem 2rem;
-    margin: 0.5rem;
+    border: 1px solid var(--accent);
     border-radius: 8px;
+    color: var(--text);
+    font-size: 1.1em;
     cursor: pointer;
-    transition: all 0.3s;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
+    transition: all 0.3s;
 }
 
-.game-button:hover {
+.game-btn:hover {
     background: rgba(255, 215, 0, 0.2);
     transform: translateY(-2px);
 }
 
-.game-button:active {
-    transform: translateY(1px);
+.icon {
+    font-size: 1.3em;
+    filter: drop-shadow(0 0 3px var(--accent));
 }
 
-.icon {
-    font-size: 1.2em;
-    filter: drop-shadow(0 0 3px var(--accent-gold));
+.hidden {
+    display: none !important;
+}
+
+/* Стили для игровых режимов */
+.number-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.symbol-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.symbol-item {
+    font-size: 2em;
+    padding: 20px;
+    border: 2px solid var(--accent);
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.color-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+
+.color-item {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--accent);
 }
