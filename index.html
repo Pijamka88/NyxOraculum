@@ -32,7 +32,7 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            background: linear-gradient(45deg, #FF007F, #8A2BE2, #BA55D3, #FF007F);
+            background: linear-gradient(45deg, #8A2BE2, #00BFFF, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
@@ -140,7 +140,7 @@
             z-index: 999;
         }
 
-        .stats-window, .achievements-window, .tarot-window, .energy-window {
+        .stats-window, .achievements-window, .tarot-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -156,13 +156,13 @@
             max-width: 400px;
         }
 
-        .stats-window h2, .achievements-window h2, .tarot-window h2, .energy-window h2 {
+        .stats-window h2, .achievements-window h2, .tarot-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
         }
 
-        .stats-window p, .achievements-window p, .tarot-window p, .energy-window p {
+        .stats-window p, .achievements-window p, .tarot-window p {
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
@@ -179,25 +179,13 @@
             color: #E6E6FA;
         }
 
+        .achievements-window li.incomplete {
+            color: #888;
+        }
+
         .tarot-card {
-            font-size: 1.5rem;
+            font-size: 4.5rem;
             margin: 20px 0;
-        }
-
-        .energy-bar {
-            width: 100%;
-            height: 20px;
-            background: rgba(138, 43, 226, 0.2);
-            border-radius: 10px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        .energy-level {
-            height: 100%;
-            background: linear-gradient(90deg, #FF007F, #8A2BE2);
-            border-radius: 10px;
-            transition: width 0.5s ease;
         }
 
         .star {
@@ -219,7 +207,7 @@
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/mind.png" alt="Телепатия">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
             Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
@@ -233,10 +221,6 @@
         <button class="btn" onclick="openTarot()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot.png" alt="Гадание на Таро">
             Гадание на Таро
-        </button>
-        <button class="btn" onclick="openEnergy()">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/energy.png" alt="Энергетический барометр">
-            Энергетика
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -302,17 +286,6 @@
         <button class="btn" style="margin-top: 20px;" onclick="closeTarot()">Закрыть</button>
     </div>
 
-    <!-- Энергетический барометр -->
-    <div id="energy" class="energy-window">
-        <h2>Энергетический барометр</h2>
-        <p>Ваш уровень энергии:</p>
-        <div class="energy-bar">
-            <div class="energy-level" id="energy-level" style="width: 50%;"></div>
-        </div>
-        <button class="btn" onclick="measureEnergy()">Измерить</button>
-        <button class="btn" style="margin-top: 20px;" onclick="closeEnergy()">Закрыть</button>
-    </div>
-
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -327,7 +300,9 @@
     <div id="achievements" class="achievements-window">
         <h2>Достижения</h2>
         <ul id="achievement-list">
-            <li>Нет достижений</li>
+            <li class="incomplete">Мастер телепатии</li>
+            <li class="incomplete">Мастер карт Зенера</li>
+            <li class="incomplete">Мастер цветовой интуиции</li>
         </ul>
         <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
@@ -357,7 +332,11 @@
             color: { correct: 0, total: 0 }
         };
 
-        let achievements = [];
+        let achievements = [
+            { name: "Мастер телепатии", completed: false },
+            { name: "Мастер карт Зенера", completed: false },
+            { name: "Мастер цветовой интуиции", completed: false }
+        ];
 
         // Открытие игры
         function openGame(gameId) {
@@ -380,18 +359,6 @@
         // Закрытие гадания на Таро
         function closeTarot() {
             document.getElementById('tarot').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // Открытие энергетического барометра
-        function openEnergy() {
-            document.getElementById('energy').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        // Закрытие энергетического барометра
-        function closeEnergy() {
-            document.getElementById('energy').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
 
@@ -441,11 +408,9 @@
         // Обновление достижений
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
-            if (achievements.length === 0) {
-                achievementList.innerHTML = "<li>Нет достижений</li>";
-            } else {
-                achievementList.innerHTML = achievements.map(ach => `<li>${ach}</li>`).join('');
-            }
+            achievementList.innerHTML = achievements.map(ach => `
+                <li class="${ach.completed ? '' : 'incomplete'}">${ach.name}</li>
+            `).join('');
         }
 
         // Телепатия
@@ -496,23 +461,18 @@
             document.getElementById('tarot-card').textContent = card;
         }
 
-        // Энергетический барометр
-        function measureEnergy() {
-            const energyLevel = Math.floor(Math.random() * 100) + 1;
-            document.getElementById('energy-level').style.width = `${energyLevel}%`;
-        }
-
         // Проверка достижений
         function checkAchievements() {
-            if (stats.telepathy.correct >= 10 && !achievements.includes("Мастер телепатии")) {
-                achievements.push("Мастер телепатии");
+            if (stats.telepathy.correct >= 10) {
+                achievements[0].completed = true;
             }
-            if (stats.zener.correct >= 10 && !achievements.includes("Мастер карт Зенера")) {
-                achievements.push("Мастер карт Зенера");
+            if (stats.zener.correct >= 10) {
+                achievements[1].completed = true;
             }
-            if (stats.color.correct >= 10 && !achievements.includes("Мастер цветовой интуиции")) {
-                achievements.push("Мастер цветовой интуиции");
+            if (stats.color.correct >= 10) {
+                achievements[2].completed = true;
             }
+            updateAchievements();
         }
     </script>
 </body>
