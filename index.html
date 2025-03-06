@@ -35,12 +35,13 @@
             background: linear-gradient(90deg, #00BFFF, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 3s linear infinite;
+            animation: glow 3s infinite;
         }
 
         @keyframes glow {
             0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn {
@@ -52,23 +53,11 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-        }
-
-        .btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-            box-shadow: 0 0 15px rgba(153, 50, 204, 0.7);
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
 
         .btn img {
@@ -114,21 +103,9 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .game-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-            box-shadow: 0 0 15px rgba(153, 50, 204, 0.7);
-        }
-
-        .game-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
 
         .overlay {
@@ -210,7 +187,7 @@
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/psychology.png" alt="Телепатия">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
             Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
