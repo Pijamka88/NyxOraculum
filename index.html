@@ -1,195 +1,233 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NyxOraculum</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #1e1e3f, #3c1e3f);
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NyxOraculum</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2E1A47, #4B0082);
+            color: #E6E6FA;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    .container {
-      text-align: center;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-    }
+        .container {
+            text-align: center;
+            background: rgba(46, 26, 71, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 20px;
-      color: #bb86fc;
-    }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #8A2BE2;
+        }
 
-    .btn {
-      background: #6200ee;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      margin: 10px;
-      border-radius: 25px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
+        .btn {
+            background: #8A2BE2;
+            color: #E6E6FA;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
 
-    .btn:hover {
-      background: #3700b3;
-    }
+        .btn:hover {
+            background: #9932CC;
+        }
 
-    .game-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-    }
+        .game-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(46, 26, 71, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
 
-    .game-buttons {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 10px;
-    }
+        .game-window h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
 
-    .game-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: #bb86fc;
-      color: #000;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.3s ease;
-    }
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
 
-    .game-btn:hover {
-      background: #3700b3;
-      color: #fff;
-    }
+        .game-btn {
+            background: #8A2BE2;
+            color: #E6E6FA;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
 
-    .result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      color: #bb86fc;
-    }
+        .game-btn:hover {
+            background: #9932CC;
+        }
 
-    .animated-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      overflow: hidden;
-    }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+        }
 
-    .circle {
-      position: absolute;
-      background: rgba(187, 134, 252, 0.1);
-      border-radius: 50%;
-      animation: float 10s infinite ease-in-out;
-    }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
 
-    @keyframes float {
-      0% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-50%) translateX(50%); }
-      100% { transform: translateY(0) translateX(0); }
-    }
-  </style>
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+    </style>
 </head>
 <body>
-  <div class="animated-background">
-    <div class="circle" style="width: 200px; height: 200px; top: 10%; left: 20%;"></div>
-    <div class="circle" style="width: 150px; height: 150px; top: 50%; left: 70%;"></div>
-    <div class="circle" style="width: 100px; height: 100px; top: 80%; left: 40%;"></div>
-  </div>
-
-  <div class="container">
-    <h1>NyxOraculum</h1>
-    <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
-    <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
-    <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
-  </div>
-
-  <div id="telepathy" class="game-container">
-    <h2>Телепатия</h2>
-    <div class="game-buttons">
-      <button class="game-btn" onclick="checkTelepathy(1)">1</button>
-      <button class="game-btn" onclick="checkTelepathy(2)">2</button>
-      <button class="game-btn" onclick="checkTelepathy(3)">3</button>
-      <button class="game-btn" onclick="checkTelepathy(4)">4</button>
-      <button class="game-btn" onclick="checkTelepathy(5)">5</button>
-      <button class="game-btn" onclick="checkTelepathy(6)">6</button>
-      <button class="game-btn" onclick="checkTelepathy(7)">7</button>
-      <button class="game-btn" onclick="checkTelepathy(8)">8</button>
-      <button class="game-btn" onclick="checkTelepathy(9)">9</button>
-      <button class="game-btn" onclick="checkTelepathy(10)">10</button>
+    <div class="container">
+        <h1>NyxOraculum</h1>
+        <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
+        <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
+        <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
     </div>
-    <div class="result" id="telepathy-result"></div>
-  </div>
 
-  <div id="zener" class="game-container">
-    <h2>Карты Зенера</h2>
-    <div class="game-buttons">
-      <button class="game-btn" onclick="checkZener('○')">○</button>
-      <button class="game-btn" onclick="checkZener('□')">□</button>
-      <button class="game-btn" onclick="checkZener('～')">～</button>
-      <button class="game-btn" onclick="checkZener('✚')">✚</button>
-      <button class="game-btn" onclick="checkZener('★')">★</button>
+    <!-- Игры -->
+    <div id="telepathy" class="game-window">
+        <h2>Телепатия</h2>
+        <p>Угадайте число от 1 до 10:</p>
+        <div class="game-buttons">
+            <button class="game-btn" onclick="checkTelepathy(1)">1</button>
+            <button class="game-btn" onclick="checkTelepathy(2)">2</button>
+            <button class="game-btn" onclick="checkTelepathy(3)">3</button>
+            <button class="game-btn" onclick="checkTelepathy(4)">4</button>
+            <button class="game-btn" onclick="checkTelepathy(5)">5</button>
+            <button class="game-btn" onclick="checkTelepathy(6)">6</button>
+            <button class="game-btn" onclick="checkTelepathy(7)">7</button>
+            <button class="game-btn" onclick="checkTelepathy(8)">8</button>
+            <button class="game-btn" onclick="checkTelepathy(9)">9</button>
+            <button class="game-btn" onclick="checkTelepathy(10)">10</button>
+        </div>
+        <button class="btn" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
-    <div class="result" id="zener-result"></div>
-  </div>
 
-  <div id="color" class="game-container">
-    <h2>Цветовая интуиция</h2>
-    <div class="game-buttons">
-      <button class="game-btn" onclick="checkColor('красный')">🔴</button>
-      <button class="game-btn" onclick="checkColor('синий')">🔵</button>
-      <button class="game-btn" onclick="checkColor('зеленый')">🟢</button>
-      <button class="game-btn" onclick="checkColor('желтый')">🟡</button>
-      <button class="game-btn" onclick="checkColor('фиолетовый')">🟣</button>
+    <div id="zener" class="game-window">
+        <h2>Карты Зенера</h2>
+        <p>Угадайте символ:</p>
+        <div class="game-buttons">
+            <button class="game-btn" onclick="checkZener('○')">○</button>
+            <button class="game-btn" onclick="checkZener('□')">□</button>
+            <button class="game-btn" onclick="checkZener('～')">～</button>
+            <button class="game-btn" onclick="checkZener('✚')">✚</button>
+            <button class="game-btn" onclick="checkZener('★')">★</button>
+        </div>
+        <button class="btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
-    <div class="result" id="color-result"></div>
-  </div>
 
-  <script>
-    let currentGame = null;
+    <div id="color" class="game-window">
+        <h2>Цветовая интуиция</h2>
+        <p>Угадайте цвет:</p>
+        <div class="game-buttons">
+            <button class="game-btn" style="background: #FF0000;" onclick="checkColor('красный')"></button>
+            <button class="game-btn" style="background: #0000FF;" onclick="checkColor('синий')"></button>
+            <button class="game-btn" style="background: #00FF00;" onclick="checkColor('зеленый')"></button>
+            <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
+            <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
+        </div>
+        <button class="btn" onclick="closeGame('color')">Закрыть</button>
+    </div>
 
-    function openGame(game) {
-      document.querySelectorAll('.game-container').forEach(el => el.style.display = 'none');
-      document.getElementById(game).style.display = 'flex';
-      currentGame = game;
-    }
+    <!-- Затемнение фона -->
+    <div class="overlay" id="overlay"></div>
 
-    function checkTelepathy(guess) {
-      const target = Math.floor(Math.random() * 10) + 1;
-      const result = document.getElementById('telepathy-result');
-      result.textContent = guess === target ? '✅ Верно!' : `❌ Неверно. Загадано: ${target}`;
-    }
+    <!-- Звездный фон -->
+    <div id="stars"></div>
 
-    function checkZener(guess) {
-      const symbols = ['○', '□', '～', '✚', '★'];
-      const target = symbols[Math.floor(Math.random() * symbols.length)];
-      const result = document.getElementById('zener-result');
-      result.textContent = guess === target ? '✅ Верно!' : `❌ Неверно. Загадан: ${target}`;
-    }
+    <script>
+        // Звездный фон
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
+        }
 
-    function checkColor(guess) {
-      const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-      const target = colors[Math.floor(Math.random() * colors.length)];
-      const result = document.getElementById('color-result');
-      result.textContent = guess === target ? '✅ Верно!' : `❌ Неверно. Загадан: ${target}`;
-    }
-  </script>
+        // Открытие игры
+        function openGame(gameId) {
+            document.getElementById(gameId).style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Закрытие игры
+        function closeGame(gameId) {
+            document.getElementById(gameId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Телепатия
+        function checkTelepathy(guess) {
+            const target = Math.floor(Math.random() * 10) + 1;
+            if (guess === target) {
+                alert('✅ Верно!');
+            } else {
+                alert(`❌ Неверно. Загадано: ${target}`);
+            }
+        }
+
+        // Карты Зенера
+        function checkZener(guess) {
+            const symbols = ['○', '□', '～', '✚', '★'];
+            const target = symbols[Math.floor(Math.random() * symbols.length)];
+            if (guess === target) {
+                alert('✅ Верно!');
+            } else {
+                alert(`❌ Неверно. Загадан: ${target}`);
+            }
+        }
+
+        // Цветовая интуиция
+        function checkColor(guess) {
+            const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+            const target = colors[Math.floor(Math.random() * colors.length)];
+            if (guess === target) {
+                alert('✅ Верно!');
+            } else {
+                alert(`❌ Неверно. Загадан: ${target}`);
+            }
+        }
+    </script>
 </body>
 </html>
