@@ -140,7 +140,7 @@
             z-index: 999;
         }
 
-        .stats-window, .achievements-window {
+        .stats-window, .achievements-window, .tarot-window, .energy-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -156,13 +156,13 @@
             max-width: 400px;
         }
 
-        .stats-window h2, .achievements-window h2 {
+        .stats-window h2, .achievements-window h2, .tarot-window h2, .energy-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
         }
 
-        .stats-window p, .achievements-window p {
+        .stats-window p, .achievements-window p, .tarot-window p, .energy-window p {
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
@@ -177,6 +177,27 @@
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
+        }
+
+        .tarot-card {
+            font-size: 1.5rem;
+            margin: 20px 0;
+        }
+
+        .energy-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .energy-level {
+            height: 100%;
+            background: linear-gradient(90deg, #FF007F, #8A2BE2);
+            border-radius: 10px;
+            transition: width 0.5s ease;
         }
 
         .star {
@@ -208,6 +229,14 @@
         <button class="btn" onclick="openGame('color')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
             Цветовая интуиция
+        </button>
+        <button class="btn" onclick="openTarot()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot.png" alt="Гадание на Таро">
+            Гадание на Таро
+        </button>
+        <button class="btn" onclick="openEnergy()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/energy.png" alt="Энергетический барометр">
+            Энергетика
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -262,6 +291,26 @@
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
         <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
+    </div>
+
+    <!-- Гадание на Таро -->
+    <div id="tarot" class="tarot-window">
+        <h2>Гадание на Таро</h2>
+        <p>Вытяните карту:</p>
+        <div class="tarot-card" id="tarot-card">🃏</div>
+        <button class="btn" onclick="drawTarotCard()">Вытянуть карту</button>
+        <button class="btn" style="margin-top: 20px;" onclick="closeTarot()">Закрыть</button>
+    </div>
+
+    <!-- Энергетический барометр -->
+    <div id="energy" class="energy-window">
+        <h2>Энергетический барометр</h2>
+        <p>Ваш уровень энергии:</p>
+        <div class="energy-bar">
+            <div class="energy-level" id="energy-level" style="width: 50%;"></div>
+        </div>
+        <button class="btn" onclick="measureEnergy()">Измерить</button>
+        <button class="btn" style="margin-top: 20px;" onclick="closeEnergy()">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -319,6 +368,30 @@
         // Закрытие игры
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Открытие гадания на Таро
+        function openTarot() {
+            document.getElementById('tarot').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Закрытие гадания на Таро
+        function closeTarot() {
+            document.getElementById('tarot').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Открытие энергетического барометра
+        function openEnergy() {
+            document.getElementById('energy').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Закрытие энергетического барометра
+        function closeEnergy() {
+            document.getElementById('energy').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
         }
 
@@ -414,6 +487,19 @@
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
             checkAchievements();
+        }
+
+        // Гадание на Таро
+        const tarotCards = ["🃏", "🃞", "🃝", "🃛", "🃚", "🃙", "🃘", "🃗", "🃖", "🃕", "🃔", "🃓", "🃒", "🃑", "🃐"];
+        function drawTarotCard() {
+            const card = tarotCards[Math.floor(Math.random() * tarotCards.length)];
+            document.getElementById('tarot-card').textContent = card;
+        }
+
+        // Энергетический барометр
+        function measureEnergy() {
+            const energyLevel = Math.floor(Math.random() * 100) + 1;
+            document.getElementById('energy-level').style.width = `${energyLevel}%`;
         }
 
         // Проверка достижений
