@@ -1,309 +1,125 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* Основные стили */
         body {
+            background-color: #1e1e1e;
+            color: #ffffff;
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #0a0a1a, #000);
-            color: #e0e0ff;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            overflow: hidden;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
         }
 
         h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            background: linear-gradient(90deg, #ff00cc, #9933ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glow 2s infinite alternate;
-            margin-top: 20px;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #bb86fc;
         }
 
-        @keyframes glow {
-            0% { text-shadow: 0 0 5px #ff00cc, 0 0 10px #ff00cc, 0 0 20px #ff00cc; }
-            100% { text-shadow: 0 0 10px #9933ff, 0 0 20px #9933ff, 0 0 40px #9933ff; }
-        }
-
-        .menu, .game-screen, .achievements, .stats-screen {
-            background: rgba(10, 10, 30, 0.8);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(153, 51, 255, 0.3);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            margin: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Неоновые кнопки */
-        button {
-            background: none;
-            border: 2px solid #9933ff;
-            color: #9933ff;
-            padding: 15px 30px;
-            margin: 10px 0;
-            width: 80%;
+        #message {
             font-size: 1.2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            margin-bottom: 20px;
         }
 
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
-            color: #fff;
-            border-color: #fff;
-        }
-
-        /* Круглые кнопки для игр */
-        .game-buttons button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            padding: 0;
-            margin: 10px;
-            font-size: 1.5rem;
-        }
-
-        /* Анимация фона */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 20%, #0a0a1a 70%);
-            animation: pulse 10s infinite alternate;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* Достижения и статистика */
-        .achievement, .stat-item {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
+        .button-grid button {
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .achievement.locked {
-            opacity: 0.5;
+        .button-grid button:hover {
+            background-color: #bb86fc;
+            transform: scale(1.1);
         }
 
-        .achievement-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            filter: drop-shadow(0 0 5px #9933ff);
+        .button-grid button:active {
+            transform: scale(0.95);
+        }
+
+        #stats {
+            font-size: 1.1rem;
+            color: #bb86fc;
         }
     </style>
 </head>
 <body>
-    <h1>🌀 NyxOraculum</h1>
-    <div class="menu" id="main-menu">
-        <button onclick="startGame('telepathy')">Телепатия чисел</button>
-        <button onclick="startGame('zener')">Карты Зенера</button>
-        <button onclick="startGame('color')">Цветовая интуиция</button>
-        <button onclick="showStats()">Статистика</button>
-        <button onclick="showAchievements()">Достижения</button>
+    <div class="container">
+        <h1>🔮 NyxOraculum</h1>
+        <div id="game">
+            <p id="message">Попробуйте угадать символ!</p>
+            <div id="buttons" class="button-grid"></div>
+        </div>
+        <div id="stats">
+            <p>Статистика: <span id="correct">0</span> / <span id="total">0</span></p>
+        </div>
     </div>
-
-    <div class="game-screen hidden" id="game-screen">
-        <!-- Динамическое содержимое -->
-    </div>
-
-    <div class="achievements hidden" id="achievements">
-        <h2>🏆 Достижения</h2>
-        <div id="achievements-list"></div>
-        <button onclick="showMainMenu()">Назад</button>
-    </div>
-
-    <div class="stats-screen hidden" id="stats-screen">
-        <h2>📊 Статистика</h2>
-        <div id="stats-list"></div>
-        <button onclick="showMainMenu()">Назад</button>
-    </div>
-
     <script>
-        const tg = window.Telegram.WebApp;
-        let stats = {
-            telepathy: { correct: 0, total: 0 },
-            zener: { correct: 0, total: 0 },
-            color: { correct: 0, total: 0 }
-        };
+        const symbols = ['○', '□', '～', '✚', '★'];
+        let correctCount = 0;
+        let totalCount = 0;
 
-        const achievements = [
-            { id: 'first_try', name: 'Первая попытка', icon: '1️⃣', condition: (stats) => stats.telepathy.total + stats.zener.total + stats.color.total >= 1 },
-            { id: 'five_correct', name: 'Пять правильных ответов', icon: '5️⃣', condition: (stats) => stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 5 },
-            { id: 'master', name: 'Мастер интуиции', icon: '🎯', condition: (stats) => {
-                const total = stats.telepathy.total + stats.zener.total + stats.color.total;
-                const correct = stats.telepathy.correct + stats.zener.correct + stats.color.correct;
-                return total >= 10 && (correct / total) >= 0.8;
-            }}
-        ];
+        const messageElement = document.getElementById('message');
+        const buttonsElement = document.getElementById('buttons');
+        const correctElement = document.getElementById('correct');
+        const totalElement = document.getElementById('total');
 
-        // Инициализация
-        tg.expand();
+        function startGame() {
+            const target = symbols[Math.floor(Math.random() * symbols.length)];
+            messageElement.textContent = "Угадайте символ!";
 
-        function startGame(type) {
-            hideAllScreens();
-            document.getElementById('game-screen').classList.remove('hidden');
-            generateNewTask(type);
-        }
-
-        function generateNewTask(type) {
-            const answer = generateTask(type);
-            renderGameScreen(type, answer);
-        }
-
-        function generateTask(type) {
-            const rand = Math.random();
-            switch(type) {
-                case 'telepathy': return Math.floor(rand * 10) + 1;
-                case 'zener': return ['○','□','～','✚','★'][Math.floor(rand * 5)];
-                case 'color': return ['red','blue','green','yellow','purple'][Math.floor(rand * 5)];
-            }
-        }
-
-        function renderGameScreen(type, answer) {
-            const screen = document.getElementById('game-screen');
-            screen.innerHTML = `
-                <h2>${getGameTitle(type)}</h2>
-                ${getGameUI(type, answer)}
-                <button onclick="showMainMenu()">Назад</button>
-            `;
-        }
-
-        function getGameTitle(type) {
-            switch(type) {
-                case 'telepathy': return 'Телепатия чисел';
-                case 'zener': return 'Карты Зенера';
-                case 'color': return 'Цветовая интуиция';
-            }
-        }
-
-        function getGameUI(type, answer) {
-            switch(type) {
-                case 'telepathy': return `
-                    <div class="game-buttons">
-                        ${Array.from({length: 10}, (_, i) => `
-                            <button onclick="checkAnswer('${type}', ${i + 1}, ${answer})">${i + 1}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'zener': return `
-                    <div class="game-buttons">
-                        ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="checkAnswer('${type}', '${s}', '${answer}')">${s}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'color': return `
-                    <div class="game-buttons">
-                        ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="checkAnswer('${type}', '${c}', '${answer}')"></button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-
-        function checkAnswer(type, guess, answer) {
-            stats[type].total++;
-            
-            if(guess == answer) {
-                stats[type].correct++;
-                alert('✅ Верно!');
-            } else {
-                alert(`❌ Неверно. Правильный ответ: ${answer}`);
-            }
-            
-            generateNewTask(type);
-            checkAchievements();
-        }
-
-        function showStats() {
-            hideAllScreens();
-            const statsList = document.getElementById('stats-list');
-            statsList.innerHTML = Object.entries(stats).map(([type, data]) => `
-                <div class="stat-item">
-                    <span>${getGameTitle(type)}:</span>
-                    <span>${data.correct}/${data.total} (${data.total > 0 ? ((data.correct / data.total) * 100).toFixed(1) : 0}%)</span>
-                </div>
-            `).join('');
-            document.getElementById('stats-screen').classList.remove('hidden');
-        }
-
-        function showAchievements() {
-            hideAllScreens();
-            const list = document.getElementById('achievements-list');
-            list.innerHTML = achievements.map(a => `
-                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
-                    <span class="achievement-icon">${a.icon}</span>
-                    <span>${a.name}</span>
-                </div>
-            `).join('');
-            document.getElementById('achievements').classList.remove('hidden');
-        }
-
-        function checkAchievements() {
-            // Можно добавить уведомления о новых достижениях
-        }
-
-        function hideAllScreens() {
-            document.querySelectorAll('.menu, .game-screen, .achievements, .stats-screen').forEach(el => {
-                el.classList.add('hidden');
+            buttonsElement.innerHTML = '';
+            symbols.forEach(symbol => {
+                const button = document.createElement('button');
+                button.textContent = symbol;
+                button.addEventListener('click', () => checkAnswer(symbol, target));
+                buttonsElement.appendChild(button);
             });
         }
 
-        function showMainMenu() {
-            hideAllScreens();
-            document.getElementById('main-menu').classList.remove('hidden');
+        function checkAnswer(guess, target) {
+            totalCount++;
+            if (guess === target) {
+                correctCount++;
+                messageElement.textContent = "✅ Верно!";
+            } else {
+                messageElement.textContent = `❌ Неверно. Загадан: ${target}`;
+            }
+            updateStats();
+            setTimeout(startGame, 1000);
         }
+
+        function updateStats() {
+            correctElement.textContent = correctCount;
+            totalElement.textContent = totalCount;
+        }
+
+        // Запуск игры
+        startGame();
     </script>
 </body>
 </html>
