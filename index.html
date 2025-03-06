@@ -6,167 +6,37 @@
     <title>NyxOraculum</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Основные стили */
+        /* Минималистичные стили */
         body {
-            font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #0a0a1a, #000);
-            color: #e0e0ff;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            background: linear-gradient(90deg, #ff00cc, #9933ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: glow 2s infinite alternate;
-            margin: 20px 0;
-        }
-
-        @keyframes glow {
-            0% { text-shadow: 0 0 5px #ff00cc, 0 0 10px #ff00cc, 0 0 20px #ff00cc; }
-            100% { text-shadow: 0 0 10px #9933ff, 0 0 20px #9933ff, 0 0 40px #9933ff; }
-        }
-
-        .menu, .game-screen, .achievements, .stats-screen {
-            background: rgba(10, 10, 30, 0.8);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(153, 51, 255, 0.3);
-            max-width: 400px;
-            width: 100%;
-            text-align: center;
-            position: absolute;
-            top: 20px;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* Неоновые кнопки */
-        button {
-            background: none;
-            border: 2px solid #9933ff;
-            color: #9933ff;
+            font-family: Arial, sans-serif;
             padding: 15px;
-            margin: 10px;
-            font-size: 1.1rem;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            width: 60px;
-            height: 60px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            background: #f0f2f5;
         }
-
-        .menu button {
-            width: 80px;
-            height: 80px;
-            font-size: 1.2rem;
+        
+        .menu {
+            text-align: center;
         }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-        }
-
-        button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
-            color: #fff;
-            border-color: #fff;
-        }
-
-        /* Анимация фона */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        
+        button {
+            display: block;
             width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, transparent 20%, #0a0a1a 70%);
-            animation: pulse 10s infinite alternate;
-            z-index: -1;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.2); opacity: 1; }
-        }
-
-        /* Анимация взрыва частиц */
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
-        }
-
-        .explode {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #9933ff;
-            border-radius: 50%;
-            animation: explode 0.5s ease-out;
-        }
-
-        /* Оптимизация расположения кнопок */
-        .symbols, .colors, .numbers {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 20px 0;
+            padding: 12px;
+            margin: 8px 0;
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div class="menu" id="main-menu">
+    <div class="menu">
         <h1>🌀 NyxOraculum</h1>
-        <button onclick="startGame('telepathy')">1-10</button>
-        <button onclick="startGame('zener')">🃏</button>
-        <button onclick="startGame('color')">🎨</button>
-        <button onclick="showStats()">📊</button>
-        <button onclick="showAchievements()">🏆</button>
-    </div>
-
-    <div class="game-screen hidden" id="game-screen">
-        <!-- Динамическое содержимое -->
-    </div>
-
-    <div class="achievements hidden" id="achievements">
-        <h2>🏆 Достижения</h2>
-        <div id="achievements-list"></div>
-        <button onclick="showMainMenu()">Назад</button>
-    </div>
-
-    <div class="stats-screen hidden" id="stats-screen">
-        <h2>📊 Статистика</h2>
-        <div id="stats-list"></div>
-        <button onclick="showMainMenu()">Назад</button>
+        <button onclick="startGame('telepathy')">Телепатия чисел</button>
+        <button onclick="startGame('zener')">Карты Зенера</button>
+        <button onclick="startGame('color')">Цветовая интуиция</button>
+        <button onclick="showStats()">Статистика</button>
     </div>
 
     <script>
@@ -177,29 +47,24 @@
             color: { correct: 0, total: 0 }
         };
 
-        const achievements = [
-            { id: 'first_try', name: 'Первая попытка', icon: '1️⃣', condition: (stats) => stats.telepathy.total + stats.zener.total + stats.color.total >= 1 },
-            { id: 'five_correct', name: 'Пять правильных ответов', icon: '5️⃣', condition: (stats) => stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 5 },
-            { id: 'master', name: 'Мастер интуиции', icon: '🎯', condition: (stats) => {
-                const total = stats.telepathy.total + stats.zener.total + stats.color.total;
-                const correct = stats.telepathy.correct + stats.zener.correct + stats.color.correct;
-                return total >= 10 && (correct / total) >= 0.8;
-            }}
-        ];
-
-        let currentAnswer = null;
-
         // Инициализация
         tg.expand();
 
-        function startGame(type) {
-            hideAllScreens();
-            currentAnswer = generateTask(type);
-            renderGameScreen(type);
-            document.getElementById('game-screen').classList.remove('hidden');
+        async function startGame(type) {
+            const answer = await generateTask(type);
+            const guess = await getUserGuess(type);
+            
+            stats[type].total++;
+            if(guess === answer) {
+                stats[type].correct++;
+                showResult('✅ Верно!', answer);
+            } else {
+                showResult('❌ Неверно', answer);
+            }
         }
 
-        function generateTask(type) {
+        async function generateTask(type) {
+            // Упрощенная логика генерации заданий
             const rand = Math.random();
             switch(type) {
                 case 'telepathy': return Math.floor(rand * 10) + 1;
@@ -208,61 +73,9 @@
             }
         }
 
-        function renderGameScreen(type) {
-            const screen = document.getElementById('game-screen');
-            screen.innerHTML = `
-                <h2>${getGameTitle(type)}</h2>
-                ${getGameUI(type)}
-                <button onclick="showMainMenu()">Назад</button>
-            `;
-        }
-
-        function getGameTitle(type) {
-            switch(type) {
-                case 'telepathy': return 'Телепатия чисел';
-                case 'zener': return 'Карты Зенера';
-                case 'color': return 'Цветовая интуиция';
-            }
-        }
-
-        function getGameUI(type) {
-            switch(type) {
-                case 'telepathy': return `
-                    <div class="numbers">
-                        ${Array.from({length: 10}, (_, i) => `
-                            <button onclick="checkAnswer('telepathy', ${i + 1})">${i + 1}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'zener': return `
-                    <div class="symbols">
-                        ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="checkAnswer('zener', '${s}')">${s}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'color': return `
-                    <div class="colors">
-                        ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="checkAnswer('color', '${c}')"></button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-
-        function checkAnswer(type, guess) {
-            stats[type].total++;
-            
-            if(guess === currentAnswer) {
-                stats[type].correct++;
-                showResult('✅ Верно!', currentAnswer);
-            } else {
-                showResult('❌ Неверно', currentAnswer);
-            }
-            
-            createExplosion(event);
-            checkAchievements();
+        function getUserGuess(type) {
+            // Заглушка для UI взаимодействия
+            return prompt(`Угадайте ${type === 'color' ? 'цвет' : 'символ/число'}:`);
         }
 
         function showResult(message, answer) {
@@ -270,47 +83,14 @@
         }
 
         function showStats() {
-            hideAllScreens();
-            const statsList = document.getElementById('stats-list');
-            statsList.innerHTML = Object.entries(stats).map(([type, data]) => {
+            let statsText = '📊 Статистика:\n';
+            for(const [type, data] of Object.entries(stats)) {
                 const percent = data.total > 0 
                     ? (data.correct/data.total*100).toFixed(1)
                     : 0;
-                return `<p>${type}: ${data.correct}/${data.total} (${percent}%)</p>`;
-            }).join('');
-            document.getElementById('stats-screen').classList.remove('hidden');
-        }
-
-        function showAchievements() {
-            hideAllScreens();
-            const list = document.getElementById('achievements-list');
-            list.innerHTML = achievements.map(a => `
-                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
-                    <span class="achievement-icon">${a.icon}</span>
-                    <span>${a.name}</span>
-                </div>
-            `).join('');
-            document.getElementById('achievements').classList.remove('hidden');
-        }
-
-        function createExplosion(event) {
-            const explosion = document.createElement('div');
-            explosion.classList.add('explode');
-            explosion.style.left = `${event.clientX - 5}px`;
-            explosion.style.top = `${event.clientY - 5}px`;
-            document.body.appendChild(explosion);
-            setTimeout(() => explosion.remove(), 500);
-        }
-
-        function hideAllScreens() {
-            document.querySelectorAll('.menu, .game-screen, .achievements, .stats-screen').forEach(el => {
-                el.classList.add('hidden');
-            });
-        }
-
-        function showMainMenu() {
-            hideAllScreens();
-            document.getElementById('main-menu').classList.remove('hidden');
+                statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
+            }
+            alert(statsText);
         }
     </script>
 </body>
