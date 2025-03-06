@@ -52,14 +52,14 @@
         /* Круглые кнопки */
         .button-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin: 20px 0;
         }
 
         .button-grid button {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             border: 2px solid #9933ff;
             background: none;
@@ -67,12 +67,31 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-grid button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            border-radius: 50%;
+        }
+
+        .button-grid button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .button-grid button:hover {
-            background: #9933ff;
-            color: #fff;
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
+            color: #fff;
+            border-color: #fff;
         }
 
         /* Анимация фона */
@@ -166,7 +185,6 @@
         ];
 
         let currentAnswer = null;
-        let currentGuess = null;
 
         // Инициализация
         tg.expand();
@@ -174,9 +192,7 @@
         function startGame(type) {
             hideAllScreens();
             document.getElementById('game-screen').classList.remove('hidden');
-            
             currentAnswer = generateTask(type);
-            currentGuess = null;
             renderGameScreen(type);
         }
 
@@ -194,7 +210,6 @@
             screen.innerHTML = `
                 <h2>${getGameTitle(type)}</h2>
                 ${getGameUI(type)}
-                <button onclick="checkAnswer('${type}')">Проверить</button>
                 <button onclick="showMainMenu()">Назад</button>
             `;
         }
@@ -211,47 +226,41 @@
             switch(type) {
                 case 'telepathy': return `
                     <div class="button-grid">
-                        ${Array.from({ length: 10 }, (_, i) => `
-                            <button onclick="setGuess(${i + 1})">${i + 1}</button>
+                        ${Array.from({length: 10}, (_, i) => `
+                            <button onclick="checkAnswer('telepathy', ${i + 1})">${i + 1}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'zener': return `
                     <div class="button-grid">
                         ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="setGuess('${s}')">${s}</button>
+                            <button onclick="checkAnswer('zener', '${s}')">${s}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'color': return `
                     <div class="button-grid">
                         ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="setGuess('${c}')"></button>
+                            <button style="background: ${c}" onclick="checkAnswer('color', '${c}')"></button>
                         `).join('')}
                     </div>
                 `;
             }
         }
 
-        function setGuess(guess) {
-            currentGuess = guess;
-        }
-
-        function checkAnswer(type) {
-            if (currentGuess === null) {
-                alert("Сначала выберите ответ!");
-                return;
-            }
-
+        function checkAnswer(type, guess) {
             stats[type].total++;
             
-            if(currentGuess === currentAnswer) {
+            if(guess === currentAnswer) {
                 stats[type].correct++;
                 showResult('✅ Верно!', currentAnswer);
             } else {
                 showResult('❌ Неверно', currentAnswer);
             }
             
+            // Генерация нового задания
+            currentAnswer = generateTask(type);
+            renderGameScreen(type);
             checkAchievements();
         }
 
