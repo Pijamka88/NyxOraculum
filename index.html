@@ -83,65 +83,22 @@
             display: none;
         }
 
-        /* Главные кнопки */
-        .main-buttons button {
-            display: block;
-            width: 100%;
-            max-width: 300px;
-            margin: 15px auto;
-            padding: 15px 24px;
-            background: rgba(153, 51, 255, 0.1);
-            border: 2px solid #9933ff;
-            color: #9933ff;
-            font-size: 1.2rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .main-buttons button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-        }
-
-        .main-buttons button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        .main-buttons button:hover {
-            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
-            color: #fff;
-            border-color: #fff;
-        }
-
-        /* Круглые кнопки для игр */
+        /* Круглые кнопки */
         .button-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 20px auto;
-            max-width: 300px;
+            gap: 15px;
+            margin: 20px 0;
         }
 
         .button-grid button {
-            width: 90px;
-            height: 90px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            font-size: 1.5rem;
-            margin: 0;
-            background: rgba(153, 51, 255, 0.1);
             border: 2px solid #9933ff;
+            background: rgba(153, 51, 255, 0.1);
             color: #9933ff;
+            font-size: 1.5rem;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
@@ -169,45 +126,6 @@
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
             color: #fff;
             border-color: #fff;
-        }
-
-        /* Анимация "взрыв красок" */
-        @keyframes explode {
-            0% { transform: scale(0); opacity: 1; }
-            100% { transform: scale(3); opacity: 0; }
-        }
-
-        .explode-effect {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ff00cc, #9933ff);
-            animation: explode 0.5s ease-out;
-            pointer-events: none;
-        }
-
-        /* Адаптация под мобильные */
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .button-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            .button-grid button {
-                width: 80px;
-                height: 80px;
-                font-size: 1.2rem;
-            }
-
-            .main-buttons button {
-                font-size: 1rem;
-                padding: 12px 20px;
-            }
         }
 
         /* Эзотерические элементы */
@@ -286,13 +204,11 @@
     <div class="menu" id="main-menu">
         <div class="esoteric-border"></div>
         <h1>NyxOraculum</h1>
-        <div class="main-buttons">
-            <button onclick="startGame('telepathy')">Телепатия чисел</button>
-            <button onclick="startGame('zener')">Карты Зенера</button>
-            <button onclick="startGame('color')">Цветовая интуиция</button>
-            <button onclick="showStats()">Статистика</button>
-            <button onclick="showAchievements()">Достижения</button>
-        </div>
+        <button onclick="startGame('telepathy')">Телепатия чисел</button>
+        <button onclick="startGame('zener')">Карты Зенера</button>
+        <button onclick="startGame('color')">Цветовая интуиция</button>
+        <button onclick="showStats()">Статистика</button>
+        <button onclick="showAchievements()">Достижения</button>
     </div>
 
     <div class="game-screen hidden" id="game-screen">
@@ -368,39 +284,25 @@
                 case 'telepathy': return `
                     <div class="button-grid">
                         ${Array.from({length: 10}, (_, i) => `
-                            <button onclick="handleClick(event, 'telepathy', ${i + 1})">${i + 1}</button>
+                            <button onclick="checkAnswer('telepathy', ${i + 1})">${i + 1}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'zener': return `
                     <div class="button-grid">
                         ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="handleClick(event, 'zener', '${s}')">${s}</button>
+                            <button onclick="checkAnswer('zener', '${s}')">${s}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'color': return `
                     <div class="button-grid">
                         ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="handleClick(event, 'color', '${c}')"></button>
+                            <button style="background: ${c}" onclick="checkAnswer('color', '${c}')"></button>
                         `).join('')}
                     </div>
                 `;
             }
-        }
-
-        function handleClick(event, type, guess) {
-            createExplosionEffect(event);
-            checkAnswer(type, guess);
-        }
-
-        function createExplosionEffect(event) {
-            const explosion = document.createElement('div');
-            explosion.className = 'explode-effect';
-            explosion.style.left = `${event.clientX - 10}px`;
-            explosion.style.top = `${event.clientY - 10}px`;
-            document.body.appendChild(explosion);
-            setTimeout(() => explosion.remove(), 500);
         }
 
         function checkAnswer(type, guess) {
