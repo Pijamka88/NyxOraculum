@@ -60,14 +60,13 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .menu.active, .game-screen.active, .achievements.active {
-            opacity: 1;
-            transform: translateY(0);
+        .hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
         }
 
         .menu::before, .game-screen::before, .achievements::before {
@@ -87,46 +86,6 @@
             100% { transform: scale(1.2); opacity: 0.6; }
         }
 
-        /* Кнопки */
-        button {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: rgba(153, 51, 255, 0.1);
-            border: 2px solid #9933ff;
-            color: #9933ff;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-        }
-
-        button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
-            color: #fff;
-            border-color: #fff;
-        }
-
         /* Круглые кнопки */
         .button-grid {
             display: grid;
@@ -139,7 +98,37 @@
             width: 100px;
             height: 100px;
             border-radius: 50%;
+            border: 2px solid #9933ff;
+            background: rgba(153, 51, 255, 0.1);
+            color: #9933ff;
             font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-grid button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(153, 51, 255, 0.3), transparent);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            border-radius: 50%;
+        }
+
+        .button-grid button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .button-grid button:hover {
+            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
+            color: #fff;
+            border-color: #fff;
         }
 
         /* Эзотерические элементы */
@@ -178,63 +167,72 @@
             100% { transform: translateY(0); }
         }
 
-        /* Достижения */
-        .achievement {
-            display: flex;
-            align-items: center;
-            margin: 15px 0;
+        /* Результаты */
+        .results {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(10, 10, 30, 0.9);
             padding: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            border: 1px solid rgba(153, 51, 255, 0.2);
-            position: relative;
+            text-align: center;
+            border-top: 1px solid rgba(153, 51, 255, 0.3);
+            box-shadow: 0 -5px 20px rgba(153, 51, 255, 0.2);
+            z-index: 100;
         }
 
-        .achievement.locked {
-            opacity: 0.5;
+        .results span {
+            margin: 0 10px;
+            font-size: 0.9rem;
+            color: #e0e0ff;
         }
 
-        .achievement-icon {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-            filter: drop-shadow(0 0 5px #9933ff);
+        .results span.correct {
+            color: #00ff00;
         }
 
-        .achievement::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 50%;
-            width: 80%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #9933ff, transparent);
-            transform: translateX(-50%);
-            opacity: 0.3;
+        .results span.wrong {
+            color: #ff0000;
+        }
+
+        /* Анимация перехода */
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <div class="menu active" id="main-menu">
+    <div class="menu" id="main-menu">
         <div class="esoteric-border"></div>
         <h1>NyxOraculum</h1>
-        <button onclick="showScreen('telepathy')">Телепатия чисел</button>
-        <button onclick="showScreen('zener')">Карты Зенера</button>
-        <button onclick="showScreen('color')">Цветовая интуиция</button>
-        <button onclick="showScreen('stats')">Статистика</button>
-        <button onclick="showScreen('achievements')">Достижения</button>
+        <button onclick="startGame('telepathy')">Телепатия чисел</button>
+        <button onclick="startGame('zener')">Карты Зенера</button>
+        <button onclick="startGame('color')">Цветовая интуиция</button>
+        <button onclick="showStats()">Статистика</button>
+        <button onclick="showAchievements()">Достижения</button>
     </div>
 
-    <div class="game-screen" id="game-screen">
+    <div class="game-screen hidden" id="game-screen">
         <div class="esoteric-border"></div>
         <!-- Динамическое содержимое -->
     </div>
 
-    <div class="achievements" id="achievements">
+    <div class="achievements hidden" id="achievements">
         <div class="esoteric-border"></div>
         <h2>🏆 Достижения</h2>
         <div id="achievements-list"></div>
-        <button onclick="showScreen('menu')">Назад</button>
+        <button onclick="showMainMenu()">Назад</button>
+    </div>
+
+    <div class="results" id="results">
+        <span>Телепатия: <span class="correct" id="telepathy-correct">0</span>/<span id="telepathy-total">0</span></span>
+        <span>Зенер: <span class="correct" id="zener-correct">0</span>/<span id="zener-total">0</span></span>
+        <span>Цвета: <span class="correct" id="color-correct">0</span>/<span id="color-total">0</span></span>
     </div>
 
     <script>
@@ -260,27 +258,10 @@
         // Инициализация
         tg.expand();
 
-        function showScreen(screen) {
-            const screens = ['main-menu', 'game-screen', 'achievements'];
-            screens.forEach(id => {
-                const element = document.getElementById(id);
-                if (id === screen) {
-                    element.classList.add('active');
-                } else {
-                    element.classList.remove('active');
-                }
-            });
-
-            if (screen === 'telepathy' || screen === 'zener' || screen === 'color') {
-                startGame(screen);
-            } else if (screen === 'stats') {
-                showStats();
-            } else if (screen === 'achievements') {
-                showAchievements();
-            }
-        }
-
         function startGame(type) {
+            hideAllScreens();
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('game-screen').classList.add('fade-in');
             currentAnswer = generateTask(type);
             renderGameScreen(type);
         }
@@ -299,7 +280,7 @@
             screen.innerHTML = `
                 <h2>${getGameTitle(type)}</h2>
                 ${getGameUI(type)}
-                <button onclick="showScreen('menu')">Назад</button>
+                <button onclick="showMainMenu()">Назад</button>
             `;
         }
 
@@ -342,9 +323,9 @@
             
             if(guess === currentAnswer) {
                 stats[type].correct++;
-                showResult('✅ Верно!', currentAnswer);
+                updateResults(type, true);
             } else {
-                showResult('❌ Неверно', currentAnswer);
+                updateResults(type, false);
             }
             
             // Генерация нового задания
@@ -353,8 +334,13 @@
             checkAchievements();
         }
 
-        function showResult(message, answer) {
-            alert(`${message}\nПравильный ответ: ${answer}`);
+        function updateResults(type, isCorrect) {
+            document.getElementById(`${type}-correct`).textContent = stats[type].correct;
+            document.getElementById(`${type}-total`).textContent = stats[type].total;
+            
+            const correctElement = document.getElementById(`${type}-correct`);
+            correctElement.classList.add(isCorrect ? 'correct' : 'wrong');
+            setTimeout(() => correctElement.classList.remove('correct', 'wrong'), 500);
         }
 
         function showStats() {
@@ -369,6 +355,7 @@
         }
 
         function showAchievements() {
+            hideAllScreens();
             const list = document.getElementById('achievements-list');
             list.innerHTML = achievements.map(a => `
                 <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
@@ -376,10 +363,25 @@
                     <span>${a.name}</span>
                 </div>
             `).join('');
+            document.getElementById('achievements').classList.remove('hidden');
+            document.getElementById('achievements').classList.add('fade-in');
         }
 
         function checkAchievements() {
             // Можно добавить уведомления о новых достижениях
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
+                el.classList.add('hidden');
+                el.classList.remove('fade-in');
+            });
+        }
+
+        function showMainMenu() {
+            hideAllScreens();
+            document.getElementById('main-menu').classList.remove('hidden');
+            document.getElementById('main-menu').classList.add('fade-in');
         }
     </script>
 </body>
