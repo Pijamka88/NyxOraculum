@@ -90,13 +90,13 @@
         button {
             display: block;
             width: 100%;
-            padding: 12px;
+            padding: 12px 24px;
             margin: 10px 0;
             background: rgba(153, 51, 255, 0.1);
             border: 1px solid rgba(153, 51, 255, 0.3);
+            color: #e0e0ff;
+            font-size: 1.1rem;
             border-radius: 8px;
-            color: #9933ff;
-            font-size: 1rem;
             cursor: pointer;
             backdrop-filter: blur(10px);
             transition: all 0.3s ease;
@@ -123,8 +123,8 @@
 
         button:hover {
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
-            color: #fff;
             border-color: #fff;
+            background: rgba(153, 51, 255, 0.2);
         }
 
         /* Круглые кнопки */
@@ -141,19 +141,6 @@
             height: 100px;
             border-radius: 50%;
             font-size: 1.5rem;
-        }
-
-        /* Адаптация под мобильные устройства */
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .button-grid button {
-                width: 80px;
-                height: 80px;
-                font-size: 1.2rem;
-            }
         }
 
         /* Эзотерические элементы */
@@ -244,13 +231,6 @@
         <!-- Динамическое содержимое -->
     </div>
 
-    <div class="achievements hidden" id="achievements">
-        <div class="esoteric-border"></div>
-        <h2>🏆 Достижения</h2>
-        <div id="achievements-list"></div>
-        <button onclick="showMainMenu()">Назад</button>
-    </div>
-
     <script>
         const tg = window.Telegram.WebApp;
         let stats = {
@@ -276,9 +256,11 @@
 
         function startGame(type) {
             hideAllScreens();
-            document.getElementById('game-screen').classList.remove('hidden');
-            currentAnswer = generateTask(type);
-            renderGameScreen(type);
+            setTimeout(() => {
+                document.getElementById('game-screen').classList.remove('hidden');
+                currentAnswer = generateTask(type);
+                renderGameScreen(type);
+            }, 500);
         }
 
         function generateTask(type) {
@@ -361,20 +343,56 @@
                     : 0;
                 statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
             }
-            const statsWindow = window.open('', 'Статистика', 'width=300,height=400');
-            statsWindow.document.write(`<pre>${statsText}</pre>`);
+            openNewWindow('Статистика', statsText);
         }
 
         function showAchievements() {
-            hideAllScreens();
-            const list = document.getElementById('achievements-list');
-            list.innerHTML = achievements.map(a => `
+            const achievementsText = achievements.map(a => `
                 <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
                     <span class="achievement-icon">${a.icon}</span>
                     <span>${a.name}</span>
                 </div>
             `).join('');
-            document.getElementById('achievements').classList.remove('hidden');
+            openNewWindow('Достижения', achievementsText);
+        }
+
+        function openNewWindow(title, content) {
+            const newWindow = window.open('', '_blank', 'width=400,height=600');
+            newWindow.document.write(`
+                <html>
+                <head>
+                    <title>${title}</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background: #0a0a1a;
+                            color: #e0e0ff;
+                            padding: 20px;
+                        }
+                        h2 {
+                            color: #9933ff;
+                        }
+                        .achievement {
+                            display: flex;
+                            align-items: center;
+                            margin: 15px 0;
+                            padding: 10px;
+                            background: rgba(0, 0, 0, 0.3);
+                            border-radius: 10px;
+                            border: 1px solid rgba(153, 51, 255, 0.2);
+                        }
+                        .achievement-icon {
+                            margin-right: 10px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h2>${title}</h2>
+                    ${content}
+                </body>
+                </html>
+            `);
+            newWindow.document.close();
         }
 
         function checkAchievements() {
@@ -382,14 +400,16 @@
         }
 
         function hideAllScreens() {
-            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
+            document.querySelectorAll('.menu, .game-screen').forEach(el => {
                 el.classList.add('hidden');
             });
         }
 
         function showMainMenu() {
             hideAllScreens();
-            document.getElementById('main-menu').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('main-menu').classList.remove('hidden');
+            }, 500);
         }
     </script>
 </body>
