@@ -43,6 +43,15 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
+            position: absolute;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .hidden {
@@ -138,10 +147,28 @@
         .symbols button, .colors button {
             animation: float 3s infinite ease-in-out;
         }
+
+        /* Поле ввода */
+        .neon-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 10px;
+            border-radius: 10px;
+            width: 100%;
+            margin: 10px 0;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .neon-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px #00ffff;
+        }
     </style>
 </head>
 <body>
-    <div class="menu" id="main-menu">
+    <div class="menu visible" id="main-menu">
         <h1>🌀 NyxOraculum</h1>
         <button onclick="startGame('telepathy')">Телепатия чисел</button>
         <button onclick="startGame('zener')">Карты Зенера</button>
@@ -150,3 +177,157 @@
         <button onclick="showAchievements()">Достижения</button>
     </div>
 
+    <div class="game-screen" id="game-screen">
+        <!-- Динамическое содержимое -->
+    </div>
+
+    <div class="achievements" id="achievements">
+        <h2>🏆 Достижения</h2>
+        <div id="achievements-list"></div>
+        <button onclick="showMainMenu()">Назад</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 }
+        };
+
+        const achievements = [
+            { id: 'first_try', name: 'Первая попытка', icon: '1️⃣', condition: (stats) => stats.telepathy.total + stats.zener.total + stats.color.total >= 1 },
+            { id: 'five_correct', name: 'Пять правильных ответов', icon: '5️⃣', condition: (stats) => stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 5 },
+            { id: 'master', name: 'Мастер интуиции', icon: '🎯', condition: (stats) => {
+                const total = stats.telepathy.total + stats.zener.total + stats.color.total;
+                const correct = stats.telepathy.correct + stats.zener.correct + stats.color.correct;
+                return total >= 10 && (correct / total) >= 0.8;
+            }}
+        ];
+
+        let currentGuess = null;
+
+        // Инициализация
+        tg.expand();
+
+        function startGame(type) {
+            hideAllScreens();
+            const gameScreen = document.getElementById('game-screen');
+            gameScreen.classList.add('visible');
+            
+            const answer = generateTask(type);
+            renderGameScreen(type, answer);
+        }
+
+        function generateTask(type) {
+            const rand = Math.random();
+            switch(type) {
+                case 'telepathy': return Math.floor(rand * 10) + 1;
+                case 'zener': return ['○','□','～','✚','★'][Math.floor(rand * 5)];
+                case 'color': return ['red','blue','green','yellow','purple'][Math.floor(rand * 5)];
+            }
+        }
+
+        function renderGameScreen(type, answer) {
+            const screen = document.getElementById('game-screen');
+            screen.innerHTML = `
+                <h2>${getGameTitle(type)}</h2>
+                ${getGameUI(type)}
+                <button onclick="checkAnswer('${type}', '${answer}')">Проверить</button>
+                <button onclick="showMainMenu()">Назад</button>
+            `;
+        }
+
+        function getGameTitle(type) {
+            switch(type) {
+                case 'telepathy': return 'Телепатия чисел';
+                case 'zener': return 'Карты Зенера';
+                case 'color': return 'Цветовая интуиция';
+            }
+        }
+
+        function getGameUI(type) {
+            switch(type) {
+                case 'telepathy': return '<input type="number" min="1" max="10" id="user-guess" placeholder="Введите число" class="neon-input">';
+                case 'zener': return `
+                    <div class="symbols">
+                        ${['○','□','～','✚','★'].map(s => `<button onclick="setGuess('${s}')">${s}</button>`).join('')}
+                    </div>
+                `;
+                case 'color': return `
+                    <div class="colors">
+                        ${['red','blue','green','yellow','purple'].map(c => `
+                            <button style="background: ${c}" onclick="setGuess('${c}')"></button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function setGuess(guess) {
+            currentGuess = guess;
+        }
+
+        function checkAnswer(type, answer) {
+            const guess = getUserGuess(type);
+            stats[type].total++;
+            
+            if(guess == answer) {
+                stats[type].correct++;
+                showResult('✅ Верно!', answer);
+            } else {
+                showResult('❌ Неверно', answer);
+            }
+            
+            checkAchievements();
+        }
+
+        function getUserGuess(type) {
+            if(type === 'telepathy') return document.getElementById('user-guess').value;
+            return currentGuess;
+        }
+
+        function showResult(message, answer) {
+            alert(`${message}\nПравильный ответ: ${answer}`);
+        }
+
+        function showStats() {
+            let statsText = '📊 Статистика:\n';
+            for(const [type, data] of Object.entries(stats)) {
+                const percent = data.total > 0 
+                    ? (data.correct/data.total*100).toFixed(1)
+                    : 0;
+                statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
+            }
+            alert(statsText);
+        }
+
+        function showAchievements() {
+            hideAllScreens();
+            const list = document.getElementById('achievements-list');
+            list.innerHTML = achievements.map(a => `
+                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
+                    <span class="achievement-icon">${a.icon}</span>
+                    <span>${a.name}</span>
+                </div>
+            `).join('');
+            document.getElementById('achievements').classList.add('visible');
+        }
+
+        function checkAchievements() {
+            // Можно добавить уведомления о новых достижениях
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
+                el.classList.remove('visible');
+            });
+        }
+
+        function showMainMenu() {
+            hideAllScreens();
+            document.getElementById('main-menu').classList.add('visible');
+        }
+    </script>
+</body>
+</html>
