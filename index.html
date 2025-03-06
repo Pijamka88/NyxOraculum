@@ -29,7 +29,17 @@
         h1 {
             font-size: 3rem;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px #8A2BE2;
+            background: linear-gradient(90deg, #8A2BE2, #FFD700, #00FF00, #00FFFF, #FF00FF, #8A2BE2);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 10s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn {
@@ -43,6 +53,9 @@
             font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
@@ -53,6 +66,10 @@
         .btn:active {
             transform: scale(0.95);
             box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+        }
+
+        .btn i {
+            margin-right: 10px;
         }
 
         .game-window {
@@ -172,16 +189,46 @@
             font-size: 1.2rem;
             margin: 10px 0;
         }
+
+        .ball-game {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            z-index: 1000;
+        }
+
+        .ball-game h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .ball {
+            width: 50px;
+            height: 50px;
+            background: #8A2BE2;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <h1>NyxOraculum</h1>
-        <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
-        <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
-        <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
-        <button class="btn" onclick="openStats()">Статистика</button>
-        <button class="btn" onclick="openAchievements()">Достижения</button>
+        <button class="btn" onclick="openGame('telepathy')"><i class="fas fa-brain"></i> Телепатия</button>
+        <button class="btn" onclick="openGame('zener')"><i class="fas fa-cards"></i> Карты Зенера</button>
+        <button class="btn" onclick="openGame('color')"><i class="fas fa-palette"></i> Цветовая интуиция</button>
+        <button class="btn" onclick="openGame('ball')"><i class="fas fa-dice"></i> Управление шариком</button>
+        <button class="btn" onclick="openStats()"><i class="fas fa-chart-bar"></i> Статистика</button>
+        <button class="btn" onclick="openAchievements()"><i class="fas fa-trophy"></i> Достижения</button>
     </div>
 
     <!-- Игры -->
@@ -227,6 +274,16 @@
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
         <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
+    </div>
+
+    <!-- Управление шариком -->
+    <div id="ball" class="ball-game">
+        <h2>Управление шариком</h2>
+        <p>Мысленно управляйте шариком. По тапу он движется вправо.</p>
+        <div id="ball-container" style="position: relative; width: 100%; height: 300px;">
+            <div id="ball-object" class="ball"></div>
+        </div>
+        <button class="btn" style="margin-top: 20px;" onclick="closeGame('ball')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -277,12 +334,18 @@
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+            if (gameId === 'ball') {
+                startBallGame();
+            }
         }
 
         // Закрытие игры
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
+            if (gameId === 'ball') {
+                stopBallGame();
+            }
         }
 
         // Открытие статистики
@@ -360,37 +423,4 @@
                 stats.zener.correct++;
                 alert('✅ Верно!');
             } else {
-                alert(`❌ Неверно. Загадан: ${target}`);
-            }
-            checkAchievements();
-        }
-
-        // Цветовая интуиция
-        function checkColor(guess) {
-            const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-            const target = colors[Math.floor(Math.random() * colors.length)];
-            stats.color.total++;
-            if (guess === target) {
-                stats.color.correct++;
-                alert('✅ Верно!');
-            } else {
-                alert(`❌ Неверно. Загадан: ${target}`);
-            }
-            checkAchievements();
-        }
-
-        // Проверка достижений
-        function checkAchievements() {
-            if (stats.telepathy.correct >= 10 && !achievements.includes("Мастер телепатии")) {
-                achievements.push("Мастер телепатии");
-            }
-            if (stats.zener.correct >= 10 && !achievements.includes("Мастер карт Зенера")) {
-                achievements.push("Мастер карт Зенера");
-            }
-            if (stats.color.correct >= 10 && !achievements.includes("Мастер цветовой интуиции")) {
-                achievements.push("Мастер цветовой интуиции");
-            }
-        }
-    </script>
-</body>
-</html>
+                alert(`❌ Неверно. Загадан: ${target
