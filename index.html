@@ -60,6 +60,25 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease;
+            border-radius: 50%;
+        }
+
+        .btn:active::before {
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .btn:hover {
@@ -69,7 +88,7 @@
 
         .btn:active {
             transform: scale(0.95);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
 
         .btn img {
@@ -129,7 +148,7 @@
 
         .game-btn:active {
             transform: scale(0.95);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
 
         .overlay {
