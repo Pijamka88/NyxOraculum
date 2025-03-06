@@ -7,7 +7,7 @@
     <style>
         /* Основные стили */
         body {
-            background-color: #1e1e1e;
+            background-color: #0a0a0a;
             color: #ffffff;
             font-family: 'Arial', sans-serif;
             display: flex;
@@ -21,17 +21,23 @@
             text-align: center;
             max-width: 400px;
             width: 100%;
+            padding: 20px;
+            background-color: #1a1a1a;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
         }
 
         h1 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #bb86fc;
+            text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
         }
 
         #message {
             font-size: 1.2rem;
             margin-bottom: 20px;
+            color: #ffffff;
         }
 
         .button-grid {
@@ -49,12 +55,13 @@
             padding: 15px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
         }
 
         .button-grid button:hover {
             background-color: #bb86fc;
             transform: scale(1.1);
+            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
         }
 
         .button-grid button:active {
@@ -64,39 +71,107 @@
         #stats {
             font-size: 1.1rem;
             color: #bb86fc;
+            margin-bottom: 20px;
+        }
+
+        #achievements {
+            font-size: 1rem;
+            color: #ffffff;
+            margin-top: 20px;
+        }
+
+        .neon-text {
+            text-shadow: 0 0 5px #bb86fc, 0 0 10px #bb86fc;
+        }
+
+        .mode-buttons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .mode-buttons button {
+            background-color: #444444;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .mode-buttons button:hover {
+            background-color: #bb86fc;
+            transform: scale(1.1);
+            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+        }
+
+        .mode-buttons button:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🔮 NyxOraculum</h1>
+        <h1 class="neon-text">🔮 NyxOraculum</h1>
+        <div class="mode-buttons">
+            <button onclick="setMode('zener')">Карты Зенера</button>
+            <button onclick="setMode('telepathy')">Телепатия</button>
+            <button onclick="setMode('color')">Цвета</button>
+        </div>
         <div id="game">
-            <p id="message">Попробуйте угадать символ!</p>
+            <p id="message" class="neon-text">Выберите режим игры!</p>
             <div id="buttons" class="button-grid"></div>
         </div>
         <div id="stats">
             <p>Статистика: <span id="correct">0</span> / <span id="total">0</span></p>
         </div>
+        <div id="achievements">
+            <p>Достижения: <span id="achievements-list">Нет</span></p>
+        </div>
     </div>
     <script>
         const symbols = ['○', '□', '～', '✚', '★'];
+        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         let correctCount = 0;
         let totalCount = 0;
+        let achievements = [];
 
         const messageElement = document.getElementById('message');
         const buttonsElement = document.getElementById('buttons');
         const correctElement = document.getElementById('correct');
         const totalElement = document.getElementById('total');
+        const achievementsListElement = document.getElementById('achievements-list');
+
+        let currentMode = 'zener';
+
+        function setMode(mode) {
+            currentMode = mode;
+            startGame();
+        }
 
         function startGame() {
-            const target = symbols[Math.floor(Math.random() * symbols.length)];
-            messageElement.textContent = "Угадайте символ!";
+            let target, options;
+            if (currentMode === 'zener') {
+                target = symbols[Math.floor(Math.random() * symbols.length)];
+                options = symbols;
+                messageElement.textContent = "Угадайте символ!";
+            } else if (currentMode === 'telepathy') {
+                target = Math.floor(Math.random() * 10) + 1;
+                options = Array.from({ length: 10 }, (_, i) => i + 1);
+                messageElement.textContent = "Угадайте число от 1 до 10!";
+            } else if (currentMode === 'color') {
+                target = colors[Math.floor(Math.random() * colors.length)];
+                options = colors;
+                messageElement.textContent = "Угадайте цвет!";
+            }
 
             buttonsElement.innerHTML = '';
-            symbols.forEach(symbol => {
+            options.forEach(option => {
                 const button = document.createElement('button');
-                button.textContent = symbol;
-                button.addEventListener('click', () => checkAnswer(symbol, target));
+                button.textContent = option;
+                button.addEventListener('click', () => checkAnswer(option, target));
                 buttonsElement.appendChild(button);
             });
         }
@@ -106,6 +181,7 @@
             if (guess === target) {
                 correctCount++;
                 messageElement.textContent = "✅ Верно!";
+                checkAchievements();
             } else {
                 messageElement.textContent = `❌ Неверно. Загадан: ${target}`;
             }
@@ -118,8 +194,18 @@
             totalElement.textContent = totalCount;
         }
 
-        // Запуск игры
-        startGame();
+        function checkAchievements() {
+            if (correctCount === 5 && !achievements.includes('Новичок')) {
+                achievements.push('Новичок');
+            }
+            if (correctCount === 10 && !achievements.includes('Эксперт')) {
+                achievements.push('Эксперт');
+            }
+            if (correctCount === 20 && !achievements.includes('Мастер')) {
+                achievements.push('Мастер');
+            }
+            achievementsListElement.textContent = achievements.join(', ') || 'Нет';
+        }
     </script>
 </body>
 </html>
