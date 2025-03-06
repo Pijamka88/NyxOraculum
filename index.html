@@ -60,13 +60,6 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
         }
 
         .menu::before, .game-screen::before, .achievements::before {
@@ -84,6 +77,10 @@
         @keyframes pulse {
             0% { transform: scale(1); opacity: 0.3; }
             100% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        .hidden {
+            display: none;
         }
 
         /* Круглые кнопки */
@@ -167,42 +164,39 @@
             100% { transform: translateY(0); }
         }
 
-        /* Результаты */
-        .results {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 30, 0.9);
+        /* Достижения */
+        .achievement {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
             padding: 10px;
-            text-align: center;
-            border-top: 1px solid rgba(153, 51, 255, 0.3);
-            box-shadow: 0 -5px 20px rgba(153, 51, 255, 0.2);
-            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(153, 51, 255, 0.2);
+            position: relative;
         }
 
-        .results span {
-            margin: 0 10px;
-            font-size: 0.9rem;
-            color: #e0e0ff;
+        .achievement.locked {
+            opacity: 0.5;
         }
 
-        .results span.correct {
-            color: #00ff00;
+        .achievement-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 5px #9933ff);
         }
 
-        .results span.wrong {
-            color: #ff0000;
-        }
-
-        /* Анимация перехода */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease;
+        .achievement::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9933ff, transparent);
+            transform: translateX(-50%);
+            opacity: 0.3;
         }
     </style>
 </head>
@@ -227,12 +221,6 @@
         <h2>🏆 Достижения</h2>
         <div id="achievements-list"></div>
         <button onclick="showMainMenu()">Назад</button>
-    </div>
-
-    <div class="results" id="results">
-        <span>Телепатия: <span class="correct" id="telepathy-correct">0</span>/<span id="telepathy-total">0</span></span>
-        <span>Зенер: <span class="correct" id="zener-correct">0</span>/<span id="zener-total">0</span></span>
-        <span>Цвета: <span class="correct" id="color-correct">0</span>/<span id="color-total">0</span></span>
     </div>
 
     <script>
@@ -261,7 +249,6 @@
         function startGame(type) {
             hideAllScreens();
             document.getElementById('game-screen').classList.remove('hidden');
-            document.getElementById('game-screen').classList.add('fade-in');
             currentAnswer = generateTask(type);
             renderGameScreen(type);
         }
@@ -323,9 +310,9 @@
             
             if(guess === currentAnswer) {
                 stats[type].correct++;
-                updateResults(type, true);
+                showResult('✅ Верно!', currentAnswer);
             } else {
-                updateResults(type, false);
+                showResult('❌ Неверно', currentAnswer);
             }
             
             // Генерация нового задания
@@ -334,13 +321,8 @@
             checkAchievements();
         }
 
-        function updateResults(type, isCorrect) {
-            document.getElementById(`${type}-correct`).textContent = stats[type].correct;
-            document.getElementById(`${type}-total`).textContent = stats[type].total;
-            
-            const correctElement = document.getElementById(`${type}-correct`);
-            correctElement.classList.add(isCorrect ? 'correct' : 'wrong');
-            setTimeout(() => correctElement.classList.remove('correct', 'wrong'), 500);
+        function showResult(message, answer) {
+            alert(`${message}\nПравильный ответ: ${answer}`);
         }
 
         function showStats() {
@@ -364,7 +346,6 @@
                 </div>
             `).join('');
             document.getElementById('achievements').classList.remove('hidden');
-            document.getElementById('achievements').classList.add('fade-in');
         }
 
         function checkAchievements() {
@@ -374,14 +355,12 @@
         function hideAllScreens() {
             document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
                 el.classList.add('hidden');
-                el.classList.remove('fade-in');
             });
         }
 
         function showMainMenu() {
             hideAllScreens();
             document.getElementById('main-menu').classList.remove('hidden');
-            document.getElementById('main-menu').classList.add('fade-in');
         }
     </script>
 </body>
