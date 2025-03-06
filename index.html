@@ -60,13 +60,14 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease;
         }
 
-        .menu.hidden, .game-screen.hidden, .achievements.hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
+        .menu.active, .game-screen.active, .achievements.active {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .menu::before, .game-screen::before, .achievements::before {
@@ -86,19 +87,18 @@
             100% { transform: scale(1.2); opacity: 0.6; }
         }
 
-        /* Стеклянные кнопки */
+        /* Кнопки */
         button {
             display: block;
             width: 100%;
-            padding: 12px 24px;
+            padding: 12px;
             margin: 10px 0;
             background: rgba(153, 51, 255, 0.1);
-            border: 1px solid rgba(153, 51, 255, 0.3);
-            color: #e0e0ff;
+            border: 2px solid #9933ff;
+            color: #9933ff;
             font-size: 1.1rem;
-            border-radius: 8px;
+            border-radius: 25px;
             cursor: pointer;
-            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
@@ -123,8 +123,8 @@
 
         button:hover {
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
+            color: #fff;
             border-color: #fff;
-            background: rgba(153, 51, 255, 0.2);
         }
 
         /* Круглые кнопки */
@@ -133,7 +133,6 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin: 20px 0;
-            justify-items: center;
         }
 
         .button-grid button {
@@ -216,19 +215,26 @@
     </style>
 </head>
 <body>
-    <div class="menu" id="main-menu">
+    <div class="menu active" id="main-menu">
         <div class="esoteric-border"></div>
         <h1>NyxOraculum</h1>
-        <button onclick="startGame('telepathy')">Телепатия чисел</button>
-        <button onclick="startGame('zener')">Карты Зенера</button>
-        <button onclick="startGame('color')">Цветовая интуиция</button>
-        <button onclick="showStats()">Статистика</button>
-        <button onclick="showAchievements()">Достижения</button>
+        <button onclick="showScreen('telepathy')">Телепатия чисел</button>
+        <button onclick="showScreen('zener')">Карты Зенера</button>
+        <button onclick="showScreen('color')">Цветовая интуиция</button>
+        <button onclick="showScreen('stats')">Статистика</button>
+        <button onclick="showScreen('achievements')">Достижения</button>
     </div>
 
-    <div class="game-screen hidden" id="game-screen">
+    <div class="game-screen" id="game-screen">
         <div class="esoteric-border"></div>
         <!-- Динамическое содержимое -->
+    </div>
+
+    <div class="achievements" id="achievements">
+        <div class="esoteric-border"></div>
+        <h2>🏆 Достижения</h2>
+        <div id="achievements-list"></div>
+        <button onclick="showScreen('menu')">Назад</button>
     </div>
 
     <script>
@@ -254,13 +260,29 @@
         // Инициализация
         tg.expand();
 
+        function showScreen(screen) {
+            const screens = ['main-menu', 'game-screen', 'achievements'];
+            screens.forEach(id => {
+                const element = document.getElementById(id);
+                if (id === screen) {
+                    element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                }
+            });
+
+            if (screen === 'telepathy' || screen === 'zener' || screen === 'color') {
+                startGame(screen);
+            } else if (screen === 'stats') {
+                showStats();
+            } else if (screen === 'achievements') {
+                showAchievements();
+            }
+        }
+
         function startGame(type) {
-            hideAllScreens();
-            setTimeout(() => {
-                document.getElementById('game-screen').classList.remove('hidden');
-                currentAnswer = generateTask(type);
-                renderGameScreen(type);
-            }, 500);
+            currentAnswer = generateTask(type);
+            renderGameScreen(type);
         }
 
         function generateTask(type) {
@@ -277,7 +299,7 @@
             screen.innerHTML = `
                 <h2>${getGameTitle(type)}</h2>
                 ${getGameUI(type)}
-                <button onclick="showMainMenu()">Назад</button>
+                <button onclick="showScreen('menu')">Назад</button>
             `;
         }
 
@@ -343,73 +365,21 @@
                     : 0;
                 statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
             }
-            openNewWindow('Статистика', statsText);
+            alert(statsText);
         }
 
         function showAchievements() {
-            const achievementsText = achievements.map(a => `
+            const list = document.getElementById('achievements-list');
+            list.innerHTML = achievements.map(a => `
                 <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
                     <span class="achievement-icon">${a.icon}</span>
                     <span>${a.name}</span>
                 </div>
             `).join('');
-            openNewWindow('Достижения', achievementsText);
-        }
-
-        function openNewWindow(title, content) {
-            const newWindow = window.open('', '_blank', 'width=400,height=600');
-            newWindow.document.write(`
-                <html>
-                <head>
-                    <title>${title}</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            background: #0a0a1a;
-                            color: #e0e0ff;
-                            padding: 20px;
-                        }
-                        h2 {
-                            color: #9933ff;
-                        }
-                        .achievement {
-                            display: flex;
-                            align-items: center;
-                            margin: 15px 0;
-                            padding: 10px;
-                            background: rgba(0, 0, 0, 0.3);
-                            border-radius: 10px;
-                            border: 1px solid rgba(153, 51, 255, 0.2);
-                        }
-                        .achievement-icon {
-                            margin-right: 10px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h2>${title}</h2>
-                    ${content}
-                </body>
-                </html>
-            `);
-            newWindow.document.close();
         }
 
         function checkAchievements() {
             // Можно добавить уведомления о новых достижениях
-        }
-
-        function hideAllScreens() {
-            document.querySelectorAll('.menu, .game-screen').forEach(el => {
-                el.classList.add('hidden');
-            });
-        }
-
-        function showMainMenu() {
-            hideAllScreens();
-            setTimeout(() => {
-                document.getElementById('main-menu').classList.remove('hidden');
-            }, 500);
         }
     </script>
 </body>
