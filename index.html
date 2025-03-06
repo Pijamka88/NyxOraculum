@@ -423,4 +423,72 @@
                 stats.zener.correct++;
                 alert('✅ Верно!');
             } else {
-                alert(`❌ Неверно. Загадан: ${target
+                alert(`❌ Неверно. Загадан: ${target}`);
+            }
+            checkAchievements();
+        }
+
+        // Цветовая интуиция
+        function checkColor(guess) {
+            const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+            const target = colors[Math.floor(Math.random() * colors.length)];
+            stats.color.total++;
+            if (guess === target) {
+                stats.color.correct++;
+                alert('✅ Верно!');
+            } else {
+                alert(`❌ Неверно. Загадан: ${target}`);
+            }
+            checkAchievements();
+        }
+
+        // Проверка достижений
+        function checkAchievements() {
+            if (stats.telepathy.correct >= 10 && !achievements.includes("Мастер телепатии")) {
+                achievements.push("Мастер телепатии");
+            }
+            if (stats.zener.correct >= 10 && !achievements.includes("Мастер карт Зенера")) {
+                achievements.push("Мастер карт Зенера");
+            }
+            if (stats.color.correct >= 10 && !achievements.includes("Мастер цветовой интуиции")) {
+                achievements.push("Мастер цветовой интуиции");
+            }
+        }
+
+        // Управление шариком
+        let ballInterval;
+        const ball = document.getElementById('ball-object');
+        const ballContainer = document.getElementById('ball-container');
+
+        function startBallGame() {
+            ballInterval = setInterval(moveBallRandomly, 1000);
+            ball.addEventListener('click', moveBallRight);
+        }
+
+        function stopBallGame() {
+            clearInterval(ballInterval);
+            ball.removeEventListener('click', moveBallRight);
+        }
+
+        function moveBallRandomly() {
+            const containerRect = ballContainer.getBoundingClientRect();
+            const ballRect = ball.getBoundingClientRect();
+            const maxX = containerRect.width - ballRect.width;
+            const maxY = containerRect.height - ballRect.height;
+            const newX = Math.floor(Math.random() * maxX);
+            const newY = Math.floor(Math.random() * maxY);
+            ball.style.left = `${newX}px`;
+            ball.style.top = `${newY}px`;
+        }
+
+        function moveBallRight() {
+            const ballRect = ball.getBoundingClientRect();
+            const containerRect = ballContainer.getBoundingClientRect();
+            const newX = ballRect.left + 50;
+            if (newX + ballRect.width <= containerRect.width) {
+                ball.style.left = `${newX}px`;
+            }
+        }
+    </script>
+</body>
+</html>
