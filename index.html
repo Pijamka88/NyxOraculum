@@ -60,6 +60,13 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .menu.hidden, .game-screen.hidden, .achievements.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
         }
 
         .menu::before, .game-screen::before, .achievements::before {
@@ -79,33 +86,25 @@
             100% { transform: scale(1.2); opacity: 0.6; }
         }
 
-        .hidden {
-            display: none;
-        }
-
-        /* Круглые кнопки */
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .button-grid button {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid #9933ff;
+        /* Стеклянные кнопки */
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
             background: rgba(153, 51, 255, 0.1);
+            border: 1px solid rgba(153, 51, 255, 0.3);
+            border-radius: 8px;
             color: #9933ff;
-            font-size: 1.5rem;
+            font-size: 1rem;
             cursor: pointer;
+            backdrop-filter: blur(10px);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .button-grid button::before {
+        button::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -118,14 +117,43 @@
             border-radius: 50%;
         }
 
-        .button-grid button:hover::before {
+        button:hover::before {
             transform: translate(-50%, -50%) scale(1);
         }
 
-        .button-grid button:hover {
+        button:hover {
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
             color: #fff;
             border-color: #fff;
+        }
+
+        /* Круглые кнопки */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+            justify-items: center;
+        }
+
+        .button-grid button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+        }
+
+        /* Адаптация под мобильные устройства */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-grid button {
+                width: 80px;
+                height: 80px;
+                font-size: 1.2rem;
+            }
         }
 
         /* Эзотерические элементы */
@@ -333,7 +361,8 @@
                     : 0;
                 statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
             }
-            alert(statsText);
+            const statsWindow = window.open('', 'Статистика', 'width=300,height=400');
+            statsWindow.document.write(`<pre>${statsText}</pre>`);
         }
 
         function showAchievements() {
