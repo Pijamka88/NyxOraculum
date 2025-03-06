@@ -199,31 +199,33 @@
         ];
 
         let currentAnswer = null;
+        let currentType = null;
 
         // Инициализация
         tg.expand();
 
         function startGame(type) {
             hideAllScreens();
-            currentAnswer = generateTask(type);
-            renderGameScreen(type);
+            currentType = type;
+            generateNewTask();
+            renderGameScreen();
             document.getElementById('game-screen').classList.add('visible');
         }
 
-        function generateTask(type) {
+        function generateNewTask() {
             const rand = Math.random();
-            switch(type) {
-                case 'telepathy': return Math.floor(rand * 10) + 1;
-                case 'zener': return ['○','□','～','✚','★'][Math.floor(rand * 5)];
-                case 'color': return ['red','blue','green','yellow','purple'][Math.floor(rand * 5)];
+            switch(currentType) {
+                case 'telepathy': currentAnswer = Math.floor(rand * 10) + 1; break;
+                case 'zener': currentAnswer = ['○','□','～','✚','★'][Math.floor(rand * 5)]; break;
+                case 'color': currentAnswer = ['red','blue','green','yellow','purple'][Math.floor(rand * 5)]; break;
             }
         }
 
-        function renderGameScreen(type) {
+        function renderGameScreen() {
             const screen = document.getElementById('game-screen');
             screen.innerHTML = `
-                <h2>${getGameTitle(type)}</h2>
-                ${getGameUI(type)}
+                <h2>${getGameTitle(currentType)}</h2>
+                ${getGameUI(currentType)}
                 <button onclick="showMainMenu()">Назад</button>
             `;
         }
@@ -241,39 +243,40 @@
                 case 'telepathy': return `
                     <div class="game-buttons">
                         ${Array.from({length: 10}, (_, i) => `
-                            <button onclick="checkAnswer('${type}', ${i + 1})">${i + 1}</button>
+                            <button onclick="checkAnswer(${i + 1})">${i + 1}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'zener': return `
                     <div class="game-buttons">
                         ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="checkAnswer('${type}', '${s}')">${s}</button>
+                            <button onclick="checkAnswer('${s}')">${s}</button>
                         `).join('')}
                     </div>
                 `;
                 case 'color': return `
                     <div class="game-buttons">
                         ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="checkAnswer('${type}', '${c}')"></button>
+                            <button style="background: ${c}" onclick="checkAnswer('${c}')"></button>
                         `).join('')}
                     </div>
                 `;
             }
         }
 
-        function checkAnswer(type, guess) {
-            stats[type].total++;
+        function checkAnswer(guess) {
+            stats[currentType].total++;
             
             if(guess == currentAnswer) {
-                stats[type].correct++;
+                stats[currentType].correct++;
                 showResult('✅ Верно!', currentAnswer);
             } else {
                 showResult('❌ Неверно', currentAnswer);
             }
             
             checkAchievements();
-            startGame(type); // Начать новый раунд
+            generateNewTask(); // Генерация нового задания
+            renderGameScreen(); // Обновление экрана
         }
 
         function showResult(message, answer) {
