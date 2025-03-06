@@ -97,6 +97,25 @@
             border-color: #fff;
         }
 
+        /* Круглые кнопки для игр */
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .game-buttons button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
         /* Анимация фона */
         body::before {
             content: '';
@@ -147,24 +166,6 @@
         .symbols button, .colors button {
             animation: float 3s infinite ease-in-out;
         }
-
-        /* Поле ввода */
-        .neon-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 2px solid #00ffff;
-            color: #00ffff;
-            padding: 10px;
-            border-radius: 10px;
-            width: 100%;
-            font-size: 1rem;
-            margin: 10px 0;
-            text-align: center;
-        }
-
-        .neon-input:focus {
-            outline: none;
-            box-shadow: 0 0 10px #00ffff;
-        }
     </style>
 </head>
 <body>
@@ -205,15 +206,15 @@
             }}
         ];
 
-        let currentGuess = null;
+        let currentAnswer = null;
 
         // Инициализация
         tg.expand();
 
         function startGame(type) {
             hideAllScreens(() => {
-                const answer = generateTask(type);
-                renderGameScreen(type, answer);
+                currentAnswer = generateTask(type);
+                renderGameScreen(type);
                 document.getElementById('game-screen').classList.add('visible');
             });
         }
@@ -227,12 +228,11 @@
             }
         }
 
-        function renderGameScreen(type, answer) {
+        function renderGameScreen(type) {
             const screen = document.getElementById('game-screen');
             screen.innerHTML = `
                 <h2>${getGameTitle(type)}</h2>
                 ${getGameUI(type)}
-                <button onclick="checkAnswer('${type}', '${answer}')">Проверить</button>
                 <button onclick="showMainMenu()">Назад</button>
             `;
             screen.classList.remove('hidden');
@@ -248,43 +248,42 @@
 
         function getGameUI(type) {
             switch(type) {
-                case 'telepathy': return '<input type="number" min="1" max="10" id="user-guess" placeholder="Введите число" class="neon-input">';
+                case 'telepathy': return `
+                    <div class="game-buttons">
+                        ${Array.from({length: 10}, (_, i) => `
+                            <button onclick="checkAnswer('${type}', ${i + 1})">${i + 1}</button>
+                        `).join('')}
+                    </div>
+                `;
                 case 'zener': return `
-                    <div class="symbols">
-                        ${['○','□','～','✚','★'].map(s => `<button onclick="setGuess('${s}')">${s}</button>`).join('')}
+                    <div class="game-buttons">
+                        ${['○','□','～','✚','★'].map(s => `
+                            <button onclick="checkAnswer('${type}', '${s}')">${s}</button>
+                        `).join('')}
                     </div>
                 `;
                 case 'color': return `
-                    <div class="colors">
+                    <div class="game-buttons">
                         ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="setGuess('${c}')"></button>
+                            <button style="background: ${c}" onclick="checkAnswer('${type}', '${c}')"></button>
                         `).join('')}
                     </div>
                 `;
             }
         }
 
-        function setGuess(guess) {
-            currentGuess = guess;
-        }
-
-        function checkAnswer(type, answer) {
-            const guess = getUserGuess(type);
+        function checkAnswer(type, guess) {
             stats[type].total++;
             
-            if(guess == answer) {
+            if(guess == currentAnswer) {
                 stats[type].correct++;
-                showResult('✅ Верно!', answer);
+                showResult('✅ Верно!', currentAnswer);
             } else {
-                showResult('❌ Неверно', answer);
+                showResult('❌ Неверно', currentAnswer);
             }
             
             checkAchievements();
-        }
-
-        function getUserGuess(type) {
-            if(type === 'telepathy') return document.getElementById('user-guess').value;
-            return currentGuess;
+            startGame(type); // Начать новый раунд
         }
 
         function showResult(message, answer) {
