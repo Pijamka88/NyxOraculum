@@ -88,4 +88,243 @@
             border-color: #fff;
         }
 
-        /* Круглые кнопки
+        /* Круглые кнопки для игр */
+        .symbols button, .colors button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin: 10px;
+            font-size: 1.5rem;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #00ffff;
+            background: rgba(0, 0, 0, 0.5);
+            color: #00ffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .symbols button:hover, .colors button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+        }
+
+        /* Анимация фона */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, #0a0a1a 70%);
+            animation: pulse 10s infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; }
+        }
+
+        /* Достижения */
+        .achievement {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .achievement.locked {
+            opacity: 0.5;
+        }
+
+        .achievement-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 5px #00ffff);
+        }
+
+        /* Анимация символов */
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .symbols button, .colors button {
+            animation: float 3s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="menu" id="main-menu">
+        <h1>🌀 NyxOraculum</h1>
+        <button onclick="startGame('telepathy')">Телепатия чисел</button>
+        <button onclick="startGame('zener')">Карты Зенера</button>
+        <button onclick="startGame('color')">Цветовая интуиция</button>
+        <button onclick="showStats()">Статистика</button>
+        <button onclick="showAchievements()">Достижения</button>
+    </div>
+
+    <div class="game-screen hidden" id="game-screen">
+        <!-- Динамическое содержимое -->
+    </div>
+
+    <div class="achievements hidden" id="achievements">
+        <h2>🏆 Достижения</h2>
+        <div id="achievements-list"></div>
+        <button onclick="showMainMenu()">Назад</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 }
+        };
+
+        const achievements = [
+            { id: 'first_try', name: 'Первая попытка', icon: '1️⃣', condition: (stats) => stats.telepathy.total + stats.zener.total + stats.color.total >= 1 },
+            { id: 'five_correct', name: 'Пять правильных ответов', icon: '5️⃣', condition: (stats) => stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 5 },
+            { id: 'master', name: 'Мастер интуиции', icon: '🎯', condition: (stats) => {
+                const total = stats.telepathy.total + stats.zener.total + stats.color.total;
+                const correct = stats.telepathy.correct + stats.zener.correct + stats.color.correct;
+                return total >= 10 && (correct / total) >= 0.8;
+            }}
+        ];
+
+        let currentAnswer = null;
+        let currentGuess = null;
+
+        // Инициализация
+        tg.expand();
+
+        function startGame(type) {
+            hideAllScreens();
+            document.getElementById('game-screen').classList.remove('hidden');
+            currentAnswer = generateTask(type);
+            renderGameScreen(type, currentAnswer);
+        }
+
+        function generateTask(type) {
+            const rand = Math.random();
+            switch(type) {
+                case 'telepathy': return Math.floor(rand * 10) + 1;
+                case 'zener': return ['○','□','～','✚','★'][Math.floor(rand * 5)];
+                case 'color': return ['red','blue','green','yellow','purple'][Math.floor(rand * 5)];
+            }
+        }
+
+        function renderGameScreen(type, answer) {
+            const screen = document.getElementById('game-screen');
+            screen.innerHTML = `
+                <h2>${getGameTitle(type)}</h2>
+                ${getGameUI(type)}
+                <button onclick="checkAnswer('${type}')">Проверить</button>
+                <button onclick="showMainMenu()">Назад</button>
+            `;
+        }
+
+        function getGameTitle(type) {
+            switch(type) {
+                case 'telepathy': return 'Телепатия чисел';
+                case 'zener': return 'Карты Зенера';
+                case 'color': return 'Цветовая интуиция';
+            }
+        }
+
+        function getGameUI(type) {
+            switch(type) {
+                case 'telepathy': return '<input type="number" min="1" max="10" id="user-guess" placeholder="Введите число" class="neon-input">';
+                case 'zener': return `
+                    <div class="symbols">
+                        ${['○','□','～','✚','★'].map(s => `<button onclick="setGuess('${s}')">${s}</button>`).join('')}
+                    </div>
+                `;
+                case 'color': return `
+                    <div class="colors">
+                        ${['red','blue','green','yellow','purple'].map(c => `
+                            <button style="background: ${c}" onclick="setGuess('${c}')"></button>
+                        `).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function setGuess(guess) {
+            currentGuess = guess;
+        }
+
+        function checkAnswer(type) {
+            const guess = getUserGuess(type);
+            stats[type].total++;
+            
+            if(guess == currentAnswer) {
+                stats[type].correct++;
+                showResult('✅ Верно!', currentAnswer);
+            } else {
+                showResult('❌ Неверно', currentAnswer);
+            }
+            
+            // Генерация нового задания
+            currentAnswer = generateTask(type);
+            renderGameScreen(type, currentAnswer);
+            checkAchievements();
+        }
+
+        function getUserGuess(type) {
+            if(type === 'telepathy') return document.getElementById('user-guess').value;
+            return currentGuess;
+        }
+
+        function showResult(message, answer) {
+            alert(`${message}\nПравильный ответ: ${answer}`);
+        }
+
+        function showStats() {
+            let statsText = '📊 Статистика:\n';
+            for(const [type, data] of Object.entries(stats)) {
+                const percent = data.total > 0 
+                    ? (data.correct/data.total*100).toFixed(1)
+                    : 0;
+                statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
+            }
+            alert(statsText);
+        }
+
+        function showAchievements() {
+            hideAllScreens();
+            const list = document.getElementById('achievements-list');
+            list.innerHTML = achievements.map(a => `
+                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
+                    <span class="achievement-icon">${a.icon}</span>
+                    <span>${a.name}</span>
+                </div>
+            `).join('');
+            document.getElementById('achievements').classList.remove('hidden');
+        }
+
+        function checkAchievements() {
+            // Можно добавить уведомления о новых достижениях
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
+                el.classList.add('hidden');
+            });
+        }
+
+        function showMainMenu() {
+            hideAllScreens();
+            document.getElementById('main-menu').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
