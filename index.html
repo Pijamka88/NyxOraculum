@@ -10,27 +10,29 @@
             background: radial-gradient(circle, #1A1A2E, #0F0F1A);
             color: #E6E6FA;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
         .container {
             text-align: center;
             background: rgba(26, 26, 46, 0.9);
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
+            width: 100%;
+            max-width: 400px;
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #8A2BE2, #9932CC, #BA55D3, #8A2BE2);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #FF007F, #8A2BE2, #BA55D3, #FF007F);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
@@ -46,17 +48,18 @@
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            padding: 15px 30px;
-            margin: 15px;
+            padding: 10px 20px;
+            margin: 10px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            width: 100%;
         }
 
         .btn:hover {
@@ -70,8 +73,8 @@
         }
 
         .btn img {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             filter: brightness(0) invert(1);
         }
 
@@ -82,15 +85,17 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
             z-index: 1000;
+            width: 90%;
+            max-width: 400px;
         }
 
         .game-window h2 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
         }
@@ -98,18 +103,18 @@
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .game-btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            width: 70px;
-            height: 70px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
@@ -142,21 +147,34 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
-            padding: 30px;
+            padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
             z-index: 1000;
+            width: 90%;
+            max-width: 400px;
         }
 
         .stats-window h2, .achievements-window h2 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
         }
 
         .stats-window p, .achievements-window p {
-            font-size: 1.2rem;
+            font-size: 1rem;
+            margin: 10px 0;
+            color: #E6E6FA;
+        }
+
+        .achievements-window ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .achievements-window li {
+            font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
         }
@@ -259,7 +277,9 @@
     <!-- Достижения -->
     <div id="achievements" class="achievements-window">
         <h2>Достижения</h2>
-        <p id="achievement-list">Нет достижений</p>
+        <ul id="achievement-list">
+            <li>Нет достижений</li>
+        </ul>
         <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
@@ -349,9 +369,9 @@
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
             if (achievements.length === 0) {
-                achievementList.textContent = "Нет достижений";
+                achievementList.innerHTML = "<li>Нет достижений</li>";
             } else {
-                achievementList.innerHTML = achievements.join('<br>');
+                achievementList.innerHTML = achievements.map(ach => `<li>${ach}</li>`).join('');
             }
         }
 
