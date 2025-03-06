@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
+            background: url('https://i.imgur.com/3QZQZ9Q.gif') no-repeat center center fixed;
+            background-size: cover;
             color: #E6E6FA;
             margin: 0;
             padding: 0;
@@ -20,13 +21,19 @@
 
         .container {
             text-align: center;
-            background: rgba(26, 26, 46, 0.9);
+            background: rgba(26, 26, 46, 0.8);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         h1 {
@@ -35,34 +42,31 @@
             background: linear-gradient(90deg, #00BFFF, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 3s infinite;
-        }
-
-        @keyframes glow {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
 
         .btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
-            border: 2px solid #FFFFFF;
+            border: 2px solid #8A2BE2;
             padding: 15px;
             margin: 10px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-            transition: background 0.3s ease;
         }
 
         .btn:hover {
             background: rgba(153, 50, 204, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
         }
 
         .btn img {
@@ -85,6 +89,7 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .game-window h2 {
@@ -108,14 +113,18 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.2rem;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s ease;
         }
 
         .game-btn:hover {
             background: rgba(153, 50, 204, 0.3);
+        }
+
+        .game-btn:active {
+            transform: scale(0.95);
         }
 
         .overlay {
@@ -127,6 +136,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .stats-window, .achievements-window {
@@ -143,6 +153,7 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
+            animation: fadeIn 0.5s ease-in-out;
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -177,32 +188,13 @@
         .achievement-item.locked {
             color: #888;
         }
-
-        .space-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: url('https://i.imgur.com/7W0M5y2.gif') no-repeat center center;
-            background-size: cover;
-            animation: spaceMove 20s linear infinite;
-        }
-
-        @keyframes spaceMove {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
     </style>
 </head>
 <body>
-    <div class="space-background"></div>
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/psychology.png" alt="Телепатия">
             Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
