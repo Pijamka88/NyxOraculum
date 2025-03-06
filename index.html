@@ -15,6 +15,31 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Эзотерический фон с анимацией */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(187, 134, 252, 0.1) 10%, transparent 20%);
+            background-size: 20px 20px;
+            animation: moveBackground 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(20px, 20px);
+            }
         }
 
         .container {
@@ -22,16 +47,62 @@
             max-width: 400px;
             width: 100%;
             padding: 20px;
-            background-color: #1a1a1a;
+            background-color: rgba(26, 26, 26, 0.8);
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+            position: relative;
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
             color: #bb86fc;
             text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .mode-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mode-buttons button {
+            background-color: #444444;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        .mode-buttons button:hover {
+            background-color: #bb86fc;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+        }
+
+        .mode-buttons button:active {
+            transform: scale(0.95);
+        }
+
+        #game {
+            margin-bottom: 20px;
         }
 
         #message {
@@ -51,8 +122,9 @@
             background-color: #333333;
             color: #ffffff;
             border: none;
-            border-radius: 10px;
-            padding: 15px;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             font-size: 1rem;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
@@ -74,40 +146,69 @@
             margin-bottom: 20px;
         }
 
-        #achievements {
+        #achievements-button {
+            background-color: #444444;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+        }
+
+        #achievements-button:hover {
+            background-color: #bb86fc;
+            transform: scale(1.05);
+            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+        }
+
+        #achievements-button:active {
+            transform: scale(0.95);
+        }
+
+        #achievements-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(26, 26, 26, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+            z-index: 1000;
+        }
+
+        #achievements-modal h2 {
+            font-size: 1.5rem;
+            color: #bb86fc;
+            margin-bottom: 10px;
+        }
+
+        #achievements-list {
             font-size: 1rem;
             color: #ffffff;
-            margin-top: 20px;
         }
 
-        .neon-text {
-            text-shadow: 0 0 5px #bb86fc, 0 0 10px #bb86fc;
-        }
-
-        .mode-buttons {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-
-        .mode-buttons button {
-            background-color: #444444;
+        #close-achievements {
+            background-color: #bb86fc;
             color: #ffffff;
             border: none;
             border-radius: 10px;
             padding: 10px 20px;
             font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            margin-top: 10px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
-        .mode-buttons button:hover {
-            background-color: #bb86fc;
-            transform: scale(1.1);
-            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+        #close-achievements:hover {
+            background-color: #9a67ea;
+            transform: scale(1.05);
         }
 
-        .mode-buttons button:active {
+        #close-achievements:active {
             transform: scale(0.95);
         }
     </style>
@@ -119,6 +220,7 @@
             <button onclick="setMode('zener')">Карты Зенера</button>
             <button onclick="setMode('telepathy')">Телепатия</button>
             <button onclick="setMode('color')">Цвета</button>
+            <button id="achievements-button" onclick="showAchievements()">Достижения</button>
         </div>
         <div id="game">
             <p id="message" class="neon-text">Выберите режим игры!</p>
@@ -127,10 +229,15 @@
         <div id="stats">
             <p>Статистика: <span id="correct">0</span> / <span id="total">0</span></p>
         </div>
-        <div id="achievements">
-            <p>Достижения: <span id="achievements-list">Нет</span></p>
-        </div>
     </div>
+
+    <!-- Модальное окно достижений -->
+    <div id="achievements-modal">
+        <h2>Достижения</h2>
+        <div id="achievements-list">Нет</div>
+        <button id="close-achievements" onclick="hideAchievements()">Закрыть</button>
+    </div>
+
     <script>
         const symbols = ['○', '□', '～', '✚', '★'];
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -143,6 +250,7 @@
         const correctElement = document.getElementById('correct');
         const totalElement = document.getElementById('total');
         const achievementsListElement = document.getElementById('achievements-list');
+        const achievementsModal = document.getElementById('achievements-modal');
 
         let currentMode = 'zener';
 
@@ -205,6 +313,14 @@
                 achievements.push('Мастер');
             }
             achievementsListElement.textContent = achievements.join(', ') || 'Нет';
+        }
+
+        function showAchievements() {
+            achievementsModal.style.display = 'block';
+        }
+
+        function hideAchievements() {
+            achievementsModal.style.display = 'none';
         }
     </script>
 </body>
