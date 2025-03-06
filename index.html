@@ -35,13 +35,12 @@
             background: linear-gradient(90deg, #00BFFF, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 3s infinite;
+            animation: glow 3s linear infinite;
         }
 
         @keyframes glow {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
         }
 
         .btn {
@@ -60,25 +59,6 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0));
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-        }
-
-        .btn:active::before {
-            transform: translate(-50%, -50%) scale(1);
         }
 
         .btn:hover {
@@ -230,7 +210,7 @@
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/psychology.png" alt="Телепатия">
             Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
@@ -267,7 +247,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('telepathy')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -280,7 +260,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('zener')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -293,7 +273,7 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('color')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
