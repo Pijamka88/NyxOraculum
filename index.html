@@ -27,7 +27,7 @@
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 20px;
             text-shadow: 0 0 10px #8A2BE2;
         }
@@ -36,11 +36,11 @@
             background: #8A2BE2;
             color: #E6E6FA;
             border: none;
-            padding: 10px 20px;
+            padding: 15px 30px;
             margin: 10px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
         }
@@ -69,7 +69,7 @@
         }
 
         .game-window h2 {
-            font-size: 2rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
         }
 
@@ -83,11 +83,11 @@
             background: #8A2BE2;
             color: #E6E6FA;
             border: none;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
         }
@@ -127,7 +127,7 @@
             50% { opacity: 1; }
         }
 
-        .achievement {
+        .achievements-window, .stats-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -137,17 +137,33 @@
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1001;
-            text-align: center;
+            z-index: 1000;
+            text-align: left;
         }
 
-        .achievement h3 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
+        .achievements-window h2, .stats-window h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
-        .achievement p {
-            font-size: 1rem;
+        .achievements-list, .stats-list {
+            font-size: 1.2rem;
+        }
+
+        .stats-list p {
+            margin: 10px 0;
+        }
+
+        .achievement {
+            margin: 10px 0;
+        }
+
+        .achievement.unlocked {
+            color: #00FF00;
+        }
+
+        .achievement.locked {
+            color: #FF0000;
         }
     </style>
 </head>
@@ -157,7 +173,8 @@
         <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
         <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
         <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
-        <button class="btn" onclick="showStats()">Статистика</button>
+        <button class="btn" onclick="openStats()">Статистика</button>
+        <button class="btn" onclick="openAchievements()">Достижения</button>
     </div>
 
     <!-- Игры -->
@@ -206,18 +223,25 @@
     </div>
 
     <!-- Статистика -->
-    <div id="stats" class="game-window">
+    <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
-        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
-        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <button class="btn" onclick="closeGame('stats')">Закрыть</button>
+        <div class="stats-list">
+            <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
+            <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
+            <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+        </div>
+        <button class="btn" onclick="closeStats()">Закрыть</button>
     </div>
 
     <!-- Достижения -->
-    <div id="achievement-popup" class="achievement">
-        <h3>🎉 Новое достижение!</h3>
-        <p id="achievement-text"></p>
+    <div id="achievements" class="achievements-window">
+        <h2>Достижения</h2>
+        <div class="achievements-list">
+            <div class="achievement locked" id="achievement-1">Угадайте 5 чисел подряд</div>
+            <div class="achievement locked" id="achievement-2">Угадайте 3 символа подряд</div>
+            <div class="achievement locked" id="achievement-3">Угадайте 5 цветов подряд</div>
+        </div>
+        <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -227,20 +251,6 @@
     <div id="stars"></div>
 
     <script>
-        // Данные пользователя
-        const stats = {
-            telepathy: { correct: 0, total: 0, streak: 0 },
-            zener: { correct: 0, total: 0, streak: 0 },
-            color: { correct: 0, total: 0, streak: 0 }
-        };
-
-        const achievements = {
-            telepathyMaster: false,
-            zenerMaster: false,
-            colorMaster: false,
-            streak5: false
-        };
-
         // Звездный фон
         const stars = document.getElementById('stars');
         for (let i = 0; i < 100; i++) {
@@ -251,6 +261,20 @@
             star.style.animationDelay = `${Math.random() * 2}s`;
             stars.appendChild(star);
         }
+
+        // Статистика
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 }
+        };
+
+        // Достижения
+        let achievements = {
+            telepathyStreak: 0,
+            zenerStreak: 0,
+            colorStreak: 0
+        };
 
         // Открытие игры
         function openGame(gameId) {
@@ -264,22 +288,31 @@
             document.getElementById('overlay').style.display = 'none';
         }
 
-        // Показать статистику
-        function showStats() {
+        // Открытие статистики
+        function openStats() {
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            openGame('stats');
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
         }
 
-        // Показать достижение
-        function showAchievement(text) {
-            document.getElementById('achievement-text').textContent = text;
-            const popup = document.getElementById('achievement-popup');
-            popup.style.display = 'block';
-            setTimeout(() => {
-                popup.style.display = 'none';
-            }, 3000);
+        // Закрытие статистики
+        function closeStats() {
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        // Открытие достижений
+        function openAchievements() {
+            document.getElementById('achievements').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Закрытие достижений
+        function closeAchievements() {
+            document.getElementById('achievements').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // Телепатия
@@ -288,18 +321,14 @@
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                stats.telepathy.streak++;
+                achievements.telepathyStreak++;
+                if (achievements.telepathyStreak === 5) {
+                    document.getElementById('achievement-1').classList.remove('locked');
+                    document.getElementById('achievement-1').classList.add('unlocked');
+                }
                 alert('✅ Верно!');
-                if (stats.telepathy.streak === 5 && !achievements.streak5) {
-                    achievements.streak5 = true;
-                    showAchievement('5 правильных ответов подряд в телепатии!');
-                }
-                if (stats.telepathy.correct === 10 && !achievements.telepathyMaster) {
-                    achievements.telepathyMaster = true;
-                    showAchievement('Мастер телепатии!');
-                }
             } else {
-                stats.telepathy.streak = 0;
+                achievements.telepathyStreak = 0;
                 alert(`❌ Неверно. Загадано: ${target}`);
             }
         }
@@ -311,18 +340,14 @@
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                stats.zener.streak++;
+                achievements.zenerStreak++;
+                if (achievements.zenerStreak === 3) {
+                    document.getElementById('achievement-2').classList.remove('locked');
+                    document.getElementById('achievement-2').classList.add('unlocked');
+                }
                 alert('✅ Верно!');
-                if (stats.zener.streak === 5 && !achievements.streak5) {
-                    achievements.streak5 = true;
-                    showAchievement('5 правильных ответов подряд в картах Зенера!');
-                }
-                if (stats.zener.correct === 10 && !achievements.zenerMaster) {
-                    achievements.zenerMaster = true;
-                    showAchievement('Мастер карт Зенера!');
-                }
             } else {
-                stats.zener.streak = 0;
+                achievements.zenerStreak = 0;
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
         }
@@ -334,18 +359,14 @@
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                stats.color.streak++;
+                achievements.colorStreak++;
+                if (achievements.colorStreak === 5) {
+                    document.getElementById('achievement-3').classList.remove('locked');
+                    document.getElementById('achievement-3').classList.add('unlocked');
+                }
                 alert('✅ Верно!');
-                if (stats.color.streak === 5 && !achievements.streak5) {
-                    achievements.streak5 = true;
-                    showAchievement('5 правильных ответов подряд в цветовой интуиции!');
-                }
-                if (stats.color.correct === 10 && !achievements.colorMaster) {
-                    achievements.colorMaster = true;
-                    showAchievement('Мастер цветовой интуиции!');
-                }
             } else {
-                stats.color.streak = 0;
+                achievements.colorStreak = 0;
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
         }
