@@ -43,19 +43,11 @@
             max-width: 400px;
             width: 100%;
             text-align: center;
-            position: absolute;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none; /* По умолчанию скрыты */
         }
 
         .visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .hidden {
-            display: none;
+            display: block; /* Показываем экран */
         }
 
         /* Неоновые кнопки */
@@ -178,11 +170,11 @@
         <button onclick="showAchievements()">Достижения</button>
     </div>
 
-    <div class="game-screen hidden" id="game-screen">
+    <div class="game-screen" id="game-screen">
         <!-- Динамическое содержимое -->
     </div>
 
-    <div class="achievements hidden" id="achievements">
+    <div class="achievements" id="achievements">
         <h2>🏆 Достижения</h2>
         <div id="achievements-list"></div>
         <button onclick="showMainMenu()">Назад</button>
@@ -212,11 +204,10 @@
         tg.expand();
 
         function startGame(type) {
-            hideAllScreens(() => {
-                currentAnswer = generateTask(type);
-                renderGameScreen(type);
-                document.getElementById('game-screen').classList.add('visible');
-            });
+            hideAllScreens();
+            currentAnswer = generateTask(type);
+            renderGameScreen(type);
+            document.getElementById('game-screen').classList.add('visible');
         }
 
         function generateTask(type) {
@@ -235,7 +226,6 @@
                 ${getGameUI(type)}
                 <button onclick="showMainMenu()">Назад</button>
             `;
-            screen.classList.remove('hidden');
         }
 
         function getGameTitle(type) {
@@ -302,35 +292,26 @@
         }
 
         function showAchievements() {
-            hideAllScreens(() => {
-                const list = document.getElementById('achievements-list');
-                list.innerHTML = achievements.map(a => `
-                    <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
-                        <span class="achievement-icon">${a.icon}</span>
-                        <span>${a.name}</span>
-                    </div>
-                `).join('');
-                document.getElementById('achievements').classList.add('visible');
-            });
+            hideAllScreens();
+            const list = document.getElementById('achievements-list');
+            list.innerHTML = achievements.map(a => `
+                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
+                    <span class="achievement-icon">${a.icon}</span>
+                    <span>${a.name}</span>
+                </div>
+            `).join('');
+            document.getElementById('achievements').classList.add('visible');
         }
 
-        function checkAchievements() {
-            // Можно добавить уведомления о новых достижениях
-        }
-
-        function hideAllScreens(callback) {
-            const screens = document.querySelectorAll('.menu, .game-screen, .achievements');
-            screens.forEach(screen => {
+        function hideAllScreens() {
+            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(screen => {
                 screen.classList.remove('visible');
-                screen.classList.add('hidden');
             });
-            setTimeout(callback, 500); // Ждем завершения анимации
         }
 
         function showMainMenu() {
-            hideAllScreens(() => {
-                document.getElementById('main-menu').classList.add('visible');
-            });
+            hideAllScreens();
+            document.getElementById('main-menu').classList.add('visible');
         }
     </script>
 </body>
