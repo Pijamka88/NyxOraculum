@@ -23,7 +23,7 @@
         h1 {
             font-size: 2.5rem;
             text-align: center;
-            background: linear-gradient(90deg, #ff00cc, #3333ff);
+            background: linear-gradient(90deg, #ff00cc, #9933ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 2s infinite alternate;
@@ -31,7 +31,7 @@
 
         @keyframes glow {
             0% { text-shadow: 0 0 5px #ff00cc, 0 0 10px #ff00cc, 0 0 20px #ff00cc; }
-            100% { text-shadow: 0 0 10px #3333ff, 0 0 20px #3333ff, 0 0 40px #3333ff; }
+            100% { text-shadow: 0 0 10px #9933ff, 0 0 20px #9933ff, 0 0 40px #9933ff; }
         }
 
         .menu, .game-screen, .achievements {
@@ -39,7 +39,7 @@
             padding: 20px;
             border-radius: 15px;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 0, 255, 0.3);
+            box-shadow: 0 0 20px rgba(153, 51, 255, 0.3);
             max-width: 400px;
             width: 100%;
             text-align: center;
@@ -49,65 +49,30 @@
             display: none;
         }
 
-        /* Неоновые кнопки */
-        button {
+        /* Круглые кнопки */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .button-grid button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #9933ff;
             background: none;
-            border: 2px solid #00ffff;
-            color: #00ffff;
-            padding: 12px 24px;
-            margin: 10px 0;
-            width: 100%;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(0, 255, 255, 0.3), transparent);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease;
-            border-radius: 50%;
-        }
-
-        button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
-            color: #fff;
-            border-color: #fff;
-        }
-
-        /* Круглые кнопки для игр */
-        .symbols button, .colors button {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            margin: 10px;
+            color: #9933ff;
             font-size: 1.5rem;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #00ffff;
-            background: rgba(0, 0, 0, 0.5);
-            color: #00ffff;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .symbols button:hover, .colors button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+        .button-grid button:hover {
+            background: #9933ff;
+            color: #fff;
+            box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
         }
 
         /* Анимация фона */
@@ -147,7 +112,7 @@
             width: 24px;
             height: 24px;
             margin-right: 10px;
-            filter: drop-shadow(0 0 5px #00ffff);
+            filter: drop-shadow(0 0 5px #9933ff);
         }
 
         /* Анимация символов */
@@ -209,8 +174,10 @@
         function startGame(type) {
             hideAllScreens();
             document.getElementById('game-screen').classList.remove('hidden');
+            
             currentAnswer = generateTask(type);
-            renderGameScreen(type, currentAnswer);
+            currentGuess = null;
+            renderGameScreen(type);
         }
 
         function generateTask(type) {
@@ -222,7 +189,7 @@
             }
         }
 
-        function renderGameScreen(type, answer) {
+        function renderGameScreen(type) {
             const screen = document.getElementById('game-screen');
             screen.innerHTML = `
                 <h2>${getGameTitle(type)}</h2>
@@ -242,14 +209,22 @@
 
         function getGameUI(type) {
             switch(type) {
-                case 'telepathy': return '<input type="number" min="1" max="10" id="user-guess" placeholder="Введите число" class="neon-input">';
+                case 'telepathy': return `
+                    <div class="button-grid">
+                        ${Array.from({ length: 10 }, (_, i) => `
+                            <button onclick="setGuess(${i + 1})">${i + 1}</button>
+                        `).join('')}
+                    </div>
+                `;
                 case 'zener': return `
-                    <div class="symbols">
-                        ${['○','□','～','✚','★'].map(s => `<button onclick="setGuess('${s}')">${s}</button>`).join('')}
+                    <div class="button-grid">
+                        ${['○','□','～','✚','★'].map(s => `
+                            <button onclick="setGuess('${s}')">${s}</button>
+                        `).join('')}
                     </div>
                 `;
                 case 'color': return `
-                    <div class="colors">
+                    <div class="button-grid">
                         ${['red','blue','green','yellow','purple'].map(c => `
                             <button style="background: ${c}" onclick="setGuess('${c}')"></button>
                         `).join('')}
@@ -263,25 +238,21 @@
         }
 
         function checkAnswer(type) {
-            const guess = getUserGuess(type);
+            if (currentGuess === null) {
+                alert("Сначала выберите ответ!");
+                return;
+            }
+
             stats[type].total++;
             
-            if(guess == currentAnswer) {
+            if(currentGuess === currentAnswer) {
                 stats[type].correct++;
                 showResult('✅ Верно!', currentAnswer);
             } else {
                 showResult('❌ Неверно', currentAnswer);
             }
             
-            // Генерация нового задания
-            currentAnswer = generateTask(type);
-            renderGameScreen(type, currentAnswer);
             checkAchievements();
-        }
-
-        function getUserGuess(type) {
-            if(type === 'telepathy') return document.getElementById('user-guess').value;
-            return currentGuess;
         }
 
         function showResult(message, answer) {
