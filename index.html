@@ -83,29 +83,25 @@
             display: none;
         }
 
-        /* Круглые кнопки */
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .button-grid button {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid #9933ff;
+        /* Кнопки */
+        button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 10px auto;
+            padding: 12px 24px;
             background: rgba(153, 51, 255, 0.1);
+            border: 2px solid #9933ff;
             color: #9933ff;
-            font-size: 1.5rem;
+            font-size: 1.1rem;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
         }
 
-        .button-grid button::before {
+        button::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -118,39 +114,54 @@
             border-radius: 50%;
         }
 
-        .button-grid button:hover::before {
+        button:hover::before {
             transform: translate(-50%, -50%) scale(1);
         }
 
-        .button-grid button:hover {
+        button:hover {
             box-shadow: 0 0 15px #9933ff, 0 0 30px #9933ff;
             color: #fff;
             border-color: #fff;
         }
 
-        /* Уведомления */
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(10, 10, 30, 0.9);
-            border: 1px solid #9933ff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(153, 51, 255, 0.5);
-            animation: slideIn 0.5s ease, fadeOut 0.5s ease 2.5s;
-            z-index: 1000;
+        /* Круглые кнопки для игр */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 300px;
         }
 
-        @keyframes slideIn {
-            0% { top: -50px; opacity: 0; }
-            100% { top: 20px; opacity: 1; }
+        .button-grid button {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            margin: 0;
         }
 
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
+        /* Адаптация под мобильные */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .button-grid button {
+                width: 80px;
+                height: 80px;
+                font-size: 1.2rem;
+            }
+
+            button {
+                font-size: 1rem;
+                padding: 10px 20px;
+            }
         }
 
         /* Эзотерические элементы */
@@ -299,100 +310,4 @@
         function getGameTitle(type) {
             switch(type) {
                 case 'telepathy': return 'Телепатия чисел';
-                case 'zener': return 'Карты Зенера';
-                case 'color': return 'Цветовая интуиция';
-            }
-        }
-
-        function getGameUI(type) {
-            switch(type) {
-                case 'telepathy': return `
-                    <div class="button-grid">
-                        ${Array.from({length: 10}, (_, i) => `
-                            <button onclick="checkAnswer('telepathy', ${i + 1})">${i + 1}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'zener': return `
-                    <div class="button-grid">
-                        ${['○','□','～','✚','★'].map(s => `
-                            <button onclick="checkAnswer('zener', '${s}')">${s}</button>
-                        `).join('')}
-                    </div>
-                `;
-                case 'color': return `
-                    <div class="button-grid">
-                        ${['red','blue','green','yellow','purple'].map(c => `
-                            <button style="background: ${c}" onclick="checkAnswer('color', '${c}')"></button>
-                        `).join('')}
-                    </div>
-                `;
-            }
-        }
-
-        function checkAnswer(type, guess) {
-            stats[type].total++;
-            
-            if(guess === currentAnswer) {
-                stats[type].correct++;
-                showNotification('✅ Верно!', 'success');
-            } else {
-                showNotification('❌ Неверно', 'error');
-            }
-            
-            // Генерация нового задания
-            currentAnswer = generateTask(type);
-            renderGameScreen(type);
-            checkAchievements();
-        }
-
-        function showNotification(message, type) {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        function showStats() {
-            let statsText = '📊 Статистика:\n';
-            for(const [type, data] of Object.entries(stats)) {
-                const percent = data.total > 0 
-                    ? (data.correct/data.total*100).toFixed(1)
-                    : 0;
-                statsText += `\n${type}: ${data.correct}/${data.total} (${percent}%)`;
-            }
-            showNotification(statsText, 'info');
-        }
-
-        function showAchievements() {
-            hideAllScreens();
-            const list = document.getElementById('achievements-list');
-            list.innerHTML = achievements.map(a => `
-                <div class="achievement ${a.condition(stats) ? '' : 'locked'}">
-                    <span class="achievement-icon">${a.icon}</span>
-                    <span>${a.name}</span>
-                </div>
-            `).join('');
-            document.getElementById('achievements').classList.remove('hidden');
-        }
-
-        function checkAchievements() {
-            // Можно добавить уведомления о новых достижениях
-        }
-
-        function hideAllScreens() {
-            document.querySelectorAll('.menu, .game-screen, .achievements').forEach(el => {
-                el.classList.add('hidden');
-            });
-        }
-
-        function showMainMenu() {
-            hideAllScreens();
-            document.getElementById('main-menu').classList.remove('hidden');
-        }
-    </script>
-</body>
-</html>
+                case '
