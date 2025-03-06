@@ -7,14 +7,14 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1A1A2E, #16213E);
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
             color: #E6E6FA;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             overflow: hidden;
         }
 
@@ -22,37 +22,53 @@
             text-align: center;
             background: rgba(26, 26, 46, 0.9);
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            width: 90%;
+            max-width: 400px;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 2.5rem;
             margin-bottom: 20px;
-            text-shadow: 0 0 10px #8A2BE2;
+            background: linear-gradient(90deg, #00BFFF, #8A2BE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s infinite;
+        }
+
+        @keyframes glow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn {
-            background: #8A2BE2;
+            background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
-            border: 2px solid #FFD700;
-            padding: 15px 30px;
+            border: 2px solid #FFFFFF;
+            padding: 15px;
             margin: 10px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            transition: background 0.3s ease;
         }
 
         .btn:hover {
-            background: #9932CC;
-            box-shadow: 0 0 15px #9932CC, 0 0 30px #9932CC;
+            background: rgba(153, 50, 204, 0.3);
         }
 
-        .btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+        .btn img {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
         }
 
         .game-window {
@@ -63,43 +79,43 @@
             transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
             z-index: 1000;
+            width: 90%;
+            max-width: 400px;
         }
 
         .game-window h2 {
-            font-size: 2.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
+            color: #E6E6FA;
         }
 
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 15px;
+            gap: 10px;
         }
 
         .game-btn {
-            background: #8A2BE2;
+            background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
-            border: 2px solid #FFD700;
-            width: 70px;
-            height: 70px;
+            border: 2px solid #8A2BE2;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.5rem;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
         }
 
         .game-btn:hover {
-            background: #9932CC;
-            box-shadow: 0 0 15px #9932CC, 0 0 30px #9932CC;
-        }
-
-        .game-btn:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+            background: rgba(153, 50, 204, 0.3);
         }
 
         .overlay {
@@ -113,21 +129,7 @@
             z-index: 999;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        .stats-window {
+        .stats-window, .achievements-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -135,53 +137,90 @@
             transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
             padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
             z-index: 1000;
+            width: 90%;
+            max-width: 400px;
         }
 
-        .stats-window h2 {
-            font-size: 2.5rem;
+        .stats-window h2, .achievements-window h2 {
+            font-size: 2rem;
             margin-bottom: 20px;
+            color: #E6E6FA;
         }
 
-        .stats-window p {
-            font-size: 1.2rem;
+        .stats-window p, .achievements-window p {
+            font-size: 1rem;
             margin: 10px 0;
+            color: #E6E6FA;
         }
 
-        .achievements-window {
-            display: none;
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .achievement-item img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .achievement-item.locked img {
+            filter: grayscale(100%);
+        }
+
+        .achievement-item.locked {
+            color: #888;
+        }
+
+        .space-background {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: url('https://i.imgur.com/7W0M5y2.gif') no-repeat center center;
+            background-size: cover;
+            animation: spaceMove 20s linear infinite;
         }
 
-        .achievements-window h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .achievements-window p {
-            font-size: 1.2rem;
-            margin: 10px 0;
+        @keyframes spaceMove {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
+    <div class="space-background"></div>
     <div class="container">
         <h1>NyxOraculum</h1>
-        <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
-        <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
-        <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
-        <button class="btn" onclick="openStats()">Статистика</button>
-        <button class="btn" onclick="openAchievements()">Достижения</button>
+        <button class="btn" onclick="openGame('telepathy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
+            Телепатия
+        </button>
+        <button class="btn" onclick="openGame('zener')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
+            Карты Зенера
+        </button>
+        <button class="btn" onclick="openGame('color')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
+            Цветовая интуиция
+        </button>
+        <button class="btn" onclick="openStats()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
+            Статистика
+        </button>
+        <button class="btn" onclick="openAchievements()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
+            Достижения
+        </button>
     </div>
 
     <!-- Игры -->
@@ -200,7 +239,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('telepathy')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -213,7 +252,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('zener')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -226,7 +265,7 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('color')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -242,28 +281,27 @@
     <!-- Достижения -->
     <div id="achievements" class="achievements-window">
         <h2>Достижения</h2>
-        <p id="achievement-list">Нет достижений</p>
+        <div id="achievement-list">
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер телепатии
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер карт Зенера
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер цветовой интуиции
+            </div>
+        </div>
         <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Звездный фон -->
-    <div id="stars"></div>
-
     <script>
-        // Звездный фон
-        const stars = document.getElementById('stars');
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.left = `${Math.random() * 100}%`;
-            star.style.animationDelay = `${Math.random() * 2}s`;
-            stars.appendChild(star);
-        }
-
         // Статистика и достижения
         let stats = {
             telepathy: { correct: 0, total: 0 },
@@ -331,11 +369,18 @@
         // Обновление достижений
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
-            if (achievements.length === 0) {
-                achievementList.textContent = "Нет достижений";
-            } else {
-                achievementList.innerHTML = achievements.join('<br>');
-            }
+            const achievementsData = [
+                { id: "Мастер телепатии", condition: stats.telepathy.correct >= 10 },
+                { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
+                { id: "Мастер цветовой интуиции", condition: stats.color.correct >= 10 }
+            ];
+
+            achievementList.innerHTML = achievementsData.map(achievement => `
+                <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    ${achievement.id}
+                </div>
+            `).join('');
         }
 
         // Телепатия
@@ -381,15 +426,7 @@
 
         // Проверка достижений
         function checkAchievements() {
-            if (stats.telepathy.correct >= 10 && !achievements.includes("Мастер телепатии")) {
-                achievements.push("Мастер телепатии");
-            }
-            if (stats.zener.correct >= 10 && !achievements.includes("Мастер карт Зенера")) {
-                achievements.push("Мастер карт Зенера");
-            }
-            if (stats.color.correct >= 10 && !achievements.includes("Мастер цветовой интуиции")) {
-                achievements.push("Мастер цветовой интуиции");
-            }
+            updateAchievements();
         }
     </script>
 </body>
