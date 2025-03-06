@@ -7,7 +7,8 @@
     <style>
         /* Основные стили */
         body {
-            background-color: #0a0a0a;
+            background: url('https://i.imgur.com/7QZQZQz.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: #ffffff;
             font-family: 'Arial', sans-serif;
             display: flex;
@@ -15,31 +16,6 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Эзотерический фон с анимацией */
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(187, 134, 252, 0.1) 10%, transparent 20%);
-            background-size: 20px 20px;
-            animation: moveBackground 10s linear infinite;
-            z-index: -1;
-        }
-
-        @keyframes moveBackground {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(20px, 20px);
-            }
         }
 
         .container {
@@ -50,27 +26,21 @@
             background-color: rgba(26, 26, 26, 0.8);
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
-            position: relative;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            color: #bb86fc;
-            text-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
-            animation: pulse 2s infinite;
+            background: linear-gradient(90deg, #bb86fc, #03dac6, #bb86fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 3s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-            }
-            50% {
-                transform: scale(1.05);
-            }
-            100% {
-                transform: scale(1);
-            }
+        @keyframes glow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .mode-buttons {
@@ -101,54 +71,9 @@
             transform: scale(0.95);
         }
 
-        #game {
-            margin-bottom: 20px;
-        }
-
-        #message {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #ffffff;
-        }
-
-        .button-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .button-grid button {
-            background-color: #333333;
-            color: #ffffff;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-        }
-
-        .button-grid button:hover {
-            background-color: #bb86fc;
-            transform: scale(1.1);
-            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
-        }
-
-        .button-grid button:active {
-            transform: scale(0.95);
-        }
-
-        #stats {
-            font-size: 1.1rem;
-            color: #bb86fc;
-            margin-bottom: 20px;
-        }
-
         #achievements-button {
-            background-color: #444444;
-            color: #ffffff;
+            background-color: #bb86fc;
+            color: #1a1a1a;
             border: none;
             border-radius: 10px;
             padding: 15px;
@@ -158,16 +83,16 @@
         }
 
         #achievements-button:hover {
-            background-color: #bb86fc;
+            background-color: #03dac6;
             transform: scale(1.05);
-            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+            box-shadow: 0 0 10px #03dac6, 0 0 20px #03dac6;
         }
 
         #achievements-button:active {
             transform: scale(0.95);
         }
 
-        #achievements-modal {
+        .achievements-modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -178,149 +103,218 @@
             border-radius: 15px;
             box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
             z-index: 1000;
+            text-align: center;
         }
 
-        #achievements-modal h2 {
+        .achievements-modal h2 {
             font-size: 1.5rem;
-            color: #bb86fc;
             margin-bottom: 10px;
+            color: #bb86fc;
         }
 
-        #achievements-list {
+        .achievements-modal p {
             font-size: 1rem;
             color: #ffffff;
         }
 
-        #close-achievements {
+        .achievements-modal button {
             background-color: #bb86fc;
-            color: #ffffff;
+            color: #1a1a1a;
             border: none;
             border-radius: 10px;
             padding: 10px 20px;
             font-size: 1rem;
             cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
         }
 
-        #close-achievements:hover {
-            background-color: #9a67ea;
+        .achievements-modal button:hover {
+            background-color: #03dac6;
             transform: scale(1.05);
+            box-shadow: 0 0 10px #03dac6, 0 0 20px #03dac6;
         }
 
-        #close-achievements:active {
+        .achievements-modal button:active {
             transform: scale(0.95);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 class="neon-text">🔮 NyxOraculum</h1>
+        <h1>🔮 NyxOraculum</h1>
         <div class="mode-buttons">
-            <button onclick="setMode('zener')">Карты Зенера</button>
-            <button onclick="setMode('telepathy')">Телепатия</button>
-            <button onclick="setMode('color')">Цвета</button>
+            <button onclick="openGame('zener')">Карты Зенера</button>
+            <button onclick="openGame('telepathy')">Телепатия</button>
+            <button onclick="openGame('color')">Цвета</button>
             <button id="achievements-button" onclick="showAchievements()">Достижения</button>
-        </div>
-        <div id="game">
-            <p id="message" class="neon-text">Выберите режим игры!</p>
-            <div id="buttons" class="button-grid"></div>
-        </div>
-        <div id="stats">
-            <p>Статистика: <span id="correct">0</span> / <span id="total">0</span></p>
         </div>
     </div>
 
-    <!-- Модальное окно достижений -->
-    <div id="achievements-modal">
+    <div id="achievements-modal" class="achievements-modal">
         <h2>Достижения</h2>
-        <div id="achievements-list">Нет</div>
-        <button id="close-achievements" onclick="hideAchievements()">Закрыть</button>
+        <p id="achievements-list">Нет достижений</p>
+        <button onclick="hideAchievements()">Закрыть</button>
     </div>
 
     <script>
-        const symbols = ['○', '□', '～', '✚', '★'];
-        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-        let correctCount = 0;
-        let totalCount = 0;
         let achievements = [];
 
-        const messageElement = document.getElementById('message');
-        const buttonsElement = document.getElementById('buttons');
-        const correctElement = document.getElementById('correct');
-        const totalElement = document.getElementById('total');
-        const achievementsListElement = document.getElementById('achievements-list');
-        const achievementsModal = document.getElementById('achievements-modal');
+        function openGame(mode) {
+            const gameWindow = window.open('', '_blank', 'width=400,height=600');
+            gameWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="ru">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>${mode === 'zener' ? 'Карты Зенера' : mode === 'telepathy' ? 'Телепатия' : 'Цвета'}</title>
+                    <style>
+                        body {
+                            background-color: #1a1a1a;
+                            color: #ffffff;
+                            font-family: 'Arial', sans-serif;
+                            display: flex;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            margin: 0;
+                        }
+                        .game-container {
+                            text-align: center;
+                            max-width: 400px;
+                            width: 100%;
+                            padding: 20px;
+                            background-color: rgba(26, 26, 26, 0.8);
+                            border-radius: 15px;
+                            box-shadow: 0 0 20px rgba(187, 134, 252, 0.5);
+                        }
+                        .button-grid {
+                            display: grid;
+                            grid-template-columns: repeat(5, 1fr);
+                            gap: 10px;
+                            margin-bottom: 20px;
+                        }
+                        .button-grid button {
+                            background-color: #444444;
+                            color: #ffffff;
+                            border: none;
+                            border-radius: 50%;
+                            width: 50px;
+                            height: 50px;
+                            font-size: 1rem;
+                            cursor: pointer;
+                            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+                        }
+                        .button-grid button:hover {
+                            background-color: #bb86fc;
+                            transform: scale(1.1);
+                            box-shadow: 0 0 10px #bb86fc, 0 0 20px #bb86fc;
+                        }
+                        .button-grid button:active {
+                            transform: scale(0.95);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="game-container">
+                        <h2>${mode === 'zener' ? 'Карты Зенера' : mode === 'telepathy' ? 'Телепатия' : 'Цвета'}</h2>
+                        <p id="message">Угадайте!</p>
+                        <div id="buttons" class="button-grid"></div>
+                        <p>Статистика: <span id="correct">0</span> / <span id="total">0</span></p>
+                    </div>
+                    <script>
+                        const symbols = ['○', '□', '～', '✚', '★'];
+                        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+                        let correctCount = 0;
+                        let totalCount = 0;
 
-        let currentMode = 'zener';
+                        const messageElement = document.getElementById('message');
+                        const buttonsElement = document.getElementById('buttons');
+                        const correctElement = document.getElementById('correct');
+                        const totalElement = document.getElementById('total');
 
-        function setMode(mode) {
-            currentMode = mode;
-            startGame();
+                        function startGame() {
+                            let target, options;
+                            if ('${mode}' === 'zener') {
+                                target = symbols[Math.floor(Math.random() * symbols.length)];
+                                options = symbols;
+                                messageElement.textContent = "Угадайте символ!";
+                            } else if ('${mode}' === 'telepathy') {
+                                target = Math.floor(Math.random() * 10) + 1;
+                                options = Array.from({ length: 10 }, (_, i) => i + 1);
+                                messageElement.textContent = "Угадайте число от 1 до 10!";
+                            } else if ('${mode}' === 'color') {
+                                target = colors[Math.floor(Math.random() * colors.length)];
+                                options = colors;
+                                messageElement.textContent = "Угадайте цвет!";
+                            }
+
+                            buttonsElement.innerHTML = '';
+                            options.forEach(option => {
+                                const button = document.createElement('button');
+                                button.textContent = option;
+                                button.addEventListener('click', () => checkAnswer(option, target));
+                                buttonsElement.appendChild(button);
+                            });
+                        }
+
+                        function checkAnswer(guess, target) {
+                            totalCount++;
+                            if (guess === target) {
+                                correctCount++;
+                                messageElement.textContent = "✅ Верно!";
+                                checkAchievements();
+                            } else {
+                                messageElement.textContent = \`❌ Неверно. Загадан: \${target}\`;
+                            }
+                            updateStats();
+                            setTimeout(startGame, 1000);
+                        }
+
+                        function updateStats() {
+                            correctElement.textContent = correctCount;
+                            totalElement.textContent = totalCount;
+                        }
+
+                        function checkAchievements() {
+                            if (correctCount === 5) {
+                                window.opener.addAchievement('Новичок');
+                            }
+                            if (correctCount === 10) {
+                                window.opener.addAchievement('Эксперт');
+                            }
+                            if (correctCount === 20) {
+                                window.opener.addAchievement('Мастер');
+                            }
+                        }
+
+                        startGame();
+                    <\/script>
+                </body>
+                </html>
+            `);
         }
 
-        function startGame() {
-            let target, options;
-            if (currentMode === 'zener') {
-                target = symbols[Math.floor(Math.random() * symbols.length)];
-                options = symbols;
-                messageElement.textContent = "Угадайте символ!";
-            } else if (currentMode === 'telepathy') {
-                target = Math.floor(Math.random() * 10) + 1;
-                options = Array.from({ length: 10 }, (_, i) => i + 1);
-                messageElement.textContent = "Угадайте число от 1 до 10!";
-            } else if (currentMode === 'color') {
-                target = colors[Math.floor(Math.random() * colors.length)];
-                options = colors;
-                messageElement.textContent = "Угадайте цвет!";
+        function addAchievement(achievement) {
+            if (!achievements.includes(achievement)) {
+                achievements.push(achievement);
+                updateAchievements();
             }
-
-            buttonsElement.innerHTML = '';
-            options.forEach(option => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.addEventListener('click', () => checkAnswer(option, target));
-                buttonsElement.appendChild(button);
-            });
         }
 
-        function checkAnswer(guess, target) {
-            totalCount++;
-            if (guess === target) {
-                correctCount++;
-                messageElement.textContent = "✅ Верно!";
-                checkAchievements();
-            } else {
-                messageElement.textContent = `❌ Неверно. Загадан: ${target}`;
-            }
-            updateStats();
-            setTimeout(startGame, 1000);
-        }
-
-        function updateStats() {
-            correctElement.textContent = correctCount;
-            totalElement.textContent = totalCount;
-        }
-
-        function checkAchievements() {
-            if (correctCount === 5 && !achievements.includes('Новичок')) {
-                achievements.push('Новичок');
-            }
-            if (correctCount === 10 && !achievements.includes('Эксперт')) {
-                achievements.push('Эксперт');
-            }
-            if (correctCount === 20 && !achievements.includes('Мастер')) {
-                achievements.push('Мастер');
-            }
-            achievementsListElement.textContent = achievements.join(', ') || 'Нет';
+        function updateAchievements() {
+            const achievementsList = document.getElementById('achievements-list');
+            achievementsList.textContent = achievements.join(', ') || 'Нет достижений';
         }
 
         function showAchievements() {
-            achievementsModal.style.display = 'block';
+            const modal = document.getElementById('achievements-modal');
+            modal.style.display = 'block';
         }
 
         function hideAchievements() {
-            achievementsModal.style.display = 'none';
+            const modal = document.getElementById('achievements-modal');
+            modal.style.display = 'none';
         }
     </script>
 </body>
