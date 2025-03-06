@@ -76,7 +76,7 @@
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
+            gap: 15px;
         }
 
         .game-btn {
@@ -127,43 +127,39 @@
             50% { opacity: 1; }
         }
 
-        .achievements-window, .stats-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(46, 26, 71, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1000;
-            text-align: left;
+        .supernova {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            animation: explode 3s infinite;
         }
 
-        .achievements-window h2, .stats-window h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(10); opacity: 0; }
         }
 
-        .achievements-list, .stats-list {
+        .stats {
+            margin-top: 20px;
             font-size: 1.2rem;
         }
 
-        .stats-list p {
-            margin: 10px 0;
+        .achievements {
+            margin-top: 20px;
+            font-size: 1.2rem;
         }
 
-        .achievement {
-            margin: 10px 0;
+        .reset-btn {
+            margin-top: 20px;
+            background: #FF4500;
+            box-shadow: 0 0 10px #FF4500, 0 0 20px #FF4500;
         }
 
-        .achievement.unlocked {
-            color: #00FF00;
-        }
-
-        .achievement.locked {
-            color: #FF0000;
+        .reset-btn:hover {
+            background: #FF6347;
+            box-shadow: 0 0 15px #FF6347, 0 0 30px #FF6347;
         }
     </style>
 </head>
@@ -173,8 +169,10 @@
         <button class="btn" onclick="openGame('telepathy')">Телепатия</button>
         <button class="btn" onclick="openGame('zener')">Карты Зенера</button>
         <button class="btn" onclick="openGame('color')">Цветовая интуиция</button>
-        <button class="btn" onclick="openStats()">Статистика</button>
-        <button class="btn" onclick="openAchievements()">Достижения</button>
+        <button class="btn" onclick="showStats()">Статистика</button>
+        <button class="btn reset-btn" onclick="resetStats()">Сбросить статистику</button>
+        <div class="stats" id="stats"></div>
+        <div class="achievements" id="achievements"></div>
     </div>
 
     <!-- Игры -->
@@ -193,7 +191,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn" onclick="closeGame('telepathy')">Закрыть</button>
+        <button class="btn" style="margin-top: 20px;" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -206,7 +204,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn" onclick="closeGame('zener')">Закрыть</button>
+        <button class="btn" style="margin-top: 20px;" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -219,29 +217,7 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn" onclick="closeGame('color')">Закрыть</button>
-    </div>
-
-    <!-- Статистика -->
-    <div id="stats" class="stats-window">
-        <h2>Статистика</h2>
-        <div class="stats-list">
-            <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
-            <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
-            <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        </div>
-        <button class="btn" onclick="closeStats()">Закрыть</button>
-    </div>
-
-    <!-- Достижения -->
-    <div id="achievements" class="achievements-window">
-        <h2>Достижения</h2>
-        <div class="achievements-list">
-            <div class="achievement locked" id="achievement-1">Угадайте 5 чисел подряд</div>
-            <div class="achievement locked" id="achievement-2">Угадайте 3 символа подряд</div>
-            <div class="achievement locked" id="achievement-3">Угадайте 5 цветов подряд</div>
-        </div>
-        <button class="btn" onclick="closeAchievements()">Закрыть</button>
+        <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -250,7 +226,23 @@
     <!-- Звездный фон -->
     <div id="stars"></div>
 
+    <!-- Анимация сверхновых -->
+    <div id="supernovae"></div>
+
     <script>
+        // Статистика и достижения
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 }
+        };
+
+        let achievements = {
+            telepathy: false,
+            zener: false,
+            color: false
+        };
+
         // Звездный фон
         const stars = document.getElementById('stars');
         for (let i = 0; i < 100; i++) {
@@ -262,19 +254,16 @@
             stars.appendChild(star);
         }
 
-        // Статистика
-        let stats = {
-            telepathy: { correct: 0, total: 0 },
-            zener: { correct: 0, total: 0 },
-            color: { correct: 0, total: 0 }
-        };
-
-        // Достижения
-        let achievements = {
-            telepathyStreak: 0,
-            zenerStreak: 0,
-            colorStreak: 0
-        };
+        // Анимация сверхновых
+        const supernovae = document.getElementById('supernovae');
+        setInterval(() => {
+            const supernova = document.createElement('div');
+            supernova.className = 'supernova';
+            supernova.style.top = `${Math.random() * 100}%`;
+            supernova.style.left = `${Math.random() * 100}%`;
+            supernovae.appendChild(supernova);
+            setTimeout(() => supernova.remove(), 3000);
+        }, 1000);
 
         // Открытие игры
         function openGame(gameId) {
@@ -288,49 +277,18 @@
             document.getElementById('overlay').style.display = 'none';
         }
 
-        // Открытие статистики
-        function openStats() {
-            document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
-            document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
-            document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            document.getElementById('stats').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        // Закрытие статистики
-        function closeStats() {
-            document.getElementById('stats').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // Открытие достижений
-        function openAchievements() {
-            document.getElementById('achievements').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        // Закрытие достижений
-        function closeAchievements() {
-            document.getElementById('achievements').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
         // Телепатия
         function checkTelepathy(guess) {
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                achievements.telepathyStreak++;
-                if (achievements.telepathyStreak === 5) {
-                    document.getElementById('achievement-1').classList.remove('locked');
-                    document.getElementById('achievement-1').classList.add('unlocked');
-                }
                 alert('✅ Верно!');
             } else {
-                achievements.telepathyStreak = 0;
                 alert(`❌ Неверно. Загадано: ${target}`);
             }
+            checkAchievements();
+            updateStats();
         }
 
         // Карты Зенера
@@ -340,16 +298,12 @@
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                achievements.zenerStreak++;
-                if (achievements.zenerStreak === 3) {
-                    document.getElementById('achievement-2').classList.remove('locked');
-                    document.getElementById('achievement-2').classList.add('unlocked');
-                }
                 alert('✅ Верно!');
             } else {
-                achievements.zenerStreak = 0;
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
+            checkAchievements();
+            updateStats();
         }
 
         // Цветовая интуиция
@@ -359,16 +313,68 @@
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                achievements.colorStreak++;
-                if (achievements.colorStreak === 5) {
-                    document.getElementById('achievement-3').classList.remove('locked');
-                    document.getElementById('achievement-3').classList.add('unlocked');
-                }
                 alert('✅ Верно!');
             } else {
-                achievements.colorStreak = 0;
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
+            checkAchievements();
+            updateStats();
+        }
+
+        // Проверка достижений
+        function checkAchievements() {
+            if (stats.telepathy.correct >= 10 && !achievements.telepathy) {
+                achievements.telepathy = true;
+                alert('🎉 Достижение: Мастер телепатии!');
+            }
+            if (stats.zener.correct >= 10 && !achievements.zener) {
+                achievements.zener = true;
+                alert('🎉 Достижение: Мастер карт Зенера!');
+            }
+            if (stats.color.correct >= 10 && !achievements.color) {
+                achievements.color = true;
+                alert('🎉 Достижение: Мастер цветовой интуиции!');
+            }
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            const statsElement = document.getElementById('stats');
+            statsElement.innerHTML = `
+                <h3>Статистика</h3>
+                <p>Телепатия: ${stats.telepathy.correct}/${stats.telepathy.total}</p>
+                <p>Карты Зенера: ${stats.zener.correct}/${stats.zener.total}</p>
+                <p>Цветовая интуиция: ${stats.color.correct}/${stats.color.total}</p>
+            `;
+
+            const achievementsElement = document.getElementById('achievements');
+            achievementsElement.innerHTML = `
+                <h3>Достижения</h3>
+                <p>${achievements.telepathy ? '✅ Мастер телепатии' : '❌ Мастер телепатии'}</p>
+                <p>${achievements.zener ? '✅ Мастер карт Зенера' : '❌ Мастер карт Зенера'}</p>
+                <p>${achievements.color ? '✅ Мастер цветовой интуиции' : '❌ Мастер цветовой интуиции'}</p>
+            `;
+        }
+
+        // Показать статистику
+        function showStats() {
+            updateStats();
+        }
+
+        // Сброс статистики
+        function resetStats() {
+            stats = {
+                telepathy: { correct: 0, total: 0 },
+                zener: { correct: 0, total: 0 },
+                color: { correct: 0, total: 0 }
+            };
+            achievements = {
+                telepathy: false,
+                zener: false,
+                color: false
+            };
+            updateStats();
+            alert('Статистика сброшена!');
         }
     </script>
 </body>
