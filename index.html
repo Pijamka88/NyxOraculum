@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1A1A2E, #16213E);
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
             color: #E6E6FA;
             margin: 0;
             padding: 0;
@@ -21,36 +21,38 @@
         .container {
             text-align: center;
             background: rgba(26, 26, 46, 0.9);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #8A2BE2, #FFD700, #00FF00, #FF1493);
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #8A2BE2, #9932CC, #BA55D3, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 3s infinite alternate;
+            animation: glow 3s infinite;
         }
 
         @keyframes glow {
-            0% { filter: hue-rotate(0deg); }
-            100% { filter: hue-rotate(360deg); }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn {
-            background: #8A2BE2;
+            background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
-            border: 2px solid #FFD700;
+            border: 2px solid #8A2BE2;
             padding: 15px 30px;
-            margin: 10px;
+            margin: 15px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -58,13 +60,19 @@
         }
 
         .btn:hover {
-            background: #9932CC;
-            box-shadow: 0 0 15px #9932CC, 0 0 30px #9932CC;
+            background: rgba(153, 50, 204, 0.3);
+            box-shadow: 0 0 15px rgba(153, 50, 204, 0.7);
         }
 
         .btn:active {
             transform: scale(0.95);
-            box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+
+        .btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
         .game-window {
@@ -74,15 +82,17 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
             z-index: 1000;
         }
 
         .game-window h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
+            color: #E6E6FA;
         }
 
         .game-buttons {
@@ -92,26 +102,26 @@
         }
 
         .game-btn {
-            background: #8A2BE2;
+            background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
-            border: 2px solid #FFD700;
+            border: 2px solid #8A2BE2;
             width: 70px;
             height: 70px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.5rem;
             transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
 
         .game-btn:hover {
-            background: #9932CC;
-            box-shadow: 0 0 15px #9932CC, 0 0 30px #9932CC;
+            background: rgba(153, 50, 204, 0.3);
+            box-shadow: 0 0 15px rgba(153, 50, 204, 0.7);
         }
 
         .game-btn:active {
             transform: scale(0.95);
-            box-shadow: 0 0 5px #8A2BE2, 0 0 10px #8A2BE2;
+            box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
         }
 
         .overlay {
@@ -123,6 +133,32 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
+        }
+
+        .stats-window, .achievements-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1000;
+        }
+
+        .stats-window h2, .achievements-window h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #E6E6FA;
+        }
+
+        .stats-window p, .achievements-window p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: #E6E6FA;
         }
 
         .star {
@@ -138,103 +174,30 @@
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
         }
-
-        .stats-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1000;
-        }
-
-        .stats-window h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .stats-window p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-
-        .achievements-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1000;
-        }
-
-        .achievements-window h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .achievements-window p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-
-        .ball-game {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-            z-index: 1000;
-        }
-
-        .ball-game h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
-
-        .ball {
-            width: 50px;
-            height: 50px;
-            background: #8A2BE2;
-            border: 2px solid #FFD700;
-            border-radius: 50%;
-            position: absolute;
-            cursor: pointer;
-            box-shadow: 0 0 10px #8A2BE2, 0 0 20px #8A2BE2;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <span>🔮</span> Телепатия
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/mind.png" alt="Телепатия">
+            Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
-            <span>🃏</span> Карты Зенера
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
+            Карты Зенера
         </button>
         <button class="btn" onclick="openGame('color')">
-            <span>🎨</span> Цветовая интуиция
-        </button>
-        <button class="btn" onclick="openBallGame()">
-            <span>🌀</span> Управление шариком
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
+            Цветовая интуиция
         </button>
         <button class="btn" onclick="openStats()">
-            <span>📊</span> Статистика
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
+            Статистика
         </button>
         <button class="btn" onclick="openAchievements()">
-            <span>🏆</span> Достижения
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
+            Достижения
         </button>
     </div>
 
@@ -281,14 +244,6 @@
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
         <button class="btn" style="margin-top: 20px;" onclick="closeGame('color')">Закрыть</button>
-    </div>
-
-    <!-- Управление шариком -->
-    <div id="ball-game" class="ball-game">
-        <h2>Управление шариком</h2>
-        <p>Попробуйте мысленно управлять шариком:</p>
-        <div id="ball" class="ball"></div>
-        <button class="btn" style="margin-top: 20px;" onclick="closeBallGame()">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -371,56 +326,6 @@
         function closeAchievements() {
             document.getElementById('achievements').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-        }
-
-        // Открытие игры с шариком
-        function openBallGame() {
-            document.getElementById('ball-game').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            initBallGame();
-        }
-
-        // Закрытие игры с шариком
-        function closeBallGame() {
-            document.getElementById('ball-game').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // Инициализация игры с шариком
-        function initBallGame() {
-            const ball = document.getElementById('ball');
-            let isDragging = false;
-
-            ball.addEventListener('mousedown', () => {
-                isDragging = true;
-            });
-
-            document.addEventListener('mousemove', (e) => {
-                if (isDragging) {
-                    ball.style.left = `${e.clientX - 25}px`;
-                    ball.style.top = `${e.clientY - 25}px`;
-                }
-            });
-
-            document.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-
-            ball.addEventListener('touchstart', () => {
-                isDragging = true;
-            });
-
-            document.addEventListener('touchmove', (e) => {
-                if (isDragging) {
-                    const touch = e.touches[0];
-                    ball.style.left = `${touch.clientX - 25}px`;
-                    ball.style.top = `${touch.clientY - 25}px`;
-                }
-            });
-
-            document.addEventListener('touchend', () => {
-                isDragging = false;
-            });
         }
 
         // Обновление статистики
