@@ -7,7 +7,8 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
+            background: url('https://i.imgur.com/7X8ZQ2E.jpg') no-repeat center center fixed;
+            background-size: cover;
             color: #E6E6FA;
             margin: 0;
             padding: 0;
@@ -16,24 +17,6 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            position: relative;
-        }
-
-        .parallax {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://i.imgur.com/7QZQZQZ.png') repeat;
-            background-size: cover;
-            z-index: -1;
-            animation: parallax 20s linear infinite;
-        }
-
-        @keyframes parallax {
-            0% { background-position: 0 0; }
-            100% { background-position: 100% 100%; }
         }
 
         .container {
@@ -45,8 +28,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-            z-index: 1;
         }
 
         h1 {
@@ -87,7 +68,6 @@
 
         .btn:active {
             transform: scale(0.95);
-            transition: transform 0.1s ease;
         }
 
         .btn img {
@@ -145,7 +125,6 @@
 
         .game-btn:active {
             transform: scale(0.95);
-            transition: transform 0.1s ease;
         }
 
         .overlay {
@@ -207,14 +186,9 @@
         .achievement-item.locked {
             color: #888;
         }
-
-        .close-btn {
-            margin-top: 30px;
-        }
     </style>
 </head>
 <body>
-    <div class="parallax"></div>
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -255,7 +229,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -268,7 +242,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -281,7 +255,7 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('color')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -291,7 +265,7 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <button class="btn" onclick="resetStats()">Сбросить</button>
-        <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
+        <button class="btn" onclick="closeStats()">Закрыть</button>
     </div>
 
     <!-- Достижения -->
@@ -311,7 +285,7 @@
                 Мастер цветовой интуиции
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+        <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
