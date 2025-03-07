@@ -7,8 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: url('https://i.imgur.com/7QZQZQz.jpg') no-repeat center center fixed;
-            background-size: cover;
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
             color: #E6E6FA;
             margin: 0;
             padding: 0;
@@ -21,13 +20,15 @@
 
         .container {
             text-align: center;
-            background: rgba(26, 26, 46, 0.8);
+            background: rgba(26, 26, 46, 0.9);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
@@ -54,7 +55,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -90,7 +91,12 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .game-window.active {
+            opacity: 1;
         }
 
         .game-window h2 {
@@ -137,7 +143,12 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
         }
 
         .stats-window, .achievements-window {
@@ -154,7 +165,12 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .stats-window.active, .achievements-window.active {
+            opacity: 1;
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -190,8 +206,19 @@
             color: #888;
         }
 
-        .close-btn {
-            margin-top: 30px;
+        .neon-circle {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(138, 43, 226, 0.5);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
     </style>
 </head>
@@ -199,7 +226,7 @@
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Телепатия">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
             Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
@@ -209,6 +236,10 @@
         <button class="btn" onclick="openGame('color')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
             Цветовая интуиция
+        </button>
+        <button class="btn" onclick="openGame('tarot')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Таро">
+            Таро
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -236,7 +267,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -249,7 +280,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -262,7 +293,17 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('color')">Закрыть</button>
+    </div>
+
+    <div id="tarot" class="game-window">
+        <h2>Таро</h2>
+        <p>Выберите карту:</p>
+        <div class="game-buttons">
+            <button class="game-btn" onclick="drawTarotCard()">Вытянуть карту</button>
+        </div>
+        <p id="tarot-result"></p>
+        <button class="btn" style="margin-top: 30px;" onclick="closeGame('tarot')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -271,8 +312,9 @@
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+        <p>Таро: <span id="tarot-stats">0/0</span></p>
         <button class="btn" onclick="resetStats()">Сбросить</button>
-        <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
+        <button class="btn" onclick="closeStats()">Закрыть</button>
     </div>
 
     <!-- Достижения -->
@@ -293,89 +335,80 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Провидец
+                Пророк Таро
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мистик
+                Искатель истины
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+        <button class="btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
 
+    <!-- Анимированный фон -->
+    <div id="neon-circles"></div>
+
     <script>
+        // Анимированный фон с парящими кружками
+        const neonCircles = document.getElementById('neon-circles');
+        for (let i = 0; i < 20; i++) {
+            const circle = document.createElement('div');
+            circle.className = 'neon-circle';
+            circle.style.top = `${Math.random() * 100}%`;
+            circle.style.left = `${Math.random() * 100}%`;
+            circle.style.animationDelay = `${Math.random() * 5}s`;
+            neonCircles.appendChild(circle);
+        }
+
         // Статистика и достижения
         let stats = {
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
-            color: { correct: 0, total: 0 }
+            color: { correct: 0, total: 0 },
+            tarot: { total: 0 }
         };
 
         let achievements = [];
 
         // Открытие игры
         function openGame(gameId) {
-            document.getElementById(gameId).style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById(gameId).style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
+            document.getElementById(gameId).classList.add('active');
+            document.getElementById('overlay').classList.add('active');
         }
 
         // Закрытие игры
         function closeGame(gameId) {
-            document.getElementById(gameId).style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById(gameId).style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById(gameId).classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         // Открытие статистики
         function openStats() {
-            document.getElementById('stats').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('stats').style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
+            document.getElementById('stats').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
             updateStats();
         }
 
         // Закрытие статистики
         function closeStats() {
-            document.getElementById('stats').style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('stats').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById('stats').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         // Открытие достижений
         function openAchievements() {
-            document.getElementById('achievements').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('achievements').style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
+            document.getElementById('achievements').classList.add('active');
+            document.getElementById('overlay').classList.add('active');
             updateAchievements();
         }
 
         // Закрытие достижений
         function closeAchievements() {
-            document.getElementById('achievements').style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('achievements').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById('achievements').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
         }
 
         // Обновление статистики
@@ -383,6 +416,7 @@
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
+            document.getElementById('tarot-stats').textContent = `${stats.tarot.total}`;
         }
 
         // Сброс статистики
@@ -390,7 +424,8 @@
             stats = {
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
-                color: { correct: 0, total: 0 }
+                color: { correct: 0, total: 0 },
+                tarot: { total: 0 }
             };
             updateStats();
         }
@@ -402,8 +437,8 @@
                 { id: "Мастер телепатии", condition: stats.telepathy.correct >= 10 },
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Мастер цветовой интуиции", condition: stats.color.correct >= 10 },
-                { id: "Провидец", condition: stats.telepathy.correct >= 20 },
-                { id: "Мистик", condition: stats.zener.correct >= 20 }
+                { id: "Пророк Таро", condition: stats.tarot.total >= 5 },
+                { id: "Искатель истины", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 30 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -452,6 +487,21 @@
             } else {
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
+            checkAchievements();
+        }
+
+        // Таро
+        function drawTarotCard() {
+            const cards = [
+                "Шут", "Маг", "Верховная Жрица", "Императрица", "Император",
+                "Иерофант", "Влюбленные", "Колесница", "Сила", "Отшельник",
+                "Колесо Фортуны", "Справедливость", "Повешенный", "Смерть",
+                "Умеренность", "Дьявол", "Башня", "Звезда", "Луна", "Солнце",
+                "Суд", "Мир"
+            ];
+            const card = cards[Math.floor(Math.random() * cards.length)];
+            document.getElementById('tarot-result').textContent = `Вытянута карта: ${card}`;
+            stats.tarot.total++;
             checkAchievements();
         }
 
