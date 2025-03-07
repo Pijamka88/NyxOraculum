@@ -16,7 +16,6 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            position: relative;
         }
 
         .container {
@@ -28,8 +27,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-            z-index: 1;
         }
 
         h1 {
@@ -56,7 +53,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -92,7 +89,12 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .game-window h2 {
@@ -139,7 +141,7 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
-            transition: opacity 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .stats-window, .achievements-window {
@@ -156,7 +158,7 @@
             z-index: 1000;
             width: 90%;
             max-width: 400px;
-            transition: opacity 0.3s ease, transform 0.3s ease;
+            animation: fadeIn 0.5s ease;
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -192,42 +194,23 @@
             color: #888;
         }
 
-        .close-btn {
-            margin-top: 30px;
-        }
-
-        .bubbles {
+        .star {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .bubbles div {
-            position: absolute;
-            bottom: -100px;
-            width: 20px;
-            height: 20px;
-            background: rgba(138, 43, 226, 0.3);
+            width: 2px;
+            height: 2px;
+            background: white;
             border-radius: 50%;
-            animation: float 10s infinite;
+            animation: twinkle 2s infinite;
         }
 
-        @keyframes float {
-            0% {
-                transform: translateY(0);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh);
-                opacity: 0;
-            }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .close-btn, .reset-btn {
+            margin-top: 30px;
+            width: 100%;
         }
     </style>
 </head>
@@ -307,7 +290,7 @@
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <button class="btn" onclick="resetStats()">Сбросить</button>
+        <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
 
@@ -317,23 +300,19 @@
         <div id="achievement-list">
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телепатии
+                Новичок телепатии (5 правильных ответов)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер карт Зенера
+                Мастер карт Зенера (10 правильных ответов)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер цветовой интуиции
+                Цветовой провидец (15 правильных ответов)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Новичок интуиции
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Экстрасенс
+                Экстрасенс (20 правильных ответов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -342,22 +321,20 @@
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Парящие кружки -->
-    <div class="bubbles">
-        <div style="left: 10%; animation-delay: 0s;"></div>
-        <div style="left: 20%; animation-delay: 2s;"></div>
-        <div style="left: 30%; animation-delay: 4s;"></div>
-        <div style="left: 40%; animation-delay: 6s;"></div>
-        <div style="left: 50%; animation-delay: 8s;"></div>
-        <div style="left: 60%; animation-delay: 10s;"></div>
-        <div style="left: 70%; animation-delay: 12s;"></div>
-        <div style="left: 80%; animation-delay: 14s;"></div>
-        <div style="left: 90%; animation-delay: 16s;"></div>
-    </div>
+    <!-- Звездный фон -->
+    <div id="stars"></div>
 
     <script>
         // Звездный фон
-        const bubbles = document.querySelector('.bubbles');
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
+        }
 
         // Статистика и достижения
         let stats = {
@@ -372,62 +349,38 @@
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById(gameId).style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
         }
 
         // Закрытие игры
         function closeGame(gameId) {
-            document.getElementById(gameId).style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById(gameId).style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById(gameId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // Открытие статистики
         function openStats() {
             document.getElementById('stats').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('stats').style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
             updateStats();
         }
 
         // Закрытие статистики
         function closeStats() {
-            document.getElementById('stats').style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('stats').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // Открытие достижений
         function openAchievements() {
             document.getElementById('achievements').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('achievements').style.opacity = '1';
-                document.getElementById('overlay').style.opacity = '1';
-            }, 10);
             updateAchievements();
         }
 
         // Закрытие достижений
         function closeAchievements() {
-            document.getElementById('achievements').style.opacity = '0';
-            document.getElementById('overlay').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('achievements').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-            }, 300);
+            document.getElementById('achievements').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // Обновление статистики
@@ -451,11 +404,10 @@
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
             const achievementsData = [
-                { id: "Мастер телепатии", condition: stats.telepathy.correct >= 10 },
+                { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
-                { id: "Мастер цветовой интуиции", condition: stats.color.correct >= 10 },
-                { id: "Новичок интуиции", condition: stats.telepathy.total + stats.zener.total + stats.color.total >= 10 },
-                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 30 }
+                { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
+                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
