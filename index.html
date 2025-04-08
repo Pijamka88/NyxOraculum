@@ -49,16 +49,16 @@
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            padding: 12px;
-            margin: 8px;
+            padding: 15px;
+            margin: 10px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
         }
 
@@ -71,8 +71,8 @@
         }
 
         .btn img {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             filter: brightness(0) invert(1);
         }
 
@@ -99,26 +99,26 @@
         }
 
         .game-window h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 20px;
             color: #E6E6FA;
         }
 
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
+            gap: 10px;
         }
 
         .game-btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
@@ -133,21 +133,20 @@
             transform: scale(0.95);
         }
 
-        /* Стили для телекинеза */
         .telekinesis-container {
             width: 100%;
-            height: 250px;
+            height: 300px;
             position: relative;
             border: 2px dashed #8A2BE2;
             border-radius: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
 
         .telekinesis-object {
             position: absolute;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             background: #8A2BE2;
             border-radius: 50%;
             top: 50%;
@@ -156,70 +155,6 @@
             cursor: pointer;
             transition: transform 0.1s ease;
             box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
-        }
-
-        /* Стили для предсказаний */
-        .fortune-card {
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-            min-height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-        }
-
-        /* Стили для аура-визора */
-        .aura-test {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .aura-color {
-            height: 80px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .aura-color:active {
-            transform: scale(0.95);
-        }
-
-        /* Стили для теста на эмпатию */
-        .empathy-test {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .emotion-image {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .emotion-options {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .emotion-btn {
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(138, 43, 226, 0.2);
-            border: 1px solid #8A2BE2;
-            cursor: pointer;
         }
 
         .overlay {
@@ -252,28 +187,27 @@
         }
 
         .stats-window h2, .achievements-window h2 {
-            font-size: 1.8rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 20px;
             color: #E6E6FA;
         }
 
         .stats-window p, .achievements-window p {
-            font-size: 0.9rem;
-            margin: 8px 0;
+            font-size: 1rem;
+            margin: 10px 0;
             color: #E6E6FA;
         }
 
         .achievement-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .achievement-item img {
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             filter: brightness(0) invert(1);
         }
 
@@ -300,14 +234,8 @@
         }
 
         .close-btn, .reset-btn {
-            margin-top: 20px;
+            margin-top: 30px;
             width: 100%;
-        }
-
-        .result-message {
-            margin-top: 15px;
-            font-size: 1rem;
-            min-height: 20px;
         }
     </style>
 </head>
@@ -329,18 +257,6 @@
         <button class="btn" onclick="openGame('telekinesis')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/mind-map.png" alt="Телекинез">
             Телекинез
-        </button>
-        <button class="btn" onclick="openGame('fortune')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Предсказание">
-            Предсказание
-        </button>
-        <button class="btn" onclick="openGame('aura')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/aura.png" alt="Аура">
-            Аура-визор
-        </button>
-        <button class="btn" onclick="openGame('empathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/mental-health.png" alt="Эмпатия">
-            Тест на эмпатию
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -406,46 +322,6 @@
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
 
-    <div id="fortune" class="game-window">
-        <h2>Предсказание будущего</h2>
-        <p>Коснитесь карты, чтобы узнать свое будущее:</p>
-        <div class="fortune-card" id="fortune-card">
-            Нажмите на карту, чтобы получить предсказание
-        </div>
-        <button class="btn" onclick="getFortune()">Получить предсказание</button>
-        <button class="btn close-btn" onclick="closeGame('fortune')">Закрыть</button>
-    </div>
-
-    <div id="aura" class="game-window">
-        <h2>Аура-визор</h2>
-        <p>Выберите цвет, который вас привлекает:</p>
-        <div class="aura-test">
-            <div class="aura-color" style="background: #FF5733;" onclick="checkAura('red')"></div>
-            <div class="aura-color" style="background: #33FF57;" onclick="checkAura('green')"></div>
-            <div class="aura-color" style="background: #3357FF;" onclick="checkAura('blue')"></div>
-            <div class="aura-color" style="background: #F3FF33;" onclick="checkAura('yellow')"></div>
-        </div>
-        <div class="result-message" id="aura-result"></div>
-        <button class="btn close-btn" onclick="closeGame('aura')">Закрыть</button>
-    </div>
-
-    <div id="empathy" class="game-window">
-        <h2>Тест на эмпатию</h2>
-        <p>Какая эмоция изображена на картинке?</p>
-        <div class="empathy-test">
-            <img src="https://img.icons8.com/fluency/96/000000/neutral-emoticon.png" class="emotion-image" id="emotion-image">
-            <div class="emotion-options">
-                <button class="emotion-btn" onclick="checkEmpathy('радость')">Радость</button>
-                <button class="emotion-btn" onclick="checkEmpathy('грусть')">Грусть</button>
-                <button class="emotion-btn" onclick="checkEmpathy('злость')">Злость</button>
-                <button class="emotion-btn" onclick="checkEmpathy('удивление')">Удивление</button>
-            </div>
-        </div>
-        <div class="result-message" id="empathy-result"></div>
-        <button class="btn" onclick="nextEmotion()">Следующая эмоция</button>
-        <button class="btn close-btn" onclick="closeGame('empathy')">Закрыть</button>
-    </div>
-
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -453,9 +329,6 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> перемещений</p>
-        <p>Предсказаний: <span id="fortune-stats">0</span></p>
-        <p>Тестов ауры: <span id="aura-stats">0</span></p>
-        <p>Тестов на эмпатию: <span id="empathy-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -484,18 +357,6 @@
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Мастер телекинеза (10 перемещений)
             </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Оракул (5 предсказаний)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Читатель аур (3 теста)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Эмпат (5 правильных ответов)
-            </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
@@ -523,40 +384,10 @@
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
-            telekinesis: { moves: 0 },
-            fortune: { readings: 0 },
-            aura: { tests: 0 },
-            empathy: { correct: 0, total: 0 }
+            telekinesis: { moves: 0 }
         };
 
-        // Данные для новых игр
-        const fortunes = [
-            "Вас ждет неожиданная встреча",
-            "Скоро вас посетит удача",
-            "Будьте осторожны в ближайшие дни",
-            "Ваше желание скоро исполнится",
-            "Впереди вас ждет интересное путешествие",
-            "Не бойтесь перемен - они к лучшему",
-            "Ваша интуиция сейчас особенно сильна",
-            "Скоро вы получите важное известие"
-        ];
-
-        const auraMeanings = {
-            red: "Вы полны энергии и страсти",
-            green: "Вы находитесь в гармонии с природой",
-            blue: "Вы спокойны и мудры",
-            yellow: "Вы излучаете радость и оптимизм"
-        };
-
-        const emotions = [
-            { image: "https://img.icons8.com/fluency/96/000000/happy.png", emotion: "радость" },
-            { image: "https://img.icons8.com/fluency/96/000000/sad.png", emotion: "грусть" },
-            { image: "https://img.icons8.com/fluency/96/000000/angry.png", emotion: "злость" },
-            { image: "https://img.icons8.com/fluency/96/000000/surprised.png", emotion: "удивление" },
-            { image: "https://img.icons8.com/fluency/96/000000/neutral-emoticon.png", emotion: "нейтральность" }
-        ];
-
-        let currentEmotionIndex = 0;
+        let achievements = [];
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -631,46 +462,6 @@
             }
         }
 
-        // Предсказание будущего
-        function getFortune() {
-            const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-            document.getElementById('fortune-card').textContent = randomFortune;
-            stats.fortune.readings++;
-            updateStats();
-            checkAchievements();
-        }
-
-        // Аура-визор
-        function checkAura(color) {
-            const result = auraMeanings[color];
-            document.getElementById('aura-result').textContent = result;
-            stats.aura.tests++;
-            updateStats();
-            checkAchievements();
-        }
-
-        // Тест на эмпатию
-        function nextEmotion() {
-            currentEmotionIndex = (currentEmotionIndex + 1) % emotions.length;
-            document.getElementById('emotion-image').src = emotions[currentEmotionIndex].image;
-            document.getElementById('empathy-result').textContent = '';
-        }
-
-        function checkEmpathy(guess) {
-            const correctEmotion = emotions[currentEmotionIndex].emotion;
-            stats.empathy.total++;
-            
-            if (guess === correctEmotion) {
-                stats.empathy.correct++;
-                document.getElementById('empathy-result').textContent = '✅ Верно! Это ' + correctEmotion;
-            } else {
-                document.getElementById('empathy-result').textContent = '❌ Неверно. Это ' + correctEmotion;
-            }
-            
-            updateStats();
-            checkAchievements();
-        }
-
         // Открытие игры
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
@@ -678,8 +469,6 @@
             
             if (gameId === 'telekinesis') {
                 initTelekinesis();
-            } else if (gameId === 'empathy') {
-                nextEmotion();
             }
         }
 
@@ -721,9 +510,6 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.moves;
-            document.getElementById('fortune-stats').textContent = stats.fortune.readings;
-            document.getElementById('aura-stats').textContent = stats.aura.tests;
-            document.getElementById('empathy-stats').textContent = `${stats.empathy.correct}/${stats.empathy.total}`;
         }
 
         // Сброс статистики
@@ -732,10 +518,7 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                telekinesis: { moves: 0 },
-                fortune: { readings: 0 },
-                aura: { tests: 0 },
-                empathy: { correct: 0, total: 0 }
+                telekinesis: { moves: 0 }
             };
             updateStats();
             updateAchievements();
@@ -749,10 +532,7 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 },
-                { id: "Оракул", condition: stats.fortune.readings >= 5 },
-                { id: "Читатель аур", condition: stats.aura.tests >= 3 },
-                { id: "Эмпат", condition: stats.empathy.correct >= 5 }
+                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -761,11 +541,6 @@
                     ${achievement.id}
                 </div>
             `).join('');
-        }
-
-        // Проверка достижений
-        function checkAchievements() {
-            updateAchievements();
         }
 
         // Телепатия
@@ -807,6 +582,11 @@
                 alert(`❌ Неверно. Загадан: ${target}`);
             }
             checkAchievements();
+        }
+
+        // Проверка достижений
+        function checkAchievements() {
+            updateAchievements();
         }
     </script>
 </body>
