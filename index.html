@@ -16,6 +16,7 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
+            touch-action: none;
         }
 
         .container {
@@ -132,6 +133,57 @@
             transform: scale(0.95);
         }
 
+        /* Стили для новой игры "Телепатия" */
+        .mind-game-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            border: 2px dashed #8A2BE2;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .mind-circle {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #8A2BE2;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+        }
+
+        .mind-target {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .mind-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .mind-score {
+            font-size: 1.2rem;
+            color: #E6E6FA;
+        }
+
         .overlay {
             display: none;
             position: fixed;
@@ -219,7 +271,11 @@
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
-            Телепатия
+            Телепатия (числа)
+        </button>
+        <button class="btn" onclick="openGame('mind-telepathy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/psychic.png" alt="Телепатия">
+            Телепатия (сила мысли)
         </button>
         <button class="btn" onclick="openGame('zener')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
@@ -241,7 +297,7 @@
 
     <!-- Игры -->
     <div id="telepathy" class="game-window">
-        <h2>Телепатия</h2>
+        <h2>Телепатия (числа)</h2>
         <p>Угадайте число от 1 до 10:</p>
         <div class="game-buttons">
             <button class="game-btn" onclick="checkTelepathy(1)">1</button>
@@ -256,6 +312,21 @@
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
         <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+    </div>
+
+    <!-- Новая игра "Телепатия (сила мысли)" -->
+    <div id="mind-telepathy" class="game-window">
+        <h2>Телепатия (сила мысли)</h2>
+        <p>Переместите шар силой мысли к цели!</p>
+        <div class="mind-game-container" id="mind-game">
+            <div class="mind-circle" id="mind-circle"></div>
+            <div class="mind-target" id="mind-target"></div>
+        </div>
+        <div class="mind-controls">
+            <div class="mind-score">Попаданий: <span id="mind-score">0</span></div>
+            <button class="btn" onclick="newMindTarget()">Новая цель</button>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('mind-telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -287,7 +358,8 @@
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
+        <p>Телепатия (числа): <span id="telepathy-stats">0/0</span></p>
+        <p>Телепатия (мысль): <span id="mind-telepathy-stats">0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
@@ -314,6 +386,10 @@
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Экстрасенс (20 правильных ответов)
             </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Телекинетик (10 попаданий в игре "Сила мысли")
+            </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
@@ -339,14 +415,132 @@
         // Статистика и достижения
         let stats = {
             telepathy: { correct: 0, total: 0 },
+            mindTelepathy: { score: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 }
         };
 
         let achievements = [];
 
+        // Переменные для игры "Телепатия (сила мысли)"
+        let mindScore = 0;
+        let isDragging = false;
+        let offsetX, offsetY;
+        const mindCircle = document.getElementById('mind-circle');
+        const mindTarget = document.getElementById('mind-target');
+        const mindGame = document.getElementById('mind-game');
+        const mindScoreElement = document.getElementById('mind-score');
+
+        // Инициализация игры "Телепатия (сила мысли)"
+        function initMindGame() {
+            mindScore = 0;
+            mindScoreElement.textContent = '0';
+            newMindTarget();
+            
+            // Обработчики для мыши
+            mindCircle.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            // Обработчики для сенсорных устройств
+            mindCircle.addEventListener('touchstart', touchStart);
+            document.addEventListener('touchmove', touchMove);
+            document.addEventListener('touchend', touchEnd);
+        }
+
+        function startDrag(e) {
+            isDragging = true;
+            const rect = mindCircle.getBoundingClientRect();
+            offsetX = e.clientX - rect.left;
+            offsetY = e.clientY - rect.top;
+            e.preventDefault();
+        }
+
+        function drag(e) {
+            if (!isDragging) return;
+            const gameRect = mindGame.getBoundingClientRect();
+            let x = e.clientX - gameRect.left - offsetX;
+            let y = e.clientY - gameRect.top - offsetY;
+            
+            // Ограничение перемещения внутри контейнера
+            x = Math.max(0, Math.min(x, gameRect.width - mindCircle.offsetWidth));
+            y = Math.max(0, Math.min(y, gameRect.height - mindCircle.offsetHeight));
+            
+            mindCircle.style.left = x + 'px';
+            mindCircle.style.top = y + 'px';
+            
+            checkTargetCollision();
+        }
+
+        function stopDrag() {
+            isDragging = false;
+        }
+
+        // Обработчики для сенсорных устройств
+        function touchStart(e) {
+            isDragging = true;
+            const touch = e.touches[0];
+            const rect = mindCircle.getBoundingClientRect();
+            offsetX = touch.clientX - rect.left;
+            offsetY = touch.clientY - rect.top;
+            e.preventDefault();
+        }
+
+        function touchMove(e) {
+            if (!isDragging) return;
+            const touch = e.touches[0];
+            const gameRect = mindGame.getBoundingClientRect();
+            let x = touch.clientX - gameRect.left - offsetX;
+            let y = touch.clientY - gameRect.top - offsetY;
+            
+            x = Math.max(0, Math.min(x, gameRect.width - mindCircle.offsetWidth));
+            y = Math.max(0, Math.min(y, gameRect.height - mindCircle.offsetHeight));
+            
+            mindCircle.style.left = x + 'px';
+            mindCircle.style.top = y + 'px';
+            
+            checkTargetCollision();
+        }
+
+        function touchEnd() {
+            isDragging = false;
+        }
+
+        function newMindTarget() {
+            const gameRect = mindGame.getBoundingClientRect();
+            const maxX = gameRect.width - mindTarget.offsetWidth;
+            const maxY = gameRect.height - mindTarget.offsetHeight;
+            
+            const x = Math.random() * maxX;
+            const y = Math.random() * maxY;
+            
+            mindTarget.style.left = x + 'px';
+            mindTarget.style.top = y + 'px';
+        }
+
+        function checkTargetCollision() {
+            const circleRect = mindCircle.getBoundingClientRect();
+            const targetRect = mindTarget.getBoundingClientRect();
+            
+            // Проверка пересечения
+            if (!(circleRect.right < targetRect.left || 
+                  circleRect.left > targetRect.right || 
+                  circleRect.bottom < targetRect.top || 
+                  circleRect.top > targetRect.bottom)) {
+                // Попадание!
+                mindScore++;
+                mindScoreElement.textContent = mindScore;
+                stats.mindTelepathy.score = mindScore;
+                newMindTarget();
+                checkAchievements();
+            }
+        }
+
         // Открытие игры
         function openGame(gameId) {
+            if (gameId === 'mind-telepathy') {
+                initMindGame();
+            }
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
         }
@@ -386,6 +580,7 @@
         // Обновление статистики
         function updateStats() {
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
+            document.getElementById('mind-telepathy-stats').textContent = stats.mindTelepathy.score;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
         }
@@ -394,6 +589,7 @@
         function resetStats() {
             stats = {
                 telepathy: { correct: 0, total: 0 },
+                mindTelepathy: { score: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 }
             };
@@ -407,7 +603,8 @@
                 { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
-                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 }
+                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
+                { id: "Телекинетик", condition: stats.mindTelepathy.score >= 10 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -418,7 +615,7 @@
             `).join('');
         }
 
-        // Телепатия
+        // Телепатия (числа)
         function checkTelepathy(guess) {
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
