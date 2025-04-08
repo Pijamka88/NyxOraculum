@@ -5,19 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-        :root {
-            --primary-color: #8A2BE2;
-            --secondary-color: #00BFFF;
-            --bg-dark: #1A1A2E;
-            --bg-darker: #0F0F1A;
-            --text-color: #E6E6FA;
-            --border-color: #8A2BE2;
-        }
-
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, var(--bg-dark), var(--bg-darker));
-            color: var(--text-color);
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
+            color: #E6E6FA;
             margin: 0;
             padding: 0;
             display: flex;
@@ -34,17 +25,15 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--border-color);
+            border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-            z-index: 10;
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            background: linear-gradient(90deg, #00BFFF, #8A2BE2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
@@ -58,32 +47,23 @@
 
         .btn {
             background: rgba(138, 43, 226, 0.2);
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            padding: 15px;
-            margin: 10px;
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 12px;
+            margin: 8px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
             width: 100%;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:hover {
             background: rgba(153, 50, 204, 0.3);
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
         }
 
         .btn:active {
@@ -91,14 +71,9 @@
         }
 
         .btn img {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
-        }
-
-        .btn:hover img {
-            transform: scale(1.2);
         }
 
         .game-window {
@@ -111,7 +86,7 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--border-color);
+            border: 2px solid #8A2BE2;
             z-index: 1000;
             width: 90%;
             max-width: 400px;
@@ -124,27 +99,27 @@
         }
 
         .game-window h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: var(--text-color);
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #E6E6FA;
         }
 
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
+            gap: 8px;
         }
 
         .game-btn {
             background: rgba(138, 43, 226, 0.2);
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            width: 50px;
-            height: 50px;
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -152,46 +127,99 @@
 
         .game-btn:hover {
             background: rgba(153, 50, 204, 0.3);
-            animation: pulse 1.5s infinite;
-            box-shadow: 0 0 15px var(--primary-color);
         }
 
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Стили для телекинеза */
         .telekinesis-container {
             width: 100%;
-            height: 300px;
+            height: 250px;
             position: relative;
-            border: 2px dashed var(--border-color);
+            border: 2px dashed #8A2BE2;
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             overflow: hidden;
         }
 
         .telekinesis-object {
             position: absolute;
-            width: 60px;
-            height: 60px;
-            background: var(--primary-color);
+            width: 50px;
+            height: 50px;
+            background: #8A2BE2;
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
             transition: transform 0.1s ease;
-            box-shadow: 0 0 15px var(--primary-color);
-            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -55%) scale(1.05); }
+        /* Стили для предсказаний */
+        .fortune-card {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
         }
 
-        .particle {
-            position: absolute;
-            background: var(--primary-color);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 100;
+        /* Стили для аура-визора */
+        .aura-test {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .aura-color {
+            height: 80px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .aura-color:active {
+            transform: scale(0.95);
+        }
+
+        /* Стили для теста на эмпатию */
+        .empathy-test {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .emotion-image {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .emotion-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .emotion-btn {
+            padding: 8px;
+            border-radius: 8px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid #8A2BE2;
+            cursor: pointer;
         }
 
         .overlay {
@@ -216,34 +244,37 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid var(--border-color);
+            border: 2px solid #8A2BE2;
             z-index: 1000;
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
         }
 
+        .stats-window h2, .achievements-window h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: #E6E6FA;
+        }
+
+        .stats-window p, .achievements-window p {
+            font-size: 0.9rem;
+            margin: 8px 0;
+            color: #E6E6FA;
+        }
+
         .achievement-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .achievement-item:hover {
-            transform: scale(1.02);
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
         }
 
         .achievement-item img {
-            width: 24px;
-            height: 24px;
+            width: 20px;
+            height: 20px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
-        }
-
-        .achievement-item:hover img {
-            transform: scale(1.2);
         }
 
         .achievement-item.locked img {
@@ -254,65 +285,33 @@
             color: #888;
         }
 
-        /* Анимированный фон */
-        .nebula {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0.3;
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
         }
 
-        .particle-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 2;
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
         }
 
         .close-btn, .reset-btn {
-            margin-top: 30px;
+            margin-top: 20px;
             width: 100%;
         }
 
-        /* Адаптация под время суток */
-        .night-mode {
-            --primary-color: #9370DB;
-            --secondary-color: #4169E1;
-            --bg-dark: #0A0A1A;
-            --bg-darker: #050510;
-            --text-color: #D8BFD8;
-            --border-color: #9370DB;
-        }
-
-        .day-mode {
-            --primary-color: #6A5ACD;
-            --secondary-color: #4682B4;
-            --bg-dark: #2D2D4D;
-            --bg-darker: #1A1A3A;
-            --text-color: #F0F8FF;
-            --border-color: #6A5ACD;
-        }
-
-        .sunset-mode {
-            --primary-color: #DA70D6;
-            --secondary-color: #FF8C00;
-            --bg-dark: #2E1A47;
-            --bg-darker: #1A0F29;
-            --text-color: #FFE4E1;
-            --border-color: #DA70D6;
+        .result-message {
+            margin-top: 15px;
+            font-size: 1rem;
+            min-height: 20px;
         }
     </style>
 </head>
 <body>
-    <!-- Анимированный фон -->
-    <div class="nebula" id="nebula"></div>
-    <div class="particle-bg" id="particle-bg"></div>
-
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -330,6 +329,18 @@
         <button class="btn" onclick="openGame('telekinesis')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/mind-map.png" alt="Телекинез">
             Телекинез
+        </button>
+        <button class="btn" onclick="openGame('fortune')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Предсказание">
+            Предсказание
+        </button>
+        <button class="btn" onclick="openGame('aura')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/aura.png" alt="Аура">
+            Аура-визор
+        </button>
+        <button class="btn" onclick="openGame('empathy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/mental-health.png" alt="Эмпатия">
+            Тест на эмпатию
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -395,6 +406,46 @@
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
 
+    <div id="fortune" class="game-window">
+        <h2>Предсказание будущего</h2>
+        <p>Коснитесь карты, чтобы узнать свое будущее:</p>
+        <div class="fortune-card" id="fortune-card">
+            Нажмите на карту, чтобы получить предсказание
+        </div>
+        <button class="btn" onclick="getFortune()">Получить предсказание</button>
+        <button class="btn close-btn" onclick="closeGame('fortune')">Закрыть</button>
+    </div>
+
+    <div id="aura" class="game-window">
+        <h2>Аура-визор</h2>
+        <p>Выберите цвет, который вас привлекает:</p>
+        <div class="aura-test">
+            <div class="aura-color" style="background: #FF5733;" onclick="checkAura('red')"></div>
+            <div class="aura-color" style="background: #33FF57;" onclick="checkAura('green')"></div>
+            <div class="aura-color" style="background: #3357FF;" onclick="checkAura('blue')"></div>
+            <div class="aura-color" style="background: #F3FF33;" onclick="checkAura('yellow')"></div>
+        </div>
+        <div class="result-message" id="aura-result"></div>
+        <button class="btn close-btn" onclick="closeGame('aura')">Закрыть</button>
+    </div>
+
+    <div id="empathy" class="game-window">
+        <h2>Тест на эмпатию</h2>
+        <p>Какая эмоция изображена на картинке?</p>
+        <div class="empathy-test">
+            <img src="https://img.icons8.com/fluency/96/000000/neutral-emoticon.png" class="emotion-image" id="emotion-image">
+            <div class="emotion-options">
+                <button class="emotion-btn" onclick="checkEmpathy('радость')">Радость</button>
+                <button class="emotion-btn" onclick="checkEmpathy('грусть')">Грусть</button>
+                <button class="emotion-btn" onclick="checkEmpathy('злость')">Злость</button>
+                <button class="emotion-btn" onclick="checkEmpathy('удивление')">Удивление</button>
+            </div>
+        </div>
+        <div class="result-message" id="empathy-result"></div>
+        <button class="btn" onclick="nextEmotion()">Следующая эмоция</button>
+        <button class="btn close-btn" onclick="closeGame('empathy')">Закрыть</button>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -402,6 +453,9 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> перемещений</p>
+        <p>Предсказаний: <span id="fortune-stats">0</span></p>
+        <p>Тестов ауры: <span id="aura-stats">0</span></p>
+        <p>Тестов на эмпатию: <span id="empathy-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -430,6 +484,18 @@
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Мастер телекинеза (10 перемещений)
             </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Оракул (5 предсказаний)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Читатель аур (3 теста)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Эмпат (5 правильных ответов)
+            </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
@@ -437,109 +503,60 @@
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
 
+    <!-- Звездный фон -->
+    <div id="stars"></div>
+
     <script>
-        // Инициализация цветовой схемы по времени суток
-        function setTimeBasedTheme() {
-            const hour = new Date().getHours();
-            const body = document.body;
-            
-            body.classList.remove('night-mode', 'day-mode', 'sunset-mode');
-            
-            if (hour >= 6 && hour < 12) {
-                body.classList.add('day-mode');
-            } else if (hour >= 12 && hour < 18) {
-                body.classList.add('sunset-mode');
-            } else {
-                body.classList.add('night-mode');
-            }
+        // Звездный фон
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
         }
 
-        // Создание туманности
-        function createNebula() {
-            const nebula = document.getElementById('nebula');
-            const colors = ['rgba(138, 43, 226, 0.3)', 'rgba(70, 130, 180, 0.3)', 'rgba(147, 112, 219, 0.3)'];
-            
-            nebula.style.background = `radial-gradient(circle at 30% 30%, ${colors.join(', ')})`;
-            nebula.style.animation = 'rotate 60s linear infinite';
-            
-            document.head.insertAdjacentHTML('beforeend', `
-                <style>
-                    @keyframes rotate {
-                        from { transform: rotate(0deg); }
-                        to { transform: rotate(360deg); }
-                    }
-                </style>
-            `);
-        }
+        // Статистика и достижения
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 },
+            telekinesis: { moves: 0 },
+            fortune: { readings: 0 },
+            aura: { tests: 0 },
+            empathy: { correct: 0, total: 0 }
+        };
 
-        // Создание частиц фона
-        function createParticles() {
-            const container = document.getElementById('particle-bg');
-            const particleCount = 50;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                const size = Math.random() * 5 + 1;
-                const posX = Math.random() * 100;
-                const posY = Math.random() * 100;
-                const duration = Math.random() * 30 + 20;
-                const delay = Math.random() * 10;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${posX}%`;
-                particle.style.top = `${posY}%`;
-                particle.style.opacity = Math.random() * 0.5 + 0.1;
-                particle.style.animation = `float ${duration}s linear ${delay}s infinite`;
-                
-                document.head.insertAdjacentHTML('beforeend', `
-                    <style>
-                        @keyframes float {
-                            0% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.1}; }
-                            50% { transform: translate(${Math.random() * 100 - 50}px, ${Math.random() * 100 - 50}px); opacity: ${Math.random() * 0.3 + 0.1}; }
-                            100% { transform: translate(0, 0); opacity: ${Math.random() * 0.5 + 0.1}; }
-                        }
-                    </style>
-                `);
-                
-                container.appendChild(particle);
-            }
-        }
+        // Данные для новых игр
+        const fortunes = [
+            "Вас ждет неожиданная встреча",
+            "Скоро вас посетит удача",
+            "Будьте осторожны в ближайшие дни",
+            "Ваше желание скоро исполнится",
+            "Впереди вас ждет интересное путешествие",
+            "Не бойтесь перемен - они к лучшему",
+            "Ваша интуиция сейчас особенно сильна",
+            "Скоро вы получите важное известие"
+        ];
 
-        // Создание эффекта частиц при перемещении шара
-        function createMoveParticles(x, y) {
-            const container = document.getElementById('telekinesis-area');
-            const particleCount = 10;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                
-                const size = Math.random() * 8 + 2;
-                const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 30 + 10;
-                const duration = Math.random() * 1 + 0.5;
-                
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                particle.style.left = `${x}px`;
-                particle.style.top = `${y}px`;
-                particle.style.backgroundColor = `hsl(${Math.random() * 60 + 270}, 100%, 70%)`;
-                
-                const animation = particle.animate([
-                    { transform: `translate(0, 0) scale(1)`, opacity: 1 },
-                    { transform: `translate(${Math.cos(angle) * distance}px, ${Math.sin(angle) * distance}px) scale(0)`, opacity: 0 }
-                ], {
-                    duration: duration * 1000,
-                    easing: 'cubic-bezier(0.4, 0, 0.2, 1)'
-                });
-                
-                animation.onfinish = () => particle.remove();
-                container.appendChild(particle);
-            }
-        }
+        const auraMeanings = {
+            red: "Вы полны энергии и страсти",
+            green: "Вы находитесь в гармонии с природой",
+            blue: "Вы спокойны и мудры",
+            yellow: "Вы излучаете радость и оптимизм"
+        };
+
+        const emotions = [
+            { image: "https://img.icons8.com/fluency/96/000000/happy.png", emotion: "радость" },
+            { image: "https://img.icons8.com/fluency/96/000000/sad.png", emotion: "грусть" },
+            { image: "https://img.icons8.com/fluency/96/000000/angry.png", emotion: "злость" },
+            { image: "https://img.icons8.com/fluency/96/000000/surprised.png", emotion: "удивление" },
+            { image: "https://img.icons8.com/fluency/96/000000/neutral-emoticon.png", emotion: "нейтральность" }
+        ];
+
+        let currentEmotionIndex = 0;
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -547,7 +564,6 @@
             const object = document.getElementById('telekinesis-object');
             let isDragging = false;
             let startX, startY, startLeft, startTop;
-            let lastX = 0, lastY = 0;
 
             // Для мыши
             object.addEventListener('mousedown', startDrag);
@@ -576,12 +592,6 @@
                 
                 startLeft = objRect.left - rect.left;
                 startTop = objRect.top - rect.top;
-                
-                // Пульсация при касании
-                object.style.animation = 'pulse 0.5s ease';
-                setTimeout(() => {
-                    object.style.animation = 'float 3s ease-in-out infinite';
-                }, 500);
             }
 
             function drag(e) {
@@ -609,13 +619,6 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
-                
-                // Создание частиц при движении
-                if (Math.abs(lastX - newLeft) > 5 || Math.abs(lastY - newTop) > 5) {
-                    createMoveParticles(newLeft + object.offsetWidth/2, newTop + object.offsetHeight/2);
-                    lastX = newLeft;
-                    lastY = newTop;
-                }
             }
 
             function stopDrag() {
@@ -628,13 +631,45 @@
             }
         }
 
-        // Статистика и достижения
-        let stats = {
-            telepathy: { correct: 0, total: 0 },
-            zener: { correct: 0, total: 0 },
-            color: { correct: 0, total: 0 },
-            telekinesis: { moves: 0 }
-        };
+        // Предсказание будущего
+        function getFortune() {
+            const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            document.getElementById('fortune-card').textContent = randomFortune;
+            stats.fortune.readings++;
+            updateStats();
+            checkAchievements();
+        }
+
+        // Аура-визор
+        function checkAura(color) {
+            const result = auraMeanings[color];
+            document.getElementById('aura-result').textContent = result;
+            stats.aura.tests++;
+            updateStats();
+            checkAchievements();
+        }
+
+        // Тест на эмпатию
+        function nextEmotion() {
+            currentEmotionIndex = (currentEmotionIndex + 1) % emotions.length;
+            document.getElementById('emotion-image').src = emotions[currentEmotionIndex].image;
+            document.getElementById('empathy-result').textContent = '';
+        }
+
+        function checkEmpathy(guess) {
+            const correctEmotion = emotions[currentEmotionIndex].emotion;
+            stats.empathy.total++;
+            
+            if (guess === correctEmotion) {
+                stats.empathy.correct++;
+                document.getElementById('empathy-result').textContent = '✅ Верно! Это ' + correctEmotion;
+            } else {
+                document.getElementById('empathy-result').textContent = '❌ Неверно. Это ' + correctEmotion;
+            }
+            
+            updateStats();
+            checkAchievements();
+        }
 
         // Открытие игры
         function openGame(gameId) {
@@ -643,6 +678,8 @@
             
             if (gameId === 'telekinesis') {
                 initTelekinesis();
+            } else if (gameId === 'empathy') {
+                nextEmotion();
             }
         }
 
@@ -684,6 +721,9 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.moves;
+            document.getElementById('fortune-stats').textContent = stats.fortune.readings;
+            document.getElementById('aura-stats').textContent = stats.aura.tests;
+            document.getElementById('empathy-stats').textContent = `${stats.empathy.correct}/${stats.empathy.total}`;
         }
 
         // Сброс статистики
@@ -692,7 +732,10 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                telekinesis: { moves: 0 }
+                telekinesis: { moves: 0 },
+                fortune: { readings: 0 },
+                aura: { tests: 0 },
+                empathy: { correct: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -706,7 +749,10 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 }
+                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 },
+                { id: "Оракул", condition: stats.fortune.readings >= 5 },
+                { id: "Читатель аур", condition: stats.aura.tests >= 3 },
+                { id: "Эмпат", condition: stats.empathy.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -715,6 +761,11 @@
                     ${achievement.id}
                 </div>
             `).join('');
+        }
+
+        // Проверка достижений
+        function checkAchievements() {
+            updateAchievements();
         }
 
         // Телепатия
@@ -757,21 +808,6 @@
             }
             checkAchievements();
         }
-
-        // Проверка достижений
-        function checkAchievements() {
-            updateAchievements();
-        }
-
-        // Инициализация при загрузке
-        window.onload = function() {
-            setTimeBasedTheme();
-            createNebula();
-            createParticles();
-            
-            // Обновление темы каждую минуту
-            setInterval(setTimeBasedTheme, 60000);
-        };
     </script>
 </body>
 </html>
