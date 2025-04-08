@@ -16,7 +16,7 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            touch-action: none;
+            touch-action: manipulation;
         }
 
         .container {
@@ -133,8 +133,8 @@
             transform: scale(0.95);
         }
 
-        /* Стили для новой игры "Телепатия" */
-        .mind-game-container {
+        /* Стили для игры "Телекинез" */
+        .telekinesis-container {
             width: 100%;
             height: 300px;
             position: relative;
@@ -144,44 +144,40 @@
             overflow: hidden;
         }
 
-        .mind-circle {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: #8A2BE2;
+        .telekinesis-ball {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #8A2BE2, #4B0082);
             border-radius: 50%;
+            position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
-            transition: transform 0.1s ease;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            box-shadow: 0 0 15px #8A2BE2;
+            transition: transform 0.1s ease-out;
         }
 
-        .mind-target {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: #FFD700;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.7; }
-        }
-
-        .mind-controls {
-            display: flex;
-            justify-content: space-between;
+        .telekinesis-controls {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-top: 15px;
         }
 
-        .mind-score {
-            font-size: 1.2rem;
+        .telekinesis-btn {
+            background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .telekinesis-btn:hover {
+            background: rgba(153, 50, 204, 0.3);
         }
 
         .overlay {
@@ -271,11 +267,7 @@
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
-            Телепатия (числа)
-        </button>
-        <button class="btn" onclick="openGame('mind-telepathy')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/psychic.png" alt="Телепатия">
-            Телепатия (сила мысли)
+            Телепатия
         </button>
         <button class="btn" onclick="openGame('zener')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
@@ -284,6 +276,10 @@
         <button class="btn" onclick="openGame('color')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
             Цветовая интуиция
+        </button>
+        <button class="btn" onclick="openGame('telekinesis')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/magic-ball.png" alt="Телекинез">
+            Телекинез
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -297,7 +293,7 @@
 
     <!-- Игры -->
     <div id="telepathy" class="game-window">
-        <h2>Телепатия (числа)</h2>
+        <h2>Телепатия</h2>
         <p>Угадайте число от 1 до 10:</p>
         <div class="game-buttons">
             <button class="game-btn" onclick="checkTelepathy(1)">1</button>
@@ -312,21 +308,6 @@
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
         <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
-    </div>
-
-    <!-- Новая игра "Телепатия (сила мысли)" -->
-    <div id="mind-telepathy" class="game-window">
-        <h2>Телепатия (сила мысли)</h2>
-        <p>Переместите шар силой мысли к цели!</p>
-        <div class="mind-game-container" id="mind-game">
-            <div class="mind-circle" id="mind-circle"></div>
-            <div class="mind-target" id="mind-target"></div>
-        </div>
-        <div class="mind-controls">
-            <div class="mind-score">Попаданий: <span id="mind-score">0</span></div>
-            <button class="btn" onclick="newMindTarget()">Новая цель</button>
-        </div>
-        <button class="btn close-btn" onclick="closeGame('mind-telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -355,13 +336,30 @@
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
     </div>
 
+    <!-- Игра "Телекинез" -->
+    <div id="telekinesis" class="game-window">
+        <h2>Телекинез</h2>
+        <p>Передвигайте шар силой мысли (нажимайте кнопки):</p>
+        <div class="telekinesis-container" id="telekinesis-area">
+            <div class="telekinesis-ball" id="telekinesis-ball"></div>
+        </div>
+        <div class="telekinesis-controls">
+            <button class="telekinesis-btn" onclick="moveBall('up')">↑ Вверх</button>
+            <button class="telekinesis-btn" onclick="moveBall('left')">← Влево</button>
+            <button class="telekinesis-btn" onclick="moveBall('right')">→ Вправо</button>
+            <button class="telekinesis-btn" onclick="moveBall('down')">↓ Вниз</button>
+            <button class="telekinesis-btn" onclick="resetBall()">⟲ Сброс</button>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия (числа): <span id="telepathy-stats">0/0</span></p>
-        <p>Телепатия (мысль): <span id="mind-telepathy-stats">0</span></p>
+        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+        <p>Телекинез: <span id="telekinesis-stats">0 перемещений</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -388,7 +386,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Телекинетик (10 попаданий в игре "Сила мысли")
+                Мастер телекинеза (30 перемещений)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -415,134 +413,68 @@
         // Статистика и достижения
         let stats = {
             telepathy: { correct: 0, total: 0 },
-            mindTelepathy: { score: 0 },
             zener: { correct: 0, total: 0 },
-            color: { correct: 0, total: 0 }
+            color: { correct: 0, total: 0 },
+            telekinesis: { moves: 0 }
         };
 
         let achievements = [];
 
-        // Переменные для игры "Телепатия (сила мысли)"
-        let mindScore = 0;
-        let isDragging = false;
-        let offsetX, offsetY;
-        const mindCircle = document.getElementById('mind-circle');
-        const mindTarget = document.getElementById('mind-target');
-        const mindGame = document.getElementById('mind-game');
-        const mindScoreElement = document.getElementById('mind-score');
+        // Телекинез - перемещение шара
+        const ball = document.getElementById('telekinesis-ball');
+        const area = document.getElementById('telekinesis-area');
+        let ballX = 50;
+        let ballY = 50;
+        const step = 10;
 
-        // Инициализация игры "Телепатия (сила мысли)"
-        function initMindGame() {
-            mindScore = 0;
-            mindScoreElement.textContent = '0';
-            newMindTarget();
-            
-            // Обработчики для мыши
-            mindCircle.addEventListener('mousedown', startDrag);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
-            
-            // Обработчики для сенсорных устройств
-            mindCircle.addEventListener('touchstart', touchStart);
-            document.addEventListener('touchmove', touchMove);
-            document.addEventListener('touchend', touchEnd);
-        }
+        function moveBall(direction) {
+            const areaRect = area.getBoundingClientRect();
+            const ballSize = ball.offsetWidth;
+            const maxX = areaRect.width - ballSize;
+            const maxY = areaRect.height - ballSize;
 
-        function startDrag(e) {
-            isDragging = true;
-            const rect = mindCircle.getBoundingClientRect();
-            offsetX = e.clientX - rect.left;
-            offsetY = e.clientY - rect.top;
-            e.preventDefault();
-        }
-
-        function drag(e) {
-            if (!isDragging) return;
-            const gameRect = mindGame.getBoundingClientRect();
-            let x = e.clientX - gameRect.left - offsetX;
-            let y = e.clientY - gameRect.top - offsetY;
-            
-            // Ограничение перемещения внутри контейнера
-            x = Math.max(0, Math.min(x, gameRect.width - mindCircle.offsetWidth));
-            y = Math.max(0, Math.min(y, gameRect.height - mindCircle.offsetHeight));
-            
-            mindCircle.style.left = x + 'px';
-            mindCircle.style.top = y + 'px';
-            
-            checkTargetCollision();
-        }
-
-        function stopDrag() {
-            isDragging = false;
-        }
-
-        // Обработчики для сенсорных устройств
-        function touchStart(e) {
-            isDragging = true;
-            const touch = e.touches[0];
-            const rect = mindCircle.getBoundingClientRect();
-            offsetX = touch.clientX - rect.left;
-            offsetY = touch.clientY - rect.top;
-            e.preventDefault();
-        }
-
-        function touchMove(e) {
-            if (!isDragging) return;
-            const touch = e.touches[0];
-            const gameRect = mindGame.getBoundingClientRect();
-            let x = touch.clientX - gameRect.left - offsetX;
-            let y = touch.clientY - gameRect.top - offsetY;
-            
-            x = Math.max(0, Math.min(x, gameRect.width - mindCircle.offsetWidth));
-            y = Math.max(0, Math.min(y, gameRect.height - mindCircle.offsetHeight));
-            
-            mindCircle.style.left = x + 'px';
-            mindCircle.style.top = y + 'px';
-            
-            checkTargetCollision();
-        }
-
-        function touchEnd() {
-            isDragging = false;
-        }
-
-        function newMindTarget() {
-            const gameRect = mindGame.getBoundingClientRect();
-            const maxX = gameRect.width - mindTarget.offsetWidth;
-            const maxY = gameRect.height - mindTarget.offsetHeight;
-            
-            const x = Math.random() * maxX;
-            const y = Math.random() * maxY;
-            
-            mindTarget.style.left = x + 'px';
-            mindTarget.style.top = y + 'px';
-        }
-
-        function checkTargetCollision() {
-            const circleRect = mindCircle.getBoundingClientRect();
-            const targetRect = mindTarget.getBoundingClientRect();
-            
-            // Проверка пересечения
-            if (!(circleRect.right < targetRect.left || 
-                  circleRect.left > targetRect.right || 
-                  circleRect.bottom < targetRect.top || 
-                  circleRect.top > targetRect.bottom)) {
-                // Попадание!
-                mindScore++;
-                mindScoreElement.textContent = mindScore;
-                stats.mindTelepathy.score = mindScore;
-                newMindTarget();
-                checkAchievements();
+            switch(direction) {
+                case 'up':
+                    ballY = Math.max(0, ballY - step);
+                    break;
+                case 'down':
+                    ballY = Math.min(maxY, ballY + step);
+                    break;
+                case 'left':
+                    ballX = Math.max(0, ballX - step);
+                    break;
+                case 'right':
+                    ballX = Math.min(maxX, ballX + step);
+                    break;
             }
+
+            ball.style.left = `${ballX}px`;
+            ball.style.top = `${ballY}px`;
+            
+            stats.telekinesis.moves++;
+            updateStats();
+            checkAchievements();
         }
+
+        function resetBall() {
+            ballX = (area.offsetWidth - ball.offsetWidth) / 2;
+            ballY = (area.offsetHeight - ball.offsetHeight) / 2;
+            ball.style.left = `${ballX}px`;
+            ball.style.top = `${ballY}px`;
+        }
+
+        // Инициализация позиции шара
+        window.addEventListener('load', () => {
+            resetBall();
+        });
 
         // Открытие игры
         function openGame(gameId) {
-            if (gameId === 'mind-telepathy') {
-                initMindGame();
-            }
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+            if (gameId === 'telekinesis') {
+                resetBall();
+            }
         }
 
         // Закрытие игры
@@ -580,20 +512,21 @@
         // Обновление статистики
         function updateStats() {
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
-            document.getElementById('mind-telepathy-stats').textContent = stats.mindTelepathy.score;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
+            document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.moves} перемещений`;
         }
 
         // Сброс статистики
         function resetStats() {
             stats = {
                 telepathy: { correct: 0, total: 0 },
-                mindTelepathy: { score: 0 },
                 zener: { correct: 0, total: 0 },
-                color: { correct: 0, total: 0 }
+                color: { correct: 0, total: 0 },
+                telekinesis: { moves: 0 }
             };
             updateStats();
+            updateAchievements();
         }
 
         // Обновление достижений
@@ -604,7 +537,7 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Телекинетик", condition: stats.mindTelepathy.score >= 10 }
+                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 30 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -615,7 +548,7 @@
             `).join('');
         }
 
-        // Телепатия (числа)
+        // Телепатия
         function checkTelepathy(guess) {
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
