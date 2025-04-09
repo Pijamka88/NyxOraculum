@@ -133,7 +133,6 @@
             transform: scale(0.95);
         }
 
-        /* Стили для телекинеза */
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -158,7 +157,6 @@
             box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
         }
 
-        /* Стили для биолокации */
         .dowsing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -167,17 +165,15 @@
         }
 
         .dowsing-cell {
-            aspect-ratio: 1;
             background: rgba(138, 43, 226, 0.2);
             border: 2px solid #8A2BE2;
-            border-radius: 10px;
+            aspect-ratio: 1/1;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            font-size: 1.5rem;
         }
 
         .dowsing-cell:hover {
@@ -185,28 +181,12 @@
         }
 
         .dowsing-cell.opened {
-            background: rgba(70, 130, 180, 0.3);
+            background: rgba(75, 0, 130, 0.5);
         }
 
         .dowsing-cell.found {
-            background: rgba(50, 205, 50, 0.3);
+            background: rgba(0, 255, 0, 0.3);
             animation: pulse 0.5s;
-        }
-
-        .dowsing-cell::after {
-            content: "?";
-            font-size: 1.5rem;
-            color: #E6E6FA;
-        }
-
-        .dowsing-cell.opened::after,
-        .dowsing-cell.found::after {
-            content: "";
-        }
-
-        .dowsing-cell.found::before {
-            content: "💎";
-            font-size: 1.5rem;
         }
 
         @keyframes pulse {
@@ -317,7 +297,7 @@
             Телекинез
         </button>
         <button class="btn" onclick="openGame('dowsing')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-chest.png" alt="Биолокация">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
         <button class="btn" onclick="openStats()">
@@ -386,7 +366,7 @@
 
     <div id="dowsing" class="game-window">
         <h2>Биолокация</h2>
-        <p>Найдите скрытый артефакт (кликните на клетку):</p>
+        <p>Найдите скрытый артефакт (кликните на ячейку):</p>
         <div class="dowsing-grid" id="dowsing-grid"></div>
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
@@ -463,8 +443,6 @@
         };
 
         let achievements = [];
-        let artifactPosition = 0;
-        let dowsingAttempts = 0;
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -544,11 +522,7 @@
             const grid = document.getElementById('dowsing-grid');
             grid.innerHTML = '';
             
-            // Случайная позиция артефакта (0-15)
-            artifactPosition = Math.floor(Math.random() * 16);
-            dowsingAttempts = 0;
-            
-            // Создаем 16 клеток (4x4)
+            // Создаем 16 ячеек (4x4)
             for (let i = 0; i < 16; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'dowsing-cell';
@@ -556,29 +530,35 @@
                 cell.addEventListener('click', checkDowsingCell);
                 grid.appendChild(cell);
             }
+            
+            // Случайно выбираем ячейку с артефактом
+            const artifactIndex = Math.floor(Math.random() * 16);
+            grid.dataset.artifact = artifactIndex;
+            stats.dowsing.total++;
+            updateStats();
         }
 
         function checkDowsingCell(e) {
             const cell = e.target;
-            const index = parseInt(cell.dataset.index);
+            const grid = document.getElementById('dowsing-grid');
+            const artifactIndex = parseInt(grid.dataset.artifact);
+            const cellIndex = parseInt(cell.dataset.index);
             
-            if (cell.classList.contains('opened') return;
+            if (cell.classList.contains('opened')) return;
             
             cell.classList.add('opened');
-            dowsingAttempts++;
-            stats.dowsing.total++;
             
-            if (index === artifactPosition) {
+            if (cellIndex === artifactIndex) {
                 cell.classList.add('found');
+                cell.innerHTML = '🔮';
                 stats.dowsing.found++;
                 updateStats();
+                checkAchievements();
                 setTimeout(() => {
-                    alert('🎉 Вы нашли артефакт!');
-                    initDowsing(); // Новая игра
+                    alert('✅ Вы нашли артефакт!');
+                    initDowsing(); // Начинаем новую игру
                 }, 500);
             }
-            
-            checkAchievements();
         }
 
         // Открытие игры
