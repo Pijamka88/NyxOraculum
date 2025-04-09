@@ -16,7 +16,7 @@
             align-items: center;
             min-height: 100vh;
             overflow: hidden;
-            touch-action: manipulation;
+            touch-action: none;
         }
 
         .container {
@@ -133,6 +133,64 @@
             transform: scale(0.95);
         }
 
+        /* Стили для игры Биолокация */
+        .dowsing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .dowsing-cell {
+            width: 60px;
+            height: 60px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dowsing-cell:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .dowsing-cell::after {
+            content: "?";
+            font-size: 24px;
+            color: #E6E6FA;
+        }
+
+        .dowsing-cell.revealed::after {
+            content: "";
+        }
+
+        .dowsing-cell.artifact::before {
+            content: "🔮";
+            font-size: 24px;
+            position: absolute;
+        }
+
+        .dowsing-cell.revealed:not(.artifact) {
+            background: rgba(255, 0, 0, 0.2);
+        }
+
+        .dowsing-cell.artifact.revealed {
+            background: rgba(0, 255, 0, 0.2);
+            animation: pulse 0.5s 3;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -155,61 +213,6 @@
             cursor: pointer;
             transition: transform 0.1s ease;
             box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
-        }
-
-        .dowsing-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-        }
-
-        .dowsing-cell {
-            aspect-ratio: 1/1;
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .dowsing-cell:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .dowsing-cell.revealed {
-            background: rgba(75, 0, 130, 0.5);
-        }
-
-        .dowsing-cell.revealed::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .dowsing-cell.treasure {
-            background: radial-gradient(circle, #FFD700, #FFA500);
-            box-shadow: 0 0 20px #FFD700;
-        }
-
-        .dowsing-cell.treasure::after {
-            content: '💎';
-            font-size: 2rem;
-            position: absolute;
-        }
-
-        .dowsing-hint {
-            margin-top: 15px;
-            font-size: 1rem;
-            color: #E6E6FA;
-            min-height: 20px;
         }
 
         .overlay {
@@ -314,7 +317,7 @@
             Телекинез
         </button>
         <button class="btn" onclick="openGame('dowsing')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/dowsing.png" alt="Биолокация">
             Биолокация
         </button>
         <button class="btn" onclick="openStats()">
@@ -336,7 +339,7 @@
             <button class="game-btn" onclick="checkTelepathy(2)">2</button>
             <button class="game-btn" onclick="checkTelepathy(3)">3</button>
             <button class="game-btn" onclick="checkTelepathy(4)">4</button>
-            <button class="game-btn" onclick="checkTreasure(5)">5</button>
+            <button class="game-btn" onclick="checkTelepathy(5)">5</button>
             <button class="game-btn" onclick="checkTelepathy(6)">6</button>
             <button class="game-btn" onclick="checkTelepathy(7)">7</button>
             <button class="game-btn" onclick="checkTelepathy(8)">8</button>
@@ -383,9 +386,9 @@
 
     <div id="dowsing" class="game-window">
         <h2>Биолокация</h2>
-        <p>Найдите скрытый артефакт (почувствуйте вибрацию при приближении):</p>
+        <p>Найдите скрытый артефакт (кликните на ячейку):</p>
         <div class="dowsing-grid" id="dowsing-grid"></div>
-        <div class="dowsing-hint" id="dowsing-hint"></div>
+        <button class="btn" onclick="resetDowsing()">Новая игра</button>
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
@@ -396,7 +399,7 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> перемещений</p>
-        <p>Биолокация: <span id="dowsing-stats">0</span> находок</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -427,7 +430,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Искатель сокровищ (5 находок)
+                Искатель артефактов (5 найденных артефактов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -457,12 +460,57 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { moves: 0 },
-            dowsing: { found: 0 }
+            dowsing: { correct: 0, total: 0 }
         };
 
         let achievements = [];
-        let treasurePosition = null;
-        let lastVibrationTime = 0;
+        let artifactPosition = -1;
+        let dowsingGameActive = false;
+
+        // Инициализация биолокации
+        function initDowsing() {
+            const grid = document.getElementById('dowsing-grid');
+            grid.innerHTML = '';
+            
+            // Случайное положение артефакта
+            artifactPosition = Math.floor(Math.random() * 16);
+            dowsingGameActive = true;
+            
+            // Создаем 16 ячеек
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'dowsing-cell';
+                cell.dataset.index = i;
+                cell.addEventListener('click', checkDowsingCell);
+                grid.appendChild(cell);
+            }
+        }
+
+        function checkDowsingCell(e) {
+            if (!dowsingGameActive) return;
+            
+            const cell = e.target;
+            const index = parseInt(cell.dataset.index);
+            
+            cell.classList.add('revealed');
+            stats.dowsing.total++;
+            
+            if (index === artifactPosition) {
+                cell.classList.add('artifact');
+                stats.dowsing.correct++;
+                dowsingGameActive = false;
+                setTimeout(() => {
+                    alert('🎉 Вы нашли артефакт!');
+                }, 300);
+            }
+            
+            updateStats();
+            checkAchievements();
+        }
+
+        function resetDowsing() {
+            initDowsing();
+        }
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -537,89 +585,6 @@
             }
         }
 
-        // Инициализация биолокации
-        function initDowsing() {
-            const grid = document.getElementById('dowsing-grid');
-            grid.innerHTML = '';
-            
-            // Создаем сетку 4x4
-            for (let i = 0; i < 16; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'dowsing-cell';
-                cell.dataset.index = i;
-                cell.addEventListener('click', checkDowsingCell);
-                cell.addEventListener('mouseenter', handleCellHover);
-                cell.addEventListener('touchstart', handleCellTouch);
-                grid.appendChild(cell);
-            }
-            
-            // Случайное положение сокровища
-            treasurePosition = Math.floor(Math.random() * 16);
-        }
-
-        function handleCellHover(e) {
-            const cell = e.target;
-            if (cell.classList.contains('revealed')) return;
-            
-            const cellIndex = parseInt(cell.dataset.index);
-            const distance = calculateDistance(cellIndex, treasurePosition);
-            
-            // Чем ближе к сокровищу, тем сильнее вибрация
-            const now = Date.now();
-            if (now - lastVibrationTime > 500) { // Ограничение частоты вибрации
-                const intensity = Math.max(0, 1 - distance / 4);
-                if (intensity > 0.3 && navigator.vibrate) {
-                    navigator.vibrate(intensity * 100);
-                }
-                lastVibrationTime = now;
-            }
-        }
-
-        function handleCellTouch(e) {
-            handleCellHover(e);
-        }
-
-        function calculateDistance(index1, index2) {
-            const row1 = Math.floor(index1 / 4);
-            const col1 = index1 % 4;
-            const row2 = Math.floor(index2 / 4);
-            const col2 = index2 % 4;
-            
-            return Math.sqrt(Math.pow(row1 - row2, 2) + Math.pow(col1 - col2, 2));
-        }
-
-        function checkDowsingCell(e) {
-            const cell = e.target;
-            if (cell.classList.contains('revealed')) return;
-            
-            const cellIndex = parseInt(cell.dataset.index);
-            cell.classList.add('revealed');
-            
-            if (cellIndex === treasurePosition) {
-                cell.classList.add('treasure');
-                document.getElementById('dowsing-hint').textContent = '✅ Вы нашли артефакт!';
-                stats.dowsing.found++;
-                updateStats();
-                checkAchievements();
-                
-                // Перезапуск игры через 2 секунды
-                setTimeout(() => {
-                    initDowsing();
-                    document.getElementById('dowsing-hint').textContent = '';
-                }, 2000);
-            } else {
-                const distance = calculateDistance(cellIndex, treasurePosition);
-                let hint = '';
-                
-                if (distance < 1.5) hint = 'Очень горячо!';
-                else if (distance < 2.5) hint = 'Горячо';
-                else if (distance < 3.5) hint = 'Тепло';
-                else hint = 'Холодно';
-                
-                document.getElementById('dowsing-hint').textContent = hint;
-            }
-        }
-
         // Открытие игры
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
@@ -636,6 +601,7 @@
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
+            dowsingGameActive = false;
         }
 
         // Открытие статистики
@@ -670,7 +636,7 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.moves;
-            document.getElementById('dowsing-stats').textContent = stats.dowsing.found;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.correct}/${stats.dowsing.total}`;
         }
 
         // Сброс статистики
@@ -680,7 +646,7 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { moves: 0 },
-                dowsing: { found: 0 }
+                dowsing: { correct: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -695,7 +661,7 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Искатель артефактов", condition: stats.dowsing.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
