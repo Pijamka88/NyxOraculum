@@ -26,15 +26,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fogFilter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/></filter><rect width="100%" height="100%" filter="url(%23fogFilter)" opacity="0.3"/></svg>');
-            animation: fogMovement 60s linear infinite;
-            z-index: -1;
+            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
             pointer-events: none;
+            z-index: -1;
+            animation: fogMovement 20s infinite alternate;
         }
 
         @keyframes fogMovement {
-            0% { background-position: 0 0; }
-            100% { background-position: 1000px 1000px; }
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 0.7; }
         }
 
         .container {
@@ -220,10 +221,6 @@
             animation: pulse 0.5s;
         }
 
-        .dowsing-cell.wrong {
-            background: rgba(205, 50, 50, 0.3);
-        }
-
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -314,7 +311,6 @@
 </head>
 <body>
     <div class="fog"></div>
-    
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -394,7 +390,7 @@
 
     <div id="telekinesis" class="game-window">
         <h2>Телекинез</h2>
-        <p>Передвиньте фиолетовый шар к золотому:</p>
+        <p>Передвиньте фиолетовый шар к желтому:</p>
         <div class="telekinesis-container" id="telekinesis-area">
             <div class="telekinesis-object" id="telekinesis-object"></div>
             <div class="target-object" id="target-object"></div>
@@ -412,11 +408,11 @@
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
-        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
-        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-mistakes">0</span>)</p>
+        <p>Телепатия: <span id="telepathy-stats">0/0</span> (точность: <span id="telepathy-accuracy">0%</span>)</p>
+        <p>Карты Зенера: <span id="zener-stats">0/0</span> (точность: <span id="zener-accuracy">0%</span>)</p>
+        <p>Цветовая интуиция: <span id="color-stats">0/0</span> (точность: <span id="color-accuracy">0%</span>)</p>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> успешных перемещений</p>
+        <p>Биолокация: найдено <span id="dowsing-found">0</span> из <span id="dowsing-total">0</span> (ошибок: <span id="dowsing-mistakes">0</span>)</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -476,14 +472,14 @@
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
-            telekinesis: { success: 0 },
+            telekinesis: { moves: 0, successful: 0 },
             dowsing: { found: 0, total: 0, mistakes: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let isDragging = false;
         let targetPosition = { x: 0, y: 0 };
+        let isTargetReached = false;
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -496,16 +492,30 @@
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
             
-            // Случайное положение цели
-            const rect = area.getBoundingClientRect();
-            targetPosition = {
-                x: Math.random() * (rect.width - 40),
-                y: Math.random() * (rect.height - 40)
-            };
+            // Генерация новой цели (не в центре)
+            const areaRect = area.getBoundingClientRect();
+            const centerX = areaRect.width / 2;
+            const centerY = areaRect.height / 2;
             
-            target.style.left = targetPosition.x + 'px';
-            target.style.top = targetPosition.y + 'px';
+            do {
+                targetPosition = {
+                    x: 50 + Math.random() * (areaRect.width - 100),
+                    y: 50 + Math.random() * (areaRect.height - 100)
+                };
+            } while (
+                Math.abs(targetPosition.x - centerX) < 100 && 
+                Math.abs(targetPosition.y - centerY) < 100
+            );
             
+            target.style.left = `${targetPosition.x}px`;
+            target.style.top = `${targetPosition.y}px`;
+            target.style.transform = 'translate(-50%, -50%)';
+            
+            isTargetReached = false;
+            
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+
             // Для мыши
             object.addEventListener('mousedown', startDrag);
             document.addEventListener('mousemove', drag);
@@ -560,27 +570,38 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
+                
+                // Проверка достижения цели
+                if (!isTargetReached) {
+                    const objRect = object.getBoundingClientRect();
+                    const targetRect = target.getBoundingClientRect();
+                    
+                    const distance = Math.sqrt(
+                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
+                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
+                    );
+                    
+                    if (distance < 30) {
+                        isTargetReached = true;
+                        stats.telekinesis.successful++;
+                        stats.telekinesis.moves++;
+                        updateStats();
+                        checkAchievements();
+                        
+                        // Создаем новую цель через 1 секунду
+                        setTimeout(() => {
+                            initTelekinesis();
+                        }, 1000);
+                    }
+                }
             }
 
             function stopDrag() {
                 if (isDragging) {
                     isDragging = false;
-                    
-                    // Проверка достижения цели
-                    const objectRect = document.getElementById('telekinesis-object').getBoundingClientRect();
-                    const targetRect = document.getElementById('target-object').getBoundingClientRect();
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(objectRect.left + objectRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
-                        Math.pow(objectRect.top + objectRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                    );
-                    
-                    if (distance < 40) {
-                        stats.telekinesis.success++;
+                    if (!isTargetReached) {
+                        stats.telekinesis.moves++;
                         updateStats();
-                        checkAchievements();
-                        alert('✅ Успех! Шар достиг цели!');
-                        initTelekinesis(); // Новая цель
                     }
                 }
             }
@@ -609,7 +630,7 @@
             const cell = e.target;
             const index = parseInt(cell.dataset.index);
             
-            if (cell.classList.contains('opened') || cell.classList.contains('found')) return;
+            if (cell.classList.contains('opened')) return;
             
             cell.classList.add('opened');
             
@@ -624,7 +645,6 @@
                 }, 1000);
             } else {
                 cell.innerHTML = '❌';
-                cell.classList.add('wrong');
                 stats.dowsing.mistakes++;
                 updateStats();
             }
@@ -679,9 +699,19 @@
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
-            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
+            document.getElementById('telekinesis-stats').textContent = stats.telekinesis.successful;
+            document.getElementById('dowsing-found').textContent = stats.dowsing.found;
+            document.getElementById('dowsing-total').textContent = stats.dowsing.total;
             document.getElementById('dowsing-mistakes').textContent = stats.dowsing.mistakes;
+            
+            // Расчет точности
+            const telepathyAccuracy = stats.telepathy.total > 0 ? Math.round((stats.telepathy.correct / stats.telepathy.total) * 100) : 0;
+            const zenerAccuracy = stats.zener.total > 0 ? Math.round((stats.zener.correct / stats.zener.total) * 100) : 0;
+            const colorAccuracy = stats.color.total > 0 ? Math.round((stats.color.correct / stats.color.total) * 100) : 0;
+            
+            document.getElementById('telepathy-accuracy').textContent = `${telepathyAccuracy}%`;
+            document.getElementById('zener-accuracy').textContent = `${zenerAccuracy}%`;
+            document.getElementById('color-accuracy').textContent = `${colorAccuracy}%`;
         }
 
         // Сброс статистики
@@ -690,7 +720,7 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                telekinesis: { success: 0 },
+                telekinesis: { moves: 0, successful: 0 },
                 dowsing: { found: 0, total: 0, mistakes: 0 }
             };
             updateStats();
@@ -705,7 +735,7 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 10 },
+                { id: "Мастер телекинеза", condition: stats.telekinesis.successful >= 10 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
             ];
 
