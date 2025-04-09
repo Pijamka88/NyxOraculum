@@ -28,12 +28,12 @@
             height: 100%;
             background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
             z-index: -1;
-            animation: fogMovement 20s infinite alternate;
+            animation: fog-move 20s infinite alternate;
         }
 
-        @keyframes fogMovement {
+        @keyframes fog-move {
             0% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.5; }
             100% { transform: scale(1); opacity: 0.3; }
         }
 
@@ -46,7 +46,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            backdrop-filter: blur(5px);
         }
 
         h1 {
@@ -110,7 +109,6 @@
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            backdrop-filter: blur(5px);
         }
 
         @keyframes fadeIn {
@@ -184,7 +182,6 @@
             height: 30px;
             background: #FFD700;
             border-radius: 50%;
-            cursor: pointer;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
             z-index: 1;
         }
@@ -254,7 +251,6 @@
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            backdrop-filter: blur(5px);
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -412,8 +408,8 @@
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успешных перемещений</p>
-        <p>Биолокация: <span id="dowsing-found">0</span> найдено / <span id="dowsing-misses">0</span> попыток</p>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-errors">0</span>)</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -440,11 +436,11 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (10 успешных перемещений)
+                Мастер телекинеза (5 успехов)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Искатель сокровищ (5 найденных артефактов)
+                Искатель сокровищ (3 найденных артефакта)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -474,13 +470,13 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0 },
-            dowsing: { found: 0, misses: 0 }
+            dowsing: { found: 0, total: 0, errors: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isDragging = false;
-        let targetPosition = { x: 0, y: 0 };
+        let targetElement = null;
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -493,23 +489,8 @@
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
             
-            // Генерация новой позиции для цели
-            const rect = area.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            const minDistance = 100; // Минимальное расстояние от центра
-            
-            let newX, newY;
-            do {
-                newX = Math.random() * (rect.width - 40);
-                newY = Math.random() * (rect.height - 40);
-            } while (Math.sqrt(Math.pow(newX - centerX, 2) + Math.pow(newY - centerY, 2)) < minDistance;
-            
-            target.style.left = newX + 'px';
-            target.style.top = newY + 'px';
-            target.style.transform = 'translate(0, 0)';
-            
-            targetPosition = { x: newX + 15, y: newY + 15 }; // Центр цели
+            // Размещение цели
+            placeTarget(area, target);
             
             // Для мыши
             object.addEventListener('mousedown', startDrag);
@@ -521,10 +502,28 @@
             document.addEventListener('touchmove', drag);
             document.addEventListener('touchend', stopDrag);
 
+            function placeTarget(area, target) {
+                const rect = area.getBoundingClientRect();
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const minDistance = 100; // Минимальное расстояние от центра
+                
+                let x, y;
+                do {
+                    x = Math.random() * (rect.width - 40) + 20;
+                    y = Math.random() * (rect.height - 40) + 20;
+                } while (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < minDistance);
+                
+                target.style.left = x + 'px';
+                target.style.top = y + 'px';
+                targetElement = target;
+            }
+
             function startDrag(e) {
                 e.preventDefault();
                 isDragging = true;
                 
+                const rect = area.getBoundingClientRect();
                 const objRect = object.getBoundingClientRect();
                 
                 if (e.type === 'mousedown') {
@@ -571,24 +570,22 @@
                     isDragging = false;
                     
                     // Проверка достижения цели
-                    const objRect = object.getBoundingClientRect();
-                    const objCenter = {
-                        x: objRect.left + objRect.width / 2,
-                        y: objRect.top + objRect.height / 2
-                    };
+                    const objRect = document.getElementById('telekinesis-object').getBoundingClientRect();
+                    const targetRect = targetElement.getBoundingClientRect();
                     
                     const distance = Math.sqrt(
-                        Math.pow(objCenter.x - targetPosition.x, 2) + 
-                        Math.pow(objCenter.y - targetPosition.y, 2)
+                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) + 
+                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
                     );
                     
-                    if (distance < 30) { // Если шар близко к цели
+                    if (distance < 30) {
                         stats.telekinesis.success++;
                         updateStats();
                         checkAchievements();
-                        setTimeout(() => {
-                            initTelekinesis(); // Новая цель
-                        }, 500);
+                        placeTarget(area, targetElement);
+                        document.getElementById('telekinesis-object').style.left = '50%';
+                        document.getElementById('telekinesis-object').style.top = '50%';
+                        document.getElementById('telekinesis-object').style.transform = 'translate(-50%, -50%)';
                     }
                 }
             }
@@ -601,6 +598,7 @@
             
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
+            stats.dowsing.total++;
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
@@ -631,7 +629,7 @@
                 }, 1000);
             } else {
                 cell.innerHTML = '❌';
-                stats.dowsing.misses++;
+                stats.dowsing.errors++;
                 updateStats();
             }
         }
@@ -686,8 +684,8 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
-            document.getElementById('dowsing-found').textContent = stats.dowsing.found;
-            document.getElementById('dowsing-misses').textContent = stats.dowsing.misses;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
+            document.getElementById('dowsing-errors').textContent = stats.dowsing.errors;
         }
 
         // Сброс статистики
@@ -697,7 +695,7 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0 },
-                dowsing: { found: 0, misses: 0 }
+                dowsing: { found: 0, total: 0, errors: 0 }
             };
             updateStats();
             updateAchievements();
@@ -711,8 +709,8 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 10 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
