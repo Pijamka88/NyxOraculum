@@ -181,11 +181,11 @@
         }
 
         .dowsing-cell.opened {
-            background: rgba(75, 0, 130, 0.5);
+            background: rgba(70, 130, 180, 0.3);
         }
 
         .dowsing-cell.found {
-            background: rgba(0, 255, 0, 0.3);
+            background: rgba(50, 205, 50, 0.3);
             animation: pulse 0.5s;
         }
 
@@ -366,7 +366,7 @@
 
     <div id="dowsing" class="game-window">
         <h2>Биолокация</h2>
-        <p>Найдите скрытый артефакт (кликните на ячейку):</p>
+        <p>Найдите скрытый артефакт:</p>
         <div class="dowsing-grid" id="dowsing-grid"></div>
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
@@ -378,7 +378,7 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> перемещений</p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> найдено</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -443,6 +443,7 @@
         };
 
         let achievements = [];
+        let currentArtifactPosition = -1;
 
         // Инициализация телекинеза
         function initTelekinesis() {
@@ -522,7 +523,11 @@
             const grid = document.getElementById('dowsing-grid');
             grid.innerHTML = '';
             
-            // Создаем 16 ячеек (4x4)
+            // Случайное положение артефакта
+            currentArtifactPosition = Math.floor(Math.random() * 16);
+            stats.dowsing.total++;
+            
+            // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'dowsing-cell';
@@ -530,34 +535,27 @@
                 cell.addEventListener('click', checkDowsingCell);
                 grid.appendChild(cell);
             }
-            
-            // Случайно выбираем ячейку с артефактом
-            const artifactIndex = Math.floor(Math.random() * 16);
-            grid.dataset.artifact = artifactIndex;
-            stats.dowsing.total++;
-            updateStats();
         }
 
         function checkDowsingCell(e) {
             const cell = e.target;
-            const grid = document.getElementById('dowsing-grid');
-            const artifactIndex = parseInt(grid.dataset.artifact);
-            const cellIndex = parseInt(cell.dataset.index);
+            const index = parseInt(cell.dataset.index);
             
             if (cell.classList.contains('opened')) return;
             
             cell.classList.add('opened');
             
-            if (cellIndex === artifactIndex) {
+            if (index === currentArtifactPosition) {
                 cell.classList.add('found');
-                cell.innerHTML = '🔮';
+                cell.innerHTML = '💎';
                 stats.dowsing.found++;
                 updateStats();
                 checkAchievements();
                 setTimeout(() => {
-                    alert('✅ Вы нашли артефакт!');
-                    initDowsing(); // Начинаем новую игру
-                }, 500);
+                    initDowsing(); // Новая игра после нахождения
+                }, 1000);
+            } else {
+                cell.innerHTML = '❌';
             }
         }
 
