@@ -27,15 +27,14 @@
             width: 100%;
             height: 100%;
             background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
-            pointer-events: none;
             z-index: -1;
-            animation: fogMovement 20s infinite alternate;
+            animation: fog-move 20s infinite alternate;
         }
 
-        @keyframes fogMovement {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 0.7; }
+        @keyframes fog-move {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 0.3; }
         }
 
         .container {
@@ -47,8 +46,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-            z-index: 1;
         }
 
         h1 {
@@ -181,10 +178,12 @@
 
         .target-object {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             background: #FFD700;
             border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.1s ease;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
             z-index: 1;
         }
@@ -408,11 +407,11 @@
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span> (точность: <span id="telepathy-accuracy">0%</span>)</p>
-        <p>Карты Зенера: <span id="zener-stats">0/0</span> (точность: <span id="zener-accuracy">0%</span>)</p>
-        <p>Цветовая интуиция: <span id="color-stats">0/0</span> (точность: <span id="color-accuracy">0%</span>)</p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успешных перемещений</p>
-        <p>Биолокация: найдено <span id="dowsing-found">0</span> из <span id="dowsing-total">0</span> (ошибок: <span id="dowsing-mistakes">0</span>)</p>
+        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
+        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
+        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+        <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-errors">0</span>)</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -439,7 +438,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (10 успешных перемещений)
+                Мастер телекинеза (5 успешных перемещений)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
@@ -472,13 +471,12 @@
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
-            telekinesis: { moves: 0, successful: 0 },
-            dowsing: { found: 0, total: 0, mistakes: 0 }
+            telekinesis: { success: 0, total: 0 },
+            dowsing: { found: 0, total: 0, errors: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let targetPosition = { x: 0, y: 0 };
         let isTargetReached = false;
 
         // Инициализация телекинеза
@@ -492,26 +490,26 @@
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
             
-            // Генерация новой цели (не в центре)
-            const areaRect = area.getBoundingClientRect();
-            const centerX = areaRect.width / 2;
-            const centerY = areaRect.height / 2;
+            // Размещение цели
+            const rect = area.getBoundingClientRect();
+            const objectSize = 60;
+            const safeDistance = 100;
             
+            let targetX, targetY;
             do {
-                targetPosition = {
-                    x: 50 + Math.random() * (areaRect.width - 100),
-                    y: 50 + Math.random() * (areaRect.height - 100)
-                };
+                targetX = Math.random() * (rect.width - objectSize);
+                targetY = Math.random() * (rect.height - objectSize);
             } while (
-                Math.abs(targetPosition.x - centerX) < 100 && 
-                Math.abs(targetPosition.y - centerY) < 100
+                Math.abs(targetX - (rect.width/2 - objectSize/2)) < safeDistance && 
+                Math.abs(targetY - (rect.height/2 - objectSize/2)) < safeDistance
             );
             
-            target.style.left = `${targetPosition.x}px`;
-            target.style.top = `${targetPosition.y}px`;
-            target.style.transform = 'translate(-50%, -50%)';
+            target.style.left = targetX + 'px';
+            target.style.top = targetY + 'px';
+            target.style.transform = 'translate(0, 0)';
             
             isTargetReached = false;
+            stats.telekinesis.total++;
             
             let isDragging = false;
             let startX, startY, startLeft, startTop;
@@ -530,7 +528,6 @@
                 e.preventDefault();
                 isDragging = true;
                 
-                const rect = area.getBoundingClientRect();
                 const objRect = object.getBoundingClientRect();
                 
                 if (e.type === 'mousedown') {
@@ -549,7 +546,6 @@
                 if (!isDragging) return;
                 e.preventDefault();
                 
-                const rect = area.getBoundingClientRect();
                 let clientX, clientY;
                 
                 if (e.type === 'mousemove') {
@@ -583,27 +579,18 @@
                     
                     if (distance < 30) {
                         isTargetReached = true;
-                        stats.telekinesis.successful++;
-                        stats.telekinesis.moves++;
+                        stats.telekinesis.success++;
                         updateStats();
                         checkAchievements();
-                        
-                        // Создаем новую цель через 1 секунду
                         setTimeout(() => {
-                            initTelekinesis();
+                            initTelekinesis(); // Новая цель
                         }, 1000);
                     }
                 }
             }
 
             function stopDrag() {
-                if (isDragging) {
-                    isDragging = false;
-                    if (!isTargetReached) {
-                        stats.telekinesis.moves++;
-                        updateStats();
-                    }
-                }
+                isDragging = false;
             }
         }
 
@@ -645,7 +632,7 @@
                 }, 1000);
             } else {
                 cell.innerHTML = '❌';
-                stats.dowsing.mistakes++;
+                stats.dowsing.errors++;
                 updateStats();
             }
         }
@@ -699,19 +686,9 @@
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            document.getElementById('telekinesis-stats').textContent = stats.telekinesis.successful;
-            document.getElementById('dowsing-found').textContent = stats.dowsing.found;
-            document.getElementById('dowsing-total').textContent = stats.dowsing.total;
-            document.getElementById('dowsing-mistakes').textContent = stats.dowsing.mistakes;
-            
-            // Расчет точности
-            const telepathyAccuracy = stats.telepathy.total > 0 ? Math.round((stats.telepathy.correct / stats.telepathy.total) * 100) : 0;
-            const zenerAccuracy = stats.zener.total > 0 ? Math.round((stats.zener.correct / stats.zener.total) * 100) : 0;
-            const colorAccuracy = stats.color.total > 0 ? Math.round((stats.color.correct / stats.color.total) * 100) : 0;
-            
-            document.getElementById('telepathy-accuracy').textContent = `${telepathyAccuracy}%`;
-            document.getElementById('zener-accuracy').textContent = `${zenerAccuracy}%`;
-            document.getElementById('color-accuracy').textContent = `${colorAccuracy}%`;
+            document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
+            document.getElementById('dowsing-errors').textContent = stats.dowsing.errors;
         }
 
         // Сброс статистики
@@ -720,8 +697,8 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                telekinesis: { moves: 0, successful: 0 },
-                dowsing: { found: 0, total: 0, mistakes: 0 }
+                telekinesis: { success: 0, total: 0 },
+                dowsing: { found: 0, total: 0, errors: 0 }
             };
             updateStats();
             updateAchievements();
@@ -735,7 +712,7 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.successful >= 10 },
+                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
             ];
 
