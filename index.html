@@ -28,12 +28,12 @@
             height: 100%;
             background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
             z-index: -1;
-            animation: fog-move 20s infinite alternate;
+            animation: fogMovement 20s infinite alternate;
         }
 
-        @keyframes fog-move {
+        @keyframes fogMovement {
             0% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.5; }
             100% { transform: scale(1); opacity: 0.3; }
         }
 
@@ -46,6 +46,7 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
+            z-index: 1;
         }
 
         h1 {
@@ -176,7 +177,7 @@
             z-index: 2;
         }
 
-        .target-object {
+        .telekinesis-target {
             position: absolute;
             width: 30px;
             height: 30px;
@@ -222,6 +223,22 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
+        }
+
+        .game-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1001;
+            animation: fadeIn 0.5s ease;
+            text-align: center;
+            max-width: 80%;
         }
 
         .overlay {
@@ -390,7 +407,7 @@
         <p>Передвиньте фиолетовый шар к желтому:</p>
         <div class="telekinesis-container" id="telekinesis-area">
             <div class="telekinesis-object" id="telekinesis-object"></div>
-            <div class="target-object" id="target-object"></div>
+            <div class="telekinesis-target" id="telekinesis-target"></div>
         </div>
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
@@ -440,10 +457,17 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Искатель сокровищ (3 найденных артефакта)
+                Искатель сокровищ (5 найденных артефактов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+    </div>
+
+    <!-- Сообщение о победе -->
+    <div id="game-message" class="game-message" style="display: none;">
+        <h3 id="message-title">Поздравляем!</h3>
+        <p id="message-text"></p>
+        <button class="btn" onclick="hideMessage()">OK</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -475,23 +499,47 @@
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let isDragging = false;
-        let targetElement = null;
+        let isTargetReached = false;
+
+        // Показать сообщение
+        function showMessage(title, text) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-text').textContent = text;
+            document.getElementById('game-message').style.display = 'block';
+        }
+
+        // Скрыть сообщение
+        function hideMessage() {
+            document.getElementById('game-message').style.display = 'none';
+        }
 
         // Инициализация телекинеза
         function initTelekinesis() {
             const area = document.getElementById('telekinesis-area');
             const object = document.getElementById('telekinesis-object');
-            const target = document.getElementById('target-object');
-            
-            // Сброс позиций
+            const target = document.getElementById('telekinesis-target');
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+            isTargetReached = false;
+
+            // Сброс позиции объекта
             object.style.left = '50%';
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
+
+            // Позиция цели (не в центре)
+            const areaRect = area.getBoundingClientRect();
+            let targetX, targetY;
             
-            // Размещение цели
-            placeTarget(area, target);
-            
+            do {
+                targetX = 50 + Math.random() * 80 - 40; // 10-90% от ширины
+                targetY = 50 + Math.random() * 80 - 40; // 10-90% от высоты
+            } while (Math.abs(targetX - 50) < 20 && Math.abs(targetY - 50) < 20); // Не ближе 20% от центра
+
+            target.style.left = targetX + '%';
+            target.style.top = targetY + '%';
+            target.style.transform = 'translate(-50%, -50%)';
+
             // Для мыши
             object.addEventListener('mousedown', startDrag);
             document.addEventListener('mousemove', drag);
@@ -501,23 +549,6 @@
             object.addEventListener('touchstart', startDrag);
             document.addEventListener('touchmove', drag);
             document.addEventListener('touchend', stopDrag);
-
-            function placeTarget(area, target) {
-                const rect = area.getBoundingClientRect();
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                const minDistance = 100; // Минимальное расстояние от центра
-                
-                let x, y;
-                do {
-                    x = Math.random() * (rect.width - 40) + 20;
-                    y = Math.random() * (rect.height - 40) + 20;
-                } while (Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2)) < minDistance);
-                
-                target.style.left = x + 'px';
-                target.style.top = y + 'px';
-                targetElement = target;
-            }
 
             function startDrag(e) {
                 e.preventDefault();
@@ -539,7 +570,7 @@
             }
 
             function drag(e) {
-                if (!isDragging) return;
+                if (!isDragging || isTargetReached) return;
                 e.preventDefault();
                 
                 const rect = area.getBoundingClientRect();
@@ -563,31 +594,27 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
+
+                // Проверка достижения цели
+                const objRect = object.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                const distance = Math.sqrt(
+                    Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
+                    Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
+                );
+
+                if (distance < 30 && !isTargetReached) {
+                    isTargetReached = true;
+                    stats.telekinesis.success++;
+                    updateStats();
+                    checkAchievements();
+                    showMessage('Успех!', 'Вы переместили шар силой мысли!');
+                    setTimeout(initTelekinesis, 1500);
+                }
             }
 
             function stopDrag() {
-                if (isDragging) {
-                    isDragging = false;
-                    
-                    // Проверка достижения цели
-                    const objRect = document.getElementById('telekinesis-object').getBoundingClientRect();
-                    const targetRect = targetElement.getBoundingClientRect();
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) + 
-                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                    );
-                    
-                    if (distance < 30) {
-                        stats.telekinesis.success++;
-                        updateStats();
-                        checkAchievements();
-                        placeTarget(area, targetElement);
-                        document.getElementById('telekinesis-object').style.left = '50%';
-                        document.getElementById('telekinesis-object').style.top = '50%';
-                        document.getElementById('telekinesis-object').style.transform = 'translate(-50%, -50%)';
-                    }
-                }
+                isDragging = false;
             }
         }
 
@@ -624,9 +651,8 @@
                 stats.dowsing.found++;
                 updateStats();
                 checkAchievements();
-                setTimeout(() => {
-                    initDowsing(); // Новая игра после нахождения
-                }, 1000);
+                showMessage('Найдено!', 'Вы обнаружили скрытый артефакт!');
+                setTimeout(initDowsing, 1500);
             } else {
                 cell.innerHTML = '❌';
                 stats.dowsing.errors++;
@@ -710,7 +736,7 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
