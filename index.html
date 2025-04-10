@@ -26,15 +26,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fogFilter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 0"/></filter><rect width="100%" height="100%" filter="url(%23fogFilter)" fill="rgba(138,43,226,0.3)"/></svg>');
             z-index: -1;
-            animation: fogMovement 20s infinite alternate;
+            opacity: 0.7;
+            animation: fogMove 60s linear infinite;
         }
 
-        @keyframes fogMovement {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        @keyframes fogMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 1000px 1000px; }
         }
 
         .container {
@@ -163,8 +163,8 @@
 
         .telekinesis-object {
             position: absolute;
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             background: #8A2BE2;
             border-radius: 50%;
             top: 50%;
@@ -176,10 +176,10 @@
             z-index: 2;
         }
 
-        .telekinesis-target {
+        .target-object {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background: #FFD700;
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
@@ -254,23 +254,13 @@
             text-align: center;
         }
 
-        .message-window p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-        }
-
-        .message-window .btn {
-            margin: 10px auto;
-            max-width: 200px;
-        }
-
         .stats-window h2, .achievements-window h2, .message-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
         }
 
-        .stats-window p, .achievements-window p {
+        .stats-window p, .achievements-window p, .message-window p {
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
@@ -311,17 +301,15 @@
             50% { opacity: 1; }
         }
 
-        .close-btn, .reset-btn {
-            margin-top: 30px;
-            width: 100%;
+        .close-btn, .reset-btn, .message-btn {
+            margin: 20px auto 0;
+            width: 80%;
+            display: block;
         }
 
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            margin-top: 20px;
+        .message-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -406,10 +394,10 @@
 
     <div id="telekinesis" class="game-window">
         <h2>Телекинез</h2>
-        <p>Переместите фиолетовый шар к желтому:</p>
+        <p>Передвиньте фиолетовый шар к желтому:</p>
         <div class="telekinesis-container" id="telekinesis-area">
             <div class="telekinesis-object" id="telekinesis-object"></div>
-            <div class="telekinesis-target" id="telekinesis-target"></div>
+            <div class="target-object" id="target-object"></div>
         </div>
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
@@ -427,8 +415,8 @@
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-errors">0</span>)</p>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> успешных перемещений</p>
+        <p>Биолокация: <span id="dowsing-found">0</span> найдено / <span id="dowsing-misses">0</span> ошибок</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -455,7 +443,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (5 успехов)
+                Мастер телекинеза (5 успешных перемещений)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
@@ -465,13 +453,12 @@
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
-    <!-- Сообщения -->
+    <!-- Сообщение -->
     <div id="message" class="message-window">
-        <h2 id="message-title">Поздравляем!</h2>
-        <p id="message-text"></p>
-        <div class="btn-container">
-            <button class="btn" id="message-btn">OK</button>
-        </div>
+        <div class="message-icon" id="message-icon">✨</div>
+        <h2 id="message-title">Успех!</h2>
+        <p id="message-text">Вы выполнили задание!</p>
+        <button class="btn message-btn" onclick="closeMessage()">Продолжить</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -498,59 +485,43 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0 },
-            dowsing: { found: 0, total: 0, errors: 0 }
+            dowsing: { found: 0, misses: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let isTelekinesisTargetReached = false;
-
-        // Показать сообщение
-        function showMessage(title, text, callback) {
-            document.getElementById('message-title').textContent = title;
-            document.getElementById('message-text').textContent = text;
-            document.getElementById('message').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            
-            const btn = document.getElementById('message-btn');
-            btn.onclick = function() {
-                document.getElementById('message').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                if (callback) callback();
-            };
-        }
+        let isDragging = false;
+        let targetX, targetY;
+        let telekinesisActive = false;
 
         // Инициализация телекинеза
         function initTelekinesis() {
             const area = document.getElementById('telekinesis-area');
             const object = document.getElementById('telekinesis-object');
-            const target = document.getElementById('telekinesis-target');
-            let isDragging = false;
-            let startX, startY, startLeft, startTop;
+            const target = document.getElementById('target-object');
             
-            // Сброс позиций
+            // Сброс позиции фиолетового шара
             object.style.left = '50%';
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
             
-            // Позиция цели (не в центре)
+            // Генерация позиции желтого шара (не в центре)
             const rect = area.getBoundingClientRect();
-            let targetX, targetY;
+            let newX, newY;
             
             do {
-                targetX = Math.random() * (rect.width - 60);
-                targetY = Math.random() * (rect.height - 60);
+                newX = 30 + Math.random() * (rect.width - 60);
+                newY = 30 + Math.random() * (rect.height - 60);
             } while (
-                Math.abs(targetX - (rect.width/2 - 30)) < 100 && 
-                Math.abs(targetY - (rect.height/2 - 30)) < 100
+                Math.abs(newX - rect.width/2) < 60 && 
+                Math.abs(newY - rect.height/2) < 60
             );
             
-            target.style.left = targetX + 'px';
-            target.style.top = targetY + 'px';
-            target.style.transform = 'translate(0, 0)';
+            target.style.left = newX + 'px';
+            target.style.top = newY + 'px';
+            targetX = newX;
+            targetY = newY;
             
-            isTelekinesisTargetReached = false;
-
             // Для мыши
             object.addEventListener('mousedown', startDrag);
             document.addEventListener('mousemove', drag);
@@ -560,74 +531,75 @@
             object.addEventListener('touchstart', startDrag);
             document.addEventListener('touchmove', drag);
             document.addEventListener('touchend', stopDrag);
+            
+            telekinesisActive = true;
+        }
 
-            function startDrag(e) {
-                e.preventDefault();
-                isDragging = true;
-                
-                const rect = area.getBoundingClientRect();
-                const objRect = object.getBoundingClientRect();
-                
-                if (e.type === 'mousedown') {
-                    startX = e.clientX;
-                    startY = e.clientY;
-                } else {
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
-                }
-                
-                startLeft = objRect.left - rect.left;
-                startTop = objRect.top - rect.top;
+        function startDrag(e) {
+            if (!telekinesisActive) return;
+            e.preventDefault();
+            isDragging = true;
+            
+            const object = document.getElementById('telekinesis-object');
+            const rect = object.getBoundingClientRect();
+            
+            if (e.type === 'mousedown') {
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+            } else {
+                startX = e.touches[0].clientX - rect.left;
+                startY = e.touches[0].clientY - rect.top;
             }
+        }
 
-            function drag(e) {
-                if (!isDragging) return;
-                e.preventDefault();
-                
-                const rect = area.getBoundingClientRect();
-                let clientX, clientY;
-                
-                if (e.type === 'mousemove') {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                } else {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                }
-                
-                let newLeft = startLeft + (clientX - startX);
-                let newTop = startTop + (clientY - startY);
-                
-                // Ограничения по границам области
-                newLeft = Math.max(0, Math.min(rect.width - object.offsetWidth, newLeft));
-                newTop = Math.max(0, Math.min(rect.height - object.offsetHeight, newTop));
-                
-                object.style.left = newLeft + 'px';
-                object.style.top = newTop + 'px';
-                object.style.transform = 'translate(0, 0)';
-                
-                // Проверка достижения цели
-                if (!isTelekinesisTargetReached) {
-                    const objRect = object.getBoundingClientRect();
-                    const targetRect = target.getBoundingClientRect();
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
-                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                    );
-                    
-                    if (distance < 30) {
-                        isTelekinesisTargetReached = true;
-                        stats.telekinesis.success++;
-                        updateStats();
-                        checkAchievements();
-                        showMessage('Успех!', 'Вы переместили шар к цели!', initTelekinesis);
-                    }
-                }
+        function drag(e) {
+            if (!isDragging || !telekinesisActive) return;
+            e.preventDefault();
+            
+            const object = document.getElementById('telekinesis-object');
+            const area = document.getElementById('telekinesis-area');
+            const rect = area.getBoundingClientRect();
+            let clientX, clientY;
+            
+            if (e.type === 'mousemove') {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
             }
+            
+            let newLeft = clientX - rect.left - startX;
+            let newTop = clientY - rect.top - startY;
+            
+            // Ограничения по границам области
+            newLeft = Math.max(0, Math.min(rect.width - object.offsetWidth, newLeft));
+            newTop = Math.max(0, Math.min(rect.height - object.offsetHeight, newTop));
+            
+            object.style.left = newLeft + 'px';
+            object.style.top = newTop + 'px';
+            object.style.transform = 'translate(0, 0)';
+        }
 
-            function stopDrag() {
-                isDragging = false;
+        function stopDrag() {
+            if (!isDragging || !telekinesisActive) return;
+            isDragging = false;
+            
+            const object = document.getElementById('telekinesis-object');
+            const objRect = object.getBoundingClientRect();
+            const objX = objRect.left + objRect.width/2;
+            const objY = objRect.top + objRect.height/2;
+            
+            // Проверка достижения цели
+            const distance = Math.sqrt(Math.pow(objX - targetX, 2) + Math.pow(objY - targetY, 2));
+            
+            if (distance < 30) {
+                stats.telekinesis.success++;
+                updateStats();
+                checkAchievements();
+                telekinesisActive = false;
+                showMessage('Поздравляем!', 'Вы успешно переместили шар!', '✨');
+                setTimeout(initTelekinesis, 1500);
             }
         }
 
@@ -638,7 +610,6 @@
             
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
-            stats.dowsing.total++;
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
@@ -664,12 +635,28 @@
                 stats.dowsing.found++;
                 updateStats();
                 checkAchievements();
-                showMessage('Найдено!', 'Вы обнаружили скрытый артефакт!', initDowsing);
+                showMessage('Успех!', 'Вы нашли артефакт!', '💎');
+                setTimeout(initDowsing, 1500);
             } else {
                 cell.innerHTML = '❌';
-                stats.dowsing.errors++;
+                stats.dowsing.misses++;
                 updateStats();
             }
+        }
+
+        // Показать сообщение
+        function showMessage(title, text, icon) {
+            document.getElementById('message-title').textContent = title;
+            document.getElementById('message-text').textContent = text;
+            document.getElementById('message-icon').textContent = icon;
+            document.getElementById('message').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        // Закрыть сообщение
+        function closeMessage() {
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         // Открытие игры
@@ -688,6 +675,7 @@
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
+            telekinesisActive = false;
         }
 
         // Открытие статистики
@@ -722,8 +710,8 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
-            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
-            document.getElementById('dowsing-errors').textContent = stats.dowsing.errors;
+            document.getElementById('dowsing-found').textContent = stats.dowsing.found;
+            document.getElementById('dowsing-misses').textContent = stats.dowsing.misses;
         }
 
         // Сброс статистики
@@ -733,7 +721,7 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0 },
-                dowsing: { found: 0, total: 0, errors: 0 }
+                dowsing: { found: 0, misses: 0 }
             };
             updateStats();
             updateAchievements();
@@ -765,9 +753,9 @@
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                showMessage('Верно!', `Вы угадали число ${target}!`);
+                showMessage('Верно!', `Вы угадали число ${target}`, '✅');
             } else {
-                showMessage('Неверно', `Загадано число ${target}. Попробуйте еще!`);
+                showMessage('Неверно', `Загадано число ${target}`, '❌');
             }
             checkAchievements();
         }
@@ -779,9 +767,9 @@
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                showMessage('Верно!', `Вы угадали символ ${target}!`);
+                showMessage('Верно!', `Вы угадали символ ${target}`, '✅');
             } else {
-                showMessage('Неверно', `Загадан символ ${target}. Попробуйте еще!`);
+                showMessage('Неверно', `Загадан символ ${target}`, '❌');
             }
             checkAchievements();
         }
@@ -793,9 +781,9 @@
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                showMessage('Верно!', `Вы угадали цвет ${target}!`);
+                showMessage('Верно!', `Вы угадали цвет ${target}`, '✅');
             } else {
-                showMessage('Неверно', `Загадан цвет ${target}. Попробуйте еще!`);
+                showMessage('Неверно', `Загадан цвет ${target}`, '❌');
             }
             checkAchievements();
         }
