@@ -123,6 +123,7 @@
             color: #E6E6FA;
         }
 
+        /* Общие стили для игр */
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -152,6 +153,7 @@
             transform: scale(0.95);
         }
 
+        /* Стили для Телекинеза */
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -187,6 +189,7 @@
             z-index: 1;
         }
 
+        /* Стили для Биолокации */
         .dowsing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -225,6 +228,222 @@
             100% { transform: scale(1); }
         }
 
+        /* Стили для Предвидения (Хрономантии) */
+        .chronomancy-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .time-flow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(138, 43, 226, 0.1) 0%, rgba(70, 130, 180, 0.3) 50%, rgba(138, 43, 226, 0.1) 100%);
+            animation: timeFlow 10s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes timeFlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .sequence-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+        }
+
+        .sequence-card {
+            width: 60px;
+            height: 90px;
+            background: rgba(138, 43, 226, 0.3);
+            border: 2px solid #8A2BE2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: transform 0.5s ease, opacity 0.5s ease;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+
+        .sequence-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .sequence-card .front, .sequence-card .back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .sequence-card .back {
+            background: rgba(26, 26, 46, 0.9);
+            transform: rotateY(180deg);
+        }
+
+        .chronomancy-options {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .chronomancy-option {
+            width: 60px;
+            height: 90px;
+            background: rgba(138, 43, 226, 0.3);
+            border: 2px solid #8A2BE2;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chronomancy-option:hover {
+            background: rgba(153, 50, 204, 0.5);
+            transform: scale(1.05);
+        }
+
+        /* Стили для Медитации-концентрации */
+        .meditation-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .pendulum {
+            position: absolute;
+            width: 4px;
+            height: 150px;
+            background: #8A2BE2;
+            top: 0;
+            left: 50%;
+            transform-origin: top center;
+            animation: pendulumSwing 3s infinite ease-in-out;
+        }
+
+        @keyframes pendulumSwing {
+            0%, 100% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
+        }
+
+        .pendulum-ball {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #8A2BE2;
+            border-radius: 50%;
+            bottom: -40px;
+            left: -20px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            transition: box-shadow 0.5s ease;
+        }
+
+        .pendulum-ball.focused {
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.9);
+            background: #FFD700;
+        }
+
+        .focus-meter {
+            width: 100%;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin-top: 40px;
+            overflow: hidden;
+        }
+
+        .focus-progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8A2BE2, #FFD700);
+            transition: width 0.5s ease;
+        }
+
+        /* Стили для Энергетического баланса */
+        .energy-balance-container {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .energy-wave {
+            width: 100%;
+            height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wave-path {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
+        }
+
+        .balance-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .balance-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(138, 43, 226, 0.3);
+            border: 2px solid #8A2BE2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .balance-btn:hover {
+            background: rgba(153, 50, 204, 0.5);
+            transform: scale(1.05);
+        }
+
+        .harmony-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(50, 205, 50, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+
+        .harmony-effect.active {
+            opacity: 1;
+        }
+
+        /* Общие элементы */
         .game-message {
             position: fixed;
             top: 50%;
@@ -347,6 +566,18 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
+        <button class="btn" onclick="openGame('chronomancy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Хрономантия">
+            Предвидение
+        </button>
+        <button class="btn" onclick="openGame('meditation')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/meditation.png" alt="Медитация">
+            Концентрация
+        </button>
+        <button class="btn" onclick="openGame('energy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/energy.png" alt="Энергия">
+            Баланс
+        </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
             Статистика
@@ -419,6 +650,49 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
+    <div id="chronomancy" class="game-window">
+        <h2>Предвидение</h2>
+        <p>Запомните последовательность и предскажите следующее изображение:</p>
+        <div class="chronomancy-container">
+            <div class="time-flow"></div>
+            <div class="sequence-container" id="sequence-container"></div>
+        </div>
+        <div class="chronomancy-options" id="chronomancy-options"></div>
+        <button class="btn close-btn" onclick="closeGame('chronomancy')">Закрыть</button>
+    </div>
+
+    <div id="meditation" class="game-window">
+        <h2>Медитация-концентрация</h2>
+        <p>Сфокусируйтесь на маятнике:</p>
+        <div class="meditation-container">
+            <div class="pendulum">
+                <div class="pendulum-ball" id="pendulum-ball"></div>
+            </div>
+            <div class="focus-meter">
+                <div class="focus-progress" id="focus-progress"></div>
+            </div>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('meditation')">Закрыть</button>
+    </div>
+
+    <div id="energy" class="game-window">
+        <h2>Энергетический баланс</h2>
+        <p>Успокойте энергетические волны:</p>
+        <div class="energy-balance-container">
+            <div class="energy-wave">
+                <svg viewBox="0 0 400 100" preserveAspectRatio="none">
+                    <path class="wave-path" id="energy-wave" d="M0,50 C100,150 300,-50 400,50" stroke="#8A2BE2" fill="none"></path>
+                </svg>
+            </div>
+            <div class="harmony-effect" id="harmony-effect"></div>
+            <div class="balance-controls">
+                <button class="balance-btn" id="balance-left">←</button>
+                <button class="balance-btn" id="balance-right">→</button>
+            </div>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('energy')">Закрыть</button>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -427,6 +701,9 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-errors">0</span>)</p>
+        <p>Предвидение: <span id="chronomancy-stats">0/0</span></p>
+        <p>Концентрация: <span id="meditation-stats">0</span> сек</p>
+        <p>Баланс: <span id="energy-stats">0</span> успехов</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -458,6 +735,18 @@
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (5 найденных артефактов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Пророк (5 верных предсказаний)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер концентрации (30 сек фокуса)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Энергетический мастер (5 успехов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -494,7 +783,10 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0 },
-            dowsing: { found: 0, total: 0, errors: 0 }
+            dowsing: { found: 0, total: 0, errors: 0 },
+            chronomancy: { correct: 0, total: 0 },
+            meditation: { time: 0, best: 0 },
+            energy: { success: 0 }
         };
 
         let achievements = [];
@@ -660,6 +952,260 @@
             }
         }
 
+        // Инициализация предвидения (Хрономантии)
+        const chronomancySymbols = ['🌞', '🌙', '⭐', '☁️', '🌀', '🌊', '🔥', '🌪️'];
+        let currentSequence = [];
+        let correctAnswer = '';
+        let sequenceTimeout;
+
+        function initChronomancy() {
+            const container = document.getElementById('sequence-container');
+            const optionsContainer = document.getElementById('chronomancy-options');
+            container.innerHTML = '';
+            optionsContainer.innerHTML = '';
+            
+            // Генерируем последовательность (3-5 символов)
+            const sequenceLength = 3 + Math.floor(Math.random() * 3);
+            currentSequence = [];
+            
+            // Заполняем последовательность случайными символами (могут повторяться)
+            for (let i = 0; i < sequenceLength; i++) {
+                const randomIndex = Math.floor(Math.random() * chronomancySymbols.length);
+                currentSequence.push(chronomancySymbols[randomIndex]);
+            }
+            
+            // Определяем правильный ответ (следующий символ)
+            const nextSymbolIndex = Math.floor(Math.random() * chronomancySymbols.length);
+            correctAnswer = chronomancySymbols[nextSymbolIndex];
+            
+            // Показываем последовательность
+            currentSequence.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.className = 'sequence-card';
+                card.innerHTML = `
+                    <div class="front">?</div>
+                    <div class="back">${symbol}</div>
+                `;
+                container.appendChild(card);
+                
+                // Анимация переворота с задержкой
+                setTimeout(() => {
+                    card.classList.add('flipped');
+                }, 500 + index * 800);
+            });
+            
+            // Генерируем варианты ответов (3 варианта, включая правильный)
+            const options = [correctAnswer];
+            while (options.length < 3) {
+                const randomSymbol = chronomancySymbols[Math.floor(Math.random() * chronomancySymbols.length)];
+                if (!options.includes(randomSymbol)) {
+                    options.push(randomSymbol);
+                }
+            }
+            
+            // Перемешиваем варианты
+            options.sort(() => Math.random() - 0.5);
+            
+            // Создаем кнопки вариантов
+            options.forEach(symbol => {
+                const option = document.createElement('div');
+                option.className = 'chronomancy-option';
+                option.textContent = symbol;
+                option.addEventListener('click', () => checkChronomancyAnswer(symbol));
+                optionsContainer.appendChild(option);
+            });
+            
+            // Через некоторое время скрываем последовательность
+            sequenceTimeout = setTimeout(() => {
+                const cards = container.querySelectorAll('.sequence-card');
+                cards.forEach(card => {
+                    card.classList.remove('flipped');
+                });
+            }, 500 + currentSequence.length * 800 + 1000);
+            
+            stats.chronomancy.total++;
+        }
+
+        function checkChronomancyAnswer(answer) {
+            clearTimeout(sequenceTimeout);
+            const cards = document.querySelectorAll('.sequence-card');
+            cards.forEach(card => card.classList.remove('flipped'));
+            
+            if (answer === correctAnswer) {
+                stats.chronomancy.correct++;
+                showMessage('Верно!', 'Вы правильно предсказали следующий символ!');
+            } else {
+                showMessage('Неверно', `Правильный ответ был: ${correctAnswer}`);
+            }
+            
+            updateStats();
+            checkAchievements();
+            setTimeout(initChronomancy, 2000);
+        }
+
+        // Инициализация медитации-концентрации
+        let focusTime = 0;
+        let focusInterval;
+        let isFocused = false;
+        let lastFocusTime = 0;
+
+        function initMeditation() {
+            const pendulumBall = document.getElementById('pendulum-ball');
+            const focusProgress = document.getElementById('focus-progress');
+            
+            pendulumBall.classList.remove('focused');
+            focusProgress.style.width = '0%';
+            focusTime = 0;
+            isFocused = false;
+            
+            // Слушатель для определения фокуса
+            pendulumBall.addEventListener('click', startFocus);
+            document.addEventListener('keydown', (e) => {
+                if (e.code === 'Space') {
+                    startFocus();
+                }
+            });
+        }
+
+        function startFocus() {
+            if (isFocused) return;
+            
+            const pendulumBall = document.getElementById('pendulum-ball');
+            const focusProgress = document.getElementById('focus-progress');
+            
+            pendulumBall.classList.add('focused');
+            isFocused = true;
+            focusTime = 0;
+            
+            focusInterval = setInterval(() => {
+                focusTime++;
+                focusProgress.style.width = `${Math.min(100, focusTime / 2)}%`;
+                
+                if (focusTime % 10 === 0) {
+                    stats.meditation.time += 10;
+                    if (stats.meditation.time > stats.meditation.best) {
+                        stats.meditation.best = stats.meditation.time;
+                    }
+                    updateStats();
+                    checkAchievements();
+                }
+                
+                // Случайное событие для потери фокуса
+                if (Math.random() < 0.01) {
+                    loseFocus();
+                }
+            }, 100);
+            
+            // Автоматическая потеря фокуса через 1-3 секунды
+            lastFocusTime = 3000 + Math.random() * 2000;
+            setTimeout(loseFocus, lastFocusTime);
+        }
+
+        function loseFocus() {
+            if (!isFocused) return;
+            
+            clearInterval(focusInterval);
+            isFocused = false;
+            const pendulumBall = document.getElementById('pendulum-ball');
+            pendulumBall.classList.remove('focused');
+            
+            setTimeout(() => {
+                if (!isFocused) {
+                    startFocus();
+                }
+            }, 1000);
+        }
+
+        // Инициализация энергетического баланса
+        let waveAmplitude = 50;
+        let waveFrequency = 0.05;
+        let waveOffset = 0;
+        let waveInterval;
+        let balanceCounter = 0;
+        let balanceAttempts = 0;
+        const chakraColors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#8B00FF'];
+
+        function initEnergyBalance() {
+            const wavePath = document.getElementById('energy-wave');
+            const harmonyEffect = document.getElementById('harmony-effect');
+            const leftBtn = document.getElementById('balance-left');
+            const rightBtn = document.getElementById('balance-right');
+            
+            harmonyEffect.classList.remove('active');
+            waveAmplitude = 50;
+            waveFrequency = 0.05;
+            waveOffset = 0;
+            balanceCounter = 0;
+            balanceAttempts = 0;
+            
+            // Анимация волны
+            waveInterval = setInterval(updateWave, 50);
+            
+            // Обработчики кнопок
+            leftBtn.addEventListener('click', () => balanceControl('left'));
+            rightBtn.addEventListener('click', () => balanceControl('right'));
+        }
+
+        function updateWave() {
+            const wavePath = document.getElementById('energy-wave');
+            let path = `M0,50 `;
+            const steps = 20;
+            
+            for (let i = 0; i <= steps; i++) {
+                const x = i * 20;
+                const y = 50 + waveAmplitude * Math.sin(waveFrequency * (x + waveOffset));
+                path += `${i === 0 ? '' : 'L'}${x},${y} `;
+            }
+            
+            wavePath.setAttribute('d', path);
+            
+            // Случайное изменение параметров волны
+            waveOffset += 2;
+            waveAmplitude += (Math.random() - 0.5) * 10;
+            waveAmplitude = Math.max(10, Math.min(80, waveAmplitude));
+            
+            // Изменение цвета в зависимости от амплитуды
+            const colorIndex = Math.floor(waveAmplitude / 10) % chakraColors.length;
+            wavePath.setAttribute('stroke', chakraColors[colorIndex]);
+        }
+
+        function balanceControl(direction) {
+            balanceAttempts++;
+            
+            // Определяем фазу волны
+            const wavePhase = Math.sin(waveFrequency * waveOffset);
+            
+            // Правильное время для нажатия (вблизи нуля)
+            const isCorrectTiming = Math.abs(wavePhase) < 0.3;
+            
+            if (isCorrectTiming) {
+                // Уменьшаем амплитуду при правильном нажатии
+                waveAmplitude *= 0.7;
+                balanceCounter++;
+                
+                if (balanceCounter >= 3) {
+                    // Успех - волна успокаивается
+                    waveAmplitude = 5;
+                    stats.energy.success++;
+                    updateStats();
+                    checkAchievements();
+                    
+                    const harmonyEffect = document.getElementById('harmony-effect');
+                    harmonyEffect.classList.add('active');
+                    showMessage('Гармония!', 'Вы достигли энергетического баланса!');
+                    
+                    setTimeout(() => {
+                        harmonyEffect.classList.remove('active');
+                        initEnergyBalance();
+                    }, 2000);
+                }
+            } else {
+                // Неправильное нажатие - увеличиваем сложность
+                waveAmplitude = Math.min(80, waveAmplitude + 10);
+                balanceCounter = Math.max(0, balanceCounter - 1);
+            }
+        }
+
         // Открытие игры
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
@@ -669,6 +1215,12 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
+            } else if (gameId === 'chronomancy') {
+                initChronomancy();
+            } else if (gameId === 'meditation') {
+                initMeditation();
+            } else if (gameId === 'energy') {
+                initEnergyBalance();
             }
         }
 
@@ -676,6 +1228,15 @@
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
+            
+            // Остановка всех интервалов при закрытии игры
+            if (gameId === 'meditation') {
+                clearInterval(focusInterval);
+            } else if (gameId === 'energy') {
+                clearInterval(waveInterval);
+            } else if (gameId === 'chronomancy') {
+                clearTimeout(sequenceTimeout);
+            }
         }
 
         // Открытие статистики
@@ -712,6 +1273,9 @@
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
             document.getElementById('dowsing-errors').textContent = stats.dowsing.errors;
+            document.getElementById('chronomancy-stats').textContent = `${stats.chronomancy.correct}/${stats.chronomancy.total}`;
+            document.getElementById('meditation-stats').textContent = stats.meditation.best;
+            document.getElementById('energy-stats').textContent = stats.energy.success;
         }
 
         // Сброс статистики
@@ -721,7 +1285,10 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0 },
-                dowsing: { found: 0, total: 0, errors: 0 }
+                dowsing: { found: 0, total: 0, errors: 0 },
+                chronomancy: { correct: 0, total: 0 },
+                meditation: { time: 0, best: 0 },
+                energy: { success: 0 }
             };
             updateStats();
             updateAchievements();
@@ -736,7 +1303,10 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
+                { id: "Пророк", condition: stats.chronomancy.correct >= 5 },
+                { id: "Мастер концентрации", condition: stats.meditation.best >= 30 },
+                { id: "Энергетический мастер", condition: stats.energy.success >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
