@@ -26,15 +26,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fogFilter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.1 -0.1"/></filter><rect width="100%" height="100%" filter="url(%23fogFilter)" fill="rgba(138,43,226,0.3)"/></svg>');
-            pointer-events: none;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(0, 0, 0, 0) 100%);
+            animation: fogAnimation 20s infinite alternate;
             z-index: -1;
-            animation: fogMove 60s linear infinite;
         }
 
-        @keyframes fogMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 1000px 1000px; }
+        @keyframes fogAnimation {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 100% 100%; }
         }
 
         .container {
@@ -46,6 +45,8 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
+            position: relative;
+            z-index: 1;
         }
 
         h1 {
@@ -163,8 +164,8 @@
 
         .telekinesis-object {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             background: #8A2BE2;
             border-radius: 50%;
             top: 50%;
@@ -176,10 +177,10 @@
             z-index: 2;
         }
 
-        .telekinesis-target {
+        .target-object {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             background: #FFD700;
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
@@ -336,11 +337,9 @@
             width: 100%;
         }
 
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
+        .game-disabled {
+            pointer-events: none;
+            opacity: 0.5;
         }
     </style>
 </head>
@@ -428,7 +427,7 @@
         <p>Переместите фиолетовый шар к желтому:</p>
         <div class="telekinesis-container" id="telekinesis-area">
             <div class="telekinesis-object" id="telekinesis-object"></div>
-            <div class="telekinesis-target" id="telekinesis-target"></div>
+            <div class="target-object" id="target-object"></div>
         </div>
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
@@ -447,7 +446,7 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (неверных: <span id="dowsing-wrong-stats">0</span>)</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -487,8 +486,8 @@
     <!-- Сообщения -->
     <div id="message" class="message-window">
         <p id="message-text"></p>
-        <div class="btn-container">
-            <button class="message-btn" id="message-btn">OK</button>
+        <div class="message-buttons">
+            <button class="message-btn" id="message-ok">OK</button>
         </div>
     </div>
 
@@ -516,54 +515,56 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0 },
-            dowsing: { found: 0, total: 0, wrong: 0 }
+            dowsing: { found: 0, attempts: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let isTargetReached = false;
+        let isGameActive = true;
 
         // Показать сообщение
-        function showMessage(text, callback) {
+        function showMessage(text) {
             document.getElementById('message-text').textContent = text;
             document.getElementById('message').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            
-            const btn = document.getElementById('message-btn');
-            btn.onclick = function() {
-                document.getElementById('message').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                if (callback) callback();
-            };
+            document.querySelectorAll('.game-window').forEach(el => {
+                el.classList.add('game-disabled');
+            });
         }
+
+        // Закрыть сообщение
+        function closeMessage() {
+            document.getElementById('message').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.querySelectorAll('.game-window').forEach(el => {
+                el.classList.remove('game-disabled');
+            });
+        }
+
+        document.getElementById('message-ok').addEventListener('click', closeMessage);
 
         // Инициализация телекинеза
         function initTelekinesis() {
             const area = document.getElementById('telekinesis-area');
             const object = document.getElementById('telekinesis-object');
-            const target = document.getElementById('telekinesis-target');
-            const rect = area.getBoundingClientRect();
-            
-            // Сброс позиции объекта
-            object.style.left = '50%';
-            object.style.top = '50%';
-            object.style.transform = 'translate(-50%, -50%)';
-            
-            // Генерация случайной позиции для цели (не слишком близко к центру)
-            let targetX, targetY;
-            do {
-                targetX = 50 + Math.random() * 80 - 40; // 10-90% от ширины
-                targetY = 50 + Math.random() * 80 - 40; // 10-90% от высоты
-            } while (Math.abs(targetX - 50) < 20 && Math.abs(targetY - 50) < 20);
-            
-            target.style.left = targetX + '%';
-            target.style.top = targetY + '%';
-            target.style.transform = 'translate(-50%, -50%)';
-            
-            isTargetReached = false;
-            
+            const target = document.getElementById('target-object');
             let isDragging = false;
             let startX, startY, startLeft, startTop;
+            let targetX, targetY;
+
+            // Установка случайной позиции для цели (не слишком близко к центру)
+            const rect = area.getBoundingClientRect();
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const minDistance = 100;
+
+            do {
+                targetX = Math.random() * (rect.width - 40);
+                targetY = Math.random() * (rect.height - 40);
+            } while (Math.sqrt(Math.pow(targetX - centerX, 2) + Math.pow(targetY - centerY, 2)) < minDistance);
+
+            target.style.left = targetX + 'px';
+            target.style.top = targetY + 'px';
 
             // Для мыши
             object.addEventListener('mousedown', startDrag);
@@ -576,6 +577,7 @@
             document.addEventListener('touchend', stopDrag);
 
             function startDrag(e) {
+                if (!isGameActive) return;
                 e.preventDefault();
                 isDragging = true;
                 
@@ -594,10 +596,9 @@
             }
 
             function drag(e) {
-                if (!isDragging) return;
+                if (!isDragging || !isGameActive) return;
                 e.preventDefault();
                 
-                const rect = area.getBoundingClientRect();
                 let clientX, clientY;
                 
                 if (e.type === 'mousemove') {
@@ -618,29 +619,32 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
-                
-                // Проверка достижения цели
-                if (!isTargetReached) {
-                    const objRect = object.getBoundingClientRect();
-                    const targetRect = target.getBoundingClientRect();
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
-                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                    );
-                    
-                    if (distance < 30) {
-                        isTargetReached = true;
-                        stats.telekinesis.success++;
-                        updateStats();
-                        checkAchievements();
-                        showMessage('✅ Вы успешно переместили шар силой мысли!', initTelekinesis);
-                    }
-                }
             }
 
             function stopDrag() {
+                if (!isDragging || !isGameActive) return;
                 isDragging = false;
+
+                // Проверка достижения цели
+                const objRect = object.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                
+                const distance = Math.sqrt(
+                    Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
+                    Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
+                );
+
+                if (distance < 30) {
+                    stats.telekinesis.success++;
+                    updateStats();
+                    checkAchievements();
+                    isGameActive = false;
+                    showMessage("✅ Успех! Вы переместили шар силой мысли!");
+                    setTimeout(() => {
+                        isGameActive = true;
+                        initTelekinesis();
+                    }, 1000);
+                }
             }
         }
 
@@ -651,7 +655,8 @@
             
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
-            stats.dowsing.total++;
+            stats.dowsing.attempts++;
+            updateStats();
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
@@ -664,6 +669,7 @@
         }
 
         function checkDowsingCell(e) {
+            if (!isGameActive) return;
             const cell = e.target;
             const index = parseInt(cell.dataset.index);
             
@@ -677,11 +683,14 @@
                 stats.dowsing.found++;
                 updateStats();
                 checkAchievements();
-                showMessage('✅ Вы нашли артефакт! Ваша интуиция вас не подвела.', initDowsing);
+                isGameActive = false;
+                showMessage("✅ Поздравляем! Вы нашли артефакт!");
+                setTimeout(() => {
+                    isGameActive = true;
+                    initDowsing();
+                }, 1000);
             } else {
                 cell.innerHTML = '❌';
-                stats.dowsing.wrong++;
-                updateStats();
             }
         }
 
@@ -689,6 +698,7 @@
         function openGame(gameId) {
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
+            isGameActive = true;
             
             if (gameId === 'telekinesis') {
                 initTelekinesis();
@@ -735,8 +745,7 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
-            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
-            document.getElementById('dowsing-wrong-stats').textContent = stats.dowsing.wrong;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
         }
 
         // Сброс статистики
@@ -746,7 +755,7 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0 },
-                dowsing: { found: 0, total: 0, wrong: 0 }
+                dowsing: { found: 0, attempts: 0 }
             };
             updateStats();
             updateAchievements();
@@ -778,10 +787,11 @@
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                showMessage('✅ Верно! Загадано число: ' + target);
+                showMessage("✅ Верно! Загадано число: " + target);
             } else {
                 showMessage(`❌ Неверно. Загадано число: ${target}`);
             }
+            updateStats();
             checkAchievements();
         }
 
@@ -792,10 +802,11 @@
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                showMessage('✅ Верно! Загадан символ: ' + target);
+                showMessage("✅ Верно! Загадан символ: " + target);
             } else {
                 showMessage(`❌ Неверно. Загадан символ: ${target}`);
             }
+            updateStats();
             checkAchievements();
         }
 
@@ -806,10 +817,11 @@
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                showMessage('✅ Верно! Загадан цвет: ' + target);
+                showMessage("✅ Верно! Загадан цвет: " + target);
             } else {
                 showMessage(`❌ Неверно. Загадан цвет: ${target}`);
             }
+            updateStats();
             checkAchievements();
         }
 
