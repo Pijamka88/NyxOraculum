@@ -19,26 +19,6 @@
             touch-action: none;
         }
 
-        /* Фиолетовый туман */
-        .fog {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, rgba(138, 43, 226, 0.1) 0%, rgba(26, 26, 46, 0.9) 70%);
-            z-index: -1;
-            animation: fog-move 20s infinite alternate;
-        }
-
-        @keyframes fog-move {
-            0% { transform: translate(0, 0); }
-            25% { transform: translate(5%, 5%); }
-            50% { transform: translate(-5%, 5%); }
-            75% { transform: translate(5%, -5%); }
-            100% { transform: translate(-5%, -5%); }
-        }
-
         .container {
             text-align: center;
             background: rgba(26, 26, 46, 0.9);
@@ -240,7 +220,7 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .stats-window, .achievements-window, .message-window {
+        .stats-window, .achievements-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -251,23 +231,24 @@
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
-            z-index: 1001;
+            z-index: 1000;
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            text-align: center;
         }
 
-        .stats-window h2, .achievements-window h2, .message-window h2 {
+        .stats-window h2, .achievements-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
+            text-align: center;
         }
 
-        .stats-window p, .achievements-window p, .message-window p {
+        .stats-window p, .achievements-window p {
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
+            text-align: center;
         }
 
         .achievement-item {
@@ -306,22 +287,70 @@
             50% { opacity: 1; }
         }
 
-        .close-btn, .reset-btn, .message-btn {
-            margin: 20px auto 0;
-            width: 80%;
-            display: block;
+        .close-btn, .reset-btn {
+            margin-top: 30px;
+            width: 100%;
         }
 
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
+        .message-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1001;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1002;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .message-box p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .message-box button {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .message-box button:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .message-box button:active {
+            transform: scale(0.95);
+        }
+
+        .game-inactive {
+            pointer-events: none;
+            opacity: 0.5;
         }
     </style>
 </head>
 <body>
-    <div class="fog"></div>
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -370,9 +399,7 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
-        </div>
+        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
 
     <div id="zener" class="game-window">
@@ -385,9 +412,7 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
-        </div>
+        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
 
     <div id="color" class="game-window">
@@ -400,9 +425,7 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
-        </div>
+        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
     </div>
 
     <div id="telekinesis" class="game-window">
@@ -412,18 +435,14 @@
             <div class="telekinesis-object" id="telekinesis-object"></div>
             <div class="telekinesis-target" id="telekinesis-target"></div>
         </div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
-        </div>
+        <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
 
     <div id="dowsing" class="game-window">
         <h2>Биолокация</h2>
         <p>Найдите скрытый артефакт:</p>
         <div class="dowsing-grid" id="dowsing-grid"></div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
-        </div>
+        <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -432,12 +451,10 @@
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успешных перемещений</p>
-        <p>Биолокация: <span id="dowsing-stats">0</span> артефактов найдено (<span id="dowsing-attempts">0</span> попыток)</p>
-        <div class="btn-container">
-            <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
-            <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
-        </div>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
+        <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
 
     <!-- Достижения -->
@@ -469,22 +486,18 @@
                 Искатель сокровищ (3 найденных артефакта)
             </div>
         </div>
-        <div class="btn-container">
-            <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- Сообщения -->
-    <div id="message" class="message-window">
-        <h2 id="message-title">Сообщение</h2>
-        <p id="message-text">Текст сообщения</p>
-        <div class="btn-container">
-            <button class="btn message-btn" onclick="closeMessage()">OK</button>
-        </div>
+        <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
+
+    <!-- Сообщение -->
+    <div class="message-overlay" id="message-overlay"></div>
+    <div class="message-box" id="message-box">
+        <p id="message-text"></p>
+        <button onclick="closeMessage()">OK</button>
+    </div>
 
     <!-- Звездный фон -->
     <div id="stars"></div>
@@ -515,19 +528,28 @@
         let isGameActive = true;
 
         // Показать сообщение
-        function showMessage(title, text) {
-            document.getElementById('message-title').textContent = title;
+        function showMessage(text) {
             document.getElementById('message-text').textContent = text;
-            document.getElementById('message').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            isGameActive = false;
+            document.getElementById('message-overlay').style.display = 'block';
+            document.getElementById('message-box').style.display = 'block';
+            
+            // Делаем игру неактивной
+            const gameWindow = document.querySelector('.game-window[style*="display: block"]');
+            if (gameWindow) {
+                gameWindow.classList.add('game-inactive');
+            }
         }
 
         // Закрыть сообщение
         function closeMessage() {
-            document.getElementById('message').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            isGameActive = true;
+            document.getElementById('message-overlay').style.display = 'none';
+            document.getElementById('message-box').style.display = 'none';
+            
+            // Возвращаем активность игре
+            const gameWindow = document.querySelector('.game-window[style*="display: block"]');
+            if (gameWindow) {
+                gameWindow.classList.remove('game-inactive');
+            }
         }
 
         // Инициализация телекинеза
@@ -538,19 +560,26 @@
             let isDragging = false;
             let startX, startY, startLeft, startTop;
 
-            // Установка случайной позиции для цели
+            // Сброс позиций
+            object.style.left = '50%';
+            object.style.top = '50%';
+            object.style.transform = 'translate(-50%, -50%)';
+
+            // Размещаем цель в случайном месте, но не слишком близко к центру
             const rect = area.getBoundingClientRect();
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
             let targetX, targetY;
-            do {
-                targetX = Math.random() * (rect.width - 40);
-                targetY = Math.random() * (rect.height - 40);
-            } while (Math.abs(targetX - centerX) < 100 && Math.abs(targetY - centerY) < 100);
             
+            do {
+                targetX = Math.random() * (rect.width - 60);
+                targetY = Math.random() * (rect.height - 60);
+            } while (
+                Math.abs(targetX - (rect.width/2 - 30)) < 100 && 
+                Math.abs(targetY - (rect.height/2 - 30)) < 100
+            );
+
             target.style.left = targetX + 'px';
             target.style.top = targetY + 'px';
+            target.style.transform = 'translate(0, 0)';
 
             // Для мыши
             object.addEventListener('mousedown', startDrag);
@@ -607,33 +636,30 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
-
-                // Проверка достижения цели
-                const objRect = object.getBoundingClientRect();
-                const targetRect = target.getBoundingClientRect();
-                
-                if (isColliding(objRect, targetRect)) {
-                    stats.telekinesis.success++;
-                    updateStats();
-                    checkAchievements();
-                    showMessage("Успех!", "Вы переместили шар к цели силой мысли!");
-                    setTimeout(() => {
-                        initTelekinesis(); // Новая игра после успеха
-                    }, 1000);
-                }
             }
 
             function stopDrag() {
+                if (!isDragging || !isGameActive) return;
                 isDragging = false;
-            }
 
-            function isColliding(rect1, rect2) {
-                return !(
-                    rect1.right < rect2.left || 
-                    rect1.left > rect2.right || 
-                    rect1.bottom < rect2.top || 
-                    rect1.top > rect2.bottom
+                // Проверяем, достиг ли объект цели
+                const objRect = object.getBoundingClientRect();
+                const targetRect = target.getBoundingClientRect();
+                
+                const distance = Math.sqrt(
+                    Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
+                    Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
                 );
+                
+                if (distance < 30) {
+                    stats.telekinesis.success++;
+                    updateStats();
+                    checkAchievements();
+                    showMessage('✅ Успех! Вы переместили шар силой мысли!');
+                    setTimeout(() => {
+                        initTelekinesis(); // Новая игра после успеха
+                    }, 1500);
+                }
             }
         }
 
@@ -645,7 +671,6 @@
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
             stats.dowsing.attempts++;
-            updateStats();
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
@@ -659,6 +684,7 @@
 
         function checkDowsingCell(e) {
             if (!isGameActive) return;
+            
             const cell = e.target;
             const index = parseInt(cell.dataset.index);
             
@@ -672,10 +698,10 @@
                 stats.dowsing.found++;
                 updateStats();
                 checkAchievements();
-                showMessage("Найдено!", "Вы обнаружили скрытый артефакт!");
+                showMessage('✅ Успех! Вы нашли артефакт!');
                 setTimeout(() => {
                     initDowsing(); // Новая игра после нахождения
-                }, 1000);
+                }, 1500);
             } else {
                 cell.innerHTML = '❌';
             }
@@ -738,8 +764,7 @@
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
-            document.getElementById('dowsing-stats').textContent = stats.dowsing.found;
-            document.getElementById('dowsing-attempts').textContent = stats.dowsing.attempts;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
         }
 
         // Сброс статистики
@@ -778,47 +803,47 @@
         // Телепатия
         function checkTelepathy(guess) {
             if (!isGameActive) return;
+            
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                showMessage("Верно!", `Вы угадали число ${target}!`);
+                showMessage('✅ Верно! Загадано: ' + target);
             } else {
-                showMessage("Неверно", `Загадано число ${target}. Попробуйте еще!`);
+                showMessage('❌ Неверно. Загадано: ' + target);
             }
-            updateStats();
             checkAchievements();
         }
 
         // Карты Зенера
         function checkZener(guess) {
             if (!isGameActive) return;
+            
             const symbols = ['○', '□', '～', '✚', '★'];
             const target = symbols[Math.floor(Math.random() * symbols.length)];
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                showMessage("Верно!", `Вы угадали символ ${target}!`);
+                showMessage('✅ Верно! Загадан: ' + target);
             } else {
-                showMessage("Неверно", `Загадан символ ${target}. Попробуйте еще!`);
+                showMessage('❌ Неверно. Загадан: ' + target);
             }
-            updateStats();
             checkAchievements();
         }
 
         // Цветовая интуиция
         function checkColor(guess) {
             if (!isGameActive) return;
+            
             const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
             const target = colors[Math.floor(Math.random() * colors.length)];
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                showMessage("Верно!", `Вы угадали цвет ${target}!`);
+                showMessage('✅ Верно! Загадан: ' + target);
             } else {
-                showMessage("Неверно", `Загадан цвет ${target}. Попробуйте еще!`);
+                showMessage('❌ Неверно. Загадан: ' + target);
             }
-            updateStats();
             checkAchievements();
         }
 
