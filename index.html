@@ -212,6 +212,46 @@
             100% { transform: scale(1); }
         }
 
+        .oracle-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            border: 2px dashed #8A2BE2;
+            border-radius: 15px;
+            margin: 20px auto;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .crystal-ball {
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(138, 43, 226, 0.3));
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .oracle-text {
+            font-size: 1.2rem;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .overlay {
             display: none;
             position: fixed;
@@ -354,6 +394,10 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
+        <button class="btn" onclick="openGame('oracle')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Оракул Ночи">
+            Оракул Ночи
+        </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
             Статистика
@@ -426,6 +470,22 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
+    <div id="oracle" class="game-window">
+        <h2>Оракул Ночи</h2>
+        <p>Задайте вопрос и получите предсказание:</p>
+        <div class="oracle-container">
+            <div class="crystal-ball"></div>
+            <div class="oracle-text" id="oracle-text">
+                Сосредоточьтесь на вопросе и нажмите кнопку...
+            </div>
+        </div>
+        <button class="btn" onclick="getOraclePrediction()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/magic-crystal-ball.png" alt="Предсказание">
+            Получить предсказание
+        </button>
+        <button class="btn close-btn" onclick="closeGame('oracle')">Закрыть</button>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -434,6 +494,7 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Оракул: <span id="oracle-stats">0</span> предсказаний</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -465,6 +526,10 @@
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (5 найденных артефактов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Посвященный Оракула (10 предсказаний)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -500,12 +565,32 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
-            dowsing: { found: 0, attempts: 0 }
+            dowsing: { found: 0, attempts: 0 },
+            oracle: { predictions: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
+
+        // Предсказания Оракула
+        const oraclePredictions = [
+            "Тьма перед рассветом всегда самая густая - ваше просветление близко.",
+            "Когда луна будет в седьмом доме, вы найдете то, что давно искали.",
+            "Ваш путь освещен звездами, но только вы выбираете направление.",
+            "Тени прошлого пытаются вас догнать, но будущее светлее, чем кажется.",
+            "Слушайте шепот ветра - он принесет вам важное послание.",
+            "То, что вы ищете, найдется там, где меньше всего ожидаете.",
+            "Ваше сердце знает ответ, даже когда разум сомневается.",
+            "Когда придет время, двери откроются сами - не торопите события.",
+            "Ваша энергия сейчас особенно сильна - используйте это время мудро.",
+            "Тайное станет явным, когда луна будет полной.",
+            "Не бойтесь идти туда, куда ведет вас интуиция.",
+            "Ваши мысли материальны - сосредоточьтесь на желаемом.",
+            "Скоро вы встретите человека, который изменит вашу жизнь.",
+            "Доверьтесь течению Вселенной - оно приведет вас к нужному берегу.",
+            "Ваше настоящее испытание станет вашей величайшей силой."
+        ];
 
         // Показать сообщение
         function showMessage(text) {
@@ -522,6 +607,22 @@
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.remove('game-active');
             });
+        }
+
+        // Получить предсказание от Оракула
+        function getOraclePrediction() {
+            if (!isGameActive) return;
+            
+            const oracleText = document.getElementById('oracle-text');
+            oracleText.innerHTML = '<div class="star" style="position:relative; width:10px; height:10px; margin:0 auto;"></div>';
+            
+            setTimeout(() => {
+                const randomPrediction = oraclePredictions[Math.floor(Math.random() * oraclePredictions.length)];
+                oracleText.textContent = randomPrediction;
+                stats.oracle.predictions++;
+                updateStats();
+                checkAchievements();
+            }, 1500);
         }
 
         // Инициализация телекинеза
@@ -690,6 +791,8 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
+            } else if (gameId === 'oracle') {
+                document.getElementById('oracle-text').textContent = "Сосредоточьтесь на вопросе и нажмите кнопку...";
             }
         }
 
@@ -737,6 +840,7 @@
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
+            document.getElementById('oracle-stats').textContent = stats.oracle.predictions;
         }
 
         // Сброс статистики
@@ -746,7 +850,8 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
-                dowsing: { found: 0, attempts: 0 }
+                dowsing: { found: 0, attempts: 0 },
+                oracle: { predictions: 0 }
             };
             updateStats();
             updateAchievements();
@@ -761,7 +866,8 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
+                { id: "Посвященный Оракула", condition: stats.oracle.predictions >= 10 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
