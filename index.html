@@ -77,6 +77,18 @@
             filter: brightness(0) invert(1);
         }
 
+        .secret-btn {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid #FFD700;
+            animation: pulse-gold 2s infinite;
+        }
+
+        @keyframes pulse-gold {
+            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
+        }
+
         .game-window {
             display: none;
             position: fixed;
@@ -206,13 +218,7 @@
             animation: pulse 0.5s;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .oracle-container {
+        .astral-container {
             width: 100%;
             height: 300px;
             position: relative;
@@ -220,36 +226,45 @@
             border-radius: 15px;
             margin: 20px auto;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
+            background: rgba(10, 10, 30, 0.7);
         }
 
-        .crystal-ball {
-            width: 150px;
-            height: 150px;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.8), rgba(138, 43, 226, 0.3));
+        .astral-ball {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #BA55D3;
             border-radius: 50%;
-            position: relative;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
+            box-shadow: 0 0 15px rgba(186, 85, 211, 0.7);
+            z-index: 2;
+            top: 20px;
+            left: 20px;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .astral-wall {
+            position: absolute;
+            background: rgba(138, 43, 226, 0.5);
+            z-index: 1;
         }
 
-        .oracle-text {
-            font-size: 1.2rem;
-            min-height: 100px;
+        .astral-exit {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            z-index: 1;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         .overlay {
@@ -369,6 +384,13 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+        .hint {
+            font-size: 0.8rem;
+            color: #BA55D3;
+            margin-top: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -394,10 +416,6 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
-        <button class="btn" onclick="openGame('oracle')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Оракул Ночи">
-            Оракул Ночи
-        </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
             Статистика
@@ -405,6 +423,11 @@
         <button class="btn" onclick="openAchievements()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
             Достижения
+        </button>
+        <button class="btn secret-btn" id="secret-room-btn" onclick="openGame('astral')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/door.png" alt="Тайная комната">
+            Тайная комната
+            <div class="hint">(Секрет от разработчика)</div>
         </button>
     </div>
 
@@ -470,20 +493,15 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
-    <div id="oracle" class="game-window">
-        <h2>Оракул Ночи</h2>
-        <p>Задайте вопрос и получите предсказание:</p>
-        <div class="oracle-container">
-            <div class="crystal-ball"></div>
-            <div class="oracle-text" id="oracle-text">
-                Сосредоточьтесь на вопросе и нажмите кнопку...
-            </div>
+    <div id="astral" class="game-window">
+        <h2>Астральная проекция</h2>
+        <p>Проведите шар через лабиринт к выходу (🌀):</p>
+        <div class="astral-container" id="astral-area">
+            <div class="astral-ball" id="astral-ball"></div>
+            <div class="astral-exit">🌀</div>
+            <!-- Стены будут добавлены через JS -->
         </div>
-        <button class="btn" onclick="getOraclePrediction()">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/magic-crystal-ball.png" alt="Предсказание">
-            Получить предсказание
-        </button>
-        <button class="btn close-btn" onclick="closeGame('oracle')">Закрыть</button>
+        <button class="btn close-btn" onclick="closeGame('astral')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -494,7 +512,7 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Оракул: <span id="oracle-stats">0</span> предсказаний</p>
+        <p>Астральная проекция: <span id="astral-stats">0</span> успешных прохождений</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -529,7 +547,11 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Посвященный Оракула (10 предсказаний)
+                Астральный путешественник (3 прохождения лабиринта)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Посвященный (Нашли все секреты)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -566,35 +588,28 @@
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
             dowsing: { found: 0, attempts: 0 },
-            oracle: { predictions: 0 }
+            astral: { success: 0 },
+            secrets: { found: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-
-        // Предсказания Оракула
-        const oraclePredictions = [
-            "Тьма перед рассветом всегда самая густая - ваше просветление близко.",
-            "Когда луна будет в седьмом доме, вы найдете то, что давно искали.",
-            "Ваш путь освещен звездами, но только вы выбираете направление.",
-            "Тени прошлого пытаются вас догнать, но будущее светлее, чем кажется.",
-            "Слушайте шепот ветра - он принесет вам важное послание.",
-            "То, что вы ищете, найдется там, где меньше всего ожидаете.",
-            "Ваше сердце знает ответ, даже когда разум сомневается.",
-            "Когда придет время, двери откроются сами - не торопите события.",
-            "Ваша энергия сейчас особенно сильна - используйте это время мудро.",
-            "Тайное станет явным, когда луна будет полной.",
-            "Не бойтесь идти туда, куда ведет вас интуиция.",
-            "Ваши мысли материальны - сосредоточьтесь на желаемом.",
-            "Скоро вы встретите человека, который изменит вашу жизнь.",
-            "Доверьтесь течению Вселенной - оно приведет вас к нужному берегу.",
-            "Ваше настоящее испытание станет вашей величайшей силой."
-        ];
+        let secretFound = false;
 
         // Показать сообщение
         function showMessage(text) {
-            document.getElementById('message-text').textContent = text;
+            const messages = [
+                "Отличная работа! Ваши способности растут!",
+                "Удивительно! Вы настоящий экстрасенс!",
+                "Потрясающе! Космические силы с вами!",
+                "Великолепно! Вы чувствуете энергию вселенной!",
+                "Невероятно! Ваша интуиция на высоте!",
+                secretFound ? "Вы нашли мой секрет! Спасибо за игру! ✨" : ""
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            document.getElementById('message-text').textContent = text + (randomMessage ? "\n\n" + randomMessage : "");
             document.getElementById('message-box').style.display = 'block';
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.add('game-active');
@@ -607,22 +622,6 @@
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.remove('game-active');
             });
-        }
-
-        // Получить предсказание от Оракула
-        function getOraclePrediction() {
-            if (!isGameActive) return;
-            
-            const oracleText = document.getElementById('oracle-text');
-            oracleText.innerHTML = '<div class="star" style="position:relative; width:10px; height:10px; margin:0 auto;"></div>';
-            
-            setTimeout(() => {
-                const randomPrediction = oraclePredictions[Math.floor(Math.random() * oraclePredictions.length)];
-                oracleText.textContent = randomPrediction;
-                stats.oracle.predictions++;
-                updateStats();
-                checkAchievements();
-            }, 1500);
         }
 
         // Инициализация телекинеза
@@ -780,6 +779,165 @@
             checkAchievements();
         }
 
+        // Инициализация астральной проекции
+        function initAstral() {
+            const area = document.getElementById('astral-area');
+            const ball = document.getElementById('astral-ball');
+            const exit = document.querySelector('.astral-exit');
+            
+            // Очищаем предыдущие стены
+            document.querySelectorAll('.astral-wall').forEach(wall => wall.remove());
+            
+            // Позиционируем шар в стартовой позиции
+            ball.style.left = '20px';
+            ball.style.top = '20px';
+            
+            // Позиционируем выход в правом нижнем углу
+            const rect = area.getBoundingClientRect();
+            exit.style.left = (rect.width - 60) + 'px';
+            exit.style.top = (rect.height - 60) + 'px';
+            
+            // Создаем лабиринт
+            createMaze(area);
+            
+            // Управление шаром
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+            
+            // Для мыши
+            ball.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+
+            // Для сенсорных устройств
+            ball.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', stopDrag);
+
+            function startDrag(e) {
+                if (!isGameActive) return;
+                e.preventDefault();
+                isDragging = true;
+                
+                const rect = area.getBoundingClientRect();
+                const ballRect = ball.getBoundingClientRect();
+                
+                if (e.type === 'mousedown') {
+                    startX = e.clientX;
+                    startY = e.clientY;
+                } else {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }
+                
+                startLeft = ballRect.left - rect.left;
+                startTop = ballRect.top - rect.top;
+            }
+
+            function drag(e) {
+                if (!isDragging || !isGameActive) return;
+                e.preventDefault();
+                
+                const rect = area.getBoundingClientRect();
+                let clientX, clientY;
+                
+                if (e.type === 'mousemove') {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                } else {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+                
+                let newLeft = startLeft + (clientX - startX);
+                let newTop = startTop + (clientY - startY);
+                
+                // Ограничения по границам области
+                newLeft = Math.max(0, Math.min(rect.width - ball.offsetWidth, newLeft));
+                newTop = Math.max(0, Math.min(rect.height - ball.offsetHeight, newTop));
+                
+                // Проверка столкновений со стенами
+                const walls = document.querySelectorAll('.astral-wall');
+                let collision = false;
+                
+                walls.forEach(wall => {
+                    const wallRect = wall.getBoundingClientRect();
+                    const ballRect = {
+                        left: rect.left + newLeft,
+                        top: rect.top + newTop,
+                        right: rect.left + newLeft + ball.offsetWidth,
+                        bottom: rect.top + newTop + ball.offsetHeight
+                    };
+                    
+                    if (
+                        ballRect.right > wallRect.left &&
+                        ballRect.left < wallRect.right &&
+                        ballRect.bottom > wallRect.top &&
+                        ballRect.top < wallRect.bottom
+                    ) {
+                        collision = true;
+                    }
+                });
+                
+                if (!collision) {
+                    ball.style.left = newLeft + 'px';
+                    ball.style.top = newTop + 'px';
+                    
+                    // Проверка достижения выхода
+                    const exitRect = exit.getBoundingClientRect();
+                    const ballRect = ball.getBoundingClientRect();
+                    
+                    if (
+                        ballRect.right > exitRect.left &&
+                        ballRect.left < exitRect.right &&
+                        ballRect.bottom > exitRect.top &&
+                        ballRect.top < exitRect.bottom
+                    ) {
+                        stats.astral.success++;
+                        if (stats.astral.success === 1) {
+                            stats.secrets.found++;
+                            secretFound = true;
+                            showMessage('🌀 Поздравляю! Вы прошли астральный лабиринт!\n\nЭто мой личный вклад в игру. Надеюсь, вам понравилось!');
+                        } else {
+                            showMessage('🌀 Успех! Вы вышли из лабиринта!');
+                        }
+                        updateStats();
+                        checkAchievements();
+                        setTimeout(initAstral, 1000);
+                    }
+                }
+            }
+
+            function stopDrag() {
+                isDragging = false;
+            }
+        }
+
+        // Создание лабиринта
+        function createMaze(container) {
+            const walls = [
+                // Горизонтальные стены
+                { left: 50, top: 100, width: 200, height: 10 },
+                { left: 100, top: 200, width: 150, height: 10 },
+                { left: 0, top: 250, width: 150, height: 10 },
+                
+                // Вертикальные стены
+                { left: 120, top: 0, width: 10, height: 100 },
+                { left: 200, top: 100, width: 10, height: 100 },
+                { left: 80, top: 150, width: 10, height: 100 }
+            ];
+            
+            walls.forEach(wall => {
+                const wallElement = document.createElement('div');
+                wallElement.className = 'astral-wall';
+                wallElement.style.left = wall.left + 'px';
+                wallElement.style.top = wall.top + 'px';
+                wallElement.style.width = wall.width + 'px';
+                wallElement.style.height = wall.height + 'px';
+                container.appendChild(wallElement);
+            });
+        }
+
         // Открытие игры
         function openGame(gameId) {
             document.getElementById('main-menu').style.display = 'none';
@@ -791,8 +949,8 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
-            } else if (gameId === 'oracle') {
-                document.getElementById('oracle-text').textContent = "Сосредоточьтесь на вопросе и нажмите кнопку...";
+            } else if (gameId === 'astral') {
+                initAstral();
             }
         }
 
@@ -840,7 +998,7 @@
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
-            document.getElementById('oracle-stats').textContent = stats.oracle.predictions;
+            document.getElementById('astral-stats').textContent = stats.astral.success;
         }
 
         // Сброс статистики
@@ -851,8 +1009,10 @@
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
                 dowsing: { found: 0, attempts: 0 },
-                oracle: { predictions: 0 }
+                astral: { success: 0 },
+                secrets: { found: 0 }
             };
+            secretFound = false;
             updateStats();
             updateAchievements();
         }
@@ -867,7 +1027,8 @@
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Посвященный Оракула", condition: stats.oracle.predictions >= 10 }
+                { id: "Астральный путешественник", condition: stats.astral.success >= 3 },
+                { id: "Посвященный", condition: stats.secrets.found >= 1 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -932,6 +1093,11 @@
         function checkAchievements() {
             updateAchievements();
         }
+
+        // Секретная кнопка - мерцает через 30 секунд
+        setTimeout(() => {
+            document.getElementById('secret-room-btn').style.display = 'flex';
+        }, 30000);
     </script>
 </body>
 </html>
