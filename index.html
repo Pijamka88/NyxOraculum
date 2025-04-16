@@ -5,10 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
+        :root {
+            --main-color: #8A2BE2;
+            --secondary-color: #FFD700;
+            --bg-dark: #1A1A2E;
+            --bg-darker: #0F0F1A;
+            --text-light: #E6E6FA;
+            --text-gray: #888;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
-            color: #E6E6FA;
+            background: radial-gradient(circle, var(--bg-dark), var(--bg-darker);
+            color: var(--text-light);
             margin: 0;
             padding: 0;
             display: flex;
@@ -25,18 +34,63 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--main-color);
             width: 90%;
             max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: linear-gradient(
+                45deg,
+                var(--main-color),
+                transparent,
+                var(--secondary-color),
+                transparent,
+                var(--main-color)
+            );
+            background-size: 400% 400%;
+            z-index: -1;
+            animation: gradientGlow 15s ease infinite;
+            opacity: 0.3;
+            border-radius: 30px;
+        }
+
+        @keyframes gradientGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, #00BFFF, #8A2BE2);
+            background: linear-gradient(90deg, #00BFFF, var(--main-color));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
+            position: relative;
+        }
+
+        h1::after {
+            content: "🔮";
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            font-size: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         @keyframes glow {
@@ -47,24 +101,47 @@
 
         .btn {
             background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
+            color: var(--text-light);
+            border: 2px solid var(--main-color);
             padding: 15px;
             margin: 10px auto;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
             max-width: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
         }
 
         .btn:hover {
             background: rgba(153, 50, 204, 0.3);
+            box-shadow: 0 0 15px var(--main-color);
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:active {
@@ -77,18 +154,6 @@
             filter: brightness(0) invert(1);
         }
 
-        .secret-btn {
-            background: rgba(255, 215, 0, 0.1);
-            border: 2px solid #FFD700;
-            animation: pulse-gold 2s infinite;
-        }
-
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.6); }
-            100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.3); }
-        }
-
         .game-window {
             display: none;
             position: fixed;
@@ -99,7 +164,7 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--main-color);
             z-index: 1000;
             width: 90%;
             max-width: 400px;
@@ -107,15 +172,25 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         .game-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
+            color: var(--text-light);
             text-align: center;
+            position: relative;
+        }
+
+        .game-window h2::after {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--main-color), transparent);
+            margin: 10px auto;
         }
 
         .game-buttons {
@@ -128,14 +203,14 @@
 
         .game-btn {
             background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
+            color: var(--text-light);
+            border: 2px solid var(--main-color);
             width: 50px;
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -144,6 +219,7 @@
 
         .game-btn:hover {
             background: rgba(153, 50, 204, 0.3);
+            transform: scale(1.05);
         }
 
         .game-btn:active {
@@ -154,17 +230,18 @@
             width: 100%;
             height: 300px;
             position: relative;
-            border: 2px dashed #8A2BE2;
+            border: 2px dashed var(--main-color);
             border-radius: 15px;
             margin: 20px auto;
             overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .telekinesis-object {
             position: absolute;
             width: 60px;
             height: 60px;
-            background: #8A2BE2;
+            background: var(--main-color);
             border-radius: 50%;
             top: 50%;
             left: 50%;
@@ -179,10 +256,17 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            background: #FFD700;
+            background: var(--secondary-color);
             border-radius: 50%;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
             z-index: 1;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
         .dowsing-grid {
@@ -195,7 +279,7 @@
 
         .dowsing-cell {
             background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--main-color);
             aspect-ratio: 1/1;
             display: flex;
             align-items: center;
@@ -203,10 +287,24 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1.5rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        .dowsing-cell:hover {
-            background: rgba(153, 50, 204, 0.3);
+        .dowsing-cell::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle, transparent, rgba(255,255,255,0.1));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .dowsing-cell:hover::before {
+            opacity: 1;
         }
 
         .dowsing-cell.opened {
@@ -215,45 +313,45 @@
 
         .dowsing-cell.found {
             background: rgba(50, 205, 50, 0.3);
-            animation: pulse 0.5s;
+            animation: foundPulse 0.5s;
         }
 
+        @keyframes foundPulse {
+            0% { transform: scale(1); box-shadow: 0 0 5px green; }
+            50% { transform: scale(1.1); box-shadow: 0 0 20px green; }
+            100% { transform: scale(1); box-shadow: 0 0 5px green; }
+        }
+
+        /* Стили для Астральной проекции */
         .astral-container {
             width: 100%;
             height: 300px;
             position: relative;
-            border: 2px dashed #8A2BE2;
+            border: 2px dashed var(--main-color);
             border-radius: 15px;
             margin: 20px auto;
             overflow: hidden;
-            background: rgba(10, 10, 30, 0.7);
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .astral-ball {
+        .astral-player {
             position: absolute;
             width: 30px;
             height: 30px;
-            background: #BA55D3;
+            background: var(--main-color);
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(186, 85, 211, 0.7);
+            box-shadow: 0 0 15px var(--main-color);
             z-index: 2;
-            top: 20px;
-            left: 20px;
-        }
-
-        .astral-wall {
-            position: absolute;
-            background: rgba(138, 43, 226, 0.5);
-            z-index: 1;
+            transition: transform 0.1s linear;
         }
 
         .astral-exit {
             position: absolute;
             width: 40px;
             height: 40px;
-            background: #FFD700;
+            background: var(--secondary-color);
             border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            box-shadow: 0 0 20px var(--secondary-color);
             z-index: 1;
             display: flex;
             align-items: center;
@@ -261,10 +359,11 @@
             font-size: 1.5rem;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        .astral-wall {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 1;
         }
 
         .overlay {
@@ -289,7 +388,7 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--main-color);
             z-index: 1000;
             width: 90%;
             max-width: 400px;
@@ -299,14 +398,14 @@
         .stats-window h2, .achievements-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
+            color: var(--text-light);
             text-align: center;
         }
 
         .stats-window p, .achievements-window p {
             font-size: 1rem;
             margin: 10px 0;
-            color: #E6E6FA;
+            color: var(--text-light);
             text-align: center;
         }
 
@@ -329,7 +428,7 @@
         }
 
         .achievement-item.locked {
-            color: #888;
+            color: var(--text-gray);
         }
 
         .message-box {
@@ -342,7 +441,7 @@
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--main-color);
             z-index: 1001;
             width: 80%;
             max-width: 300px;
@@ -353,7 +452,7 @@
         .message-box p {
             font-size: 1.2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
+            color: var(--text-light);
         }
 
         .message-box .btn {
@@ -382,14 +481,51 @@
 
         .game-active {
             pointer-events: none;
-            opacity: 0.5;
+            opacity: 0.7;
+            filter: blur(1px);
         }
 
-        .hint {
-            font-size: 0.8rem;
-            color: #BA55D3;
-            margin-top: 5px;
-            text-align: center;
+        .secret-btn {
+            position: absolute;
+            bottom: -10px;
+            right: -10px;
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .secret-btn:hover {
+            opacity: 1;
+        }
+
+        .secret-btn img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Анимации для астральной проекции */
+        @keyframes astralGlow {
+            0% { box-shadow: 0 0 10px var(--main-color); }
+            50% { box-shadow: 0 0 20px var(--main-color); }
+            100% { box-shadow: 0 0 10px var(--main-color); }
+        }
+
+        .astral-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            z-index: 10;
+            display: none;
         }
     </style>
 </head>
@@ -424,10 +560,10 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
             Достижения
         </button>
-        <button class="btn secret-btn" id="secret-room-btn" onclick="openGame('astral')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/door.png" alt="Тайная комната">
-            Тайная комната
-            <div class="hint">(Секрет от разработчика)</div>
+
+        <!-- Секретная кнопка -->
+        <button class="secret-btn" id="secret-btn" onclick="openSecretRoom()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/key.png" alt="Секрет">
         </button>
     </div>
 
@@ -493,13 +629,14 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
+    <!-- Тайная комната - Астральная проекция -->
     <div id="astral" class="game-window">
         <h2>Астральная проекция</h2>
-        <p>Проведите шар через лабиринт к выходу (🌀):</p>
-        <div class="astral-container" id="astral-area">
-            <div class="astral-ball" id="astral-ball"></div>
-            <div class="astral-exit">🌀</div>
-            <!-- Стены будут добавлены через JS -->
+        <p>Проведите шар через лабиринт к выходу (используйте наклон устройства или стрелки):</p>
+        <div class="astral-container" id="astral-container">
+            <div class="astral-player" id="astral-player"></div>
+            <div class="astral-exit" id="astral-exit">🚪</div>
+            <div class="astral-message" id="astral-message"></div>
         </div>
         <button class="btn close-btn" onclick="closeGame('astral')">Закрыть</button>
     </div>
@@ -547,11 +684,11 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Астральный путешественник (3 прохождения лабиринта)
+                Астральный путешественник (3 успешных прохождения)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Посвященный (Нашли все секреты)
+                Посвященный (Найдена тайная комната)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -589,27 +726,20 @@
             telekinesis: { success: 0, total: 0 },
             dowsing: { found: 0, attempts: 0 },
             astral: { success: 0 },
-            secrets: { found: 0 }
+            secretFound: false
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let secretFound = false;
+        let astralWalls = [];
+        let astralPlayer = { x: 0, y: 0 };
+        let astralExit = { x: 0, y: 0 };
+        let deviceOrientationSupported = false;
 
         // Показать сообщение
         function showMessage(text) {
-            const messages = [
-                "Отличная работа! Ваши способности растут!",
-                "Удивительно! Вы настоящий экстрасенс!",
-                "Потрясающе! Космические силы с вами!",
-                "Великолепно! Вы чувствуете энергию вселенной!",
-                "Невероятно! Ваша интуиция на высоте!",
-                secretFound ? "Вы нашли мой секрет! Спасибо за игру! ✨" : ""
-            ];
-            
-            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-            document.getElementById('message-text').textContent = text + (randomMessage ? "\n\n" + randomMessage : "");
+            document.getElementById('message-text').textContent = text;
             document.getElementById('message-box').style.display = 'block';
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.add('game-active');
@@ -780,162 +910,283 @@
         }
 
         // Инициализация астральной проекции
-        function initAstral() {
-            const area = document.getElementById('astral-area');
-            const ball = document.getElementById('astral-ball');
-            const exit = document.querySelector('.astral-exit');
+        function initAstralProjection() {
+            const container = document.getElementById('astral-container');
+            const player = document.getElementById('astral-player');
+            const exit = document.getElementById('astral-exit');
+            const message = document.getElementById('astral-message');
             
             // Очищаем предыдущие стены
-            document.querySelectorAll('.astral-wall').forEach(wall => wall.remove());
+            astralWalls.forEach(wall => wall.remove());
+            astralWalls = [];
             
-            // Позиционируем шар в стартовой позиции
-            ball.style.left = '20px';
-            ball.style.top = '20px';
+            const containerRect = container.getBoundingClientRect();
+            const containerWidth = containerRect.width;
+            const containerHeight = containerRect.height;
             
-            // Позиционируем выход в правом нижнем углу
-            const rect = area.getBoundingClientRect();
-            exit.style.left = (rect.width - 60) + 'px';
-            exit.style.top = (rect.height - 60) + 'px';
+            // Устанавливаем размеры игрока и выхода
+            const playerSize = 30;
+            const exitSize = 40;
+            
+            player.style.width = playerSize + 'px';
+            player.style.height = playerSize + 'px';
+            exit.style.width = exitSize + 'px';
+            exit.style.height = exitSize + 'px';
+            
+            // Начальная позиция игрока (в центре)
+            astralPlayer = {
+                x: containerWidth / 2 - playerSize / 2,
+                y: containerHeight / 2 - playerSize / 2
+            };
+            
+            // Позиция выхода (в случайном углу)
+            const exitPositions = [
+                { x: 20, y: 20 }, // Левый верхний
+                { x: containerWidth - exitSize - 20, y: 20 }, // Правый верхний
+                { x: 20, y: containerHeight - exitSize - 20 }, // Левый нижний
+                { x: containerWidth - exitSize - 20, y: containerHeight - exitSize - 20 } // Правый нижний
+            ];
+            
+            astralExit = exitPositions[Math.floor(Math.random() * exitPositions.length)];
+            
+            // Устанавливаем позиции
+            player.style.left = astralPlayer.x + 'px';
+            player.style.top = astralPlayer.y + 'px';
+            exit.style.left = astralExit.x + 'px';
+            exit.style.top = astralExit.y + 'px';
             
             // Создаем лабиринт
-            createMaze(area);
+            createAstralMaze(container, containerWidth, containerHeight);
             
-            // Управление шаром
-            let isDragging = false;
-            let startX, startY, startLeft, startTop;
+            // Проверяем поддержку ориентации устройства
+            if (window.DeviceOrientationEvent) {
+                deviceOrientationSupported = true;
+                window.addEventListener('deviceorientation', handleOrientation);
+                message.textContent = 'Наклоняйте устройство для управления';
+            } else {
+                deviceOrientationSupported = false;
+                message.textContent = 'Используйте стрелки на клавиатуре';
+                window.addEventListener('keydown', handleKeyDown);
+            }
             
-            // Для мыши
-            ball.addEventListener('mousedown', startDrag);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
+            message.style.display = 'block';
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 3000);
+        }
 
-            // Для сенсорных устройств
-            ball.addEventListener('touchstart', startDrag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('touchend', stopDrag);
-
-            function startDrag(e) {
-                if (!isGameActive) return;
-                e.preventDefault();
-                isDragging = true;
+        function createAstralMaze(container, width, height) {
+            // Создаем 4-6 случайных стен
+            const wallCount = 4 + Math.floor(Math.random() * 3);
+            
+            for (let i = 0; i < wallCount; i++) {
+                const wall = document.createElement('div');
+                wall.className = 'astral-wall';
                 
-                const rect = area.getBoundingClientRect();
-                const ballRect = ball.getBoundingClientRect();
+                // Вертикальная или горизонтальная стена
+                const isVertical = Math.random() > 0.5;
                 
-                if (e.type === 'mousedown') {
-                    startX = e.clientX;
-                    startY = e.clientY;
+                if (isVertical) {
+                    // Вертикальная стена
+                    const wallHeight = 50 + Math.random() * (height - 100);
+                    const wallX = 50 + Math.random() * (width - 100);
+                    const wallY = Math.random() * (height - wallHeight);
+                    
+                    wall.style.width = '10px';
+                    wall.style.height = wallHeight + 'px';
+                    wall.style.left = wallX + 'px';
+                    wall.style.top = wallY + 'px';
                 } else {
-                    startX = e.touches[0].clientX;
-                    startY = e.touches[0].clientY;
+                    // Горизонтальная стена
+                    const wallWidth = 50 + Math.random() * (width - 100);
+                    const wallX = Math.random() * (width - wallWidth);
+                    const wallY = 50 + Math.random() * (height - 100);
+                    
+                    wall.style.width = wallWidth + 'px';
+                    wall.style.height = '10px';
+                    wall.style.left = wallX + 'px';
+                    wall.style.top = wallY + 'px';
                 }
                 
-                startLeft = ballRect.left - rect.left;
-                startTop = ballRect.top - rect.top;
-            }
-
-            function drag(e) {
-                if (!isDragging || !isGameActive) return;
-                e.preventDefault();
-                
-                const rect = area.getBoundingClientRect();
-                let clientX, clientY;
-                
-                if (e.type === 'mousemove') {
-                    clientX = e.clientX;
-                    clientY = e.clientY;
-                } else {
-                    clientX = e.touches[0].clientX;
-                    clientY = e.touches[0].clientY;
-                }
-                
-                let newLeft = startLeft + (clientX - startX);
-                let newTop = startTop + (clientY - startY);
-                
-                // Ограничения по границам области
-                newLeft = Math.max(0, Math.min(rect.width - ball.offsetWidth, newLeft));
-                newTop = Math.max(0, Math.min(rect.height - ball.offsetHeight, newTop));
-                
-                // Проверка столкновений со стенами
-                const walls = document.querySelectorAll('.astral-wall');
-                let collision = false;
-                
-                walls.forEach(wall => {
-                    const wallRect = wall.getBoundingClientRect();
-                    const ballRect = {
-                        left: rect.left + newLeft,
-                        top: rect.top + newTop,
-                        right: rect.left + newLeft + ball.offsetWidth,
-                        bottom: rect.top + newTop + ball.offsetHeight
-                    };
-                    
-                    if (
-                        ballRect.right > wallRect.left &&
-                        ballRect.left < wallRect.right &&
-                        ballRect.bottom > wallRect.top &&
-                        ballRect.top < wallRect.bottom
-                    ) {
-                        collision = true;
-                    }
-                });
-                
-                if (!collision) {
-                    ball.style.left = newLeft + 'px';
-                    ball.style.top = newTop + 'px';
-                    
-                    // Проверка достижения выхода
-                    const exitRect = exit.getBoundingClientRect();
-                    const ballRect = ball.getBoundingClientRect();
-                    
-                    if (
-                        ballRect.right > exitRect.left &&
-                        ballRect.left < exitRect.right &&
-                        ballRect.bottom > exitRect.top &&
-                        ballRect.top < exitRect.bottom
-                    ) {
-                        stats.astral.success++;
-                        if (stats.astral.success === 1) {
-                            stats.secrets.found++;
-                            secretFound = true;
-                            showMessage('🌀 Поздравляю! Вы прошли астральный лабиринт!\n\nЭто мой личный вклад в игру. Надеюсь, вам понравилось!');
-                        } else {
-                            showMessage('🌀 Успех! Вы вышли из лабиринта!');
-                        }
-                        updateStats();
-                        checkAchievements();
-                        setTimeout(initAstral, 1000);
-                    }
-                }
-            }
-
-            function stopDrag() {
-                isDragging = false;
+                container.appendChild(wall);
+                astralWalls.push(wall);
             }
         }
 
-        // Создание лабиринта
-        function createMaze(container) {
-            const walls = [
-                // Горизонтальные стены
-                { left: 50, top: 100, width: 200, height: 10 },
-                { left: 100, top: 200, width: 150, height: 10 },
-                { left: 0, top: 250, width: 150, height: 10 },
-                
-                // Вертикальные стены
-                { left: 120, top: 0, width: 10, height: 100 },
-                { left: 200, top: 100, width: 10, height: 100 },
-                { left: 80, top: 150, width: 10, height: 100 }
-            ];
+        function handleOrientation(event) {
+            if (!isGameActive) return;
             
-            walls.forEach(wall => {
-                const wallElement = document.createElement('div');
-                wallElement.className = 'astral-wall';
-                wallElement.style.left = wall.left + 'px';
-                wallElement.style.top = wall.top + 'px';
-                wallElement.style.width = wall.width + 'px';
-                wallElement.style.height = wall.height + 'px';
-                container.appendChild(wallElement);
+            const player = document.getElementById('astral-player');
+            const container = document.getElementById('astral-container');
+            const containerRect = container.getBoundingClientRect();
+            const playerSize = 30;
+            
+            // Получаем данные акселерометра
+            const beta = event.beta;  // Наклон вперед-назад (от -180 до 180)
+            const gamma = event.gamma; // Наклон влево-вправо (от -90 до 90)
+            
+            // Корректируем позицию игрока
+            let newX = astralPlayer.x + (gamma || 0) * 0.3;
+            let newY = astralPlayer.y + (beta || 0) * 0.3;
+            
+            // Ограничиваем движение в пределах контейнера
+            newX = Math.max(0, Math.min(containerRect.width - playerSize, newX));
+            newY = Math.max(0, Math.min(containerRect.height - playerSize, newY));
+            
+            // Проверяем столкновения со стенами
+            const playerRect = {
+                left: newX,
+                top: newY,
+                right: newX + playerSize,
+                bottom: newY + playerSize
+            };
+            
+            let collision = false;
+            
+            astralWalls.forEach(wall => {
+                const wallRect = wall.getBoundingClientRect();
+                const relativeWallRect = {
+                    left: wallRect.left - containerRect.left,
+                    top: wallRect.top - containerRect.top,
+                    right: wallRect.right - containerRect.left,
+                    bottom: wallRect.bottom - containerRect.top
+                };
+                
+                if (
+                    playerRect.right > relativeWallRect.left &&
+                    playerRect.left < relativeWallRect.right &&
+                    playerRect.bottom > relativeWallRect.top &&
+                    playerRect.top < relativeWallRect.bottom
+                ) {
+                    collision = true;
+                }
             });
+            
+            if (!collision) {
+                astralPlayer.x = newX;
+                astralPlayer.y = newY;
+                player.style.left = astralPlayer.x + 'px';
+                player.style.top = astralPlayer.y + 'px';
+            }
+            
+            // Проверяем достижение выхода
+            checkAstralExit();
+        }
+
+        function handleKeyDown(e) {
+            if (!isGameActive) return;
+            
+            const player = document.getElementById('astral-player');
+            const container = document.getElementById('astral-container');
+            const containerRect = container.getBoundingClientRect();
+            const playerSize = 30;
+            const step = 5;
+            
+            let newX = astralPlayer.x;
+            let newY = astralPlayer.y;
+            
+            switch(e.key) {
+                case 'ArrowLeft':
+                    newX -= step;
+                    break;
+                case 'ArrowRight':
+                    newX += step;
+                    break;
+                case 'ArrowUp':
+                    newY -= step;
+                    break;
+                case 'ArrowDown':
+                    newY += step;
+                    break;
+                default:
+                    return;
+            }
+            
+            // Ограничиваем движение в пределах контейнера
+            newX = Math.max(0, Math.min(containerRect.width - playerSize, newX));
+            newY = Math.max(0, Math.min(containerRect.height - playerSize, newY));
+            
+            // Проверяем столкновения со стенами
+            const playerRect = {
+                left: newX,
+                top: newY,
+                right: newX + playerSize,
+                bottom: newY + playerSize
+            };
+            
+            let collision = false;
+            
+            astralWalls.forEach(wall => {
+                const wallRect = wall.getBoundingClientRect();
+                const relativeWallRect = {
+                    left: wallRect.left - containerRect.left,
+                    top: wallRect.top - containerRect.top,
+                    right: wallRect.right - containerRect.left,
+                    bottom: wallRect.bottom - containerRect.top
+                };
+                
+                if (
+                    playerRect.right > relativeWallRect.left &&
+                    playerRect.left < relativeWallRect.right &&
+                    playerRect.bottom > relativeWallRect.top &&
+                    playerRect.top < relativeWallRect.bottom
+                ) {
+                    collision = true;
+                }
+            });
+            
+            if (!collision) {
+                astralPlayer.x = newX;
+                astralPlayer.y = newY;
+                player.style.left = astralPlayer.x + 'px';
+                player.style.top = astralPlayer.y + 'px';
+            }
+            
+            // Проверяем достижение выхода
+            checkAstralExit();
+        }
+
+        function checkAstralExit() {
+            const player = document.getElementById('astral-player');
+            const exit = document.getElementById('astral-exit');
+            
+            const playerRect = player.getBoundingClientRect();
+            const exitRect = exit.getBoundingClientRect();
+            
+            // Проверяем пересечение
+            if (
+                playerRect.right > exitRect.left &&
+                playerRect.left < exitRect.right &&
+                playerRect.bottom > exitRect.top &&
+                playerRect.top < exitRect.bottom
+            ) {
+                // Игрок достиг выхода
+                stats.astral.success++;
+                showMessage('✅ Успех! Вы завершили астральную проекцию!');
+                updateStats();
+                checkAchievements();
+                
+                // Убираем обработчики событий
+                if (deviceOrientationSupported) {
+                    window.removeEventListener('deviceorientation', handleOrientation);
+                } else {
+                    window.removeEventListener('keydown', handleKeyDown);
+                }
+                
+                // Перезапускаем игру через секунду
+                setTimeout(() => {
+                    initAstralProjection();
+                }, 1000);
+            }
+        }
+
+        // Открытие тайной комнаты
+        function openSecretRoom() {
+            if (!stats.secretFound) {
+                stats.secretFound = true;
+                checkAchievements();
+            }
+            openGame('astral');
         }
 
         // Открытие игры
@@ -950,7 +1201,7 @@
             } else if (gameId === 'dowsing') {
                 initDowsing();
             } else if (gameId === 'astral') {
-                initAstral();
+                initAstralProjection();
             }
         }
 
@@ -959,6 +1210,15 @@
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
+            
+            // Убираем обработчики событий для астральной проекции
+            if (gameId === 'astral') {
+                if (deviceOrientationSupported) {
+                    window.removeEventListener('deviceorientation', handleOrientation);
+                } else {
+                    window.removeEventListener('keydown', handleKeyDown);
+                }
+            }
         }
 
         // Открытие статистики
@@ -1010,9 +1270,8 @@
                 telekinesis: { success: 0, total: 0 },
                 dowsing: { found: 0, attempts: 0 },
                 astral: { success: 0 },
-                secrets: { found: 0 }
+                secretFound: stats.secretFound // Сохраняем статус тайной комнаты
             };
-            secretFound = false;
             updateStats();
             updateAchievements();
         }
@@ -1028,7 +1287,7 @@
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
                 { id: "Астральный путешественник", condition: stats.astral.success >= 3 },
-                { id: "Посвященный", condition: stats.secrets.found >= 1 }
+                { id: "Посвященный", condition: stats.secretFound }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -1093,11 +1352,6 @@
         function checkAchievements() {
             updateAchievements();
         }
-
-        // Секретная кнопка - мерцает через 30 секунд
-        setTimeout(() => {
-            document.getElementById('secret-room-btn').style.display = 'flex';
-        }, 30000);
     </script>
 </body>
 </html>
