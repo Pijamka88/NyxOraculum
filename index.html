@@ -5,10 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
+        :root {
+            --main-bg: radial-gradient(circle, #1A1A2E, #0F0F1A);
+            --container-bg: rgba(26, 26, 46, 0.9);
+            --border-color: #8A2BE2;
+            --text-color: #E6E6FA;
+            --btn-bg: rgba(138, 43, 226, 0.2);
+            --btn-hover: rgba(153, 50, 204, 0.3);
+            --accent-color: #FFD700;
+            --success-color: rgba(50, 205, 50, 0.3);
+            --error-color: rgba(255, 69, 0, 0.3);
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
-            color: #E6E6FA;
+            background: var(--main-bg);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
             display: flex;
@@ -21,14 +33,32 @@
 
         .container {
             text-align: center;
-            background: rgba(26, 26, 46, 0.9);
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--border-color);
             width: 90%;
             max-width: 400px;
             position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(138, 43, 226, 0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         h1 {
@@ -38,8 +68,21 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
-            cursor: pointer;
-            user-select: none;
+            position: relative;
+        }
+
+        h1::after {
+            content: '🔮';
+            position: absolute;
+            right: -10px;
+            top: -10px;
+            font-size: 1.5rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         @keyframes glow {
@@ -49,9 +92,9 @@
         }
 
         .btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
+            background: var(--btn-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
             padding: 15px;
             margin: 10px auto;
             border-radius: 50px;
@@ -68,52 +111,34 @@
             overflow: hidden;
         }
 
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
         .btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-            box-shadow: 0 0 15px rgba(153, 50, 204, 0.5);
+            background: var(--btn-hover);
+            box-shadow: 0 0 15px var(--border-color);
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn:active {
             transform: scale(0.95);
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255, 255, 255, 0) 0%,
-                rgba(255, 255, 255, 0.1) 50%,
-                rgba(255, 255, 255, 0) 100%
-            );
-            transform: rotate(30deg);
-            transition: all 0.5s ease;
-            opacity: 0;
-        }
-
-        .btn:hover::before {
-            animation: shine 1.5s infinite;
-            opacity: 1;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(30deg); }
-            100% { transform: translateX(100%) rotate(30deg); }
-        }
-
         .btn img {
             width: 20px;
             height: 20px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
-        }
-
-        .btn:hover img {
-            transform: scale(1.2);
         }
 
         .game-window {
@@ -122,34 +147,38 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--border-color);
             z-index: 1000;
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .game-window.active {
-            opacity: 1;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         .game-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
+            color: var(--text-color);
             text-align: center;
-            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+            position: relative;
+        }
+
+        .game-window h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 2px;
+            background: var(--border-color);
+            margin: 10px auto;
+            box-shadow: 0 0 10px var(--border-color);
         }
 
         .game-buttons {
@@ -161,9 +190,9 @@
         }
 
         .game-btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
+            background: var(--btn-bg);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
             width: 50px;
             height: 50px;
             border-radius: 50%;
@@ -174,13 +203,11 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto;
-            position: relative;
         }
 
         .game-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
+            background: var(--btn-hover);
             transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(153, 50, 204, 0.5);
         }
 
         .game-btn:active {
@@ -191,25 +218,25 @@
             width: 100%;
             height: 300px;
             position: relative;
-            border: 2px dashed #8A2BE2;
+            border: 2px dashed var(--border-color);
             border-radius: 15px;
             margin: 20px auto;
             overflow: hidden;
-            background: rgba(138, 43, 226, 0.05);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .telekinesis-object {
             position: absolute;
             width: 60px;
             height: 60px;
-            background: #8A2BE2;
+            background: var(--border-color);
             border-radius: 50%;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             cursor: pointer;
             transition: transform 0.1s ease;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            box-shadow: 0 0 15px var(--border-color);
             z-index: 2;
         }
 
@@ -217,17 +244,11 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            background: #FFD700;
+            background: var(--accent-color);
             border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.7);
+            box-shadow: 0 0 15px var(--accent-color);
             z-index: 1;
-            animation: pulseGlow 2s infinite;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
-            50% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255, 215, 0, 0.9); }
-            100% { transform: scale(1); box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); }
+            animation: pulse 2s infinite;
         }
 
         .dowsing-grid {
@@ -239,8 +260,8 @@
         }
 
         .dowsing-cell {
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
+            background: var(--btn-bg);
+            border: 2px solid var(--border-color);
             aspect-ratio: 1/1;
             display: flex;
             align-items: center;
@@ -257,21 +278,14 @@
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, transparent 0%, rgba(138, 43, 226, 0.1) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .dowsing-cell:hover::before {
-            opacity: 1;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 60%, rgba(138, 43, 226, 0.3) 100%);
         }
 
         .dowsing-cell:hover {
-            background: rgba(153, 50, 204, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background: var(--btn-hover);
+            transform: scale(1.05);
         }
 
         .dowsing-cell.opened {
@@ -280,15 +294,18 @@
         }
 
         .dowsing-cell.found {
-            background: rgba(50, 205, 50, 0.3);
+            background: var(--success-color);
             animation: pulse 0.5s;
-            box-shadow: 0 0 20px rgba(50, 205, 50, 0.5);
+        }
+
+        .dowsing-cell.error {
+            background: var(--error-color);
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% { transform: scale(1); box-shadow: 0 0 5px currentColor; }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px currentColor; }
+            100% { transform: scale(1); box-shadow: 0 0 5px currentColor; }
         }
 
         .overlay {
@@ -301,6 +318,7 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
             animation: fadeIn 0.5s ease;
+            backdrop-filter: blur(5px);
         }
 
         .stats-window, .achievements-window {
@@ -309,35 +327,28 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--border-color);
             z-index: 1000;
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .stats-window.active, .achievements-window.active {
-            opacity: 1;
         }
 
         .stats-window h2, .achievements-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
+            color: var(--text-color);
             text-align: center;
-            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
         }
 
         .stats-window p, .achievements-window p {
             font-size: 1rem;
             margin: 10px 0;
-            color: #E6E6FA;
+            color: var(--text-color);
             text-align: center;
         }
 
@@ -347,38 +358,30 @@
             gap: 10px;
             margin-bottom: 10px;
             justify-content: center;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(138, 43, 226, 0.1);
             transition: all 0.3s ease;
         }
 
-        .achievement-item.unlocked {
+        .achievement-item:hover {
             background: rgba(138, 43, 226, 0.2);
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
+            transform: translateX(5px);
         }
 
         .achievement-item img {
             width: 24px;
             height: 24px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s ease;
-        }
-
-        .achievement-item.unlocked img {
-            animation: bounce 0.5s;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.3); }
         }
 
         .achievement-item.locked img {
-            filter: grayscale(100%) brightness(0.5);
+            filter: grayscale(100%);
         }
 
         .achievement-item.locked {
             color: #888;
+            background: rgba(136, 136, 136, 0.1);
         }
 
         .message-box {
@@ -387,11 +390,11 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
+            background: var(--container-bg);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
+            border: 2px solid var(--border-color);
             z-index: 1001;
             width: 80%;
             max-width: 300px;
@@ -402,8 +405,7 @@
         .message-box p {
             font-size: 1.2rem;
             margin-bottom: 20px;
-            color: #E6E6FA;
-            text-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+            color: var(--text-color);
         }
 
         .message-box .btn {
@@ -417,22 +419,11 @@
             background: white;
             border-radius: 50%;
             animation: twinkle 2s infinite;
-            pointer-events: none;
         }
 
         @keyframes twinkle {
             0%, 100% { opacity: 0; }
             50% { opacity: 1; }
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: -1;
         }
 
         .close-btn, .reset-btn {
@@ -443,100 +434,129 @@
 
         .game-active {
             pointer-events: none;
-            filter: brightness(0.7);
+            opacity: 0.7;
+            filter: blur(1px);
         }
 
-        .loading-screen {
+        .energy-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .energy-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+            border-radius: 5px;
+            transition: width 0.5s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .energy-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3), 
+                transparent);
+            animation: shine 2s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .mystic-symbol {
+            position: absolute;
+            font-size: 2rem;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 5s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hidden-feature {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 1002;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .hidden-feature:hover {
+            opacity: 1;
+        }
+
+        .secret-mode {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(26, 26, 46, 0.9);
-            display: flex;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1003;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 2000;
-            transition: opacity 0.5s ease;
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(138, 43, 226, 0.3);
-            border-radius: 50%;
-            border-top-color: #8A2BE2;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            color: #E6E6FA;
-            font-size: 1.2rem;
-            margin-top: 15px;
-            text-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-        }
-
-        .personal-message {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
-            z-index: 2001;
-            width: 80%;
-            max-width: 400px;
+            color: white;
             text-align: center;
-            animation: fadeIn 0.5s ease;
         }
 
-        .personal-message h3 {
-            color: #8A2BE2;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-        }
-
-        .personal-message p {
-            color: #E6E6FA;
+        .secret-mode h2 {
+            font-size: 2rem;
             margin-bottom: 20px;
-            line-height: 1.5;
+            color: var(--accent-color);
         }
 
-        .personal-signature {
-            font-style: italic;
-            color: #BA55D3;
-            margin-top: 15px;
+        .secret-mode p {
+            max-width: 80%;
+            margin-bottom: 30px;
+        }
+
+        .secret-btn {
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .secret-btn:hover {
+            background: var(--accent-color);
+            color: black;
         }
     </style>
 </head>
 <body>
-    <!-- Персональное сообщение -->
-    <div class="personal-message" id="personal-message">
-        <h3>Добро пожаловать в NyxOraculum!</h3>
-        <p>Это приложение создано для развития ваших экстрасенсорных способностей. Я вложил в него частичку своей души и надеюсь, что оно поможет вам открыть в себе новые таланты.</p>
-        <p>Ищите пасхалки и наслаждайтесь процессом!</p>
-        <p class="personal-signature">— Ваш проводник в мир пси-способностей</p>
-        <button class="btn" onclick="closePersonalMessage()">Начать путешествие</button>
-    </div>
-
-    <!-- Экран загрузки -->
-    <div class="loading-screen" id="loading-screen">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loading-text">Загружаем ваши способности...</div>
-    </div>
-
-    <!-- Главное меню -->
     <div class="container" id="main-menu">
-        <h1 id="app-title">NyxOraculum</h1>
+        <h1>NyxOraculum</h1>
+        <div class="energy-bar">
+            <div class="energy-fill" id="energy-fill"></div>
+        </div>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
             Телепатия
@@ -565,6 +585,16 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
             Достижения
         </button>
+        <button class="btn" onclick="showSecretMessage()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/moon-symbol.png" alt="Секрет">
+            Посвящение
+        </button>
+
+        <!-- Скрытые мистические символы -->
+        <div class="mystic-symbol" style="top: 10%; left: 10%;">☽</div>
+        <div class="mystic-symbol" style="top: 80%; left: 20%; animation-delay: 0.5s;">✧</div>
+        <div class="mystic-symbol" style="top: 30%; right: 15%; animation-delay: 1s;">⚝</div>
+        <div class="mystic-symbol" style="bottom: 20%; right: 10%; animation-delay: 1.5s;">☾</div>
     </div>
 
     <!-- Игры -->
@@ -632,11 +662,14 @@
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
-        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
-        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
+        <p>Телепатия: <span id="telepathy-stats">0/0</span> (угадано/попыток)</p>
+        <p>Карты Зенера: <span id="zener-stats">0/0</span> (угадано/попыток)</p>
+        <p>Цветовая интуиция: <span id="color-stats">0/0</span> (угадано/попыток)</p>
+        <p>Телекинез: <span id="telekinesis-stats">0/0</span> (успешно/попыток)</p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <div class="energy-bar">
+            <div class="energy-fill" id="stats-energy-fill"></div>
+        </div>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -669,6 +702,10 @@
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (5 найденных артефактов)
             </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Посвященный (Активировал скрытый режим)
+            </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
     </div>
@@ -679,12 +716,12 @@
         <button class="btn" onclick="closeMessage()">OK</button>
     </div>
 
-    <!-- Секретное сообщение -->
-    <div id="secret-message" class="message-box" style="display: none;">
-        <p>✨ Вы нашли секретное послание! ✨</p>
-        <p>Спасибо, что используете это приложение. Я вложил в него много усилий и надеюсь, оно вам нравится!</p>
-        <p>Продолжайте развивать свои способности!</p>
-        <button class="btn" onclick="closeMessage()">Закрыть</button>
+    <!-- Секретный режим -->
+    <div id="secret-mode" class="secret-mode">
+        <h2>Посвящение</h2>
+        <p>Ты нашел скрытый путь, искатель истины. Этот мир полон тайн, которые ждут своего открытия. Продолжай развивать свои способности, и однажды ты постигнешь все тайны Вселенной.</p>
+        <p>Запомни: настоящая сила - в знании, а истинная мудрость - в понимании.</p>
+        <button class="secret-btn" onclick="closeSecretMode()">Принять знание</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -692,130 +729,20 @@
 
     <!-- Звездный фон -->
     <div id="stars"></div>
-    <div id="particles"></div>
 
-    <!-- Аудио для эффектов -->
-    <audio id="achievement-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3" preload="auto"></audio>
-    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
+    <!-- Скрытая кнопка активации секретного режима -->
+    <button class="hidden-feature" id="hidden-feature" title="Секрет"></button>
 
     <script>
-        // Инициализация при загрузке
-        document.addEventListener('DOMContentLoaded', function() {
-            // Проверяем, было ли уже показано приветственное сообщение
-            if (!localStorage.getItem('welcomeShown')) {
-                document.getElementById('personal-message').style.display = 'block';
-                localStorage.setItem('welcomeShown', 'true');
-            } else {
-                document.getElementById('loading-screen').style.display = 'flex';
-                setTimeout(hideLoadingScreen, 1500);
-            }
-
-            // Создаем звездный фон
-            createStars();
-            
-            // Создаем частицы
-            createParticles();
-            
-            // Добавляем обработчик долгого нажатия на название
-            const title = document.getElementById('app-title');
-            let pressTimer;
-            
-            title.addEventListener('mousedown', function() {
-                pressTimer = window.setTimeout(function() {
-                    showSecretMessage();
-                }, 2000);
-            });
-            
-            title.addEventListener('touchstart', function() {
-                pressTimer = window.setTimeout(function() {
-                    showSecretMessage();
-                }, 2000);
-            });
-            
-            title.addEventListener('mouseup', function() {
-                clearTimeout(pressTimer);
-            });
-            
-            title.addEventListener('mouseleave', function() {
-                clearTimeout(pressTimer);
-            });
-            
-            title.addEventListener('touchend', function() {
-                clearTimeout(pressTimer);
-            });
-            
-            // Добавляем звук при кликах на кнопки
-            document.querySelectorAll('.btn, .game-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    playSound('click');
-                });
-            });
-        });
-
-        // Создание звездного фона
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            for (let i = 0; i < 150; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.top = `${Math.random() * 100}%`;
-                star.style.left = `${Math.random() * 100}%`;
-                star.style.animationDelay = `${Math.random() * 2}s`;
-                star.style.width = `${Math.random() * 3 + 1}px`;
-                star.style.height = star.style.width;
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Создание частиц
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 50; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.top = `${Math.random() * 100}%`;
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.opacity = Math.random();
-                particle.style.width = `${Math.random() * 5 + 2}px`;
-                particle.style.height = particle.style.width;
-                particle.style.animation = `moveParticle ${Math.random() * 20 + 10}s linear infinite`;
-                particle.style.animationDelay = `${Math.random() * 5}s`;
-                
-                // Случайный цвет частицы (фиолетовые оттенки)
-                const hue = 270 + Math.random() * 30 - 15;
-                particle.style.backgroundColor = `hsla(${hue}, 80%, 70%, ${Math.random() * 0.5})`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-
-        // Показать секретное сообщение
-        function showSecretMessage() {
-            document.getElementById('secret-message').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            playSound('achievement');
-        }
-
-        // Скрыть экран загрузки
-        function hideLoadingScreen() {
-            document.getElementById('loading-screen').style.opacity = '0';
-            setTimeout(function() {
-                document.getElementById('loading-screen').style.display = 'none';
-            }, 500);
-        }
-
-        // Закрыть персональное сообщение
-        function closePersonalMessage() {
-            document.getElementById('personal-message').style.display = 'none';
-            document.getElementById('loading-screen').style.display = 'flex';
-            setTimeout(hideLoadingScreen, 1500);
-        }
-
-        // Воспроизвести звук
-        function playSound(type) {
-            const sound = document.getElementById(`${type}-sound`);
-            sound.currentTime = 0;
-            sound.play().catch(e => console.log("Автовоспроизведение звука заблокировано"));
+        // Звездный фон
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
         }
 
         // Статистика и достижения
@@ -824,33 +751,77 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
-            dowsing: { found: 0, attempts: 0 }
+            dowsing: { found: 0, attempts: 0 },
+            secret: false
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
+        let energyLevel = 100;
+        let energyInterval;
+
+        // Инициализация энергии
+        function initEnergy() {
+            updateEnergyDisplay();
+            energyInterval = setInterval(() => {
+                if (energyLevel < 100) {
+                    energyLevel += 1;
+                    updateEnergyDisplay();
+                }
+            }, 5000);
+        }
+
+        function updateEnergyDisplay() {
+            document.getElementById('energy-fill').style.width = `${energyLevel}%`;
+            document.getElementById('stats-energy-fill').style.width = `${energyLevel}%`;
+        }
+
+        function useEnergy(amount) {
+            energyLevel = Math.max(0, energyLevel - amount);
+            updateEnergyDisplay();
+        }
 
         // Показать сообщение
         function showMessage(text) {
             document.getElementById('message-text').textContent = text;
             document.getElementById('message-box').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.add('game-active');
             });
-            isGameActive = false;
+            useEnergy(10);
         }
 
         // Закрыть сообщение
         function closeMessage() {
             document.getElementById('message-box').style.display = 'none';
-            document.getElementById('secret-message').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.remove('game-active');
             });
-            isGameActive = true;
+        }
+
+        // Показать секретное сообщение
+        function showSecretMessage() {
+            if (energyLevel < 50) {
+                showMessage('🔒 Недостаточно энергии для активации');
+                return;
+            }
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('secret-mode').style.display = 'flex';
+            document.getElementById('overlay').style.display = 'block';
+            useEnergy(50);
+            
+            if (!stats.secret) {
+                stats.secret = true;
+                checkAchievements();
+            }
+        }
+
+        // Закрыть секретный режим
+        function closeSecretMode() {
+            document.getElementById('secret-mode').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Инициализация телекинеза
@@ -893,7 +864,7 @@
             document.addEventListener('touchend', stopDrag);
 
             function startDrag(e) {
-                if (!isGameActive) return;
+                if (!isGameActive || energyLevel < 5) return;
                 e.preventDefault();
                 isDragging = true;
                 
@@ -913,7 +884,7 @@
             }
 
             function drag(e) {
-                if (!isDragging || !isGameActive) return;
+                if (!isDragging || !isGameActive || energyLevel < 5) return;
                 e.preventDefault();
                 
                 const rect = area.getBoundingClientRect();
@@ -937,6 +908,9 @@
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
+                
+                // Трата энергии при движении
+                useEnergy(0.1);
             }
 
             function stopDrag() {
@@ -955,7 +929,6 @@
                     
                     if (distance < 30) {
                         stats.telekinesis.success++;
-                        playSound('achievement');
                         showMessage('✅ Успех! Вы переместили шар к цели!');
                         setTimeout(initTelekinesis, 1000);
                     }
@@ -986,7 +959,7 @@
         }
 
         function checkDowsingCell(e) {
-            if (!isGameActive) return;
+            if (!isGameActive || energyLevel < 5) return;
             
             const cell = e.target;
             const index = parseInt(cell.dataset.index);
@@ -994,15 +967,16 @@
             if (cell.classList.contains('opened')) return;
             
             cell.classList.add('opened');
+            useEnergy(5);
             
             if (index === currentArtifactPosition) {
                 cell.classList.add('found');
                 cell.innerHTML = '💎';
                 stats.dowsing.found++;
-                playSound('achievement');
                 showMessage('✅ Успех! Вы нашли артефакт!');
                 setTimeout(initDowsing, 1000);
             } else {
+                cell.classList.add('error');
                 cell.innerHTML = '❌';
             }
             
@@ -1010,44 +984,31 @@
             checkAchievements();
         }
 
-        // Открытие игры с анимацией загрузки
+        // Открытие игры
         function openGame(gameId) {
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('loading-text').textContent = `Подготовка ${gameId === 'telepathy' ? 'телепатии' : 
-                                                                 gameId === 'zener' ? 'карт Зенера' : 
-                                                                 gameId === 'color' ? 'цветовой интуиции' : 
-                                                                 gameId === 'telekinesis' ? 'телекинеза' : 'биолокации'}...`;
-            document.getElementById('loading-screen').style.display = 'flex';
-            document.getElementById('loading-screen').style.opacity = '1';
+            if (energyLevel < 20) {
+                showMessage('🔋 Низкий уровень энергии. Подождите немного.');
+                return;
+            }
             
-            setTimeout(function() {
-                document.getElementById('loading-screen').style.opacity = '0';
-                setTimeout(function() {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById(gameId).style.display = 'block';
-                    document.getElementById('overlay').style.display = 'block';
-                    setTimeout(function() {
-                        document.getElementById(gameId).classList.add('active');
-                    }, 10);
-                    isGameActive = true;
-                    
-                    if (gameId === 'telekinesis') {
-                        initTelekinesis();
-                    } else if (gameId === 'dowsing') {
-                        initDowsing();
-                    }
-                }, 500);
-            }, 1500);
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById(gameId).style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            isGameActive = true;
+            useEnergy(20);
+            
+            if (gameId === 'telekinesis') {
+                initTelekinesis();
+            } else if (gameId === 'dowsing') {
+                initDowsing();
+            }
         }
 
         // Закрытие игры
         function closeGame(gameId) {
-            document.getElementById(gameId).classList.remove('active');
-            setTimeout(function() {
-                document.getElementById(gameId).style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('main-menu').style.display = 'block';
-            }, 500);
+            document.getElementById(gameId).style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Открытие статистики
@@ -1055,20 +1016,14 @@
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById('stats').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            setTimeout(function() {
-                document.getElementById('stats').classList.add('active');
-            }, 10);
             updateStats();
         }
 
         // Закрытие статистики
         function closeStats() {
-            document.getElementById('stats').classList.remove('active');
-            setTimeout(function() {
-                document.getElementById('stats').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('main-menu').style.display = 'block';
-            }, 500);
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Открытие достижений
@@ -1076,20 +1031,14 @@
             document.getElementById('main-menu').style.display = 'none';
             document.getElementById('achievements').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            setTimeout(function() {
-                document.getElementById('achievements').classList.add('active');
-            }, 10);
             updateAchievements();
         }
 
         // Закрытие достижений
         function closeAchievements() {
-            document.getElementById('achievements').classList.remove('active');
-            setTimeout(function() {
-                document.getElementById('achievements').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                document.getElementById('main-menu').style.display = 'block';
-            }, 500);
+            document.getElementById('achievements').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Обновление статистики
@@ -1103,16 +1052,23 @@
 
         // Сброс статистики
         function resetStats() {
+            if (energyLevel < 30) {
+                showMessage('🔋 Недостаточно энергии для сброса');
+                return;
+            }
+            
             stats = {
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
-                dowsing: { found: 0, attempts: 0 }
+                dowsing: { found: 0, attempts: 0 },
+                secret: stats.secret
             };
             updateStats();
             updateAchievements();
-            showMessage('Статистика сброшена!');
+            useEnergy(30);
+            showMessage('Статистика сброшена');
         }
 
         // Обновление достижений
@@ -1124,34 +1080,26 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
+                { id: "Посвященный", condition: stats.secret }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
-                <div class="achievement-item ${achievement.condition ? 'unlocked' : 'locked'}">
+                <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
                     <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                     ${achievement.id}
                 </div>
             `).join('');
-
-            // Проверяем, есть ли новые достижения
-            achievementsData.forEach(achievement => {
-                if (achievement.condition && !achievements.includes(achievement.id)) {
-                    achievements.push(achievement.id);
-                    if (achievements.length > 0) {
-                        playSound('achievement');
-                        showMessage(`🎉 Новое достижение: ${achievement.id}!`);
-                    }
-                }
-            });
         }
 
         // Телепатия
         function checkTelepathy(guess) {
-            if (!isGameActive) return;
+            if (!isGameActive || energyLevel < 5) return;
             
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
+            useEnergy(5);
+            
             if (guess === target) {
                 stats.telepathy.correct++;
                 showMessage('✅ Верно! Загадано: ' + target);
@@ -1164,11 +1112,13 @@
 
         // Карты Зенера
         function checkZener(guess) {
-            if (!isGameActive) return;
+            if (!isGameActive || energyLevel < 5) return;
             
             const symbols = ['○', '□', '～', '✚', '★'];
             const target = symbols[Math.floor(Math.random() * symbols.length)];
             stats.zener.total++;
+            useEnergy(5);
+            
             if (guess === target) {
                 stats.zener.correct++;
                 showMessage('✅ Верно! Загадан: ' + target);
@@ -1181,11 +1131,13 @@
 
         // Цветовая интуиция
         function checkColor(guess) {
-            if (!isGameActive) return;
+            if (!isGameActive || energyLevel < 5) return;
             
             const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
             const target = colors[Math.floor(Math.random() * colors.length)];
             stats.color.total++;
+            useEnergy(5);
+            
             if (guess === target) {
                 stats.color.correct++;
                 showMessage('✅ Верно! Загадан: ' + target);
@@ -1201,27 +1153,28 @@
             updateAchievements();
         }
 
-        // Добавляем CSS для анимации частиц
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes moveParticle {
-                0% {
-                    transform: translate(0, 0);
-                    opacity: 0;
-                }
-                10% {
-                    opacity: 1;
-                }
-                90% {
-                    opacity: 1;
-                }
-                100% {
-                    transform: translate(${Math.random() * 200 - 100}px, ${Math.random() * 200 - 100}px);
-                    opacity: 0;
+        // Секретная функция
+        document.getElementById('hidden-feature').addEventListener('click', function() {
+            this.style.display = 'none';
+            showSecretMessage();
+        });
+
+        // Инициализация энергии
+        initEnergy();
+
+        // Скрытая кнопка появляется после 5 кликов по фону
+        let clickCount = 0;
+        document.body.addEventListener('click', function(e) {
+            if (e.target === document.body) {
+                clickCount++;
+                if (clickCount === 5) {
+                    document.getElementById('hidden-feature').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('hidden-feature').style.display = 'none';
+                    }, 3000);
                 }
             }
-        `;
-        document.head.appendChild(style);
+        });
     </script>
 </body>
 </html>
