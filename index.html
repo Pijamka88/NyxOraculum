@@ -28,21 +28,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-        }
-
-        .secret-code {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 20px;
-            height: 20px;
-            opacity: 0.1;
-            transition: opacity 0.3s;
-        }
-
-        .secret-code:hover {
-            opacity: 0.8;
         }
 
         h1 {
@@ -52,7 +37,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: glow 3s infinite;
-            position: relative;
         }
 
         @keyframes glow {
@@ -66,19 +50,16 @@
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
             padding: 15px;
-            margin: 10px auto;
+            margin: 10px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
             width: 100%;
-            max-width: 300px;
-            position: relative;
-            overflow: hidden;
         }
 
         .btn:hover {
@@ -89,43 +70,10 @@
             transform: scale(0.95);
         }
 
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255,255,255,0) 45%,
-                rgba(255,255,255,0.1) 50%,
-                rgba(255,255,255,0) 55%
-            );
-            transform: rotate(30deg);
-            transition: all 0.3s;
-            opacity: 0;
-        }
-
-        .btn:hover::after {
-            animation: shine 1.5s infinite;
-            opacity: 1;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(30deg); }
-            100% { transform: translateX(100%) rotate(30deg); }
-        }
-
         .btn img {
             width: 20px;
             height: 20px;
             filter: brightness(0) invert(1);
-            transition: transform 0.3s;
-        }
-
-        .btn:hover img {
-            transform: scale(1.1);
         }
 
         .game-window {
@@ -146,24 +94,20 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translate(-50%, -45%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .game-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
         }
 
         .game-buttons {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
-            margin: 0 auto;
-            max-width: 300px;
         }
 
         .game-btn {
@@ -175,18 +119,14 @@
             border-radius: 50%;
             cursor: pointer;
             font-size: 1.2rem;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, transform 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto;
-            position: relative;
         }
 
         .game-btn:hover {
             background: rgba(153, 50, 204, 0.3);
-            transform: scale(1.05);
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
         }
 
         .game-btn:active {
@@ -199,9 +139,8 @@
             position: relative;
             border: 2px dashed #8A2BE2;
             border-radius: 15px;
-            margin: 20px auto;
+            margin-bottom: 20px;
             overflow: hidden;
-            background: radial-gradient(circle, rgba(26,26,46,0.3) 0%, rgba(138,43,226,0.1) 100%);
         }
 
         .telekinesis-object {
@@ -216,32 +155,13 @@
             cursor: pointer;
             transition: transform 0.1s ease;
             box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
-            z-index: 2;
-        }
-
-        .target-object {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-            z-index: 1;
-            animation: pulse-gold 2s infinite;
-        }
-
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.7); }
-            50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
-            100% { box-shadow: 0 0 10px rgba(255, 215, 0, 0.7); }
         }
 
         .dowsing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
-            margin: 20px auto;
-            max-width: 300px;
+            margin: 20px 0;
         }
 
         .dowsing-cell {
@@ -254,24 +174,10 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-size: 1.5rem;
-            position: relative;
-            overflow: hidden;
         }
 
-        .dowsing-cell::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .dowsing-cell:hover::before {
-            opacity: 1;
+        .dowsing-cell:hover {
+            background: rgba(153, 50, 204, 0.3);
         }
 
         .dowsing-cell.opened {
@@ -289,52 +195,6 @@
             100% { transform: scale(1); }
         }
 
-        .astral-corridor {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .astral-door {
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            padding: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .astral-door:hover {
-            background: rgba(153, 50, 204, 0.3);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-        }
-
-        .astral-door::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                135deg,
-                rgba(255,255,255,0) 0%,
-                rgba(255,255,255,0.1) 50%,
-                rgba(255,255,255,0) 100%
-            );
-            transform: translateX(-100%);
-            transition: transform 0.3s;
-        }
-
-        .astral-door:hover::after {
-            transform: translateX(100%);
-        }
-
         .overlay {
             display: none;
             position: fixed;
@@ -347,7 +207,7 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .stats-window, .achievements-window, .secret-room-window {
+        .stats-window, .achievements-window {
             display: none;
             position: fixed;
             top: 50%;
@@ -364,18 +224,16 @@
             animation: fadeIn 0.5s ease;
         }
 
-        .stats-window h2, .achievements-window h2, .secret-room-window h2 {
+        .stats-window h2, .achievements-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
-            text-align: center;
         }
 
-        .stats-window p, .achievements-window p, .secret-room-window p {
+        .stats-window p, .achievements-window p {
             font-size: 1rem;
             margin: 10px 0;
             color: #E6E6FA;
-            text-align: center;
         }
 
         .achievement-item {
@@ -383,15 +241,6 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            justify-content: center;
-            padding: 8px;
-            border-radius: 8px;
-            background: rgba(138, 43, 226, 0.1);
-            transition: all 0.3s;
-        }
-
-        .achievement-item:hover {
-            background: rgba(153, 50, 204, 0.2);
         }
 
         .achievement-item img {
@@ -406,39 +255,6 @@
 
         .achievement-item.locked {
             color: #888;
-        }
-
-        .achievement-item.secret {
-            background: rgba(255, 215, 0, 0.1);
-            border-left: 3px solid #FFD700;
-        }
-
-        .message-box {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
-            z-index: 1001;
-            width: 80%;
-            max-width: 300px;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .message-box p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #E6E6FA;
-        }
-
-        .message-box .btn {
-            margin: 10px auto;
         }
 
         .star {
@@ -458,72 +274,11 @@
         .close-btn, .reset-btn {
             margin-top: 30px;
             width: 100%;
-            max-width: 300px;
-        }
-
-        .game-active {
-            pointer-events: none;
-            opacity: 0.7;
-            filter: blur(1px);
-            transition: all 0.3s;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .easter-egg {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            opacity: 0.01;
-            cursor: pointer;
-        }
-
-        .easter-egg:hover {
-            opacity: 0.8;
-        }
-
-        .floating-crystal {
-            position: absolute;
-            width: 30px;
-            height: 30px;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,0 100,50 50,100 0,50" fill="%238A2BE2" stroke="%23FFD700" stroke-width="2"/></svg>') no-repeat center;
-            background-size: contain;
-            animation: float 5s infinite ease-in-out;
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .secret-found {
-            animation: rainbow 2s infinite;
-        }
-
-        @keyframes rainbow {
-            0% { color: #ff0000; }
-            14% { color: #ff7f00; }
-            28% { color: #ffff00; }
-            42% { color: #00ff00; }
-            57% { color: #0000ff; }
-            71% { color: #4b0082; }
-            85% { color: #9400d3; }
-            100% { color: #ff0000; }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="main-menu">
-        <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='none' stroke='%238A2BE2' stroke-width='2' stroke-dasharray='5,5'/></svg>" 
-             class="secret-code" 
-             onclick="showSecretRoom()"
-             title="Секретный код">
+    <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
@@ -553,9 +308,6 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
             Достижения
         </button>
-        
-        <!-- Секретный элемент -->
-        <div class="easter-egg" style="top: 10px; left: 10px;" onclick="activateEasterEgg()"></div>
     </div>
 
     <!-- Игры -->
@@ -605,10 +357,9 @@
 
     <div id="telekinesis" class="game-window">
         <h2>Телекинез</h2>
-        <p>Передвиньте фиолетовый шар к желтому:</p>
+        <p>Переместите шар силой мысли (коснитесь экрана):</p>
         <div class="telekinesis-container" id="telekinesis-area">
             <div class="telekinesis-object" id="telekinesis-object"></div>
-            <div class="target-object" id="target-object"></div>
         </div>
         <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
     </div>
@@ -620,30 +371,14 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
-    <!-- Тайная комната -->
-    <div id="secret-room" class="secret-room-window">
-        <h2>Тайная комната</h2>
-        <p>Вы нашли скрытый вход в Астральный коридор!</p>
-        <p>Выберите дверь, которая ведет к просветлению:</p>
-        
-        <div class="astral-corridor">
-            <div class="astral-door" onclick="checkAstralDoor(1)">Дверь Лунного Света</div>
-            <div class="astral-door" onclick="checkAstralDoor(2)">Дверь Звездной Пыли</div>
-            <div class="astral-door" onclick="checkAstralDoor(3)">Дверь Вечного Покоя</div>
-        </div>
-        
-        <button class="btn close-btn" onclick="closeGame('secret-room')">Вернуться</button>
-    </div>
-
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Астральный коридор: <span id="astral-stats">0/0</span></p>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> перемещений</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -670,28 +405,14 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (5 успешных перемещений)
+                Мастер телекинеза (10 перемещений)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (5 найденных артефактов)
             </div>
-            <div class="achievement-item locked secret">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/key.png" alt="Секретное достижение">
-                Хранитель тайн (Найти секретную комнату)
-            </div>
-            <div class="achievement-item locked secret">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/door.png" alt="Секретное достижение">
-                Путник Астрала (3 правильных выбора в коридоре)
-            </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
-    </div>
-
-    <!-- Сообщения -->
-    <div id="message-box" class="message-box">
-        <p id="message-text"></p>
-        <button class="btn" onclick="closeMessage()">OK</button>
     </div>
 
     <!-- Затемнение фона -->
@@ -699,9 +420,6 @@
 
     <!-- Звездный фон -->
     <div id="stars"></div>
-
-    <!-- Парящие кристаллы (для пасхалки) -->
-    <div id="floating-crystals"></div>
 
     <script>
         // Звездный фон
@@ -720,65 +438,19 @@
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
-            telekinesis: { success: 0, total: 0 },
-            dowsing: { found: 0, attempts: 0 },
-            astral: { correct: 0, total: 0 }
+            telekinesis: { moves: 0 },
+            dowsing: { found: 0, total: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
-        let isGameActive = true;
-        let secretFound = false;
-        let easterEggActivated = false;
-        let correctAstralDoor = 0;
-
-        // Показать сообщение
-        function showMessage(text) {
-            document.getElementById('message-text').textContent = text;
-            document.getElementById('message-box').style.display = 'block';
-            document.querySelectorAll('.game-window').forEach(el => {
-                el.classList.add('game-active');
-            });
-            isGameActive = false;
-        }
-
-        // Закрыть сообщение
-        function closeMessage() {
-            document.getElementById('message-box').style.display = 'none';
-            document.querySelectorAll('.game-window').forEach(el => {
-                el.classList.remove('game-active');
-            });
-            isGameActive = true;
-        }
 
         // Инициализация телекинеза
         function initTelekinesis() {
             const area = document.getElementById('telekinesis-area');
             const object = document.getElementById('telekinesis-object');
-            const target = document.getElementById('target-object');
             let isDragging = false;
             let startX, startY, startLeft, startTop;
-
-            // Позиционируем фиолетовый шар в центре
-            object.style.left = '50%';
-            object.style.top = '50%';
-            object.style.transform = 'translate(-50%, -50%)';
-
-            // Размещаем желтый шар в случайном месте (не в центре)
-            const rect = area.getBoundingClientRect();
-            let targetX, targetY;
-            
-            do {
-                targetX = Math.random() * (rect.width - 40);
-                targetY = Math.random() * (rect.height - 40);
-            } while (
-                Math.abs(targetX - (rect.width / 2 - 30)) < 100 && 
-                Math.abs(targetY - (rect.height / 2 - 30)) < 100
-            );
-
-            target.style.left = targetX + 'px';
-            target.style.top = targetY + 'px';
-            target.style.transform = 'translate(0, 0)';
 
             // Для мыши
             object.addEventListener('mousedown', startDrag);
@@ -791,7 +463,6 @@
             document.addEventListener('touchend', stopDrag);
 
             function startDrag(e) {
-                if (!isGameActive) return;
                 e.preventDefault();
                 isDragging = true;
                 
@@ -811,7 +482,7 @@
             }
 
             function drag(e) {
-                if (!isDragging || !isGameActive) return;
+                if (!isDragging) return;
                 e.preventDefault();
                 
                 const rect = area.getBoundingClientRect();
@@ -838,25 +509,9 @@
             }
 
             function stopDrag() {
-                if (isDragging && isGameActive) {
+                if (isDragging) {
                     isDragging = false;
-                    stats.telekinesis.total++;
-                    
-                    // Проверка достижения цели
-                    const objRect = object.getBoundingClientRect();
-                    const targetRect = target.getBoundingClientRect();
-                    
-                    const distance = Math.sqrt(
-                        Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
-                        Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                    );
-                    
-                    if (distance < 30) {
-                        stats.telekinesis.success++;
-                        showMessage('✅ Успех! Вы переместили шар к цели!');
-                        setTimeout(initTelekinesis, 1000);
-                    }
-                    
+                    stats.telekinesis.moves++;
                     updateStats();
                     checkAchievements();
                 }
@@ -870,7 +525,7 @@
             
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
-            stats.dowsing.attempts++;
+            stats.dowsing.total++;
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
@@ -883,8 +538,6 @@
         }
 
         function checkDowsingCell(e) {
-            if (!isGameActive) return;
-            
             const cell = e.target;
             const index = parseInt(cell.dataset.index);
             
@@ -896,133 +549,20 @@
                 cell.classList.add('found');
                 cell.innerHTML = '💎';
                 stats.dowsing.found++;
-                showMessage('✅ Успех! Вы нашли артефакт!');
-                setTimeout(initDowsing, 1000);
+                updateStats();
+                checkAchievements();
+                setTimeout(() => {
+                    initDowsing(); // Новая игра после нахождения
+                }, 1000);
             } else {
                 cell.innerHTML = '❌';
             }
-            
-            updateStats();
-            checkAchievements();
         }
-
-        // Тайная комната - Астральный коридор
-        function showSecretRoom() {
-            if (!secretFound) {
-                secretFound = true;
-                unlockAchievement('Хранитель тайн');
-            }
-            
-            document.getElementById('main-menu').style.display = 'none';
-            document.getElementById('secret-room').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            isGameActive = true;
-            
-            // Выбираем случайную правильную дверь
-            correctAstralDoor = Math.floor(Math.random() * 3) + 1;
-        }
-
-        function checkAstralDoor(doorNumber) {
-            if (!isGameActive) return;
-            
-            stats.astral.total++;
-            isGameActive = false;
-            
-            if (doorNumber === correctAstralDoor) {
-                stats.astral.correct++;
-                showMessage('✨ Вы выбрали правильную дверь! Астральная энергия наполняет вас...');
-                
-                if (stats.astral.correct >= 3) {
-                    unlockAchievement('Путник Астрала');
-                }
-            } else {
-                const messages = [
-                    "За этой дверью вас ждала лишь пустота...",
-                    "Дверь вела в тупик астрального лабиринта.",
-                    "Вы ощутили холод вечности за этой дверью."
-                ];
-                const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-                showMessage('❌ ' + randomMessage);
-            }
-            
-            // Новая попытка
-            setTimeout(() => {
-                correctAstralDoor = Math.floor(Math.random() * 3) + 1;
-                isGameActive = true;
-            }, 1500);
-            
-            updateStats();
-            checkAchievements();
-        }
-
-        // Пасхалка - активация летающих кристаллов
-        function activateEasterEgg() {
-            if (easterEggActivated) return;
-            
-            easterEggActivated = true;
-            const crystalsContainer = document.getElementById('floating-crystals');
-            
-            // Создаем 15 парящих кристаллов
-            for (let i = 0; i < 15; i++) {
-                const crystal = document.createElement('div');
-                crystal.className = 'floating-crystal';
-                crystal.style.left = `${Math.random() * 100}%`;
-                crystal.style.top = `${Math.random() * 100}%`;
-                crystal.style.animationDelay = `${Math.random() * 2}s`;
-                crystal.style.opacity = '0.7';
-                crystal.style.width = `${20 + Math.random() * 30}px`;
-                crystal.style.height = crystal.style.width;
-                
-                // Разные скорости анимации
-                crystal.style.animationDuration = `${3 + Math.random() * 7}s`;
-                
-                crystalsContainer.appendChild(crystal);
-            }
-            
-            // Через 10 секунд кристаллы исчезают
-            setTimeout(() => {
-                crystalsContainer.innerHTML = '';
-                easterEggActivated = false;
-            }, 10000);
-        }
-
-        // Разблокировка достижения
-        function unlockAchievement(name) {
-            const achievement = document.querySelector(`.achievement-item:contains('${name}')`);
-            if (achievement && achievement.classList.contains('locked')) {
-                achievement.classList.remove('locked');
-                
-                // Показываем сообщение только для секретных достижений
-                if (achievement.classList.contains('secret')) {
-                    showMessage(`🎉 Секретное достижение: "${name}"!`);
-                }
-            }
-        }
-
-        // Полифилл для :contains
-        document.querySelectorAll = function(selector) {
-            const elements = document.querySelectorAll(selector);
-            if (elements.length) return elements;
-            
-            // Для поддержки :contains
-            if (selector.includes(':contains(')) {
-                const text = selector.match(/:contains\('(.*?)'\)/)[1];
-                selector = selector.replace(/:contains\('.*?'\)/, '');
-                
-                const allElements = document.querySelectorAll(selector || '*');
-                return Array.prototype.filter.call(allElements, el => 
-                    el.textContent.includes(text)
-                );
-            }
-            return [];
-        };
 
         // Открытие игры
         function openGame(gameId) {
-            document.getElementById('main-menu').style.display = 'none';
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
-            isGameActive = true;
             
             if (gameId === 'telekinesis') {
                 initTelekinesis();
@@ -1035,12 +575,10 @@
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Открытие статистики
         function openStats() {
-            document.getElementById('main-menu').style.display = 'none';
             document.getElementById('stats').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
             updateStats();
@@ -1050,12 +588,10 @@
         function closeStats() {
             document.getElementById('stats').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Открытие достижений
         function openAchievements() {
-            document.getElementById('main-menu').style.display = 'none';
             document.getElementById('achievements').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
             updateAchievements();
@@ -1065,7 +601,6 @@
         function closeAchievements() {
             document.getElementById('achievements').style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-menu').style.display = 'block';
         }
 
         // Обновление статистики
@@ -1073,9 +608,8 @@
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
-            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
-            document.getElementById('astral-stats').textContent = `${stats.astral.correct}/${stats.astral.total}`;
+            document.getElementById('telekinesis-stats').textContent = stats.telekinesis.moves;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.total}`;
         }
 
         // Сброс статистики
@@ -1084,9 +618,8 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                telekinesis: { success: 0, total: 0 },
-                dowsing: { found: 0, attempts: 0 },
-                astral: { correct: 0, total: 0 }
+                telekinesis: { moves: 0 },
+                dowsing: { found: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -1096,19 +629,17 @@
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
             const achievementsData = [
-                { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5, secret: false },
-                { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10, secret: false },
-                { id: "Цветовой провидец", condition: stats.color.correct >= 15, secret: false },
-                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20, secret: false },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5, secret: false },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5, secret: false },
-                { id: "Хранитель тайн", condition: secretFound, secret: true },
-                { id: "Путник Астрала", condition: stats.astral.correct >= 3, secret: true }
+                { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
+                { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
+                { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
+                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
+                { id: "Мастер телекинеза", condition: stats.telekinesis.moves >= 10 },
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
-                <div class="achievement-item ${achievement.condition ? '' : 'locked'} ${achievement.secret ? 'secret' : ''}">
-                    <img src="https://img.icons8.com/ios-filled/50/ffffff/${achievement.secret ? 'key' : 'trophy'}.png" alt="Достижение">
+                <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                     ${achievement.id}
                 </div>
             `).join('');
@@ -1116,52 +647,43 @@
 
         // Телепатия
         function checkTelepathy(guess) {
-            if (!isGameActive) return;
-            
             const target = Math.floor(Math.random() * 10) + 1;
             stats.telepathy.total++;
             if (guess === target) {
                 stats.telepathy.correct++;
-                showMessage('✅ Верно! Загадано: ' + target);
+                alert('✅ Верно!');
             } else {
-                showMessage('❌ Неверно. Загадано: ' + target);
+                alert(`❌ Неверно. Загадано: ${target}`);
             }
             checkAchievements();
-            updateStats();
         }
 
         // Карты Зенера
         function checkZener(guess) {
-            if (!isGameActive) return;
-            
             const symbols = ['○', '□', '～', '✚', '★'];
             const target = symbols[Math.floor(Math.random() * symbols.length)];
             stats.zener.total++;
             if (guess === target) {
                 stats.zener.correct++;
-                showMessage('✅ Верно! Загадан: ' + target);
+                alert('✅ Верно!');
             } else {
-                showMessage('❌ Неверно. Загадан: ' + target);
+                alert(`❌ Неверно. Загадан: ${target}`);
             }
             checkAchievements();
-            updateStats();
         }
 
         // Цветовая интуиция
         function checkColor(guess) {
-            if (!isGameActive) return;
-            
             const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
             const target = colors[Math.floor(Math.random() * colors.length)];
             stats.color.total++;
             if (guess === target) {
                 stats.color.correct++;
-                showMessage('✅ Верно! Загадан: ' + target);
+                alert('✅ Верно!');
             } else {
-                showMessage('❌ Неверно. Загадан: ' + target);
+                alert(`❌ Неверно. Загадан: ${target}`);
             }
             checkAchievements();
-            updateStats();
         }
 
         // Проверка достижений
