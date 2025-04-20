@@ -206,6 +206,70 @@
             animation: pulse 0.5s;
         }
 
+        .coin-container {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .coin {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-out;
+        }
+
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #FFD700, #B8860B);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .coin-face.back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+
+        .pendulum-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .pendulum-string {
+            width: 2px;
+            height: 200px;
+            background: #8A2BE2;
+            position: relative;
+        }
+
+        .pendulum-bob {
+            width: 60px;
+            height: 60px;
+            background: #8A2BE2;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            cursor: pointer;
+        }
+
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
@@ -329,6 +393,39 @@
             pointer-events: none;
             opacity: 0.5;
         }
+
+        .choice-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .choice-btn {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .choice-btn:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .choice-btn:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes pendulumSwing {
+            0%, 100% { transform: rotate(-30deg); }
+            50% { transform: rotate(30deg); }
+        }
     </style>
 </head>
 <body>
@@ -353,6 +450,14 @@
         <button class="btn" onclick="openGame('dowsing')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
+        </button>
+        <button class="btn" onclick="openGame('coin')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
+            Орел и решка
+        </button>
+        <button class="btn" onclick="openGame('pendulum')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/pendulum.png" alt="Маятник">
+            Маятник
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -426,6 +531,34 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
+    <div id="coin" class="game-window">
+        <h2>Орел и решка</h2>
+        <p>Угадайте результат подбрасывания монеты:</p>
+        <div class="choice-buttons">
+            <button class="choice-btn" onclick="flipCoin('орел')">Орел</button>
+            <button class="choice-btn" onclick="flipCoin('решка')">Решка</button>
+        </div>
+        <div class="coin-container">
+            <div class="coin" id="coin">
+                <div class="coin-face front">Орел</div>
+                <div class="coin-face back">Решка</div>
+            </div>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
+    </div>
+
+    <div id="pendulum" class="game-window">
+        <h2>Маятник</h2>
+        <p>Сконцентрируйтесь и управляйте маятником:</p>
+        <div class="pendulum-container">
+            <div class="pendulum-string" id="pendulum-string">
+                <div class="pendulum-bob" id="pendulum-bob"></div>
+            </div>
+        </div>
+        <p id="pendulum-instruction">Коснитесь маятника, чтобы начать</p>
+        <button class="btn close-btn" onclick="closeGame('pendulum')">Закрыть</button>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
@@ -434,6 +567,8 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
+        <p>Маятник: <span id="pendulum-stats">0</span> секунд концентрации</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -465,6 +600,14 @@
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (5 найденных артефактов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Угадыватель монет (10 правильных ответов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер концентрации (60 секунд с маятником)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -500,12 +643,17 @@
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
-            dowsing: { found: 0, attempts: 0 }
+            dowsing: { found: 0, attempts: 0 },
+            coin: { correct: 0, total: 0 },
+            pendulum: { time: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
+        let pendulumInterval;
+        let pendulumStartTime;
+        let isPendulumActive = false;
 
         // Показать сообщение
         function showMessage(text) {
@@ -679,6 +827,139 @@
             checkAchievements();
         }
 
+        // Подбрасывание монеты
+        function flipCoin(guess) {
+            if (!isGameActive) return;
+            
+            const coin = document.getElementById('coin');
+            const result = Math.random() < 0.5 ? 'орел' : 'решка';
+            const rotations = 5 + Math.floor(Math.random() * 3);
+            
+            coin.style.transform = 'rotateY(0deg)';
+            void coin.offsetWidth; // Trigger reflow
+            
+            stats.coin.total++;
+            
+            if (guess === result) {
+                stats.coin.correct++;
+            }
+            
+            // Анимация вращения
+            if (result === 'орел') {
+                coin.style.transform = `rotateY(${rotations * 360}deg)`;
+            } else {
+                coin.style.transform = `rotateY(${rotations * 360 + 180}deg)`;
+            }
+            
+            setTimeout(() => {
+                if (guess === result) {
+                    showMessage(`✅ Верно! Выпал ${result}`);
+                } else {
+                    showMessage(`❌ Неверно. Выпал ${result}`);
+                }
+            }, 2000);
+            
+            updateStats();
+            checkAchievements();
+        }
+
+        // Инициализация маятника
+        function initPendulum() {
+            const bob = document.getElementById('pendulum-bob');
+            const instruction = document.getElementById('pendulum-instruction');
+            let isDragging = false;
+            let startY;
+            let pendulumAngle = 0;
+            let pendulumSpeed = 0;
+            let lastTime;
+            
+            instruction.textContent = "Коснитесь маятника, чтобы начать";
+            isPendulumActive = false;
+            stats.pendulum.time = 0;
+            
+            bob.style.transform = 'rotate(0deg)';
+            
+            // Для мыши
+            bob.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            // Для сенсорных устройств
+            bob.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', stopDrag);
+            
+            function startDrag(e) {
+                if (!isGameActive) return;
+                e.preventDefault();
+                isDragging = true;
+                
+                if (e.type === 'mousedown') {
+                    startY = e.clientY;
+                } else {
+                    startY = e.touches[0].clientY;
+                }
+                
+                if (!isPendulumActive) {
+                    isPendulumActive = true;
+                    instruction.textContent = "Концентрация...";
+                    pendulumStartTime = Date.now();
+                    lastTime = Date.now();
+                    pendulumInterval = setInterval(updatePendulum, 16);
+                }
+            }
+            
+            function drag(e) {
+                if (!isDragging || !isGameActive) return;
+                e.preventDefault();
+                
+                let clientY;
+                
+                if (e.type === 'mousemove') {
+                    clientY = e.clientY;
+                } else {
+                    clientY = e.touches[0].clientY;
+                }
+                
+                const deltaY = clientY - startY;
+                pendulumAngle = deltaY * 0.1;
+                bob.style.transform = `rotate(${pendulumAngle}deg)`;
+            }
+            
+            function stopDrag() {
+                if (isDragging && isGameActive) {
+                    isDragging = false;
+                    pendulumSpeed = pendulumAngle * 0.1;
+                }
+            }
+            
+            function updatePendulum() {
+                const now = Date.now();
+                const deltaTime = (now - lastTime) / 1000;
+                lastTime = now;
+                
+                if (!isDragging) {
+                    // Физика маятника
+                    const gravity = 9.8;
+                    const length = 200; // Длина нити в пикселях
+                    const damping = 0.99; // Затухание
+                    
+                    const acceleration = -gravity / length * Math.sin(pendulumAngle * Math.PI / 180);
+                    pendulumSpeed += acceleration * deltaTime;
+                    pendulumSpeed *= damping;
+                    pendulumAngle += pendulumSpeed * deltaTime * 50;
+                    
+                    bob.style.transform = `rotate(${pendulumAngle}deg)`;
+                }
+                
+                // Обновляем время концентрации
+                stats.pendulum.time = Math.floor((now - pendulumStartTime) / 1000);
+                instruction.textContent = `Концентрация: ${stats.pendulum.time} сек`;
+                updateStats();
+                checkAchievements();
+            }
+        }
+
         // Открытие игры
         function openGame(gameId) {
             document.getElementById('main-menu').style.display = 'none';
@@ -690,6 +971,8 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
+            } else if (gameId === 'pendulum') {
+                initPendulum();
             }
         }
 
@@ -698,6 +981,10 @@
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
+            
+            if (gameId === 'pendulum' && pendulumInterval) {
+                clearInterval(pendulumInterval);
+            }
         }
 
         // Открытие статистики
@@ -737,6 +1024,8 @@
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
+            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
+            document.getElementById('pendulum-stats').textContent = stats.pendulum.time;
         }
 
         // Сброс статистики
@@ -746,7 +1035,9 @@
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
-                dowsing: { found: 0, attempts: 0 }
+                dowsing: { found: 0, attempts: 0 },
+                coin: { correct: 0, total: 0 },
+                pendulum: { time: 0 }
             };
             updateStats();
             updateAchievements();
@@ -761,7 +1052,9 @@
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
+                { id: "Угадыватель монет", condition: stats.coin.correct >= 10 },
+                { id: "Мастер концентрации", condition: stats.pendulum.time >= 60 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
