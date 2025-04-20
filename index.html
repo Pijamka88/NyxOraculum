@@ -206,74 +206,160 @@
             animation: pulse 0.5s;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Стили для игры "Орёл и решка" */
         .coin-container {
             width: 150px;
             height: 150px;
             margin: 20px auto;
-            position: relative;
             perspective: 1000px;
         }
-
+        
         .coin {
             width: 100%;
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 1s ease-out;
+            transition: transform 1s ease;
+            cursor: pointer;
         }
-
+        
+        .coin.flipping {
+            animation: flip-coin 1s ease-in-out;
+        }
+        
+        @keyframes flip-coin {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(3600deg); }
+        }
+        
         .coin-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
             backface-visibility: hidden;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            background: linear-gradient(135deg, #FFD700, #B8860B);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            font-size: 3rem;
         }
-
-        .coin-face.back {
+        
+        .heads {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            z-index: 2;
+        }
+        
+        .tails {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
             transform: rotateY(180deg);
-            background: linear-gradient(135deg, #C0C0C0, #808080);
+        }
+        
+        .coin-result {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            text-align: center;
         }
 
-        .pendulum-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            margin: 20px auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .pendulum-string {
-            width: 2px;
+        /* Стили для игры "Предсказание будущего" */
+        .magic-ball-container {
+            width: 200px;
             height: 200px;
-            background: #8A2BE2;
+            margin: 20px auto;
             position: relative;
         }
-
-        .pendulum-bob {
-            width: 60px;
-            height: 60px;
-            background: #8A2BE2;
+        
+        .magic-ball {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 30%, #000, #1A1A2E);
             border-radius: 50%;
-            position: absolute;
-            bottom: -30px;
-            left: -30px;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            text-align: center;
+            padding: 20px;
             cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .magic-ball:before {
+            content: '';
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.2), transparent);
+            border-radius: 50%;
+        }
+        
+        .magic-ball-text {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .magic-ball-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 20px;
+            border: 2px solid #8A2BE2;
+            background: rgba(26, 26, 46, 0.7);
+            color: #E6E6FA;
+            text-align: center;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+        /* Стили для игры "Ясновидение" */
+        .clairvoyance-container {
+            width: 100%;
+            margin: 20px auto;
+            text-align: center;
+        }
+        
+        .clairvoyance-image {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background-size: cover;
+            background-position: center;
+            border-radius: 10px;
+            transition: filter 0.5s ease;
+        }
+        
+        .clairvoyance-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px auto;
+            max-width: 300px;
+        }
+        
+        .clairvoyance-option {
+            padding: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .clairvoyance-option:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+        
+        .clairvoyance-reveal-btn {
+            margin-top: 20px;
         }
 
         .overlay {
@@ -393,39 +479,6 @@
             pointer-events: none;
             opacity: 0.5;
         }
-
-        .choice-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-
-        .choice-btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            padding: 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            min-width: 100px;
-            text-align: center;
-        }
-
-        .choice-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .choice-btn:active {
-            transform: scale(0.95);
-        }
-
-        @keyframes pendulumSwing {
-            0%, 100% { transform: rotate(-30deg); }
-            50% { transform: rotate(30deg); }
-        }
     </style>
 </head>
 <body>
@@ -451,13 +504,17 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
-        <button class="btn" onclick="openGame('coin')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
-            Орел и решка
+        <button class="btn" onclick="openGame('coinflip')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орёл и решка">
+            Орёл и решка
         </button>
-        <button class="btn" onclick="openGame('pendulum')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/pendulum.png" alt="Маятник">
-            Маятник
+        <button class="btn" onclick="openGame('prediction')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Предсказание">
+            Предсказание
+        </button>
+        <button class="btn" onclick="openGame('clairvoyance')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/third-eye.png" alt="Ясновидение">
+            Ясновидение
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -531,32 +588,44 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
-    <div id="coin" class="game-window">
-        <h2>Орел и решка</h2>
+    <div id="coinflip" class="game-window">
+        <h2>Орёл и решка</h2>
         <p>Угадайте результат подбрасывания монеты:</p>
-        <div class="choice-buttons">
-            <button class="choice-btn" onclick="flipCoin('орел')">Орел</button>
-            <button class="choice-btn" onclick="flipCoin('решка')">Решка</button>
-        </div>
         <div class="coin-container">
             <div class="coin" id="coin">
-                <div class="coin-face front">Орел</div>
-                <div class="coin-face back">Решка</div>
+                <div class="coin-face heads">🦅</div>
+                <div class="coin-face tails">💰</div>
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
+        <div class="coin-result" id="coin-result"></div>
+        <div class="game-buttons">
+            <button class="game-btn" onclick="flipCoin('heads')">Орёл</button>
+            <button class="game-btn" onclick="flipCoin('tails')">Решка</button>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('coinflip')">Закрыть</button>
     </div>
 
-    <div id="pendulum" class="game-window">
-        <h2>Маятник</h2>
-        <p>Сконцентрируйтесь и управляйте маятником:</p>
-        <div class="pendulum-container">
-            <div class="pendulum-string" id="pendulum-string">
-                <div class="pendulum-bob" id="pendulum-bob"></div>
+    <div id="prediction" class="game-window">
+        <h2>Предсказание будущего</h2>
+        <p>Задайте вопрос и получите ответ:</p>
+        <input type="text" class="magic-ball-input" id="prediction-question" placeholder="Задайте ваш вопрос...">
+        <div class="magic-ball-container">
+            <div class="magic-ball" id="magic-ball" onclick="getPrediction()">
+                <div class="magic-ball-text" id="magic-ball-text">Нажмите на шар, чтобы получить предсказание</div>
             </div>
         </div>
-        <p id="pendulum-instruction">Коснитесь маятника, чтобы начать</p>
-        <button class="btn close-btn" onclick="closeGame('pendulum')">Закрыть</button>
+        <button class="btn close-btn" onclick="closeGame('prediction')">Закрыть</button>
+    </div>
+
+    <div id="clairvoyance" class="game-window">
+        <h2>Ясновидение</h2>
+        <p>Угадайте, что изображено на картинке:</p>
+        <div class="clairvoyance-container">
+            <div class="clairvoyance-image" id="clairvoyance-image" style="filter: blur(20px);"></div>
+            <div class="clairvoyance-options" id="clairvoyance-options"></div>
+            <button class="btn clairvoyance-reveal-btn" onclick="revealImage()">Показать ответ</button>
+        </div>
+        <button class="btn close-btn" onclick="closeGame('clairvoyance')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -567,8 +636,9 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
-        <p>Маятник: <span id="pendulum-stats">0</span> секунд концентрации</p>
+        <p>Орёл и решка: <span id="coinflip-stats">0/0</span></p>
+        <p>Предсказания: <span id="prediction-stats">0</span> получено</p>
+        <p>Ясновидение: <span id="clairvoyance-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -603,11 +673,15 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Угадыватель монет (10 правильных ответов)
+                Везунчик (5 угаданных монет)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер концентрации (60 секунд с маятником)
+                Предсказатель (10 полученных предсказаний)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Ясновидящий (5 угаданных изображений)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -644,16 +718,39 @@
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
             dowsing: { found: 0, attempts: 0 },
-            coin: { correct: 0, total: 0 },
-            pendulum: { time: 0 }
+            coinflip: { correct: 0, total: 0 },
+            prediction: { total: 0 },
+            clairvoyance: { correct: 0, total: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let pendulumInterval;
-        let pendulumStartTime;
-        let isPendulumActive = false;
+        let currentClairvoyanceImage = null;
+        let currentClairvoyanceAnswer = null;
+
+        // Изображения для игры "Ясновидение"
+        const clairvoyanceImages = [
+            { image: 'https://img.icons8.com/ios-filled/100/ffffff/cat.png', options: ['Кошка', 'Собака', 'Птица', 'Рыба'] },
+            { image: 'https://img.icons8.com/ios-filled/100/ffffff/tree.png', options: ['Дерево', 'Цветок', 'Куст', 'Трава'] },
+            { image: 'https://img.icons8.com/ios-filled/100/ffffff/sun.png', options: ['Солнце', 'Луна', 'Звезда', 'Облако'] },
+            { image: 'https://img.icons8.com/ios-filled/100/ffffff/home.png', options: ['Дом', 'Магазин', 'Школа', 'Больница'] },
+            { image: 'https://img.icons8.com/ios-filled/100/ffffff/car.png', options: ['Машина', 'Автобус', 'Велосипед', 'Самолет'] }
+        ];
+
+        // Предсказания для игры "Предсказание будущего"
+        const predictions = [
+            "Да, это несомненно",
+            "Нет, не сейчас",
+            "Возможно, но не скоро",
+            "Вероятность высока",
+            "Сомнительно",
+            "Знаки указывают на положительный ответ",
+            "Лучше не знать ответ сейчас",
+            "Спросите позже",
+            "Сконцентрируйтесь и спросите снова",
+            "Перспективы неясны"
+        ];
 
         // Показать сообщение
         function showMessage(text) {
@@ -827,137 +924,123 @@
             checkAchievements();
         }
 
-        // Подбрасывание монеты
+        // Игра "Орёл и решка"
         function flipCoin(guess) {
             if (!isGameActive) return;
             
             const coin = document.getElementById('coin');
-            const result = Math.random() < 0.5 ? 'орел' : 'решка';
-            const rotations = 5 + Math.floor(Math.random() * 3);
+            const resultDiv = document.getElementById('coin-result');
             
-            coin.style.transform = 'rotateY(0deg)';
-            void coin.offsetWidth; // Trigger reflow
+            // Блокируем кнопки во время анимации
+            isGameActive = false;
+            coin.classList.add('flipping');
+            resultDiv.textContent = '';
             
-            stats.coin.total++;
+            // Случайный результат (орёл или решка)
+            const result = Math.random() < 0.5 ? 'heads' : 'tails';
             
-            if (guess === result) {
-                stats.coin.correct++;
-            }
-            
-            // Анимация вращения
-            if (result === 'орел') {
-                coin.style.transform = `rotateY(${rotations * 360}deg)`;
-            } else {
-                coin.style.transform = `rotateY(${rotations * 360 + 180}deg)`;
-            }
-            
+            // После завершения анимации
             setTimeout(() => {
-                if (guess === result) {
-                    showMessage(`✅ Верно! Выпал ${result}`);
+                coin.classList.remove('flipping');
+                
+                // Показываем результат
+                if (result === 'heads') {
+                    resultDiv.textContent = 'Выпал орёл!';
                 } else {
-                    showMessage(`❌ Неверно. Выпал ${result}`);
+                    resultDiv.textContent = 'Выпала решка!';
                 }
+                
+                // Проверяем угадал ли игрок
+                stats.coinflip.total++;
+                if (guess === result) {
+                    stats.coinflip.correct++;
+                    showMessage('✅ Верно! Вы угадали!');
+                } else {
+                    showMessage('❌ Неверно! Попробуйте ещё раз!');
+                }
+                
+                updateStats();
+                checkAchievements();
+                isGameActive = true;
+            }, 1000);
+        }
+
+        // Игра "Предсказание будущего"
+        function getPrediction() {
+            if (!isGameActive) return;
+            
+            const question = document.getElementById('prediction-question').value;
+            const ballText = document.getElementById('magic-ball-text');
+            
+            if (!question.trim()) {
+                showMessage('Пожалуйста, задайте вопрос');
+                return;
+            }
+            
+            isGameActive = false;
+            ballText.textContent = "Думаю...";
+            
+            // Анимация "размышления"
+            setTimeout(() => {
+                const randomPrediction = predictions[Math.floor(Math.random() * predictions.length)];
+                ballText.textContent = randomPrediction;
+                stats.prediction.total++;
+                updateStats();
+                checkAchievements();
+                isGameActive = true;
             }, 2000);
+        }
+
+        // Игра "Ясновидение"
+        function initClairvoyance() {
+            const imageContainer = document.getElementById('clairvoyance-image');
+            const optionsContainer = document.getElementById('clairvoyance-options');
+            
+            // Выбираем случайное изображение
+            const randomImage = clairvoyanceImages[Math.floor(Math.random() * clairvoyanceImages.length)];
+            currentClairvoyanceImage = randomImage.image;
+            currentClairvoyanceAnswer = randomImage.options[0];
+            
+            // Устанавливаем размытое изображение
+            imageContainer.style.backgroundImage = `url(${randomImage.image})`;
+            imageContainer.style.filter = 'blur(20px)';
+            
+            // Создаем варианты ответов
+            optionsContainer.innerHTML = '';
+            
+            // Перемешиваем варианты ответов
+            const shuffledOptions = [...randomImage.options].sort(() => Math.random() - 0.5);
+            
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'clairvoyance-option';
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => checkClairvoyanceAnswer(option));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            stats.clairvoyance.total++;
+        }
+
+        function checkClairvoyanceAnswer(guess) {
+            if (!isGameActive) return;
+            
+            if (guess === currentClairvoyanceAnswer) {
+                stats.clairvoyance.correct++;
+                showMessage('✅ Верно! Вы угадали!');
+                revealImage();
+                setTimeout(initClairvoyance, 1000);
+            } else {
+                showMessage('❌ Неверно! Попробуйте ещё раз!');
+            }
             
             updateStats();
             checkAchievements();
         }
 
-        // Инициализация маятника
-        function initPendulum() {
-            const bob = document.getElementById('pendulum-bob');
-            const instruction = document.getElementById('pendulum-instruction');
-            let isDragging = false;
-            let startY;
-            let pendulumAngle = 0;
-            let pendulumSpeed = 0;
-            let lastTime;
-            
-            instruction.textContent = "Коснитесь маятника, чтобы начать";
-            isPendulumActive = false;
-            stats.pendulum.time = 0;
-            
-            bob.style.transform = 'rotate(0deg)';
-            
-            // Для мыши
-            bob.addEventListener('mousedown', startDrag);
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('mouseup', stopDrag);
-            
-            // Для сенсорных устройств
-            bob.addEventListener('touchstart', startDrag);
-            document.addEventListener('touchmove', drag);
-            document.addEventListener('touchend', stopDrag);
-            
-            function startDrag(e) {
-                if (!isGameActive) return;
-                e.preventDefault();
-                isDragging = true;
-                
-                if (e.type === 'mousedown') {
-                    startY = e.clientY;
-                } else {
-                    startY = e.touches[0].clientY;
-                }
-                
-                if (!isPendulumActive) {
-                    isPendulumActive = true;
-                    instruction.textContent = "Концентрация...";
-                    pendulumStartTime = Date.now();
-                    lastTime = Date.now();
-                    pendulumInterval = setInterval(updatePendulum, 16);
-                }
-            }
-            
-            function drag(e) {
-                if (!isDragging || !isGameActive) return;
-                e.preventDefault();
-                
-                let clientY;
-                
-                if (e.type === 'mousemove') {
-                    clientY = e.clientY;
-                } else {
-                    clientY = e.touches[0].clientY;
-                }
-                
-                const deltaY = clientY - startY;
-                pendulumAngle = deltaY * 0.1;
-                bob.style.transform = `rotate(${pendulumAngle}deg)`;
-            }
-            
-            function stopDrag() {
-                if (isDragging && isGameActive) {
-                    isDragging = false;
-                    pendulumSpeed = pendulumAngle * 0.1;
-                }
-            }
-            
-            function updatePendulum() {
-                const now = Date.now();
-                const deltaTime = (now - lastTime) / 1000;
-                lastTime = now;
-                
-                if (!isDragging) {
-                    // Физика маятника
-                    const gravity = 9.8;
-                    const length = 200; // Длина нити в пикселях
-                    const damping = 0.99; // Затухание
-                    
-                    const acceleration = -gravity / length * Math.sin(pendulumAngle * Math.PI / 180);
-                    pendulumSpeed += acceleration * deltaTime;
-                    pendulumSpeed *= damping;
-                    pendulumAngle += pendulumSpeed * deltaTime * 50;
-                    
-                    bob.style.transform = `rotate(${pendulumAngle}deg)`;
-                }
-                
-                // Обновляем время концентрации
-                stats.pendulum.time = Math.floor((now - pendulumStartTime) / 1000);
-                instruction.textContent = `Концентрация: ${stats.pendulum.time} сек`;
-                updateStats();
-                checkAchievements();
-            }
+        function revealImage() {
+            const imageContainer = document.getElementById('clairvoyance-image');
+            imageContainer.style.filter = 'none';
         }
 
         // Открытие игры
@@ -971,8 +1054,11 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
-            } else if (gameId === 'pendulum') {
-                initPendulum();
+            } else if (gameId === 'clairvoyance') {
+                initClairvoyance();
+            } else if (gameId === 'prediction') {
+                document.getElementById('prediction-question').value = '';
+                document.getElementById('magic-ball-text').textContent = "Нажмите на шар, чтобы получить предсказание";
             }
         }
 
@@ -981,10 +1067,6 @@
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('main-menu').style.display = 'block';
-            
-            if (gameId === 'pendulum' && pendulumInterval) {
-                clearInterval(pendulumInterval);
-            }
         }
 
         // Открытие статистики
@@ -1024,8 +1106,9 @@
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
-            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
-            document.getElementById('pendulum-stats').textContent = stats.pendulum.time;
+            document.getElementById('coinflip-stats').textContent = `${stats.coinflip.correct}/${stats.coinflip.total}`;
+            document.getElementById('prediction-stats').textContent = stats.prediction.total;
+            document.getElementById('clairvoyance-stats').textContent = `${stats.clairvoyance.correct}/${stats.clairvoyance.total}`;
         }
 
         // Сброс статистики
@@ -1036,8 +1119,9 @@
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
                 dowsing: { found: 0, attempts: 0 },
-                coin: { correct: 0, total: 0 },
-                pendulum: { time: 0 }
+                coinflip: { correct: 0, total: 0 },
+                prediction: { total: 0 },
+                clairvoyance: { correct: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -1053,8 +1137,9 @@
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Угадыватель монет", condition: stats.coin.correct >= 10 },
-                { id: "Мастер концентрации", condition: stats.pendulum.time >= 60 }
+                { id: "Везунчик", condition: stats.coinflip.correct >= 5 },
+                { id: "Предсказатель", condition: stats.prediction.total >= 10 },
+                { id: "Ясновидящий", condition: stats.clairvoyance.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
