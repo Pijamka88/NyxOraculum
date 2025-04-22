@@ -212,7 +212,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Стили для игры "Орёл и решка" */
         .coin-container {
             width: 150px;
             height: 150px;
@@ -267,99 +266,47 @@
             text-align: center;
         }
 
-        /* Стили для игры "Предсказание будущего" */
-        .magic-ball-container {
-            width: 200px;
-            height: 200px;
+        .esp-test-container {
             margin: 20px auto;
-            position: relative;
+            max-width: 300px;
         }
-        
-        .magic-ball {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 30% 30%, #000, #1A1A2E);
-            border-radius: 50%;
+
+        .esp-card {
+            width: 100px;
+            height: 150px;
+            margin: 10px auto;
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-            text-align: center;
-            padding: 20px;
+            font-size: 3rem;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .magic-ball:before {
-            content: '';
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle at 40% 40%, rgba(255,255,255,0.2), transparent);
-            border-radius: 50%;
-        }
-        
-        .magic-ball-text {
-            position: relative;
-            z-index: 2;
-        }
-        
-        .magic-ball-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 20px;
-            border: 2px solid #8A2BE2;
-            background: rgba(26, 26, 46, 0.7);
-            color: #E6E6FA;
-            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        /* Стили для игры "Ясновидение" */
-        .clairvoyance-container {
-            width: 100%;
-            margin: 20px auto;
-            text-align: center;
+        .esp-card:hover {
+            background: rgba(153, 50, 204, 0.3);
         }
-        
-        .clairvoyance-image {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto;
-            background-size: cover;
-            background-position: center;
-            border-radius: 10px;
-            transition: filter 0.5s ease;
-        }
-        
-        .clairvoyance-options {
+
+        .esp-symbols {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(5, 1fr);
             gap: 10px;
             margin: 20px auto;
             max-width: 300px;
         }
-        
-        .clairvoyance-option {
-            padding: 10px;
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s ease;
+
+        .esp-progress {
+            margin: 20px 0;
+            text-align: center;
         }
-        
-        .clairvoyance-option:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-        
-        .clairvoyance-reveal-btn {
-            margin-top: 20px;
+
+        .esp-level {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            text-align: center;
         }
 
         .overlay {
@@ -508,13 +455,9 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орёл и решка">
             Орёл и решка
         </button>
-        <button class="btn" onclick="openGame('prediction')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/crystal-ball.png" alt="Предсказание">
-            Предсказание
-        </button>
-        <button class="btn" onclick="openGame('clairvoyance')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/third-eye.png" alt="Ясновидение">
-            Ясновидение
+        <button class="btn" onclick="openGame('esp')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/third-eye.png" alt="Тест ESP">
+            Тест ESP
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -605,27 +548,22 @@
         <button class="btn close-btn" onclick="closeGame('coinflip')">Закрыть</button>
     </div>
 
-    <div id="prediction" class="game-window">
-        <h2>Предсказание будущего</h2>
-        <p>Задайте вопрос и получите ответ:</p>
-        <input type="text" class="magic-ball-input" id="prediction-question" placeholder="Задайте ваш вопрос...">
-        <div class="magic-ball-container">
-            <div class="magic-ball" id="magic-ball" onclick="getPrediction()">
-                <div class="magic-ball-text" id="magic-ball-text">Нажмите на шар, чтобы получить предсказание</div>
+    <div id="esp" class="game-window">
+        <h2>Тест ESP</h2>
+        <p>Угадайте скрытый символ:</p>
+        <div class="esp-test-container">
+            <div class="esp-card" id="esp-card">?</div>
+            <div class="esp-progress" id="esp-progress">Попытка 1 из 5</div>
+            <div class="esp-level" id="esp-level">Уровень: Новичок</div>
+            <div class="esp-symbols">
+                <button class="game-btn" onclick="checkESPSymbol('○')">○</button>
+                <button class="game-btn" onclick="checkESPSymbol('□')">□</button>
+                <button class="game-btn" onclick="checkESPSymbol('～')">～</button>
+                <button class="game-btn" onclick="checkESPSymbol('✚')">✚</button>
+                <button class="game-btn" onclick="checkESPSymbol('★')">★</button>
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeGame('prediction')">Закрыть</button>
-    </div>
-
-    <div id="clairvoyance" class="game-window">
-        <h2>Ясновидение</h2>
-        <p>Угадайте, что изображено на картинке:</p>
-        <div class="clairvoyance-container">
-            <div class="clairvoyance-image" id="clairvoyance-image" style="filter: blur(20px);"></div>
-            <div class="clairvoyance-options" id="clairvoyance-options"></div>
-            <button class="btn clairvoyance-reveal-btn" onclick="revealImage()">Показать ответ</button>
-        </div>
-        <button class="btn close-btn" onclick="closeGame('clairvoyance')">Закрыть</button>
+        <button class="btn close-btn" onclick="closeGame('esp')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -635,10 +573,9 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
         <p>Орёл и решка: <span id="coinflip-stats">0/0</span></p>
-        <p>Предсказания: <span id="prediction-stats">0</span> получено</p>
-        <p>Ясновидение: <span id="clairvoyance-stats">0/0</span></p>
+        <p>Тест ESP: <span id="esp-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -673,15 +610,11 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Везунчик (5 угаданных монет)
+                Везунчик (5 правильных подбрасываний монеты)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Предсказатель (10 полученных предсказаний)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Ясновидящий (5 угаданных изображений)
+                Провидец (3 правильных угадывания подряд в тесте ESP)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -719,38 +652,15 @@
             telekinesis: { success: 0, total: 0 },
             dowsing: { found: 0, attempts: 0 },
             coinflip: { correct: 0, total: 0 },
-            prediction: { total: 0 },
-            clairvoyance: { correct: 0, total: 0 }
+            esp: { correct: 0, total: 0, streak: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let currentClairvoyanceImage = null;
-        let currentClairvoyanceAnswer = null;
-
-        // Изображения для игры "Ясновидение"
-        const clairvoyanceImages = [
-            { image: 'https://img.icons8.com/ios-filled/100/ffffff/cat.png', options: ['Кошка', 'Собака', 'Птица', 'Рыба'] },
-            { image: 'https://img.icons8.com/ios-filled/100/ffffff/tree.png', options: ['Дерево', 'Цветок', 'Куст', 'Трава'] },
-            { image: 'https://img.icons8.com/ios-filled/100/ffffff/sun.png', options: ['Солнце', 'Луна', 'Звезда', 'Облако'] },
-            { image: 'https://img.icons8.com/ios-filled/100/ffffff/home.png', options: ['Дом', 'Магазин', 'Школа', 'Больница'] },
-            { image: 'https://img.icons8.com/ios-filled/100/ffffff/car.png', options: ['Машина', 'Автобус', 'Велосипед', 'Самолет'] }
-        ];
-
-        // Предсказания для игры "Предсказание будущего"
-        const predictions = [
-            "Да, это несомненно",
-            "Нет, не сейчас",
-            "Возможно, но не скоро",
-            "Вероятность высока",
-            "Сомнительно",
-            "Знаки указывают на положительный ответ",
-            "Лучше не знать ответ сейчас",
-            "Спросите позже",
-            "Сконцентрируйтесь и спросите снова",
-            "Перспективы неясны"
-        ];
+        let currentESPSymbol = '';
+        let espAttempt = 1;
+        const espSymbols = ['○', '□', '～', '✚', '★'];
 
         // Показать сообщение
         function showMessage(text) {
@@ -924,7 +834,7 @@
             checkAchievements();
         }
 
-        // Игра "Орёл и решка"
+        // Игра с монеткой
         function flipCoin(guess) {
             if (!isGameActive) return;
             
@@ -965,82 +875,63 @@
             }, 1000);
         }
 
-        // Игра "Предсказание будущего"
-        function getPrediction() {
+        // Инициализация теста ESP
+        function initESPTest() {
+            currentESPSymbol = espSymbols[Math.floor(Math.random() * espSymbols.length)];
+            document.getElementById('esp-card').textContent = '?';
+            espAttempt = 1;
+            document.getElementById('esp-progress').textContent = 'Попытка 1 из 5';
+            document.getElementById('esp-level').textContent = 'Уровень: Новичок';
+        }
+
+        function checkESPSymbol(guess) {
             if (!isGameActive) return;
-            
-            const question = document.getElementById('prediction-question').value;
-            const ballText = document.getElementById('magic-ball-text');
-            
-            if (!question.trim()) {
-                showMessage('Пожалуйста, задайте вопрос');
-                return;
-            }
             
             isGameActive = false;
-            ballText.textContent = "Думаю...";
+            stats.esp.total++;
             
-            // Анимация "размышления"
-            setTimeout(() => {
-                const randomPrediction = predictions[Math.floor(Math.random() * predictions.length)];
-                ballText.textContent = randomPrediction;
-                stats.prediction.total++;
-                updateStats();
-                checkAchievements();
-                isGameActive = true;
-            }, 2000);
-        }
-
-        // Игра "Ясновидение"
-        function initClairvoyance() {
-            const imageContainer = document.getElementById('clairvoyance-image');
-            const optionsContainer = document.getElementById('clairvoyance-options');
+            // Показываем результат
+            const card = document.getElementById('esp-card');
+            card.textContent = currentESPSymbol;
             
-            // Выбираем случайное изображение
-            const randomImage = clairvoyanceImages[Math.floor(Math.random() * clairvoyanceImages.length)];
-            currentClairvoyanceImage = randomImage.image;
-            currentClairvoyanceAnswer = randomImage.options[0];
-            
-            // Устанавливаем размытое изображение
-            imageContainer.style.backgroundImage = `url(${randomImage.image})`;
-            imageContainer.style.filter = 'blur(20px)';
-            
-            // Создаем варианты ответов
-            optionsContainer.innerHTML = '';
-            
-            // Перемешиваем варианты ответов
-            const shuffledOptions = [...randomImage.options].sort(() => Math.random() - 0.5);
-            
-            shuffledOptions.forEach(option => {
-                const optionElement = document.createElement('div');
-                optionElement.className = 'clairvoyance-option';
-                optionElement.textContent = option;
-                optionElement.addEventListener('click', () => checkClairvoyanceAnswer(option));
-                optionsContainer.appendChild(optionElement);
-            });
-            
-            stats.clairvoyance.total++;
-        }
-
-        function checkClairvoyanceAnswer(guess) {
-            if (!isGameActive) return;
-            
-            if (guess === currentClairvoyanceAnswer) {
-                stats.clairvoyance.correct++;
-                showMessage('✅ Верно! Вы угадали!');
-                revealImage();
-                setTimeout(initClairvoyance, 1000);
+            if (guess === currentESPSymbol) {
+                stats.esp.correct++;
+                stats.esp.streak++;
+                showMessage('✅ Верно! Это ' + currentESPSymbol);
             } else {
-                showMessage('❌ Неверно! Попробуйте ещё раз!');
+                stats.esp.streak = 0;
+                showMessage('❌ Неверно! Это ' + currentESPSymbol);
+            }
+            
+            // Обновляем прогресс
+            espAttempt++;
+            
+            if (espAttempt <= 5) {
+                document.getElementById('esp-progress').textContent = 'Попытка ' + espAttempt + ' из 5';
+                
+                // Определяем уровень
+                let level = 'Новичок';
+                if (stats.esp.streak >= 2) level = 'Продвинутый';
+                if (stats.esp.streak >= 3) level = 'Экстрасенс';
+                document.getElementById('esp-level').textContent = 'Уровень: ' + level;
+                
+                // Новая попытка
+                setTimeout(() => {
+                    currentESPSymbol = espSymbols[Math.floor(Math.random() * espSymbols.length)];
+                    card.textContent = '?';
+                    isGameActive = true;
+                }, 1000);
+            } else {
+                // Завершаем тест
+                setTimeout(() => {
+                    showMessage('Тест завершен! Результат: ' + stats.esp.correct + ' из 5');
+                    initESPTest();
+                    isGameActive = true;
+                }, 1000);
             }
             
             updateStats();
             checkAchievements();
-        }
-
-        function revealImage() {
-            const imageContainer = document.getElementById('clairvoyance-image');
-            imageContainer.style.filter = 'none';
         }
 
         // Открытие игры
@@ -1054,11 +945,10 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
-            } else if (gameId === 'clairvoyance') {
-                initClairvoyance();
-            } else if (gameId === 'prediction') {
-                document.getElementById('prediction-question').value = '';
-                document.getElementById('magic-ball-text').textContent = "Нажмите на шар, чтобы получить предсказание";
+            } else if (gameId === 'coinflip') {
+                document.getElementById('coin-result').textContent = '';
+            } else if (gameId === 'esp') {
+                initESPTest();
             }
         }
 
@@ -1107,8 +997,7 @@
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
             document.getElementById('coinflip-stats').textContent = `${stats.coinflip.correct}/${stats.coinflip.total}`;
-            document.getElementById('prediction-stats').textContent = stats.prediction.total;
-            document.getElementById('clairvoyance-stats').textContent = `${stats.clairvoyance.correct}/${stats.clairvoyance.total}`;
+            document.getElementById('esp-stats').textContent = `${stats.esp.correct}/${stats.esp.total}`;
         }
 
         // Сброс статистики
@@ -1120,8 +1009,7 @@
                 telekinesis: { success: 0, total: 0 },
                 dowsing: { found: 0, attempts: 0 },
                 coinflip: { correct: 0, total: 0 },
-                prediction: { total: 0 },
-                clairvoyance: { correct: 0, total: 0 }
+                esp: { correct: 0, total: 0, streak: 0 }
             };
             updateStats();
             updateAchievements();
@@ -1138,8 +1026,7 @@
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
                 { id: "Везунчик", condition: stats.coinflip.correct >= 5 },
-                { id: "Предсказатель", condition: stats.prediction.total >= 10 },
-                { id: "Ясновидящий", condition: stats.clairvoyance.correct >= 5 }
+                { id: "Провидец", condition: stats.esp.streak >= 3 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
