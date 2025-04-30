@@ -138,6 +138,54 @@
             transform: scale(0.95);
         }
 
+        .coin-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .coin {
+            width: 150px;
+            height: 150px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 20px 0;
+            transition: transform 0.5s ease;
+        }
+
+        .coin.flip {
+            animation: flip-coin 1s ease-out;
+        }
+
+        @keyframes flip-coin {
+            0% { transform: rotateY(0deg); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(3600deg); }
+        }
+
+        .coin-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .coin-option {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .coin-option:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        /* Остальные стили остаются без изменений */
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -210,103 +258,6 @@
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
-        }
-
-        .coin-container {
-            width: 150px;
-            height: 150px;
-            margin: 20px auto;
-            perspective: 1000px;
-        }
-        
-        .coin {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 1s ease;
-            cursor: pointer;
-        }
-        
-        .coin.flipping {
-            animation: flip-coin 1s ease-in-out;
-        }
-        
-        @keyframes flip-coin {
-            0% { transform: rotateY(0); }
-            50% { transform: rotateY(1800deg); }
-            100% { transform: rotateY(3600deg); }
-        }
-        
-        .coin-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-        }
-        
-        .heads {
-            background: linear-gradient(135deg, #FFD700, #D4AF37);
-            z-index: 2;
-        }
-        
-        .tails {
-            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
-            transform: rotateY(180deg);
-        }
-        
-        .coin-result {
-            font-size: 1.5rem;
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .esp-test-container {
-            margin: 20px auto;
-            max-width: 300px;
-        }
-
-        .esp-card {
-            width: 100px;
-            height: 150px;
-            margin: 10px auto;
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .esp-card:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .esp-symbols {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 20px auto;
-            max-width: 300px;
-        }
-
-        .esp-progress {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .esp-level {
-            font-size: 1.2rem;
-            margin: 10px 0;
-            text-align: center;
         }
 
         .overlay {
@@ -451,13 +402,9 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
             Биолокация
         </button>
-        <button class="btn" onclick="openGame('coinflip')">
+        <button class="btn" onclick="openGame('coin')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орёл и решка">
             Орёл и решка
-        </button>
-        <button class="btn" onclick="openGame('esp')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/third-eye.png" alt="Тест ESP">
-            Тест ESP
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -531,39 +478,17 @@
         <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
     </div>
 
-    <div id="coinflip" class="game-window">
+    <div id="coin" class="game-window">
         <h2>Орёл и решка</h2>
-        <p>Угадайте результат подбрасывания монеты:</p>
+        <p>Угадайте сторону монеты:</p>
         <div class="coin-container">
-            <div class="coin" id="coin">
-                <div class="coin-face heads">🦅</div>
-                <div class="coin-face tails">💰</div>
+            <div class="coin" id="coin"></div>
+            <div class="coin-options">
+                <div class="coin-option" onclick="flipCoin('heads')">Орёл</div>
+                <div class="coin-option" onclick="flipCoin('tails')">Решка</div>
             </div>
         </div>
-        <div class="coin-result" id="coin-result"></div>
-        <div class="game-buttons">
-            <button class="game-btn" onclick="flipCoin('heads')">Орёл</button>
-            <button class="game-btn" onclick="flipCoin('tails')">Решка</button>
-        </div>
-        <button class="btn close-btn" onclick="closeGame('coinflip')">Закрыть</button>
-    </div>
-
-    <div id="esp" class="game-window">
-        <h2>Тест ESP</h2>
-        <p>Угадайте скрытый символ:</p>
-        <div class="esp-test-container">
-            <div class="esp-card" id="esp-card">?</div>
-            <div class="esp-progress" id="esp-progress">Попытка 1 из 5</div>
-            <div class="esp-level" id="esp-level">Уровень: Новичок</div>
-            <div class="esp-symbols">
-                <button class="game-btn" onclick="checkESPSymbol('○')">○</button>
-                <button class="game-btn" onclick="checkESPSymbol('□')">□</button>
-                <button class="game-btn" onclick="checkESPSymbol('～')">～</button>
-                <button class="game-btn" onclick="checkESPSymbol('✚')">✚</button>
-                <button class="game-btn" onclick="checkESPSymbol('★')">★</button>
-            </div>
-        </div>
-        <button class="btn close-btn" onclick="closeGame('esp')">Закрыть</button>
+        <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
     </div>
 
     <!-- Статистика -->
@@ -573,9 +498,8 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
-        <p>Орёл и решка: <span id="coinflip-stats">0/0</span></p>
-        <p>Тест ESP: <span id="esp-stats">0/0</span></p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Орёл и решка: <span id="coin-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -610,11 +534,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Везунчик (5 правильных подбрасываний монеты)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Провидец (3 правильных угадывания подряд в тесте ESP)
+                Угадыватель монет (10 правильных ответов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -651,16 +571,13 @@
             color: { correct: 0, total: 0 },
             telekinesis: { success: 0, total: 0 },
             dowsing: { found: 0, attempts: 0 },
-            coinflip: { correct: 0, total: 0 },
-            esp: { correct: 0, total: 0, streak: 0 }
+            coin: { correct: 0, total: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let currentESPSymbol = '';
-        let espAttempt = 1;
-        const espSymbols = ['○', '□', '～', '✚', '★'];
+        let coinIsFlipping = false;
 
         // Показать сообщение
         function showMessage(text) {
@@ -834,104 +751,43 @@
             checkAchievements();
         }
 
-        // Игра с монеткой
+        // Функция для игры "Орёл и решка"
         function flipCoin(guess) {
-            if (!isGameActive) return;
+            if (coinIsFlipping || !isGameActive) return;
             
             const coin = document.getElementById('coin');
-            const resultDiv = document.getElementById('coin-result');
-            
-            // Блокируем кнопки во время анимации
+            coinIsFlipping = true;
             isGameActive = false;
-            coin.classList.add('flipping');
-            resultDiv.textContent = '';
+            
+            // Добавляем класс для анимации
+            coin.classList.add('flip');
             
             // Случайный результат (орёл или решка)
             const result = Math.random() < 0.5 ? 'heads' : 'tails';
+            stats.coin.total++;
             
-            // После завершения анимации
+            // Устанавливаем изображение после завершения анимации
             setTimeout(() => {
-                coin.classList.remove('flipping');
+                coin.style.backgroundImage = `url(https://img.icons8.com/ios-filled/150/ffffff/${result === 'heads' ? 'coin-heads' : 'coin-tails'}.png)`;
                 
-                // Показываем результат
-                if (result === 'heads') {
-                    resultDiv.textContent = 'Выпал орёл!';
-                } else {
-                    resultDiv.textContent = 'Выпала решка!';
-                }
-                
-                // Проверяем угадал ли игрок
-                stats.coinflip.total++;
+                // Проверяем результат
                 if (guess === result) {
-                    stats.coinflip.correct++;
-                    showMessage('✅ Верно! Вы угадали!');
+                    stats.coin.correct++;
+                    showMessage(`✅ Верно! Выпал ${result === 'heads' ? 'орёл' : 'решка'}`);
                 } else {
-                    showMessage('❌ Неверно! Попробуйте ещё раз!');
+                    showMessage(`❌ Неверно! Выпал ${result === 'heads' ? 'орёл' : 'решка'}`);
                 }
+                
+                // Убираем анимацию
+                setTimeout(() => {
+                    coin.classList.remove('flip');
+                    coinIsFlipping = false;
+                    isGameActive = true;
+                }, 500);
                 
                 updateStats();
                 checkAchievements();
-                isGameActive = true;
             }, 1000);
-        }
-
-        // Инициализация теста ESP
-        function initESPTest() {
-            currentESPSymbol = espSymbols[Math.floor(Math.random() * espSymbols.length)];
-            document.getElementById('esp-card').textContent = '?';
-            espAttempt = 1;
-            document.getElementById('esp-progress').textContent = 'Попытка 1 из 5';
-            document.getElementById('esp-level').textContent = 'Уровень: Новичок';
-        }
-
-        function checkESPSymbol(guess) {
-            if (!isGameActive) return;
-            
-            isGameActive = false;
-            stats.esp.total++;
-            
-            // Показываем результат
-            const card = document.getElementById('esp-card');
-            card.textContent = currentESPSymbol;
-            
-            if (guess === currentESPSymbol) {
-                stats.esp.correct++;
-                stats.esp.streak++;
-                showMessage('✅ Верно! Это ' + currentESPSymbol);
-            } else {
-                stats.esp.streak = 0;
-                showMessage('❌ Неверно! Это ' + currentESPSymbol);
-            }
-            
-            // Обновляем прогресс
-            espAttempt++;
-            
-            if (espAttempt <= 5) {
-                document.getElementById('esp-progress').textContent = 'Попытка ' + espAttempt + ' из 5';
-                
-                // Определяем уровень
-                let level = 'Новичок';
-                if (stats.esp.streak >= 2) level = 'Продвинутый';
-                if (stats.esp.streak >= 3) level = 'Экстрасенс';
-                document.getElementById('esp-level').textContent = 'Уровень: ' + level;
-                
-                // Новая попытка
-                setTimeout(() => {
-                    currentESPSymbol = espSymbols[Math.floor(Math.random() * espSymbols.length)];
-                    card.textContent = '?';
-                    isGameActive = true;
-                }, 1000);
-            } else {
-                // Завершаем тест
-                setTimeout(() => {
-                    showMessage('Тест завершен! Результат: ' + stats.esp.correct + ' из 5');
-                    initESPTest();
-                    isGameActive = true;
-                }, 1000);
-            }
-            
-            updateStats();
-            checkAchievements();
         }
 
         // Открытие игры
@@ -945,10 +801,9 @@
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
-            } else if (gameId === 'coinflip') {
-                document.getElementById('coin-result').textContent = '';
-            } else if (gameId === 'esp') {
-                initESPTest();
+            } else if (gameId === 'coin') {
+                const coin = document.getElementById('coin');
+                coin.style.backgroundImage = 'url(https://img.icons8.com/ios-filled/150/ffffff/coin.png)';
             }
         }
 
@@ -996,8 +851,7 @@
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
             document.getElementById('telekinesis-stats').textContent = `${stats.telekinesis.success}/${stats.telekinesis.total}`;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
-            document.getElementById('coinflip-stats').textContent = `${stats.coinflip.correct}/${stats.coinflip.total}`;
-            document.getElementById('esp-stats').textContent = `${stats.esp.correct}/${stats.esp.total}`;
+            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
         }
 
         // Сброс статистики
@@ -1008,8 +862,7 @@
                 color: { correct: 0, total: 0 },
                 telekinesis: { success: 0, total: 0 },
                 dowsing: { found: 0, attempts: 0 },
-                coinflip: { correct: 0, total: 0 },
-                esp: { correct: 0, total: 0, streak: 0 }
+                coin: { correct: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -1025,8 +878,7 @@
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Везунчик", condition: stats.coinflip.correct >= 5 },
-                { id: "Провидец", condition: stats.esp.streak >= 3 }
+                { id: "Угадыватель монет", condition: stats.coin.correct >= 10 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
