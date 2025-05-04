@@ -148,21 +148,20 @@
         .coin {
             width: 120px;
             height: 120px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            background-size: cover;
             margin: 20px 0;
-            transition: transform 1s ease;
+            transition: transform 0.6s ease;
+            transform-style: preserve-3d;
         }
 
-        .coin.flip {
-            animation: flip 1s ease;
+        .coin.flipping {
+            animation: flip-coin 1s ease-out;
         }
 
-        @keyframes flip {
-            0% { transform: rotateY(0deg); }
-            50% { transform: rotateY(180deg); }
-            100% { transform: rotateY(360deg); }
+        @keyframes flip-coin {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(0); }
         }
 
         .coin-choices {
@@ -172,16 +171,18 @@
             margin-top: 20px;
         }
 
-        .coin-choice {
+        .coin-choice-btn {
             background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
             border: 2px solid #8A2BE2;
             padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: background 0.3s ease;
         }
 
-        .coin-choice:hover {
+        .coin-choice-btn:hover {
             background: rgba(153, 50, 204, 0.3);
         }
 
@@ -402,7 +403,7 @@
             Биолокация
         </button>
         <button class="btn" onclick="openGame('coin')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орёл и решка">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coins.png" alt="Орёл и решка">
             Орёл и решка
         </button>
         <button class="btn" onclick="openStats()">
@@ -479,12 +480,12 @@
 
     <div id="coin" class="game-window">
         <h2>Орёл и решка</h2>
-        <p>Угадайте сторону монеты:</p>
+        <p>Угадайте результат подбрасывания монеты:</p>
         <div class="coin-container">
             <div class="coin" id="coin"></div>
             <div class="coin-choices">
-                <div class="coin-choice" onclick="flipCoin('heads')">Орёл</div>
-                <div class="coin-choice" onclick="flipCoin('tails')">Решка</div>
+                <button class="coin-choice-btn" onclick="flipCoin('heads')">Орёл</button>
+                <button class="coin-choice-btn" onclick="flipCoin('tails')">Решка</button>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
@@ -497,7 +498,7 @@
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span></p>
         <p>Орёл и решка: <span id="coin-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
@@ -533,7 +534,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Везунчик (5 правильных угадываний монеты)
+                Угадыватель монет (5 правильных ответов)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -576,7 +577,10 @@
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let isCoinFlipping = false;
+        let coinImages = {
+            heads: 'https://img.icons8.com/ios-filled/100/ffffff/coin-heads.png',
+            tails: 'https://img.icons8.com/ios-filled/100/ffffff/coin-tails.png'
+        };
 
         // Показать сообщение
         function showMessage(text) {
@@ -593,6 +597,35 @@
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.remove('game-active');
             });
+        }
+
+        // Игра "Орёл и решка"
+        function flipCoin(choice) {
+            if (!isGameActive) return;
+            
+            const coin = document.getElementById('coin');
+            coin.classList.add('flipping');
+            coin.style.backgroundImage = `url(${coinImages.heads})`;
+            
+            isGameActive = false;
+            stats.coin.total++;
+            
+            setTimeout(() => {
+                const result = Math.random() < 0.5 ? 'heads' : 'tails';
+                coin.style.backgroundImage = `url(${coinImages[result]})`;
+                coin.classList.remove('flipping');
+                
+                if (choice === result) {
+                    stats.coin.correct++;
+                    showMessage('✅ Верно! Выпал ' + (result === 'heads' ? 'орёл' : 'решка'));
+                } else {
+                    showMessage('❌ Неверно! Выпал ' + (result === 'heads' ? 'орёл' : 'решка'));
+                }
+                
+                updateStats();
+                checkAchievements();
+                isGameActive = true;
+            }, 1000);
         }
 
         // Инициализация телекинеза
@@ -750,37 +783,6 @@
             checkAchievements();
         }
 
-        // Подбрасывание монеты
-        function flipCoin(choice) {
-            if (isCoinFlipping || !isGameActive) return;
-            
-            isCoinFlipping = true;
-            const coin = document.getElementById('coin');
-            coin.classList.add('flip');
-            stats.coin.total++;
-            
-            setTimeout(() => {
-                const result = Math.random() < 0.5 ? 'heads' : 'tails';
-                const coinImage = result === 'heads' ? 
-                    'https://img.icons8.com/ios-filled/50/ffffff/coin-heads.png' : 
-                    'https://img.icons8.com/ios-filled/50/ffffff/coin-tails.png';
-                
-                coin.style.backgroundImage = `url('${coinImage}')`;
-                
-                if (choice === result) {
-                    stats.coin.correct++;
-                    showMessage('✅ Верно! Вы угадали!');
-                } else {
-                    showMessage('❌ Неверно! Попробуйте ещё раз!');
-                }
-                
-                updateStats();
-                checkAchievements();
-                isCoinFlipping = false;
-                coin.classList.remove('flip');
-            }, 1000);
-        }
-
         // Открытие игры
         function openGame(gameId) {
             document.getElementById('main-menu').style.display = 'none';
@@ -794,7 +796,7 @@
                 initDowsing();
             } else if (gameId === 'coin') {
                 const coin = document.getElementById('coin');
-                coin.style.backgroundImage = '';
+                coin.style.backgroundImage = `url(${coinImages.heads})`;
             }
         }
 
@@ -869,7 +871,7 @@
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Везунчик", condition: stats.coin.correct >= 5 }
+                { id: "Угадыватель монет", condition: stats.coin.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
