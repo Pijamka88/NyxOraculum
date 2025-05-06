@@ -207,22 +207,25 @@
         }
 
         .coin-container {
-            width: 150px;
-            height: 150px;
-            margin: 20px auto;
+            width: 100%;
+            height: 200px;
             position: relative;
             perspective: 1000px;
+            margin: 20px auto;
         }
 
         .coin {
-            width: 100%;
-            height: 100%;
-            position: relative;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             transform-style: preserve-3d;
-            transition: transform 1s ease-in-out;
+            transition: transform 1s ease-out;
         }
 
-        .coin-front, .coin-back {
+        .coin-face {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -232,16 +235,17 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .coin-front {
-            background: linear-gradient(135deg, #FFD700, #B8860B);
+        .coin-heads {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
             transform: rotateY(0deg);
         }
 
-        .coin-back {
-            background: linear-gradient(135deg, #C0C0C0, #808080);
+        .coin-tails {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
             transform: rotateY(180deg);
         }
 
@@ -252,24 +256,26 @@
             margin-top: 20px;
         }
 
-        .coin-btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
+        .coin-option {
             padding: 10px 20px;
             border-radius: 50px;
             cursor: pointer;
-            font-size: 1rem;
+            font-weight: bold;
             transition: all 0.3s ease;
         }
 
-        .coin-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
+        .coin-option.heads {
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+            color: #000;
         }
 
-        .coin-btn.selected {
-            background: rgba(153, 50, 204, 0.5);
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
+        .coin-option.tails {
+            background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+            color: #000;
+        }
+
+        .coin-option:hover {
+            transform: scale(1.05);
         }
 
         @keyframes pulse {
@@ -421,8 +427,8 @@
             Биолокация
         </button>
         <button class="btn" onclick="openGame('coin')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орёл и решка">
-            Орёл и решка
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
+            Орел и решка
         </button>
         <button class="btn" onclick="openStats()">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
@@ -497,19 +503,18 @@
     </div>
 
     <div id="coin" class="game-window">
-        <h2>Орёл и решка</h2>
-        <p>Выберите сторону и подбросьте монету:</p>
+        <h2>Орел и решка</h2>
+        <p>Выберите сторону монеты:</p>
         <div class="coin-options">
-            <button class="coin-btn" id="heads-btn" onclick="selectCoinSide('heads')">Орёл</button>
-            <button class="coin-btn" id="tails-btn" onclick="selectCoinSide('tails')">Решка</button>
+            <div class="coin-option heads" onclick="flipCoin('heads')">Орел</div>
+            <div class="coin-option tails" onclick="flipCoin('tails')">Решка</div>
         </div>
         <div class="coin-container">
             <div class="coin" id="coin">
-                <div class="coin-front">О</div>
-                <div class="coin-back">Р</div>
+                <div class="coin-face coin-heads">О</div>
+                <div class="coin-face coin-tails">Р</div>
             </div>
         </div>
-        <button class="btn" id="flip-btn" onclick="flipCoin()" disabled>Подбросить</button>
         <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
     </div>
 
@@ -521,7 +526,7 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Орёл и решка: <span id="coin-stats">0/0</span> (угадано/попыток)</p>
+        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -556,7 +561,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Везунчик (5 угаданных подбрасываний)
+                Везунчик (5 правильных предсказаний монеты)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -599,7 +604,6 @@
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
-        let selectedCoinSide = null;
         let isCoinFlipping = false;
 
         // Показать сообщение
@@ -774,77 +778,45 @@
             checkAchievements();
         }
 
-        // Выбор стороны монеты
-        function selectCoinSide(side) {
-            if (isCoinFlipping) return;
-            
-            selectedCoinSide = side;
-            document.getElementById('heads-btn').classList.remove('selected');
-            document.getElementById('tails-btn').classList.remove('selected');
-            document.getElementById(side + '-btn').classList.add('selected');
-            document.getElementById('flip-btn').disabled = false;
-        }
-
         // Подбрасывание монеты
-        function flipCoin() {
-            if (isCoinFlipping || !selectedCoinSide) return;
+        function flipCoin(choice) {
+            if (isCoinFlipping || !isGameActive) return;
             
             isCoinFlipping = true;
             isGameActive = false;
             stats.coin.total++;
             
             const coin = document.getElementById('coin');
-            const flipBtn = document.getElementById('flip-btn');
-            flipBtn.disabled = true;
+            const result = Math.random() < 0.5 ? 'heads' : 'tails';
+            const rotations = 5 + Math.floor(Math.random() * 3); // 5-7 вращений
             
-            // Анимация подбрасывания
-            const flipDuration = 2000;
-            const startTime = Date.now();
+            // Анимация вращения
+            coin.style.transition = 'transform 2s ease-out';
+            coin.style.transform = `translate(-50%, -50%) rotateY(${rotations * 360 + (result === 'heads' ? 0 : 180)}deg)`;
             
-            function animate() {
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(elapsed / flipDuration, 1);
+            setTimeout(() => {
+                isCoinFlipping = false;
+                isGameActive = true;
                 
-                // Вращение монеты
-                const rotations = 5 + Math.random() * 3; // 5-8 полных оборотов
-                const rotation = 360 * rotations * progress;
-                
-                // Определение результата (орёл или решка)
-                const result = Math.random() < 0.5 ? 'heads' : 'tails';
-                const finalRotation = result === 'heads' ? 0 : 180;
-                
-                if (progress < 1) {
-                    // Анимация вращения
-                    coin.style.transform = `rotateY(${rotation}deg)`;
-                    requestAnimationFrame(animate);
+                if (choice === result) {
+                    stats.coin.correct++;
+                    showMessage(`✅ Верно! Выпало: ${result === 'heads' ? 'Орел' : 'Решка'}`);
                 } else {
-                    // Финальное положение
-                    coin.style.transform = `rotateY(${finalRotation}deg)`;
-                    isCoinFlipping = false;
-                    
-                    // Проверка результата
-                    const isCorrect = (result === selectedCoinSide);
-                    if (isCorrect) {
-                        stats.coin.correct++;
-                        showMessage(`✅ Угадали! Выпало: ${result === 'heads' ? 'Орёл' : 'Решка'}`);
-                    } else {
-                        showMessage(`❌ Не угадали! Выпало: ${result === 'heads' ? 'Орёл' : 'Решка'}`);
-                    }
-                    
-                    // Сброс выбора
-                    setTimeout(() => {
-                        selectedCoinSide = null;
-                        document.getElementById('heads-btn').classList.remove('selected');
-                        document.getElementById('tails-btn').classList.remove('selected');
-                        flipBtn.disabled = true;
-                        isGameActive = true;
-                        updateStats();
-                        checkAchievements();
-                    }, 1000);
+                    showMessage(`❌ Неверно. Выпало: ${result === 'heads' ? 'Орел' : 'Решка'}`);
                 }
-            }
-            
-            animate();
+                
+                updateStats();
+                checkAchievements();
+                
+                // Сброс монеты через 2 секунды
+                setTimeout(() => {
+                    coin.style.transition = 'none';
+                    coin.style.transform = 'translate(-50%, -50%) rotateY(0deg)';
+                    setTimeout(() => {
+                        coin.style.transition = 'transform 2s ease-out';
+                    }, 10);
+                }, 2000);
+            }, 2000);
         }
 
         // Открытие игры
@@ -859,11 +831,12 @@
             } else if (gameId === 'dowsing') {
                 initDowsing();
             } else if (gameId === 'coin') {
-                selectedCoinSide = null;
-                document.getElementById('heads-btn').classList.remove('selected');
-                document.getElementById('tails-btn').classList.remove('selected');
-                document.getElementById('flip-btn').disabled = true;
-                document.getElementById('coin').style.transform = 'rotateY(0deg)';
+                const coin = document.getElementById('coin');
+                coin.style.transition = 'none';
+                coin.style.transform = 'translate(-50%, -50%) rotateY(0deg)';
+                setTimeout(() => {
+                    coin.style.transition = 'transform 2s ease-out';
+                }, 10);
             }
         }
 
