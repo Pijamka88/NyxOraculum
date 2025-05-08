@@ -138,7 +138,6 @@
             transform: scale(0.95);
         }
 
-        /* Стили для игры "Телекинез" */
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -174,7 +173,6 @@
             z-index: 1;
         }
 
-        /* Стили для игры "Биолокация" */
         .dowsing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -193,7 +191,7 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
         }
 
         .dowsing-cell:hover {
@@ -209,13 +207,6 @@
             animation: pulse 0.5s;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        /* Стили для игры "Орел и решка" */
         .coin-container {
             display: flex;
             flex-direction: column;
@@ -225,15 +216,15 @@
         }
 
         .coin {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             position: relative;
             transform-style: preserve-3d;
             margin: 20px 0;
-            cursor: pointer;
         }
 
-        .coin-front, .coin-back {
+        .coin .front,
+        .coin .back {
             position: absolute;
             width: 100%;
             height: 100%;
@@ -243,32 +234,35 @@
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            border: 5px solid #FFA500;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .coin-back {
+        .coin .front {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            transform: rotateY(0deg);
+        }
+
+        .coin .back {
+            background: linear-gradient(135deg, #C0C0C0, #A9A9A9);
             transform: rotateY(180deg);
         }
 
         .coin.flipping {
-            animation: flip-coin 2s cubic-bezier(0.4, 2.5, 0.6, 0.5) forwards;
+            animation: flip 2s cubic-bezier(0.4, 2.5, 0.6, 0.5);
         }
 
-        @keyframes flip-coin {
+        @keyframes flip {
             0% { transform: rotateY(0); }
             50% { transform: rotateY(1800deg); }
-            100% { transform: rotateY(1980deg); }
+            100% { transform: rotateY(3600deg); }
         }
 
-        .coin-result {
-            font-size: 1.5rem;
-            margin-top: 20px;
-            min-height: 40px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
-        /* Общие стили */
         .overlay {
             display: none;
             position: fixed;
@@ -489,13 +483,16 @@
 
     <div id="coin" class="game-window">
         <h2>Орел и решка</h2>
-        <p>Кликните на монету, чтобы подбросить:</p>
+        <p>Предскажите результат подбрасывания монеты:</p>
         <div class="coin-container">
-            <div class="coin" id="coin" onclick="flipCoin()">
-                <div class="coin-front">О</div>
-                <div class="coin-back">Р</div>
+            <div class="coin" id="coin">
+                <div class="front">О</div>
+                <div class="back">Р</div>
             </div>
-            <div class="coin-result" id="coin-result"></div>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn" onclick="flipCoin('орел')">Орел</button>
+                <button class="btn" onclick="flipCoin('решка')">Решка</button>
+            </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
     </div>
@@ -508,7 +505,7 @@
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0/0</span></p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Орел и решка: <span id="coin-stats">0/0</span> (угадано/попыток)</p>
+        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -543,7 +540,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Везунчик (5 угаданных подбрасываний)
+                Угадайка (5 правильных предсказаний монеты)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -596,6 +593,7 @@
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.add('game-active');
             });
+            isGameActive = false;
         }
 
         // Закрыть сообщение
@@ -604,6 +602,7 @@
             document.querySelectorAll('.game-window').forEach(el => {
                 el.classList.remove('game-active');
             });
+            isGameActive = true;
         }
 
         // Инициализация телекинеза
@@ -612,13 +611,9 @@
             const object = document.getElementById('telekinesis-object');
             const target = document.getElementById('target-object');
             
-            // Удаляем старые обработчики
-            object.removeEventListener('mousedown', startDrag);
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            object.removeEventListener('touchstart', startDrag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('touchend', stopDrag);
+            // Сброс состояния
+            isDragging = false;
+            isGameActive = true;
 
             // Позиционируем фиолетовый шар в центре
             const areaRect = area.getBoundingClientRect();
@@ -638,8 +633,8 @@
                 targetX = Math.random() * (areaRect.width - 40);
                 targetY = Math.random() * (areaRect.height - 40);
             } while (
-                Math.abs(targetX - (areaRect.width / 2 - 30)) < 100 && 
-                Math.abs(targetY - (areaRect.height / 2 - 30)) < 100
+                Math.abs(targetX - (areaRect.width / 2 - 20)) < 100 && 
+                Math.abs(targetY - (areaRect.height / 2 - 20)) < 100
             );
 
             target.style.left = targetX + 'px';
@@ -720,12 +715,20 @@
                     if (distance < 50) { // Увеличили дистанцию для успешного касания
                         stats.telekinesis.success++;
                         showMessage('✅ Успех! Вы переместили шар к цели!');
-                        setTimeout(initTelekinesis, 1000);
+                        setTimeout(() => {
+                            // Возвращаем шар в исходное положение
+                            object.style.left = '50%';
+                            object.style.top = '50%';
+                            object.style.transform = 'translate(-50%, -50%)';
+                            initTelekinesis(); // Новая игра
+                        }, 1000);
                     } else {
                         // Возвращаем шар в исходное положение
-                        object.style.left = '50%';
-                        object.style.top = '50%';
-                        object.style.transform = 'translate(-50%, -50%)';
+                        setTimeout(() => {
+                            object.style.left = '50%';
+                            object.style.top = '50%';
+                            object.style.transform = 'translate(-50%, -50%)';
+                        }, 300);
                     }
                     
                     updateStats();
@@ -778,70 +781,40 @@
         }
 
         // Игра "Орел и решка"
-        function flipCoin() {
+        function flipCoin(guess) {
             if (!isGameActive) return;
             
             const coin = document.getElementById('coin');
-            const result = document.getElementById('coin-result');
-            
-            if (coin.classList.contains('flipping')) return;
-            
-            coin.classList.add('flipping');
-            result.textContent = '';
             isGameActive = false;
+            coin.classList.add('flipping');
             
-            // Случайный результат (0 - орел, 1 - решка)
-            const flipResult = Math.floor(Math.random() * 2);
+            // Случайный результат
+            const result = Math.random() < 0.5 ? 'орел' : 'решка';
             stats.coin.total++;
             
             setTimeout(() => {
                 coin.classList.remove('flipping');
                 
-                // Определяем, что выпало
-                const isHeads = flipResult === 0;
-                const resultText = isHeads ? 'Орел' : 'Решка';
+                if (guess === result) {
+                    stats.coin.correct++;
+                    showMessage(`✅ Верно! Выпало: ${result === 'орел' ? 'Орел' : 'Решка'}`);
+                } else {
+                    showMessage(`❌ Неверно. Выпало: ${result === 'орел' ? 'Орел' : 'Решка'}`);
+                }
                 
-                // Даем игроку угадать
-                showMessage(`Выпало: ${resultText}\nВыберите, что вы предсказали:`);
+                updateStats();
+                checkAchievements();
                 
-                // Создаем кнопки для выбора
-                const messageBox = document.getElementById('message-box');
-                const buttonsDiv = document.createElement('div');
-                buttonsDiv.style.display = 'flex';
-                buttonsDiv.style.justifyContent = 'center';
-                buttonsDiv.style.gap = '10px';
-                buttonsDiv.style.marginTop = '15px';
-                
-                const headsBtn = document.createElement('button');
-                headsBtn.className = 'btn';
-                headsBtn.textContent = 'Орел';
-                headsBtn.onclick = () => checkCoinGuess(true, isHeads);
-                
-                const tailsBtn = document.createElement('button');
-                tailsBtn.className = 'btn';
-                tailsBtn.textContent = 'Решка';
-                tailsBtn.onclick = () => checkCoinGuess(false, isHeads);
-                
-                buttonsDiv.appendChild(headsBtn);
-                buttonsDiv.appendChild(tailsBtn);
-                messageBox.appendChild(buttonsDiv);
-                
+                // Поворот монеты к результату
+                setTimeout(() => {
+                    if (result === 'ореl') {
+                        coin.style.transform = 'rotateY(0deg)';
+                    } else {
+                        coin.style.transform = 'rotateY(180deg)';
+                    }
+                    isGameActive = true;
+                }, 100);
             }, 2000);
-        }
-
-        function checkCoinGuess(guessedHeads, actualHeads) {
-            const correct = guessedHeads === actualHeads;
-            
-            if (correct) {
-                stats.coin.correct++;
-                showMessage('✅ Верно! Вы угадали!');
-            } else {
-                showMessage('❌ Неверно! Попробуйте еще раз!');
-            }
-            
-            updateStats();
-            checkAchievements();
-            isGameActive = true;
         }
 
         // Открытие игры
@@ -856,7 +829,8 @@
             } else if (gameId === 'dowsing') {
                 initDowsing();
             } else if (gameId === 'coin') {
-                document.getElementById('coin-result').textContent = '';
+                const coin = document.getElementById('coin');
+                coin.style.transform = 'rotateY(0deg)';
             }
         }
 
@@ -932,7 +906,7 @@
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Везунчик", condition: stats.coin.correct >= 5 }
+                { id: "Угадайка", condition: stats.coin.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
