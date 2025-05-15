@@ -109,7 +109,6 @@
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
-            justify-items: center;
         }
 
         .game-btn {
@@ -214,7 +213,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px 0;
+            gap: 20px;
+            margin-bottom: 20px;
         }
 
         .coin {
@@ -225,7 +225,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
             font-size: 2rem;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             transition: transform 1s ease-out;
@@ -233,39 +232,33 @@
         }
 
         .coin.flipping {
-            animation: flip 1s ease-out;
+            animation: flip 1.5s ease-out;
         }
 
         @keyframes flip {
             0% { transform: rotateY(0); }
             50% { transform: rotateY(1800deg); }
-            100% { transform: rotateY(3600deg); }
+            100% { transform: rotateY(0); }
         }
 
         .coin-buttons {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
-            width: 100%;
         }
 
         .coin-btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            padding: 10px 15px;
+            padding: 10px 20px;
             border-radius: 50px;
+            border: 2px solid #FFD700;
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
             cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .coin-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .coin-btn:active {
-            transform: scale(0.95);
+            background: rgba(255, 215, 0, 0.3);
         }
 
         .overlay {
@@ -313,8 +306,19 @@
             margin-bottom: 20px;
         }
 
-        .message-box .btn {
-            margin: 0 auto;
+        .message-box button {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .message-box button:hover {
+            background: rgba(153, 50, 204, 0.3);
         }
 
         .stats-window, .achievements-window {
@@ -384,15 +388,15 @@
         }
 
         .close-btn, .reset-btn {
-            margin: 30px auto 0;
+            margin-top: 30px;
             width: 100%;
-            max-width: 200px;
-            display: block;
+            text-align: center;
         }
 
-        .game-disabled {
-            pointer-events: none;
-            opacity: 0.5;
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
     </style>
 </head>
@@ -449,7 +453,9 @@
             <button class="game-btn" onclick="checkTelepathy(9)">9</button>
             <button class="game-btn" onclick="checkTelepathy(10)">10</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+        </div>
     </div>
 
     <div id="zener" class="game-window">
@@ -462,7 +468,9 @@
             <button class="game-btn" onclick="checkZener('✚')">✚</button>
             <button class="game-btn" onclick="checkZener('★')">★</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
+        </div>
     </div>
 
     <div id="color" class="game-window">
@@ -475,7 +483,9 @@
             <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
             <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        </div>
     </div>
 
     <div id="telekinesis" class="game-window">
@@ -485,14 +495,18 @@
             <div class="telekinesis-object" id="telekinesis-object"></div>
             <div class="target-object" id="target-object"></div>
         </div>
-        <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
+        </div>
     </div>
 
     <div id="dowsing" class="game-window">
         <h2>Биолокация</h2>
         <p>Найдите скрытый артефакт:</p>
         <div class="dowsing-grid" id="dowsing-grid"></div>
-        <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
+        </div>
     </div>
 
     <div id="coin" class="game-window">
@@ -505,7 +519,9 @@
                 <button class="coin-btn" onclick="flipCoin('решка')">Решка</button>
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
+        </div>
     </div>
 
     <!-- Статистика -->
@@ -517,8 +533,12 @@
         <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (ошибок: <span id="dowsing-errors">0</span>)</p>
         <p>Орел и решка: <span id="coin-stats">0/0</span></p>
-        <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
-        <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
+        </div>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
+        </div>
     </div>
 
     <!-- Достижения -->
@@ -543,7 +563,7 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (10 успехов)
+                Мастер телекинеза (5 успехов)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
@@ -551,20 +571,22 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Угадайка (10 правильных подбрасываний монеты)
+                Везунчик (5 правильных угадываний монеты)
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+        <div class="btn-container">
+            <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+        </div>
     </div>
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
 
-    <!-- Сообщение -->
+    <!-- Сообщения -->
     <div class="message-overlay" id="message-overlay"></div>
     <div class="message-box" id="message-box">
         <p id="message-text"></p>
-        <button class="btn" onclick="closeMessage()">OK</button>
+        <button id="message-button">OK</button>
     </div>
 
     <!-- Звездный фон -->
@@ -596,38 +618,21 @@
         let currentArtifactPosition = -1;
         let isGameActive = true;
         let isDragging = false;
+        let targetPosition = { x: 0, y: 0 };
+        let objectPosition = { x: 0, y: 0 };
 
         // Показать сообщение
         function showMessage(text) {
+            isGameActive = false;
             document.getElementById('message-text').textContent = text;
             document.getElementById('message-overlay').style.display = 'block';
             document.getElementById('message-box').style.display = 'block';
-            disableGame();
-        }
-
-        // Закрыть сообщение
-        function closeMessage() {
-            document.getElementById('message-overlay').style.display = 'none';
-            document.getElementById('message-box').style.display = 'none';
-            enableGame();
-        }
-
-        // Отключить игру
-        function disableGame() {
-            isGameActive = false;
-            document.querySelectorAll('.game-window').forEach(el => {
-                if (el.style.display === 'block') {
-                    el.classList.add('game-disabled');
-                }
-            });
-        }
-
-        // Включить игру
-        function enableGame() {
-            isGameActive = true;
-            document.querySelectorAll('.game-window').forEach(el => {
-                el.classList.remove('game-disabled');
-            });
+            
+            document.getElementById('message-button').onclick = function() {
+                document.getElementById('message-overlay').style.display = 'none';
+                document.getElementById('message-box').style.display = 'none';
+                isGameActive = true;
+            };
         }
 
         // Инициализация телекинеза
@@ -635,33 +640,38 @@
             const area = document.getElementById('telekinesis-area');
             const object = document.getElementById('telekinesis-object');
             const target = document.getElementById('target-object');
+            const rect = area.getBoundingClientRect();
             
-            // Сброс позиции
+            // Сброс позиций
             object.style.left = '50%';
             object.style.top = '50%';
             object.style.transform = 'translate(-50%, -50%)';
             
-            // Позиция цели
-            const rect = area.getBoundingClientRect();
-            const objectSize = 60;
-            const targetSize = 40;
-            
+            // Генерация случайной позиции для желтого шара (не в центре)
             let targetX, targetY;
             do {
-                targetX = Math.random() * (rect.width - targetSize) + targetSize/2;
-                targetY = Math.random() * (rect.height - targetSize) + targetSize/2;
+                targetX = Math.random() * (rect.width - 40);
+                targetY = Math.random() * (rect.height - 40);
             } while (
-                Math.abs(targetX - rect.width/2) < 100 && 
-                Math.abs(targetY - rect.height/2) < 100
+                Math.abs(targetX - (rect.width / 2 - 20)) < 100 && 
+                Math.abs(targetY - (rect.height / 2 - 20)) < 100
             );
             
             target.style.left = targetX + 'px';
             target.style.top = targetY + 'px';
-            target.style.transform = 'translate(-50%, -50%)';
+            
+            targetPosition = {
+                x: targetX + 20,
+                y: targetY + 20
+            };
+            
+            objectPosition = {
+                x: rect.width / 2,
+                y: rect.height / 2
+            };
             
             isDragging = false;
-            let startX, startY, startLeft, startTop;
-
+            
             // Для мыши
             object.addEventListener('mousedown', startDrag);
             document.addEventListener('mousemove', drag);
@@ -686,9 +696,6 @@
                     startX = e.touches[0].clientX;
                     startY = e.touches[0].clientY;
                 }
-                
-                startLeft = objRect.left - rect.left;
-                startTop = objRect.top - rect.top;
             }
 
             function drag(e) {
@@ -706,46 +713,52 @@
                     clientY = e.touches[0].clientY;
                 }
                 
-                let newLeft = startLeft + (clientX - startX);
-                let newTop = startTop + (clientY - startY);
+                let newLeft = clientX - rect.left - 30;
+                let newTop = clientY - rect.top - 30;
                 
                 // Ограничения по границам области
-                newLeft = Math.max(0, Math.min(rect.width - object.offsetWidth, newLeft));
-                newTop = Math.max(0, Math.min(rect.height - object.offsetHeight, newTop));
+                newLeft = Math.max(0, Math.min(rect.width - 60, newLeft));
+                newTop = Math.max(0, Math.min(rect.height - 60, newTop));
                 
                 object.style.left = newLeft + 'px';
                 object.style.top = newTop + 'px';
                 object.style.transform = 'translate(0, 0)';
                 
-                // Проверка столкновения
-                const objRect = object.getBoundingClientRect();
-                const targetRect = target.getBoundingClientRect();
-                
-                const distance = Math.sqrt(
-                    Math.pow(objRect.left + objRect.width/2 - (targetRect.left + targetRect.width/2), 2) +
-                    Math.pow(objRect.top + objRect.height/2 - (targetRect.top + targetRect.height/2), 2)
-                );
-                
-                if (distance < (objRect.width/2 + targetRect.width/2)) {
-                    stats.telekinesis.success++;
-                    updateStats();
-                    checkAchievements();
-                    showMessage("✅ Успех! Вы переместили шар силой мысли!");
-                    setTimeout(() => {
-                        initTelekinesis();
-                    }, 1000);
-                }
+                objectPosition = {
+                    x: newLeft + 30,
+                    y: newTop + 30
+                };
             }
 
             function stopDrag() {
-                if (isDragging) {
-                    isDragging = false;
-                    // Возврат в центр, если не достигнута цель
-                    if (isGameActive) {
-                        object.style.left = '50%';
-                        object.style.top = '50%';
-                        object.style.transform = 'translate(-50%, -50%)';
-                    }
+                if (!isDragging || !isGameActive) return;
+                isDragging = false;
+                
+                // Проверка столкновения
+                const distance = Math.sqrt(
+                    Math.pow(objectPosition.x - targetPosition.x, 2) + 
+                    Math.pow(objectPosition.y - targetPosition.y, 2)
+                );
+                
+                if (distance < 50) { // Расстояние для "касания"
+                    stats.telekinesis.success++;
+                    updateStats();
+                    checkAchievements();
+                    showMessage("✅ Успех! Вы переместили шар к цели!");
+                    
+                    // Новая цель
+                    setTimeout(() => {
+                        if (isGameActive) initTelekinesis();
+                    }, 1000);
+                } else {
+                    // Возврат в центр
+                    object.style.left = '50%';
+                    object.style.top = '50%';
+                    object.style.transform = 'translate(-50%, -50%)';
+                    objectPosition = {
+                        x: area.getBoundingClientRect().width / 2,
+                        y: area.getBoundingClientRect().height / 2
+                    };
                 }
             }
         }
@@ -758,23 +771,22 @@
             // Случайное положение артефакта
             currentArtifactPosition = Math.floor(Math.random() * 16);
             stats.dowsing.total++;
-            updateStats();
             
             // Создаем 16 ячеек
             for (let i = 0; i < 16; i++) {
                 const cell = document.createElement('div');
                 cell.className = 'dowsing-cell';
                 cell.dataset.index = i;
-                cell.addEventListener('click', checkDowsingCell);
+                cell.addEventListener('click', function() {
+                    if (isGameActive) checkDowsingCell(i);
+                });
                 grid.appendChild(cell);
             }
         }
 
-        function checkDowsingCell(e) {
-            if (!isGameActive) return;
-            
-            const cell = e.target;
-            const index = parseInt(cell.dataset.index);
+        function checkDowsingCell(index) {
+            const cells = document.querySelectorAll('.dowsing-cell');
+            const cell = cells[index];
             
             if (cell.classList.contains('opened')) return;
             
@@ -787,8 +799,9 @@
                 updateStats();
                 checkAchievements();
                 showMessage("✅ Успех! Вы нашли артефакт!");
+                
                 setTimeout(() => {
-                    initDowsing();
+                    if (isGameActive) initDowsing();
                 }, 1000);
             } else {
                 cell.innerHTML = '❌';
@@ -797,20 +810,16 @@
             }
         }
 
-        // Инициализация монеты
-        function initCoin() {
-            const coin = document.getElementById('coin');
-            coin.textContent = '?';
-            coin.classList.remove('flipping');
-        }
-
+        // Игра "Орел и решка"
         function flipCoin(guess) {
             if (!isGameActive) return;
             
+            isGameActive = false;
+            stats.coin.total++;
+            
             const coin = document.getElementById('coin');
             coin.classList.add('flipping');
-            
-            stats.coin.total++;
+            coin.textContent = '...';
             
             setTimeout(() => {
                 const result = Math.random() < 0.5 ? 'орел' : 'решка';
@@ -820,45 +829,44 @@
                     stats.coin.correct++;
                     showMessage("✅ Успех! Вы угадали!");
                 } else {
-                    showMessage("❌ Неудача! Попробуйте еще раз!");
+                    showMessage("❌ Неверно! Попробуйте еще раз!");
                 }
                 
                 updateStats();
                 checkAchievements();
                 
                 setTimeout(() => {
-                    initCoin();
-                }, 1000);
-            }, 1000);
+                    coin.classList.remove('flipping');
+                    isGameActive = true;
+                }, 500);
+            }, 1500);
         }
 
         // Открытие игры
         function openGame(gameId) {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById(gameId).style.display = 'block';
-            document.querySelector('.container').style.display = 'none';
             
             if (gameId === 'telekinesis') {
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
-            } else if (gameId === 'coin') {
-                initCoin();
             }
+            
+            isGameActive = true;
         }
 
         // Закрытие игры
         function closeGame(gameId) {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById(gameId).style.display = 'none';
-            document.querySelector('.container').style.display = 'block';
+            isGameActive = true;
         }
 
         // Открытие статистики
         function openStats() {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('stats').style.display = 'block';
-            document.querySelector('.container').style.display = 'none';
             updateStats();
         }
 
@@ -866,14 +874,12 @@
         function closeStats() {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('stats').style.display = 'none';
-            document.querySelector('.container').style.display = 'block';
         }
 
         // Открытие достижений
         function openAchievements() {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('achievements').style.display = 'block';
-            document.querySelector('.container').style.display = 'none';
             updateAchievements();
         }
 
@@ -881,7 +887,6 @@
         function closeAchievements() {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('achievements').style.display = 'none';
-            document.querySelector('.container').style.display = 'block';
         }
 
         // Обновление статистики
@@ -917,9 +922,9 @@
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
                 { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
-                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 10 },
+                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 5 },
-                { id: "Угадайка", condition: stats.coin.correct >= 10 }
+                { id: "Везунчик", condition: stats.coin.correct >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -942,7 +947,6 @@
             } else {
                 showMessage(`❌ Неверно. Загадано: ${target}`);
             }
-            updateStats();
             checkAchievements();
         }
 
@@ -959,7 +963,6 @@
             } else {
                 showMessage(`❌ Неверно. Загадан: ${target}`);
             }
-            updateStats();
             checkAchievements();
         }
 
@@ -976,7 +979,6 @@
             } else {
                 showMessage(`❌ Неверно. Загадан: ${target}`);
             }
-            updateStats();
             checkAchievements();
         }
 
