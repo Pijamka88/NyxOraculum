@@ -15,8 +15,8 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            touch-action: manipulation;
+            overflow: hidden;
+            touch-action: none;
         }
 
         .container {
@@ -28,38 +28,29 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            margin: 20px auto;
         }
 
         h1 {
-            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            font-size: 2.5rem;
             margin-bottom: 20px;
             background: linear-gradient(90deg, #00BFFF, #8A2BE2, #FF00FF, #00BFFF);
             background-size: 300% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradient 8s ease infinite;
+            animation: glow 5s linear infinite;
         }
 
-        @keyframes gradient {
+        @keyframes glow {
             0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            gap: 10px;
+            100% { background-position: 100% 50%; }
         }
 
         .btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            padding: 12px;
+            padding: 15px;
+            margin: 10px 0;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
@@ -69,7 +60,6 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            max-width: 300px;
         }
 
         .btn:hover {
@@ -109,7 +99,7 @@
         }
 
         .game-window h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
             text-align: center;
@@ -185,7 +175,7 @@
         .dowsing-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 15px;
             margin: 20px auto;
             max-width: 350px;
         }
@@ -199,71 +189,9 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 1.5rem;
-            min-width: 50px;
-            min-height: 50px;
-        }
-
-        .coin-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px 0;
-        }
-
-        .coin {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #FFD700, #C0C0C0);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 0;
             font-size: 2rem;
-            font-weight: bold;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-            transition: transform 1s ease;
-            transform-style: preserve-3d;
-        }
-
-        .coin.flipping {
-            animation: flip 1s ease;
-        }
-
-        @keyframes flip {
-            0% { transform: rotateY(0); }
-            50% { transform: rotateY(180deg); }
-            100% { transform: rotateY(360deg); }
-        }
-
-        .coin-options {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .coin-btn {
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .coin-btn.heads {
-            background: rgba(255, 215, 0, 0.2);
-            border: 2px solid #FFD700;
-        }
-
-        .coin-btn.tails {
-            background: rgba(192, 192, 192, 0.2);
-            border: 2px solid #C0C0C0;
-        }
-
-        .coin-btn:hover {
-            transform: scale(1.05);
+            min-width: 70px;
+            min-height: 70px;
         }
 
         .dowsing-cell:hover {
@@ -315,7 +243,7 @@
         }
 
         .stats-window h2, .achievements-window h2 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
             text-align: center;
@@ -421,64 +349,102 @@
             pointer-events: auto;
         }
 
-        @media (max-width: 480px) {
-            .game-buttons {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .dowsing-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .telekinesis-container {
-                height: 250px;
-            }
-            
-            .coin {
-                width: 80px;
-                height: 80px;
-                font-size: 1.5rem;
-            }
+        /* Стили для игры "Орел и решка" */
+        .coin-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .coin {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #FFD700, #B8860B);
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            transition: transform 1s ease-out;
+        }
+
+        .coin.flipping {
+            animation: flip 1.5s ease-out;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(3600deg); }
+        }
+
+        .coin-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .coin-btn {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
+        }
+
+        .coin-btn:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .coin-btn:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>NyxOraculum</h1>
-        <div class="btn-container">
-            <button class="btn" onclick="openGame('telepathy')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
-                Телепатия
-            </button>
-            <button class="btn" onclick="openGame('zener')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
-                Карты Зенера
-            </button>
-            <button class="btn" onclick="openGame('color')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
-                Цветовая интуиция
-            </button>
-            <button class="btn" onclick="openGame('coin')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
-                Орел и решка
-            </button>
-            <button class="btn" onclick="openGame('telekinesis')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/mind-map.png" alt="Телекинез">
-                Телекинез
-            </button>
-            <button class="btn" onclick="openGame('dowsing')">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
-                Биолокация
-            </button>
-            <button class="btn" onclick="openStats()">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
-                Статистика
-            </button>
-            <button class="btn" onclick="openAchievements()">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
-                Достижения
-            </button>
-        </div>
+        <button class="btn" onclick="openGame('telepathy')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
+            Телепатия
+        </button>
+        <button class="btn" onclick="openGame('zener')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/tarot-cards.png" alt="Карты Зенера">
+            Карты Зенера
+        </button>
+        <button class="btn" onclick="openGame('color')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/color-palette.png" alt="Цветовая интуиция">
+            Цветовая интуиция
+        </button>
+        <button class="btn" onclick="openGame('telekinesis')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/mind-map.png" alt="Телекинез">
+            Телекинез
+        </button>
+        <button class="btn" onclick="openGame('dowsing')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/treasure-map.png" alt="Биолокация">
+            Биолокация
+        </button>
+        <button class="btn" onclick="openGame('coin')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
+            Орел и решка
+        </button>
+        <button class="btn" onclick="openStats()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/statistics.png" alt="Статистика">
+            Статистика
+        </button>
+        <button class="btn" onclick="openAchievements()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижения">
+            Достижения
+        </button>
     </div>
 
     <!-- Игры -->
@@ -532,21 +498,6 @@
         </div>
     </div>
 
-    <div id="coin" class="game-window">
-        <div class="game-content active">
-            <h2>Орел и решка</h2>
-            <p>Угадайте результат подбрасывания монеты:</p>
-            <div class="coin-container">
-                <div class="coin" id="coin-element">?</div>
-                <div class="coin-options">
-                    <button class="coin-btn heads" onclick="flipCoin('орел')">Орел</button>
-                    <button class="coin-btn tails" onclick="flipCoin('решка')">Решка</button>
-                </div>
-            </div>
-            <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
-        </div>
-    </div>
-
     <div id="telekinesis" class="game-window">
         <div class="game-content active">
             <h2>Телекинез</h2>
@@ -568,15 +519,33 @@
         </div>
     </div>
 
+    <!-- Новая игра "Орел и решка" -->
+    <div id="coin" class="game-window">
+        <div class="game-content active">
+            <h2>Орел и решка</h2>
+            <p>Предскажите результат подбрасывания монеты:</p>
+            <div class="coin-container">
+                <div class="coin" id="coin">
+                    <span id="coin-result">?</span>
+                </div>
+                <div class="coin-buttons">
+                    <button class="coin-btn" onclick="flipCoin('орел')">Орел</button>
+                    <button class="coin-btn" onclick="flipCoin('решка')">Решка</button>
+                </div>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
+        </div>
+    </div>
+
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
         <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
         <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
         <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
         <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -599,10 +568,6 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Угадайка монет (7 правильных ответов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Экстрасенс (20 правильных ответов)
             </div>
             <div class="achievement-item locked">
@@ -612,6 +577,10 @@
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
                 Искатель сокровищ (3 найденных артефакта)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Угадайка (10 правильных предсказаний монеты)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -646,15 +615,16 @@
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
             color: { correct: 0, total: 0 },
-            coin: { correct: 0, total: 0 },
             telekinesis: { success: 0 },
-            dowsing: { found: 0, attempts: 0 }
+            dowsing: { found: 0, attempts: 0 },
+            coin: { correct: 0, total: 0 }
         };
 
         let achievements = [];
         let currentArtifactPosition = -1;
         let isGameActive = true;
         let telekinesisGameActive = false;
+        let isCoinFlipping = false;
 
         // Показать сообщение
         function showMessage(text, callback) {
@@ -836,31 +806,40 @@
             }
         }
 
-        // Подбрасывание монеты
+        // Игра "Орел и решка"
         function flipCoin(guess) {
-            if (!isGameActive) return;
+            if (!isGameActive || isCoinFlipping) return;
             
-            const coin = document.getElementById('coin-element');
+            isCoinFlipping = true;
+            const coin = document.getElementById('coin');
+            const coinResult = document.getElementById('coin-result');
+            
             coin.classList.add('flipping');
-            coin.textContent = '?';
+            coinResult.textContent = '?';
             
             stats.coin.total++;
+            updateStats();
             
             setTimeout(() => {
                 const result = Math.random() < 0.5 ? 'орел' : 'решка';
-                coin.textContent = result === 'орел' ? 'О' : 'Р';
-                coin.classList.remove('flipping');
+                const isCorrect = guess === result;
                 
-                if (guess === result) {
+                if (isCorrect) {
                     stats.coin.correct++;
-                    showMessage(`✅ Верно! Выпал ${result === 'орел' ? 'орёл' : 'решка'}`);
-                } else {
-                    showMessage(`❌ Неверно. Выпал ${result === 'орел' ? 'орёл' : 'решка'}`);
+                    updateStats();
+                    checkAchievements();
                 }
                 
-                updateStats();
-                checkAchievements();
-            }, 1000);
+                coinResult.textContent = result === 'орел' ? 'О' : 'Р';
+                coin.classList.remove('flipping');
+                
+                setTimeout(() => {
+                    showMessage(
+                        isCorrect ? '✅ Верно! Выпало: ' + result : '❌ Неверно. Выпало: ' + result
+                    );
+                    isCoinFlipping = false;
+                }, 500);
+            }, 1500);
         }
 
         // Открытие игры
@@ -882,6 +861,7 @@
             document.getElementById('overlay').style.display = 'none';
             document.querySelector('.container').style.display = 'block';
             telekinesisGameActive = false;
+            isCoinFlipping = false;
         }
 
         // Открытие статистики
@@ -919,9 +899,9 @@
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
             document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
-            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
+            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
         }
 
         // Сброс статистики
@@ -930,9 +910,9 @@
                 telepathy: { correct: 0, total: 0 },
                 zener: { correct: 0, total: 0 },
                 color: { correct: 0, total: 0 },
-                coin: { correct: 0, total: 0 },
                 telekinesis: { success: 0 },
-                dowsing: { found: 0, attempts: 0 }
+                dowsing: { found: 0, attempts: 0 },
+                coin: { correct: 0, total: 0 }
             };
             updateStats();
             updateAchievements();
@@ -946,10 +926,10 @@
                 { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
                 { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
-                { id: "Угадайка монет", condition: stats.coin.correct >= 7 },
-                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct + stats.coin.correct >= 20 },
+                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
-                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 }
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 },
+                { id: "Угадайка", condition: stats.coin.correct >= 10 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
