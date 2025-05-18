@@ -33,16 +33,19 @@
         h1 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            background: linear-gradient(90deg, #00BFFF, #8A2BE2, #FF00FF, #00BFFF);
-            background-size: 300% 100%;
+            background: linear-gradient(90deg, 
+                #00BFFF, #8A2BE2, #FF00FF, #00BFFF);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: glow 5s linear infinite;
+            animation: glow 8s ease infinite;
+            text-shadow: 0 0 10px rgba(138, 43, 226, 0.3);
         }
 
         @keyframes glow {
             0% { background-position: 0% 50%; }
-            100% { background-position: 100% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .btn {
@@ -54,7 +57,7 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -64,6 +67,8 @@
 
         .btn:hover {
             background: rgba(153, 50, 204, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2);
         }
 
         .btn:active {
@@ -94,8 +99,8 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from { opacity: 0; transform: translate(-50%, -45%); }
+            to { opacity: 1; transform: translate(-50%, -50%); }
         }
 
         .game-window h2 {
@@ -103,6 +108,254 @@
             margin-bottom: 20px;
             color: #E6E6FA;
             text-align: center;
+            background: linear-gradient(90deg, #00BFFF, #8A2BE2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 300px;
+        }
+
+        .game-btn {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .game-btn:hover {
+            background: rgba(153, 50, 204, 0.3);
+            transform: scale(1.05);
+        }
+
+        .game-btn:active {
+            transform: scale(0.95);
+        }
+
+        .telekinesis-container {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            border: 2px dashed #8A2BE2;
+            border-radius: 15px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+
+        .telekinesis-object {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: #8A2BE2;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+            z-index: 2;
+        }
+
+        .target-object {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #FFD700;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+            z-index: 1;
+        }
+
+        .dowsing-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 20px auto;
+            max-width: 350px;
+        }
+
+        .dowsing-cell {
+            background: rgba(138, 43, 226, 0.2);
+            border: 2px solid #8A2BE2;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 2rem;
+            min-width: 70px;
+            min-height: 70px;
+        }
+
+        .dowsing-cell:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .dowsing-cell.opened {
+            background: rgba(70, 130, 180, 0.3);
+        }
+
+        .dowsing-cell.found {
+            background: rgba(50, 205, 50, 0.3);
+            animation: pulse 0.5s;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .stats-window, .achievements-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .stats-window h2, .achievements-window h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #E6E6FA;
+            text-align: center;
+        }
+
+        .stats-window p, .achievements-window p {
+            font-size: 1rem;
+            margin: 10px 0;
+            color: #E6E6FA;
+            text-align: center;
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            justify-content: center;
+        }
+
+        .achievement-item img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .achievement-item.locked img {
+            filter: grayscale(100%);
+        }
+
+        .achievement-item.locked {
+            color: #888;
+        }
+
+        .message-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1001;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .message-box p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #E6E6FA;
+        }
+
+        .message-box button {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .message-box button:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .close-btn, .reset-btn {
+            margin-top: 30px;
+            width: 100%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .game-content {
+            pointer-events: none;
+        }
+
+        .game-content.active {
+            pointer-events: auto;
         }
 
         /* Стили для игры "Орел и решка" */
@@ -122,42 +375,46 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            font-size: 0;
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
             transform-style: preserve-3d;
-            transition: transform 1s ease-out;
         }
 
-        .coin .front, .coin .back {
+        .coin::before {
+            content: '';
             position: absolute;
             width: 100%;
             height: 100%;
+            background: url('https://img.icons8.com/ios-filled/50/ffffff/coin.png') center/60% no-repeat;
+            background-color: #FFD700;
             border-radius: 50%;
             backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .coin .front {
-            background: linear-gradient(145deg, #FFD700, #B8860B);
             transform: rotateY(0deg);
         }
 
-        .coin .back {
-            background: linear-gradient(145deg, #B8860B, #FFD700);
+        .coin::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://img.icons8.com/ios-filled/50/000000/coins.png') center/60% no-repeat;
+            background-color: #B8860B;
+            border-radius: 50%;
+            backface-visibility: hidden;
             transform: rotateY(180deg);
         }
 
         .coin.flipping {
-            animation: flip 2s ease-out;
+            animation: flip 1.5s ease-out;
         }
 
         @keyframes flip {
             0% { transform: rotateY(0); }
-            50% { transform: rotateY(1800deg); }
-            100% { transform: rotateY(3600deg); }
+            50% { transform: rotateY(900deg); }
+            100% { transform: rotateY(1800deg); }
         }
 
         .coin-buttons {
@@ -167,211 +424,153 @@
             margin-top: 20px;
         }
 
-        /* Стили для игры "Энергетические часы" */
-        .clock-container {
-            width: 200px;
-            height: 200px;
-            margin: 20px auto;
-            position: relative;
+        .coin-btn {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
 
-        .clock-face {
+        .coin-btn:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .coin-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Стили для игры "Числовая матрица" */
+        .number-matrix-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px 0;
+        }
+
+        .number-input {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 15px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            width: 150px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .number-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Стили для игры "Левитация" */
+        .levitation-container {
             width: 100%;
-            height: 100%;
-            border: 8px solid #8A2BE2;
-            border-radius: 50%;
+            height: 200px;
             position: relative;
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            margin: 20px 0;
         }
 
-        .clock-hand {
+        .levitation-object {
+            width: 60px;
+            height: 60px;
+            background: #8A2BE2;
+            border-radius: 50%;
             position: absolute;
+            bottom: 0;
             left: 50%;
-            bottom: 50%;
-            width: 4px;
-            height: 80px;
-            background: #E6E6FA;
-            transform-origin: bottom;
-            transform: translateX(-50%) rotate(0deg);
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(230, 230, 250, 0.7);
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            transition: bottom 0.1s ease;
         }
 
-        .clock-center {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 16px;
-            height: 16px;
+        .levitation-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .levitation-indicator {
+            width: 20px;
+            height: 20px;
             background: #FFD700;
             border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-        }
-
-        .clock-target {
             position: absolute;
-            top: 20px;
+            top: -5px;
             left: 50%;
-            width: 10px;
-            height: 10px;
-            background: #FF0000;
-            border-radius: 50%;
             transform: translateX(-50%);
-            z-index: 1;
+            transition: left 0.1s ease;
         }
 
-        .clock-btn {
-            margin-top: 20px;
-        }
-
-        /* Стили для игры "Биолокация 2.0" */
-        .dowsing2-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            margin: 20px auto;
-            border: 2px dashed #8A2BE2;
-            border-radius: 15px;
-            overflow: hidden;
-        }
-
-        .dowsing2-map {
-            width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .dowsing2-cell {
+        .levitation-target {
             position: absolute;
-            width: 20%;
-            height: 20%;
-            border: 1px solid rgba(138, 43, 226, 0.3);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dowsing2-cell.water {
-            background: rgba(0, 191, 255, 0.3);
-        }
-
-        .dowsing2-cell.selected {
-            border: 2px solid #FFD700;
-        }
-
-        .dowsing2-cell.found {
-            background: rgba(0, 255, 0, 0.3);
-            animation: pulse 0.5s;
+            width: 100%;
+            height: 4px;
+            background: rgba(50, 205, 50, 0.5);
+            top: 3px;
         }
 
         /* Стили для игры "Медитация-визуализация" */
         .meditation-container {
-            width: 100%;
-            height: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             margin: 20px 0;
         }
 
-        .energy-ball {
-            width: 100px;
-            height: 100px;
+        .meditation-ball {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 30% 30%, #8A2BE2, #4B0082);
             border-radius: 50%;
-            background: radial-gradient(circle, #8A2BE2, #4B0082);
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
-            margin-bottom: 20px;
-            transition: all 0.1s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .energy-ball::after {
-            content: '';
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            opacity: 0.3;
-        }
-
-        .energy-ball.growing {
-            animation: pulse-energy 0.5s infinite alternate;
-        }
-
-        @keyframes pulse-energy {
-            from { transform: scale(1); box-shadow: 0 0 30px rgba(138, 43, 226, 0.7); }
-            to { transform: scale(1.1); box-shadow: 0 0 50px rgba(138, 43, 226, 0.9); }
-        }
-
-        .energy-level {
-            width: 100%;
-            height: 20px;
-            background: rgba(138, 43, 226, 0.2);
-            border-radius: 10px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-
-        .energy-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
-            border-radius: 10px;
-            transition: width 0.1s;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.7);
+            transition: all 0.5s ease;
         }
 
         .meditation-btn {
-            margin-top: 20px;
-        }
-
-        /* Общие стили для всех игр */
-        .game-buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 0 auto;
-            max-width: 300px;
-        }
-
-        .game-btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            padding: 10px 20px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
+            font-size: 1rem;
+            margin-top: 20px;
+            transition: all 0.3s ease;
         }
 
-        .game-btn:hover {
+        .meditation-btn:hover {
             background: rgba(153, 50, 204, 0.3);
         }
 
-        .game-btn:active {
+        .meditation-btn:active {
             transform: scale(0.95);
         }
 
-        .close-btn, .reset-btn {
-            margin-top: 30px;
+        .meditation-progress {
             width: 100%;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
         }
 
-        /* Другие стили... */
-
+        .meditation-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00BFFF, #8A2BE2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body>
@@ -401,13 +600,13 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
             Орел и решка
         </button>
-        <button class="btn" onclick="openGame('clock')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/clock.png" alt="Энергетические часы">
-            Энергетические часы
+        <button class="btn" onclick="openGame('numberMatrix')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/matrix.png" alt="Числовая матрица">
+            Числовая матрица
         </button>
-        <button class="btn" onclick="openGame('dowsing2')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/water.png" alt="Биолокация 2.0">
-            Биолокация 2.0
+        <button class="btn" onclick="openGame('levitation')">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/floating.png" alt="Левитация">
+            Левитация
         </button>
         <button class="btn" onclick="openGame('meditation')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/meditation.png" alt="Медитация">
@@ -424,74 +623,223 @@
     </div>
 
     <!-- Игры -->
-    <!-- Орел и решка -->
+    <div id="telepathy" class="game-window">
+        <div class="game-content active">
+            <h2>Телепатия</h2>
+            <p>Угадайте число от 1 до 10:</p>
+            <div class="game-buttons">
+                <button class="game-btn" onclick="checkTelepathy(1)">1</button>
+                <button class="game-btn" onclick="checkTelepathy(2)">2</button>
+                <button class="game-btn" onclick="checkTelepathy(3)">3</button>
+                <button class="game-btn" onclick="checkTelepathy(4)">4</button>
+                <button class="game-btn" onclick="checkTelepathy(5)">5</button>
+                <button class="game-btn" onclick="checkTelepathy(6)">6</button>
+                <button class="game-btn" onclick="checkTelepathy(7)">7</button>
+                <button class="game-btn" onclick="checkTelepathy(8)">8</button>
+                <button class="game-btn" onclick="checkTelepathy(9)">9</button>
+                <button class="game-btn" onclick="checkTelepathy(10)">10</button>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="zener" class="game-window">
+        <div class="game-content active">
+            <h2>Карты Зенера</h2>
+            <p>Угадайте символ:</p>
+            <div class="game-buttons">
+                <button class="game-btn" onclick="checkZener('○')">○</button>
+                <button class="game-btn" onclick="checkZener('□')">□</button>
+                <button class="game-btn" onclick="checkZener('～')">～</button>
+                <button class="game-btn" onclick="checkZener('✚')">✚</button>
+                <button class="game-btn" onclick="checkZener('★')">★</button>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="color" class="game-window">
+        <div class="game-content active">
+            <h2>Цветовая интуиция</h2>
+            <p>Угадайте цвет:</p>
+            <div class="game-buttons">
+                <button class="game-btn" style="background: #FF0000;" onclick="checkColor('красный')"></button>
+                <button class="game-btn" style="background: #0000FF;" onclick="checkColor('синий')"></button>
+                <button class="game-btn" style="background: #00FF00;" onclick="checkColor('зеленый')"></button>
+                <button class="game-btn" style="background: #FFFF00;" onclick="checkColor('желтый')"></button>
+                <button class="game-btn" style="background: #800080;" onclick="checkColor('фиолетовый')"></button>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="telekinesis" class="game-window">
+        <div class="game-content active">
+            <h2>Телекинез</h2>
+            <p>Передвиньте фиолетовый шар к желтому:</p>
+            <div class="telekinesis-container" id="telekinesis-area">
+                <div class="telekinesis-object" id="telekinesis-object"></div>
+                <div class="target-object" id="target-object"></div>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('telekinesis')">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="dowsing" class="game-window">
+        <div class="game-content active">
+            <h2>Биолокация</h2>
+            <p>Найдите скрытый артефакт:</p>
+            <div class="dowsing-grid" id="dowsing-grid"></div>
+            <button class="btn close-btn" onclick="closeGame('dowsing')">Закрыть</button>
+        </div>
+    </div>
+
     <div id="coin" class="game-window">
         <div class="game-content active">
             <h2>Орел и решка</h2>
             <p>Предскажите результат подбрасывания монеты:</p>
             <div class="coin-container">
-                <div class="coin" id="coin-element">
-                    <div class="front">О</div>
-                    <div class="back">Р</div>
-                </div>
+                <div class="coin" id="coin"></div>
                 <div class="coin-buttons">
-                    <button class="btn" onclick="flipCoin('орел')">Орел</button>
-                    <button class="btn" onclick="flipCoin('решка')">Решка</button>
+                    <button class="coin-btn" onclick="flipCoin('орел')">Орел</button>
+                    <button class="coin-btn" onclick="flipCoin('решка')">Решка</button>
                 </div>
             </div>
             <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
         </div>
     </div>
 
-    <!-- Энергетические часы -->
-    <div id="clock" class="game-window">
+    <div id="numberMatrix" class="game-window">
         <div class="game-content active">
-            <h2>Энергетические часы</h2>
-            <p>Остановите стрелку на красной метке силой мысли:</p>
-            <div class="clock-container">
-                <div class="clock-face">
-                    <div class="clock-target"></div>
-                    <div class="clock-hand" id="clock-hand"></div>
-                    <div class="clock-center"></div>
+            <h2>Числовая матрица</h2>
+            <p>Угадайте число от 1 до 100:</p>
+            <div class="number-matrix-container">
+                <input type="number" min="1" max="100" class="number-input" id="number-guess" placeholder="1-100">
+                <button class="btn" onclick="checkNumberMatrix()">Проверить</button>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('numberMatrix')">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="levitation" class="game-window">
+        <div class="game-content active">
+            <h2>Левитация</h2>
+            <p>Удерживайте шар в целевой зоне 3 секунды:</p>
+            <div class="levitation-container">
+                <div class="levitation-object" id="levitation-object"></div>
+                <div class="levitation-bar">
+                    <div class="levitation-target" id="levitation-target"></div>
+                    <div class="levitation-indicator" id="levitation-indicator"></div>
                 </div>
             </div>
-            <button class="btn clock-btn" id="clock-btn" onclick="stopClock()">Остановить</button>
-            <button class="btn close-btn" onclick="closeGame('clock')">Закрыть</button>
+            <button class="btn close-btn" onclick="closeGame('levitation')">Закрыть</button>
         </div>
     </div>
 
-    <!-- Биолокация 2.0 -->
-    <div id="dowsing2" class="game-window">
-        <div class="game-content active">
-            <h2>Биолокация 2.0</h2>
-            <p>Найдите источники воды на карте:</p>
-            <div class="dowsing2-container">
-                <div class="dowsing2-map" id="dowsing2-map"></div>
-            </div>
-            <button class="btn close-btn" onclick="closeGame('dowsing2')">Закрыть</button>
-        </div>
-    </div>
-
-    <!-- Медитация-визуализация -->
     <div id="meditation" class="game-window">
         <div class="game-content active">
             <h2>Медитация-визуализация</h2>
-            <p>Увеличьте энергетический шар силой мысли:</p>
+            <p>Увеличьте шар до максимального размера:</p>
             <div class="meditation-container">
-                <div class="energy-ball" id="energy-ball"></div>
-                <div class="energy-level">
-                    <div class="energy-fill" id="energy-fill"></div>
+                <div class="meditation-ball" id="meditation-ball"></div>
+                <div class="meditation-progress">
+                    <div class="meditation-progress-bar" id="meditation-progress"></div>
                 </div>
+                <button class="meditation-btn" id="meditation-btn">Концентрироваться</button>
             </div>
-            <button class="btn meditation-btn" id="meditation-btn" onmousedown="startMeditation()" ontouchstart="startMeditation()" onmouseup="stopMeditation()" ontouchend="stopMeditation()">Концентрироваться</button>
             <button class="btn close-btn" onclick="closeGame('meditation')">Закрыть</button>
         </div>
     </div>
 
-    <!-- Другие окна игр... -->
+    <!-- Статистика -->
+    <div id="stats" class="stats-window">
+        <h2>Статистика</h2>
+        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
+        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
+        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
+        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
+        <p>Числовая матрица: <span id="numberMatrix-stats">0%</span> точности</p>
+        <p>Левитация: <span id="levitation-stats">0</span> успехов</p>
+        <p>Медитация: <span id="meditation-stats">0</span> успехов</p>
+        <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
+        <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
+    </div>
+
+    <!-- Достижения -->
+    <div id="achievements" class="achievements-window">
+        <h2>Достижения</h2>
+        <div id="achievement-list">
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Новичок телепатии (5 правильных ответов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер карт Зенера (10 правильных ответов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Цветовой провидец (15 правильных ответов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Экстрасенс (20 правильных ответов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер телекинеза (5 успехов)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Искатель сокровищ (3 найденных артефакта)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Угадайка (10 правильных предсказаний монеты)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Числовой провидец (5 точных попаданий в матрице)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Мастер левитации (5 успешных удержаний)
+            </div>
+            <div class="achievement-item locked">
+                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                Медиум (10 успешных визуализаций)
+            </div>
+        </div>
+        <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
+    </div>
+
+    <!-- Сообщения -->
+    <div id="message-box" class="message-box">
+        <p id="message-text"></p>
+        <button id="message-button">OK</button>
+    </div>
+
+    <!-- Затемнение фона -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Звездный фон -->
+    <div id="stars"></div>
 
     <script>
-        // Общие переменные
+        // Звездный фон
+        const stars = document.getElementById('stars');
+        for (let i = 0; i < 100; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.top = `${Math.random() * 100}%`;
+            star.style.left = `${Math.random() * 100}%`;
+            star.style.animationDelay = `${Math.random() * 2}s`;
+            stars.appendChild(star);
+        }
+
+        // Статистика и достижения
         let stats = {
             telepathy: { correct: 0, total: 0 },
             zener: { correct: 0, total: 0 },
@@ -499,18 +847,214 @@
             telekinesis: { success: 0 },
             dowsing: { found: 0, attempts: 0 },
             coin: { correct: 0, total: 0 },
-            clock: { accuracy: 0, attempts: 0 },
-            dowsing2: { found: 0, attempts: 0 },
-            meditation: { success: 0, attempts: 0 }
+            numberMatrix: { accuracy: 0, total: 0 },
+            levitation: { success: 0 },
+            meditation: { success: 0 }
         };
+
+        let achievements = [];
+        let currentArtifactPosition = -1;
+        let isGameActive = true;
+        let telekinesisGameActive = false;
+        let isCoinFlipping = false;
+        let levitationGameActive = false;
+        let levitationInterval;
+        let levitationSuccessTime = 0;
+        let meditationInterval;
+        let meditationSize = 0;
+        let meditationGrowing = false;
+
+        // Показать сообщение
+        function showMessage(text, callback) {
+            isGameActive = false;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('message-text').textContent = text;
+            document.getElementById('message-box').style.display = 'block';
+            
+            const button = document.getElementById('message-button');
+            button.onclick = function() {
+                document.getElementById('message-box').style.display = 'none';
+                isGameActive = true;
+                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+                if (callback) callback();
+            };
+        }
+
+        // Инициализация телекинеза
+        function initTelekinesis() {
+            const area = document.getElementById('telekinesis-area');
+            const object = document.getElementById('telekinesis-object');
+            const target = document.getElementById('target-object');
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+            telekinesisGameActive = true;
+
+            // Сброс позиции объекта
+            object.style.left = '50%';
+            object.style.top = '50%';
+            object.style.transform = 'translate(-50%, -50%)';
+
+            // Позиция цели (не в центре)
+            const rect = area.getBoundingClientRect();
+            let targetX, targetY;
+            
+            do {
+                targetX = Math.random() * (rect.width - 40);
+                targetY = Math.random() * (rect.height - 40);
+            } while (
+                Math.abs(targetX - rect.width/2) < 100 && 
+                Math.abs(targetY - rect.height/2) < 100
+            );
+
+            target.style.left = targetX + 'px';
+            target.style.top = targetY + 'px';
+
+            // Для мыши
+            object.addEventListener('mousedown', startDrag);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+
+            // Для сенсорных устройств
+            object.addEventListener('touchstart', startDrag);
+            document.addEventListener('touchmove', drag);
+            document.addEventListener('touchend', stopDrag);
+
+            function startDrag(e) {
+                if (!telekinesisGameActive) return;
+                e.preventDefault();
+                isDragging = true;
+                
+                const rect = area.getBoundingClientRect();
+                const objRect = object.getBoundingClientRect();
+                
+                if (e.type === 'mousedown') {
+                    startX = e.clientX;
+                    startY = e.clientY;
+                } else {
+                    startX = e.touches[0].clientX;
+                    startY = e.touches[0].clientY;
+                }
+                
+                startLeft = objRect.left - rect.left;
+                startTop = objRect.top - rect.top;
+            }
+
+            function drag(e) {
+                if (!isDragging || !telekinesisGameActive) return;
+                e.preventDefault();
+                
+                const rect = area.getBoundingClientRect();
+                let clientX, clientY;
+                
+                if (e.type === 'mousemove') {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                } else {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                }
+                
+                let newLeft = startLeft + (clientX - startX);
+                let newTop = startTop + (clientY - startY);
+                
+                // Ограничения по границам области
+                newLeft = Math.max(0, Math.min(rect.width - object.offsetWidth, newLeft));
+                newTop = Math.max(0, Math.min(rect.height - object.offsetHeight, newTop));
+                
+                object.style.left = newLeft + 'px';
+                object.style.top = newTop + 'px';
+                object.style.transform = 'translate(0, 0)';
+
+                // Проверка столкновения
+                checkCollision(object, target);
+            }
+
+            function stopDrag() {
+                if (isDragging && telekinesisGameActive) {
+                    isDragging = false;
+                    
+                    // Возвращение в центр
+                    object.style.left = '50%';
+                    object.style.top = '50%';
+                    object.style.transform = 'translate(-50%, -50%)';
+                }
+            }
+
+            function checkCollision(obj1, obj2) {
+                const rect1 = obj1.getBoundingClientRect();
+                const rect2 = obj2.getBoundingClientRect();
+                
+                // Простое обнаружение столкновения
+                const collision = !(
+                    rect1.right < rect2.left || 
+                    rect1.left > rect2.right || 
+                    rect1.bottom < rect2.top || 
+                    rect1.top > rect2.bottom
+                );
+                
+                if (collision) {
+                    telekinesisGameActive = false;
+                    stats.telekinesis.success++;
+                    updateStats();
+                    checkAchievements();
+                    showMessage('✅ Успех! Вы переместили шар силой мысли!', initTelekinesis);
+                }
+            }
+        }
+
+        // Инициализация биолокации
+        function initDowsing() {
+            const grid = document.getElementById('dowsing-grid');
+            grid.innerHTML = '';
+            
+            // Случайное положение артефакта
+            currentArtifactPosition = Math.floor(Math.random() * 16);
+            stats.dowsing.attempts++;
+            updateStats();
+            
+            // Создаем 16 ячеек
+            for (let i = 0; i < 16; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'dowsing-cell';
+                cell.dataset.index = i;
+                cell.addEventListener('click', checkDowsingCell);
+                grid.appendChild(cell);
+            }
+        }
+
+        function checkDowsingCell(e) {
+            if (!isGameActive) return;
+            
+            const cell = e.target;
+            const index = parseInt(cell.dataset.index);
+            
+            if (cell.classList.contains('opened')) return;
+            
+            cell.classList.add('opened');
+            
+            if (index === currentArtifactPosition) {
+                cell.classList.add('found');
+                cell.innerHTML = '💎';
+                stats.dowsing.found++;
+                updateStats();
+                checkAchievements();
+                showMessage('✅ Поздравляем! Вы нашли артефакт!', initDowsing);
+            } else {
+                cell.innerHTML = '❌';
+            }
+        }
 
         // Игра "Орел и решка"
         function flipCoin(guess) {
-            const coin = document.getElementById('coin-element');
-            if (coin.classList.contains('flipping')) return;
+            if (!isGameActive || isCoinFlipping) return;
+            
+            isCoinFlipping = true;
+            const coin = document.getElementById('coin');
             
             coin.classList.add('flipping');
+            
             stats.coin.total++;
+            updateStats();
             
             setTimeout(() => {
                 const result = Math.random() < 0.5 ? 'орел' : 'решка';
@@ -518,198 +1062,370 @@
                 
                 if (isCorrect) {
                     stats.coin.correct++;
+                    updateStats();
+                    checkAchievements();
                 }
                 
                 setTimeout(() => {
+                    coin.classList.remove('flipping');
                     showMessage(
-                        isCorrect ? '✅ Верно! Выпало: ' + result : '❌ Неверно. Выпало: ' + result,
-                        () => coin.classList.remove('flipping')
+                        isCorrect ? '✅ Верно! Выпало: ' + result : '❌ Неверно. Выпало: ' + result
                     );
-                    updateStats();
-                    checkAchievements();
+                    isCoinFlipping = false;
                 }, 500);
-            }, 2000);
+            }, 1500);
         }
 
-        // Игра "Энергетические часы"
-        let clockInterval;
-        let clockAngle = 0;
-        let clockSpeed = 0.05;
-        let clockRunning = false;
-
-        function startClock() {
-            const hand = document.getElementById('clock-hand');
-            const btn = document.getElementById('clock-btn');
+        // Игра "Числовая матрица"
+        function checkNumberMatrix() {
+            if (!isGameActive) return;
             
-            clockRunning = true;
-            btn.disabled = true;
-            clockAngle = 0;
-            clockSpeed = 0.02 + Math.random() * 0.03;
+            const input = document.getElementById('number-guess');
+            const guess = parseInt(input.value);
             
-            clockInterval = setInterval(() => {
-                clockAngle += clockSpeed;
-                hand.style.transform = `translateX(-50%) rotate(${clockAngle}rad)`;
-            }, 16);
+            if (isNaN(guess) {
+                showMessage('Введите число от 1 до 100');
+                return;
+            }
             
-            setTimeout(() => {
-                btn.disabled = false;
-            }, 2000);
-        }
-
-        function stopClock() {
-            if (!clockRunning) return;
+            const target = Math.floor(Math.random() * 100) + 1;
+            const difference = Math.abs(guess - target);
+            let accuracy = 0;
             
-            clearInterval(clockInterval);
-            clockRunning = false;
-            stats.clock.attempts++;
+            if (difference === 0) {
+                accuracy = 100;
+            } else {
+                accuracy = Math.max(0, 100 - difference);
+            }
             
-            const targetAngle = Math.PI / 2; // 90 градусов (верх)
-            const diff = Math.abs(clockAngle % (Math.PI * 2) - targetAngle);
-            const accuracy = Math.max(0, 100 - Math.floor(diff * 100));
-            
-            stats.clock.accuracy += accuracy;
+            stats.numberMatrix.total++;
+            stats.numberMatrix.accuracy = ((stats.numberMatrix.accuracy * (stats.numberMatrix.total - 1)) + accuracy) / stats.numberMatrix.total;
             updateStats();
             checkAchievements();
             
-            showMessage(`Точность: ${accuracy}%`, startClock);
-        }
-
-        // Игра "Биолокация 2.0"
-        function initDowsing2() {
-            const map = document.getElementById('dowsing2-map');
-            map.innerHTML = '';
-            
-            // Создаем 25 клеток (5x5)
-            for (let i = 0; i < 25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'dowsing2-cell';
-                cell.dataset.index = i;
-                
-                // Позиционируем клетки
-                const row = Math.floor(i / 5);
-                const col = i % 5;
-                cell.style.left = `${col * 20}%`;
-                cell.style.top = `${row * 20}%`;
-                
-                // 20% шанс, что здесь есть вода
-                if (Math.random() < 0.2) {
-                    cell.classList.add('water');
-                }
-                
-                cell.addEventListener('click', checkDowsing2Cell);
-                map.appendChild(cell);
+            let message = `Загадано: ${target}. Ваш ответ: ${guess}. `;
+            if (difference === 0) {
+                message += '✅ Точное попадание!';
+            } else if (difference <= 5) {
+                message += '👍 Очень близко!';
+            } else if (difference <= 20) {
+                message += '🔮 Неплохо!';
+            } else {
+                message += '❌ Далековато...';
             }
             
-            stats.dowsing2.attempts++;
-            updateStats();
+            showMessage(message);
+            input.value = '';
         }
 
-        function checkDowsing2Cell(e) {
-            const cell = e.target;
-            if (cell.classList.contains('selected')) return;
+        // Игра "Левитация"
+        function initLevitation() {
+            levitationGameActive = true;
+            levitationSuccessTime = 0;
+            const target = document.getElementById('levitation-target');
+            const indicator = document.getElementById('levitation-indicator');
+            const object = document.getElementById('levitation-object');
             
-            cell.classList.add('selected');
+            // Сброс позиции объекта
+            object.style.bottom = '0px';
             
-            if (cell.classList.contains('water')) {
-                cell.classList.add('found');
-                stats.dowsing2.found++;
-                updateStats();
-                checkAchievements();
-                showMessage('✅ Найдена вода!');
+            // Установка случайной позиции цели
+            const targetWidth = 100;
+            const targetPosition = Math.random() * (100 - targetWidth);
+            target.style.left = `${targetPosition}%`;
+            target.style.width = `${targetWidth}%`;
+            
+            // Настройка управления
+            let isHolding = false;
+            let holdInterval;
+            
+            object.addEventListener('mousedown', startHold);
+            object.addEventListener('touchstart', startHold);
+            document.addEventListener('mouseup', stopHold);
+            document.addEventListener('touchend', stopHold);
+            
+            function startHold() {
+                if (!levitationGameActive) return;
+                isHolding = true;
+                holdInterval = setInterval(moveUp, 50);
+            }
+            
+            function stopHold() {
+                isHolding = false;
+                clearInterval(holdInterval);
+                if (levitationGameActive) {
+                    const fallInterval = setInterval(moveDown, 30);
+                    setTimeout(() => clearInterval(fallInterval), 1000);
+                }
+            }
+            
+            function moveUp() {
+                const currentBottom = parseInt(object.style.bottom) || 0;
+                if (currentBottom < 140) {
+                    object.style.bottom = `${currentBottom + 2}px`;
+                    updateIndicator();
+                }
+            }
+            
+            function moveDown() {
+                const currentBottom = parseInt(object.style.bottom) || 0;
+                if (currentBottom > 0) {
+                    object.style.bottom = `${Math.max(0, currentBottom - 5)}px`;
+                    updateIndicator();
+                }
+            }
+            
+            function updateIndicator() {
+                const currentBottom = parseInt(object.style.bottom) || 0;
+                const indicatorPos = (currentBottom / 140) * 100;
+                indicator.style.left = `${indicatorPos}%`;
+                
+                // Проверка нахождения в целевой зоне
+                const targetRect = target.getBoundingClientRect();
+                const indicatorRect = indicator.getBoundingClientRect();
+                
+                const inTarget = indicatorRect.left >= targetRect.left && 
+                                indicatorRect.right <= targetRect.right;
+                
+                if (inTarget) {
+                    levitationSuccessTime += 0.05;
+                    if (levitationSuccessTime >= 3) {
+                        levitationGameActive = false;
+                        stats.levitation.success++;
+                        updateStats();
+                        checkAchievements();
+                        showMessage('✅ Успех! Вы удержали шар 3 секунды!', initLevitation);
+                    }
+                } else {
+                    levitationSuccessTime = 0;
+                }
             }
         }
 
         // Игра "Медитация-визуализация"
-        let meditationInterval;
-        let energyLevel = 0;
-        let meditationActive = false;
-
-        function startMeditation() {
-            if (meditationActive) return;
+        function initMeditation() {
+            meditationSize = 0;
+            meditationGrowing = false;
+            const ball = document.getElementById('meditation-ball');
+            const progress = document.getElementById('meditation-progress');
+            const btn = document.getElementById('meditation-btn');
             
-            meditationActive = true;
-            const ball = document.getElementById('energy-ball');
-            const fill = document.getElementById('energy-fill');
+            ball.style.width = '50px';
+            ball.style.height = '50px';
+            progress.style.width = '0%';
             
-            ball.classList.add('growing');
+            btn.onmousedown = btn.ontouchstart = function() {
+                meditationGrowing = true;
+                meditationInterval = setInterval(growBall, 100);
+            };
             
-            meditationInterval = setInterval(() => {
-                if (energyLevel < 100) {
-                    energyLevel += 1;
-                    fill.style.width = `${energyLevel}%`;
+            btn.onmouseup = btn.onmouseleave = btn.ontouchend = function() {
+                meditationGrowing = false;
+                clearInterval(meditationInterval);
+                checkBallSize();
+            };
+            
+            function growBall() {
+                if (meditationSize < 100) {
+                    meditationSize += 2;
+                    ball.style.width = `${50 + meditationSize}px`;
+                    ball.style.height = `${50 + meditationSize}px`;
+                    progress.style.width = `${meditationSize}%`;
                     
-                    // Случайные помехи
-                    if (Math.random() < 0.1) {
-                        energyLevel = Math.max(0, energyLevel - 5);
+                    if (meditationSize >= 100) {
+                        meditationGrowing = false;
+                        clearInterval(meditationInterval);
+                        stats.meditation.success++;
+                        updateStats();
+                        checkAchievements();
+                        showMessage('✅ Успех! Вы достигли полной концентрации!', initMeditation);
                     }
-                } else {
-                    // Успех
-                    clearInterval(meditationInterval);
+                }
+            }
+            
+            function checkBallSize() {
+                if (meditationSize >= 80) {
                     stats.meditation.success++;
-                    stats.meditation.attempts++;
                     updateStats();
                     checkAchievements();
-                    showMessage('✅ Успех! Вы достигли полной концентрации!', resetMeditation);
+                    showMessage('✅ Хорошо! Почти максимальная концентрация!', initMeditation);
+                } else if (meditationSize >= 50) {
+                    showMessage('Неплохо, но можно лучше!', initMeditation);
+                } else {
+                    showMessage('Попробуйте сконцентрироваться сильнее!', initMeditation);
                 }
-            }, 100);
-        }
-
-        function stopMeditation() {
-            if (!meditationActive) return;
-            
-            clearInterval(meditationInterval);
-            meditationActive = false;
-            const ball = document.getElementById('energy-ball');
-            ball.classList.remove('growing');
-            
-            if (energyLevel < 100) {
-                stats.meditation.attempts++;
-                updateStats();
-                showMessage(`Уровень энергии: ${energyLevel}%`, resetMeditation);
             }
         }
 
-        function resetMeditation() {
-            energyLevel = 0;
-            document.getElementById('energy-fill').style.width = '0%';
-        }
-
-        // Общие функции управления играми
+        // Открытие игры
         function openGame(gameId) {
             document.querySelector('.container').style.display = 'none';
-            document.getElementById('overlay').style.display = 'block';
             document.getElementById(gameId).style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
             
-            switch(gameId) {
-                case 'clock':
-                    startClock();
-                    break;
-                case 'dowsing2':
-                    initDowsing2();
-                    break;
-                case 'meditation':
-                    resetMeditation();
-                    break;
+            if (gameId === 'telekinesis') {
+                initTelekinesis();
+            } else if (gameId === 'dowsing') {
+                initDowsing();
+            } else if (gameId === 'levitation') {
+                initLevitation();
+            } else if (gameId === 'meditation') {
+                initMeditation();
             }
         }
 
+        // Закрытие игры
         function closeGame(gameId) {
             document.getElementById(gameId).style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             document.querySelector('.container').style.display = 'block';
-            
-            // Остановка всех игровых процессов
-            if (gameId === 'clock' && clockRunning) {
-                clearInterval(clockInterval);
-                clockRunning = false;
-            }
-            if (gameId === 'meditation' && meditationActive) {
-                stopMeditation();
-            }
+            telekinesisGameActive = false;
+            isCoinFlipping = false;
+            levitationGameActive = false;
+            if (levitationInterval) clearInterval(levitationInterval);
+            if (meditationInterval) clearInterval(meditationInterval);
+            meditationGrowing = false;
         }
 
-        // Остальные функции (showMessage, updateStats, checkAchievements и т.д.)
-        // ... (остаются без изменений из предыдущего кода)
+        // Открытие статистики
+        function openStats() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('stats').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            updateStats();
+        }
+
+        // Закрытие статистики
+        function closeStats() {
+            document.getElementById('stats').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        }
+
+        // Открытие достижений
+        function openAchievements() {
+            document.querySelector('.container').style.display = 'none';
+            document.getElementById('achievements').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            updateAchievements();
+        }
+
+        // Закрытие достижений
+        function closeAchievements() {
+            document.getElementById('achievements').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        }
+
+        // Обновление статистики
+        function updateStats() {
+            document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
+            document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
+            document.getElementById('color-stats').textContent = `${stats.color.correct}/${stats.color.total}`;
+            document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
+            document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
+            document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
+            document.getElementById('numberMatrix-stats').textContent = `${Math.round(stats.numberMatrix.accuracy)}%`;
+            document.getElementById('levitation-stats').textContent = stats.levitation.success;
+            document.getElementById('meditation-stats').textContent = stats.meditation.success;
+        }
+
+        // Сброс статистики
+        function resetStats() {
+            stats = {
+                telepathy: { correct: 0, total: 0 },
+                zener: { correct: 0, total: 0 },
+                color: { correct: 0, total: 0 },
+                telekinesis: { success: 0 },
+                dowsing: { found: 0, attempts: 0 },
+                coin: { correct: 0, total: 0 },
+                numberMatrix: { accuracy: 0, total: 0 },
+                levitation: { success: 0 },
+                meditation: { success: 0 }
+            };
+            updateStats();
+            updateAchievements();
+            showMessage('Статистика сброшена!');
+        }
+
+        // Обновление достижений
+        function updateAchievements() {
+            const achievementList = document.getElementById('achievement-list');
+            const achievementsData = [
+                { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
+                { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
+                { id: "Цветовой провидец", condition: stats.color.correct >= 15 },
+                { id: "Экстрасенс", condition: stats.telepathy.correct + stats.zener.correct + stats.color.correct >= 20 },
+                { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
+                { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 },
+                { id: "Угадайка", condition: stats.coin.correct >= 10 },
+                { id: "Числовой провидец", condition: stats.numberMatrix.accuracy >= 80 && stats.numberMatrix.total >= 5 },
+                { id: "Мастер левитации", condition: stats.levitation.success >= 5 },
+                { id: "Медиум", condition: stats.meditation.success >= 10 }
+            ];
+
+            achievementList.innerHTML = achievementsData.map(achievement => `
+                <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    ${achievement.id}
+                </div>
+            `).join('');
+        }
+
+        // Телепатия
+        function checkTelepathy(guess) {
+            if (!isGameActive) return;
+            
+            const target = Math.floor(Math.random() * 10) + 1;
+            stats.telepathy.total++;
+            if (guess === target) {
+                stats.telepathy.correct++;
+                showMessage('✅ Верно! Загадано: ' + target);
+            } else {
+                showMessage(`❌ Неверно. Загадано: ${target}`);
+            }
+            updateStats();
+            checkAchievements();
+        }
+
+        // Карты Зенера
+        function checkZener(guess) {
+            if (!isGameActive) return;
+            
+            const symbols = ['○', '□', '～', '✚', '★'];
+            const target = symbols[Math.floor(Math.random() * symbols.length)];
+            stats.zener.total++;
+            if (guess === target) {
+                stats.zener.correct++;
+                showMessage('✅ Верно! Загадан: ' + target);
+            } else {
+                showMessage(`❌ Неверно. Загадан: ${target}`);
+            }
+            updateStats();
+            checkAchievements();
+        }
+
+        // Цветовая интуиция
+        function checkColor(guess) {
+            if (!isGameActive) return;
+            
+            const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+            const target = colors[Math.floor(Math.random() * colors.length)];
+            stats.color.total++;
+            if (guess === target) {
+                stats.color.correct++;
+                showMessage('✅ Верно! Загадан: ' + target);
+            } else {
+                showMessage(`❌ Неверно. Загадан: ${target}`);
+            }
+            updateStats();
+            checkAchievements();
+        }
+
+        // Проверка достижений
+        function checkAchievements() {
+            updateAchievements();
+        }
     </script>
 </body>
 </html>
