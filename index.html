@@ -360,28 +360,33 @@
         .coin {
             width: 120px;
             height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #FFD700, #B8860B);
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
             position: relative;
-            overflow: hidden;
             transform-style: preserve-3d;
+            transition: transform 1s ease-in;
+            margin: 20px 0;
+        }
+
+        .coin.flipping {
+            animation: flip-coin 2s ease-out forwards;
+        }
+
+        @keyframes flip-coin {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(1800deg); }
+            100% { transform: rotateY(3600deg); }
         }
 
         .coin-face {
             position: absolute;
             width: 100%;
             height: 100%;
+            border-radius: 50%;
             backface-visibility: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
+            font-size: 2.5rem;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
         }
 
         .coin-front {
@@ -392,15 +397,6 @@
         .coin-back {
             background: linear-gradient(145deg, #B8860B, #FFD700);
             transform: rotateY(180deg);
-        }
-
-        .coin.flipping {
-            animation: flip 1.5s ease-out;
-        }
-
-        @keyframes flip {
-            0% { transform: rotateY(0); }
-            100% { transform: rotateY(1800deg); }
         }
 
         .coin-buttons {
@@ -429,37 +425,22 @@
             transform: scale(0.95);
         }
 
-        /* Стили для игры "Числовая матрица" */
-        .number-matrix-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        /* Стили для игры "Чтение мыслей на расстоянии" */
         .number-input {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
             padding: 15px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            width: 150px;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .number-submit {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            padding: 10px 20px;
             border-radius: 50px;
-            cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease;
+            width: 100px;
+            text-align: center;
+            margin: 20px auto;
+            display: block;
         }
 
-        .number-submit:hover {
+        .number-input:focus {
+            outline: none;
             background: rgba(153, 50, 204, 0.3);
         }
 
@@ -480,69 +461,45 @@
         }
 
         /* Стили для игры "Медитация-визуализация" */
-        .meditation-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin: 20px 0;
-        }
-
         .energy-ball {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: radial-gradient(circle, #8A2BE2, #4B0082);
-            margin: 20px 0;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
+            background: radial-gradient(circle, #00BFFF, #8A2BE2);
+            margin: 20px auto;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
             transition: transform 0.3s ease;
             position: relative;
             overflow: hidden;
+            transform: scale(0);
         }
 
-        .energy-ball::before {
+        .energy-ball::after {
             content: '';
             position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: radial-gradient(circle, transparent, rgba(138, 43, 226, 0.5));
-            border-radius: 50%;
-            animation: pulse 2s infinite;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            opacity: 0;
+            transition: transform 0.5s ease, opacity 0.5s ease;
         }
 
-        .energy-control {
-            width: 100%;
-            height: 20px;
-            background: rgba(138, 43, 226, 0.2);
-            border-radius: 10px;
-            margin: 20px 0;
-            position: relative;
+        .energy-ball.growing::after {
+            transform: scale(1);
+            opacity: 1;
         }
 
-        .energy-level {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 20%;
-            height: 100%;
-            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
-            border-radius: 10px;
-            transition: width 0.1s ease;
+        .energy-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
         }
 
-        .energy-target {
-            position: absolute;
-            top: 0;
-            left: 40%;
-            width: 20%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.2);
-            border-left: 2px solid #FFD700;
-            border-right: 2px solid #FFD700;
-        }
-
-        .meditation-btn {
+        .energy-btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
@@ -551,11 +508,46 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background 0.3s ease;
-            margin-top: 20px;
+            margin: 5px 0;
+            width: 150px;
+            text-align: center;
         }
 
-        .meditation-btn:hover {
+        .energy-btn:hover {
             background: rgba(153, 50, 204, 0.3);
+        }
+
+        .energy-btn:active {
+            transform: scale(0.95);
+        }
+
+        .target-size {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 215, 0, 0.3);
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .target-marker {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background: #FFD700;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .disabled-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1002;
+            display: none;
         }
     </style>
 </head>
@@ -583,15 +575,15 @@
             Биолокация
         </button>
         <button class="btn" onclick="openGame('coin')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/coin.png" alt="Орел и решка">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/coins.png" alt="Орел и решка">
             Орел и решка
         </button>
         <button class="btn" onclick="openGame('number')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/matrix.png" alt="Числовая матрица">
-            Числовая матрица
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/mind.png" alt="Чтение мыслей">
+            Чтение мыслей
         </button>
         <button class="btn" onclick="openGame('meditation')">
-            <img src="https://img.icons8.com/ios-filled/50/ffffff/meditation.png" alt="Медитация">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/energy-usage.png" alt="Медитация">
             Медитация
         </button>
         <button class="btn" onclick="openStats()">
@@ -606,7 +598,7 @@
 
     <!-- Игры -->
     <div id="telepathy" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Телепатия</h2>
             <p>Угадайте число от 1 до 10:</p>
             <div class="game-buttons">
@@ -626,7 +618,7 @@
     </div>
 
     <div id="zener" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Карты Зенера</h2>
             <p>Угадайте символ:</p>
             <div class="game-buttons">
@@ -641,7 +633,7 @@
     </div>
 
     <div id="color" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Цветовая интуиция</h2>
             <p>Угадайте цвет:</p>
             <div class="game-buttons">
@@ -656,7 +648,7 @@
     </div>
 
     <div id="telekinesis" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Телекинез</h2>
             <p>Передвиньте фиолетовый шар к желтому:</p>
             <div class="telekinesis-container" id="telekinesis-area">
@@ -668,7 +660,7 @@
     </div>
 
     <div id="dowsing" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Биолокация</h2>
             <p>Найдите скрытый артефакт:</p>
             <div class="dowsing-grid" id="dowsing-grid"></div>
@@ -676,12 +668,13 @@
         </div>
     </div>
 
+    <!-- Игра "Орел и решка" -->
     <div id="coin" class="game-window">
-        <div class="game-content active">
+        <div class="game-content">
             <h2>Орел и решка</h2>
             <p>Предскажите результат подбрасывания монеты:</p>
             <div class="coin-container">
-                <div class="coin" id="coin">
+                <div class="coin" id="coin-element">
                     <div class="coin-face coin-front">О</div>
                     <div class="coin-face coin-back">Р</div>
                 </div>
@@ -694,34 +687,35 @@
         </div>
     </div>
 
+    <!-- Игра "Чтение мыслей на расстоянии" -->
     <div id="number" class="game-window">
-        <div class="game-content active">
-            <h2>Числовая матрица</h2>
-            <p>Угадайте число от 1 до 100:</p>
-            <div class="number-matrix-container">
-                <input type="number" min="1" max="100" class="number-input" id="number-guess" placeholder="1-100">
-                <button class="number-submit" onclick="checkNumberGuess()">Проверить</button>
-                <div class="accuracy-meter">
-                    <div class="accuracy-fill" id="accuracy-fill"></div>
-                </div>
+        <div class="game-content">
+            <h2>Чтение мыслей</h2>
+            <p>Угадайте число от 1 до 100, которое "загадал" компьютер:</p>
+            <input type="number" class="number-input" id="number-guess" min="1" max="100" placeholder="1-100">
+            <button class="btn" onclick="checkNumberGuess()">Проверить</button>
+            <div class="accuracy-meter">
+                <div class="accuracy-fill" id="accuracy-fill"></div>
             </div>
+            <p id="number-result"></p>
             <button class="btn close-btn" onclick="closeGame('number')">Закрыть</button>
         </div>
     </div>
 
+    <!-- Игра "Медитация-визуализация" -->
     <div id="meditation" class="game-window">
-        <div class="game-content active">
-            <h2>Медитация-визуализация</h2>
-            <p>Удерживайте энергию в целевой зоне 5 секунд:</p>
-            <div class="meditation-container">
-                <div class="energy-ball" id="energy-ball"></div>
-                <div class="energy-control">
-                    <div class="energy-level" id="energy-level"></div>
-                    <div class="energy-target"></div>
-                </div>
-                <button class="meditation-btn" id="meditation-start">Начать</button>
-                <p id="meditation-timer">00:00</p>
+        <div class="game-content">
+            <h2>Медитация</h2>
+            <p>Сконцентрируйтесь и вырастите энергетический шар до нужного размера:</p>
+            <div class="target-size">
+                <div class="target-marker"></div>
             </div>
+            <div class="energy-ball" id="energy-ball"></div>
+            <div class="energy-controls">
+                <button class="energy-btn" id="grow-btn">Концентрироваться</button>
+                <button class="energy-btn" id="stop-btn" style="display: none;">Остановить</button>
+            </div>
+            <p id="meditation-result"></p>
             <button class="btn close-btn" onclick="closeGame('meditation')">Закрыть</button>
         </div>
     </div>
@@ -735,8 +729,8 @@
         <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
         <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
         <p>Орел и решка: <span id="coin-stats">0/0</span></p>
-        <p>Числовая матрица: <span id="number-stats">0%</span> точности</p>
-        <p>Медитация: <span id="meditation-stats">0</span> успехов</p>
+        <p>Чтение мыслей: <span id="number-stats">0%</span> точность</p>
+        <p>Медитация: <span id="meditation-stats">0/0</span> успехов</p>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -775,11 +769,11 @@
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Числовой провидец (80% точности)
+                Мыслечитатель (70% точность в чтении мыслей)
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер медитации (5 успехов)
+                Мастер визуализации (5 успешных медитаций)
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -793,6 +787,9 @@
 
     <!-- Затемнение фона -->
     <div class="overlay" id="overlay"></div>
+
+    <!-- Блокировка интерфейса -->
+    <div class="disabled-overlay" id="disabled-overlay"></div>
 
     <!-- Звездный фон -->
     <div id="stars"></div>
@@ -817,8 +814,8 @@
             telekinesis: { success: 0 },
             dowsing: { found: 0, attempts: 0 },
             coin: { correct: 0, total: 0 },
-            number: { accuracy: 0, total: 0 },
-            meditation: { success: 0 }
+            number: { total: 0, sumAccuracy: 0 },
+            meditation: { success: 0, attempts: 0 }
         };
 
         let achievements = [];
@@ -827,23 +824,22 @@
         let telekinesisGameActive = false;
         let isCoinFlipping = false;
         let meditationInterval;
-        let meditationSeconds = 0;
-        let meditationActive = false;
-        let energyDirection = 1;
-        let energySpeed = 0.5;
+        let ballSize = 0;
+        let targetSize = Math.random() * 80 + 20; // 20-100%
+        let currentNumber = Math.floor(Math.random() * 100) + 1;
 
         // Показать сообщение
         function showMessage(text, callback) {
             isGameActive = false;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('disabled-overlay').style.display = 'block';
             document.getElementById('message-text').textContent = text;
             document.getElementById('message-box').style.display = 'block';
             
             const button = document.getElementById('message-button');
             button.onclick = function() {
                 document.getElementById('message-box').style.display = 'none';
+                document.getElementById('disabled-overlay').style.display = 'none';
                 isGameActive = true;
-                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
                 if (callback) callback();
             };
         }
@@ -888,7 +884,7 @@
             document.addEventListener('touchend', stopDrag);
 
             function startDrag(e) {
-                if (!telekinesisGameActive) return;
+                if (!telekinesisGameActive || !isGameActive) return;
                 e.preventDefault();
                 isDragging = true;
                 
@@ -908,7 +904,7 @@
             }
 
             function drag(e) {
-                if (!isDragging || !telekinesisGameActive) return;
+                if (!isDragging || !telekinesisGameActive || !isGameActive) return;
                 e.preventDefault();
                 
                 const rect = area.getBoundingClientRect();
@@ -938,7 +934,7 @@
             }
 
             function stopDrag() {
-                if (isDragging && telekinesisGameActive) {
+                if (isDragging && telekinesisGameActive && isGameActive) {
                     isDragging = false;
                     
                     // Возвращение в центр
@@ -1017,8 +1013,7 @@
             if (!isGameActive || isCoinFlipping) return;
             
             isCoinFlipping = true;
-            const coin = document.getElementById('coin');
-            coin.style.transform = 'rotateY(0)';
+            const coin = document.getElementById('coin-element');
             coin.classList.add('flipping');
             
             stats.coin.total++;
@@ -1040,96 +1035,119 @@
                         isCorrect ? '✅ Верно! Выпало: ' + result : '❌ Неверно. Выпало: ' + result
                     );
                     isCoinFlipping = false;
-                }, 1500);
-            }, 100);
+                }, 500);
+            }, 2000);
         }
 
-        // Игра "Числовая матрица"
+        // Игра "Чтение мыслей на расстоянии"
+        function initNumberGame() {
+            currentNumber = Math.floor(Math.random() * 100) + 1;
+            document.getElementById('number-guess').value = '';
+            document.getElementById('number-result').textContent = '';
+            document.getElementById('accuracy-fill').style.width = '0%';
+        }
+
         function checkNumberGuess() {
             if (!isGameActive) return;
             
-            const guess = parseInt(document.getElementById('number-guess').value);
-            if (isNaN(guess) || guess < 1 || guess > 100) {
-                showMessage('Введите число от 1 до 100');
+            const guessInput = document.getElementById('number-guess');
+            const guess = parseInt(guessInput.value);
+            
+            if (isNaN(guess)) {
+                showMessage('Пожалуйста, введите число от 1 до 100');
                 return;
             }
             
-            const target = Math.floor(Math.random() * 100) + 1;
-            const difference = Math.abs(target - guess);
-            const accuracy = Math.max(0, 100 - difference);
+            const difference = Math.abs(guess - currentNumber);
+            let accuracy = 0;
+            
+            if (difference === 0) {
+                accuracy = 100;
+            } else {
+                accuracy = Math.max(0, 100 - difference);
+            }
             
             stats.number.total++;
-            stats.number.accuracy = (stats.number.accuracy * (stats.number.total - 1) + accuracy) / stats.number.total;
+            stats.number.sumAccuracy += accuracy;
             updateStats();
-            checkAchievements();
             
-            document.getElementById('accuracy-fill').style.width = `${accuracy}%`;
-            showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`);
-            document.getElementById('number-guess').value = '';
+            document.getElementById('accuracy-fill').style.width = accuracy + '%';
+            
+            let message;
+            if (difference === 0) {
+                message = '✅ Потрясающе! Вы точно угадали число!';
+                checkAchievements();
+            } else if (difference <= 5) {
+                message = '☑️ Очень близко! Загадано: ' + currentNumber;
+            } else if (difference <= 20) {
+                message = '↔️ Близко. Загадано: ' + currentNumber;
+            } else {
+                message = '❌ Далеко. Загадано: ' + currentNumber;
+            }
+            
+            document.getElementById('number-result').textContent = message;
+            
+            setTimeout(initNumberGame, 2000);
         }
 
         // Игра "Медитация-визуализация"
         function initMeditation() {
-            const energyLevel = document.getElementById('energy-level');
-            const startButton = document.getElementById('meditation-start');
-            const timer = document.getElementById('meditation-timer');
+            const ball = document.getElementById('energy-ball');
+            ball.style.transform = 'scale(0)';
+            ballSize = 0;
+            targetSize = Math.random() * 80 + 20; // 20-100%
+            document.getElementById('meditation-result').textContent = '';
+            document.getElementById('grow-btn').style.display = 'block';
+            document.getElementById('stop-btn').style.display = 'none';
+            document.querySelector('.target-marker').style.left = targetSize + '%';
+        }
+
+        function startMeditation() {
+            if (!isGameActive) return;
             
-            startButton.textContent = 'Начать';
-            startButton.onclick = startMeditation;
-            timer.textContent = '00:00';
-            meditationSeconds = 0;
+            const ball = document.getElementById('energy-ball');
+            document.getElementById('grow-btn').style.display = 'none';
+            document.getElementById('stop-btn').style.display = 'block';
             
-            let energyWidth = 10;
-            energyLevel.style.width = `${energyWidth}%`;
-            
-            function updateEnergy() {
-                if (!meditationActive) return;
-                
-                // Случайные колебания энергии
-                energyWidth += (Math.random() - 0.5) * 5 * energySpeed;
-                
-                // Ограничение 0-100%
-                energyWidth = Math.max(0, Math.min(100, energyWidth));
-                
-                // Движение к центру или от него
-                if (energyWidth < 30 || energyWidth > 70) {
-                    energyDirection = energyWidth < 30 ? 1 : -1;
-                    energySpeed = 0.3 + Math.random() * 0.7;
+            meditationInterval = setInterval(() => {
+                if (ballSize >= 100) {
+                    endMeditation(false);
+                    return;
                 }
                 
-                energyWidth += energyDirection * energySpeed;
-                energyLevel.style.width = `${energyWidth}%`;
+                ballSize += 1;
+                ball.style.transform = 'scale(' + (ballSize/100) + ')';
                 
-                // Проверка успеха
-                if (energyWidth >= 40 && energyWidth <= 60) {
-                    meditationSeconds++;
-                    timer.textContent = `00:${meditationSeconds.toString().padStart(2, '0')}`;
-                    
-                    if (meditationSeconds >= 5) {
-                        meditationSuccess();
-                    }
-                } else {
-                    meditationSeconds = 0;
-                    timer.textContent = '00:00';
+                if (ballSize % 10 === 0) {
+                    ball.classList.add('growing');
+                    setTimeout(() => ball.classList.remove('growing'), 300);
                 }
-                
-                requestAnimationFrame(updateEnergy);
-            }
+            }, 100);
+        }
+
+        function endMeditation(success) {
+            clearInterval(meditationInterval);
+            document.getElementById('grow-btn').style.display = 'block';
+            document.getElementById('stop-btn').style.display = 'none';
             
-            function startMeditation() {
-                meditationActive = true;
-                startButton.textContent = 'Концентрация...';
-                startButton.onclick = null;
-                updateEnergy();
-            }
+            const ball = document.getElementById('energy-ball');
+            ball.classList.add('growing');
             
-            function meditationSuccess() {
-                meditationActive = false;
+            stats.meditation.attempts++;
+            if (success) {
                 stats.meditation.success++;
-                updateStats();
+                document.getElementById('meditation-result').textContent = '✅ Успех! Вы достигли нужного уровня концентрации!';
                 checkAchievements();
-                showMessage('✅ Успех! Вы достигли гармонии!', initMeditation);
+            } else {
+                document.getElementById('meditation-result').textContent = '❌ Перебор! Шар лопнул от избытка энергии.';
             }
+            
+            updateStats();
+            
+            setTimeout(() => {
+                ball.classList.remove('growing');
+                initMeditation();
+            }, 1000);
         }
 
         // Открытие игры
@@ -1138,13 +1156,52 @@
             document.getElementById(gameId).style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
             
+            // Активируем игровое содержимое только после нажатия OK
+            const gameContent = document.querySelector(`#${gameId} .game-content`);
+            gameContent.classList.remove('active');
+            
             if (gameId === 'telekinesis') {
                 initTelekinesis();
             } else if (gameId === 'dowsing') {
                 initDowsing();
+            } else if (gameId === 'number') {
+                initNumberGame();
             } else if (gameId === 'meditation') {
                 initMeditation();
             }
+            
+            // Показываем сообщение с инструкцией
+            let message = '';
+            switch(gameId) {
+                case 'telepathy':
+                    message = 'Угадайте число от 1 до 10, которое я загадал';
+                    break;
+                case 'zener':
+                    message = 'Угадайте символ, который я загадал';
+                    break;
+                case 'color':
+                    message = 'Угадайте цвет, который я загадал';
+                    break;
+                case 'telekinesis':
+                    message = 'Передвиньте шар силой мысли к цели';
+                    break;
+                case 'dowsing':
+                    message = 'Найдите скрытый артефакт на поле';
+                    break;
+                case 'coin':
+                    message = 'Предскажите результат подбрасывания монеты';
+                    break;
+                case 'number':
+                    message = 'Угадайте число от 1 до 100, которое я загадал';
+                    break;
+                case 'meditation':
+                    message = 'Сконцентрируйтесь и вырастите шар до нужного размера';
+                    break;
+            }
+            
+            showMessage(message, function() {
+                gameContent.classList.add('active');
+            });
         }
 
         // Закрытие игры
@@ -1154,7 +1211,10 @@
             document.querySelector('.container').style.display = 'block';
             telekinesisGameActive = false;
             isCoinFlipping = false;
-            meditationActive = false;
+            if (meditationInterval) clearInterval(meditationInterval);
+            
+            // Деактивируем игровое содержимое
+            document.querySelector(`#${gameId} .game-content`).classList.remove('active');
         }
 
         // Открытие статистики
@@ -1195,8 +1255,13 @@
             document.getElementById('telekinesis-stats').textContent = stats.telekinesis.success;
             document.getElementById('dowsing-stats').textContent = `${stats.dowsing.found}/${stats.dowsing.attempts}`;
             document.getElementById('coin-stats').textContent = `${stats.coin.correct}/${stats.coin.total}`;
-            document.getElementById('number-stats').textContent = `${Math.round(stats.number.accuracy)}%`;
-            document.getElementById('meditation-stats').textContent = stats.meditation.success;
+            
+            const avgAccuracy = stats.number.total > 0 
+                ? Math.round(stats.number.sumAccuracy / stats.number.total) 
+                : 0;
+            document.getElementById('number-stats').textContent = `${avgAccuracy}%`;
+            
+            document.getElementById('meditation-stats').textContent = `${stats.meditation.success}/${stats.meditation.attempts}`;
         }
 
         // Сброс статистики
@@ -1208,8 +1273,8 @@
                 telekinesis: { success: 0 },
                 dowsing: { found: 0, attempts: 0 },
                 coin: { correct: 0, total: 0 },
-                number: { accuracy: 0, total: 0 },
-                meditation: { success: 0 }
+                number: { total: 0, sumAccuracy: 0 },
+                meditation: { success: 0, attempts: 0 }
             };
             updateStats();
             updateAchievements();
@@ -1219,6 +1284,10 @@
         // Обновление достижений
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
+            const avgAccuracy = stats.number.total > 0 
+                ? Math.round(stats.number.sumAccuracy / stats.number.total) 
+                : 0;
+            
             const achievementsData = [
                 { id: "Новичок телепатии", condition: stats.telepathy.correct >= 5 },
                 { id: "Мастер карт Зенера", condition: stats.zener.correct >= 10 },
@@ -1227,8 +1296,8 @@
                 { id: "Мастер телекинеза", condition: stats.telekinesis.success >= 5 },
                 { id: "Искатель сокровищ", condition: stats.dowsing.found >= 3 },
                 { id: "Угадайка", condition: stats.coin.correct >= 10 },
-                { id: "Числовой провидец", condition: stats.number.accuracy >= 80 },
-                { id: "Мастер медитации", condition: stats.meditation.success >= 5 }
+                { id: "Мыслечитатель", condition: avgAccuracy >= 70 },
+                { id: "Мастер визуализации", condition: stats.meditation.success >= 5 }
             ];
 
             achievementList.innerHTML = achievementsData.map(achievement => `
@@ -1293,6 +1362,13 @@
         function checkAchievements() {
             updateAchievements();
         }
+
+        // Инициализация медитации
+        document.getElementById('grow-btn').addEventListener('click', startMeditation);
+        document.getElementById('stop-btn').addEventListener('click', function() {
+            const success = Math.abs(ballSize - targetSize) <= 10;
+            endMeditation(success);
+        });
     </script>
 </body>
 </html>
