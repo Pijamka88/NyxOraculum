@@ -624,23 +624,19 @@
         </div>
     </div>
 
-    <!-- Игра "Орел и решка" -->
+   <!-- Обновленная игра "Орел и решка" -->
     <div id="coin" class="game-window">
         <div class="game-content active">
             <h2>Орел и решка</h2>
             <p>Предскажите результат подбрасывания монеты:</p>
             <div class="coin-container">
                 <div class="coin" id="coin">
-                    <div class="coin-face coin-front">
-                        <img src="https://img.icons8.com/ios-filled/100/ffffff/coin-heads.png" width="80" height="80">
-                    </div>
-                    <div class="coin-face coin-back">
-                        <img src="https://img.icons8.com/ios-filled/100/ffffff/coin-tails.png" width="80" height="80">
-                    </div>
+                    <div class="coin-face coin-front">О</div>
+                    <div class="coin-face coin-back">Р</div>
                 </div>
                 <div class="coin-buttons">
-                    <button class="coin-btn" onclick="flipCoin('орел')">Орел</button>
-                    <button class="coin-btn" onclick="flipCoin('решка')">Решка</button>
+                    <button class="coin-btn" onclick="startCoinFlip('орел')">Орел</button>
+                    <button class="coin-btn" onclick="startCoinFlip('решка')">Решка</button>
                 </div>
             </div>
             <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
@@ -661,17 +657,23 @@
         </div>
     </div>
 
-    <!-- Игра "Медитация-визуализация" -->
+    <!-- Переработанная игра "Медитация" -->
     <div id="meditation" class="game-window">
         <div class="game-content active">
             <h2>Медитация-визуализация</h2>
-            <p>Сконцентрируйтесь на чакре и наполните её энергией:</p>
+            <p>Удерживайте кнопку, чтобы увеличить шар до целевого размера:</p>
             <div class="meditation-container">
-                <div class="chakra-container">
-                    <div class="chakra" id="chakra"></div>
-                </div>
-                <button class="meditation-btn" id="meditation-btn">Начать медитацию</button>
-                <div class="meditation-result" id="meditation-result"></div>
+                <div class="target-ring" id="target-ring"></div>
+                <div class="energy-ball" id="energy-ball"></div>
+            </div>
+            <div class="meditation-controls">
+                <button class="meditation-btn" 
+                        onmousedown="startMeditation()" 
+                        onmouseup="stopMeditation()"
+                        ontouchstart="startMeditation()" 
+                        ontouchend="stopMeditation()">
+                    Удерживать для концентрации
+                </button>
             </div>
             <button class="btn close-btn" onclick="closeGame('meditation')">Закрыть</button>
         </div>
@@ -963,35 +965,42 @@
             }
         }
 
-        // Игра "Орел и решка"
-        function flipCoin(guess) {
-            if (!isGameActive || isCoinFlipping) return;
+        // Переработанный код для "Орел и решка"
+        let isCoinFlipping = false;
+
+        function startCoinFlip(guess) {
+            if (isCoinFlipping) return;
             
-            isCoinFlipping = true;
             const coin = document.getElementById('coin');
+            isCoinFlipping = true;
+            
+            // Блокируем кнопки на время анимации
+            document.querySelectorAll('.coin-btn').forEach(btn => btn.disabled = true);
+            
+            // Запускаем анимацию
             coin.classList.add('flipping');
             
-            stats.coin.total++;
-            updateStats();
-            
+            // Генерируем результат
             setTimeout(() => {
                 const result = Math.random() < 0.5 ? 'орел' : 'решка';
                 const isCorrect = guess === result;
                 
-                if (isCorrect) {
-                    stats.coin.correct++;
-                    updateStats();
-                    checkAchievements();
-                }
+                stats.coin.total++;
+                if (isCorrect) stats.coin.correct++;
                 
+                // Показываем результат после завершения анимации
                 setTimeout(() => {
                     coin.classList.remove('flipping');
-                    showMessage(
-                        isCorrect ? '✅ Верно! Выпало: ' + result : '❌ Неверно. Выпало: ' + result
-                    );
                     isCoinFlipping = false;
-                }, 500);
-            }, 2000);
+                    document.querySelectorAll('.coin-btn').forEach(btn => btn.disabled = false);
+                    showMessage(isCorrect ? 
+                        '✅ Верно! Выпало: ' + result : 
+                        '❌ Неверно. Выпало: ' + result
+                    );
+                    updateStats();
+                    checkAchievements();
+                }, 1500);
+            }, 100);
         }
 
         // Игра "Числовая матрица"
