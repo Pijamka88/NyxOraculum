@@ -475,42 +475,36 @@
             width: 200px;
             height: 200px;
             border-radius: 50%;
-            background: conic-gradient(
-                #8A2BE2 0%,
-                #4B0082 100%
-            );
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 20px 0;
+            background: rgba(138, 43, 226, 0.1);
+            border: 2px solid #8A2BE2;
             position: relative;
+            margin: 20px 0;
             overflow: hidden;
         }
 
+        .meditation-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #8A2BE2, #4B0082);
+            transition: height 0.1s ease;
+            height: 0%;
+        }
+
         .meditation-center {
-            width: 160px;
-            height: 160px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: #1A1A2E;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #8A2BE2;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            z-index: 2;
-        }
-
-        .meditation-progress {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                transparent 0deg,
-                transparent calc(var(--progress) * 1deg),
-                rgba(138, 43, 226, 0.7) calc(var(--progress) * 1deg),
-                rgba(138, 43, 226, 0.7) 360deg
-            );
-            transition: all 0.1s linear;
         }
 
         .meditation-btn {
@@ -533,6 +527,16 @@
             margin-top: 20px;
             font-size: 1.2rem;
             text-align: center;
+        }
+
+        .meditation-target {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 2px;
+            background: #FFD700;
+            z-index: 2;
         }
     </style>
 </head>
@@ -690,13 +694,15 @@
     <div id="meditation" class="game-window">
         <div class="game-content active">
             <h2>Медитация-визуализация</h2>
-            <p>Сконцентрируйтесь и наполните круг энергией:</p>
+            <p>Сконцентрируйтесь и наполните сосуд энергией:</p>
             <div class="meditation-container">
                 <div class="meditation-circle">
-                    <div class="meditation-progress" id="meditation-progress" style="--progress: 0"></div>
-                    <div class="meditation-center" id="meditation-center">0%</div>
+                    <div class="meditation-target" id="meditation-target"></div>
+                    <div class="meditation-fill" id="meditation-fill"></div>
+                    <div class="meditation-center" id="meditation-percent">0%</div>
                 </div>
-                <button class="meditation-btn" id="meditation-btn">Начать медитацию</button>
+                <button class="meditation-btn" id="meditation-btn" onmousedown="startMeditation()" ontouchstart="startMeditation()" 
+                    onmouseup="stopMeditation()" ontouchend="stopMeditation()">Концентрироваться</button>
                 <div class="meditation-result" id="meditation-result"></div>
             </div>
             <button class="btn close-btn" onclick="closeGame('meditation')">Закрыть</button>
@@ -804,8 +810,8 @@
         let telekinesisGameActive = false;
         let isCoinFlipping = false;
         let meditationInterval;
-        let meditationProgress = 0;
-        let meditationActive = false;
+        let meditationEnergy = 0;
+        let meditationTarget = 0;
         let targetNumber = 0;
 
         // Показать сообщение
@@ -1061,70 +1067,64 @@
 
         // Игра "Медитация-визуализация"
         function initMeditation() {
-            meditationProgress = 0;
-            document.getElementById('meditation-progress').style.setProperty('--progress', 0);
-            document.getElementById('meditation-center').textContent = '0%';
+            meditationEnergy = 0;
+            meditationTarget = 30 + Math.floor(Math.random() * 70); // 30-100%
+            document.getElementById('meditation-fill').style.height = '0%';
+            document.getElementById('meditation-percent').textContent = '0%';
             document.getElementById('meditation-result').textContent = '';
-            document.getElementById('meditation-btn').textContent = 'Начать медитацию';
-            meditationActive = false;
-        }
-
-        function toggleMeditation() {
-            const btn = document.getElementById('meditation-btn');
             
-            if (meditationActive) {
-                stopMeditation();
-            } else {
-                startMeditation();
-            }
+            // Установка позиции цели
+            const targetElement = document.getElementById('meditation-target');
+            targetElement.style.bottom = `${meditationTarget}%`;
         }
 
         function startMeditation() {
-            meditationActive = true;
-            document.getElementById('meditation-btn').textContent = 'Остановить медитацию';
+            if (!isGameActive || meditationInterval) return;
             
             meditationInterval = setInterval(() => {
-                if (meditationProgress < 100) {
-                    meditationProgress += 1;
-                    document.getElementById('meditation-progress').style.setProperty('--progress', meditationProgress * 3.6);
-                    document.getElementById('meditation-center').textContent = `${meditationProgress}%`;
+                if (meditationEnergy < 100) {
+                    meditationEnergy += 1;
+                    const fillElement = document.getElementById('meditation-fill');
+                    const percentElement = document.getElementById('meditation-percent');
                     
-                    if (meditationProgress >= 80) {
-                        document.getElementById('meditation-center').style.color = '#8A2BE2';
-                        document.getElementById('meditation-progress').style.background = 
-                            'conic-gradient(transparent 0deg, transparent ' + (meditationProgress * 3.6) + 'deg, rgba(138, 43, 226, 0.9) ' + (meditationProgress * 3.6) + 'deg, rgba(138, 43, 226, 0.9) 360deg)';
+                    fillElement.style.height = `${meditationEnergy}%`;
+                    percentElement.textContent = `${meditationEnergy}%`;
+                    
+                    // Пульсация при приближении к цели
+                    if (meditationEnergy >= meditationTarget - 5 && meditationEnergy <= meditationTarget + 5) {
+                        percentElement.style.animation = 'pulse 0.5s infinite';
+                    } else {
+                        percentElement.style.animation = 'none';
                     }
                 } else {
-                    completeMeditation();
+                    clearInterval(meditationInterval);
+                    meditationInterval = null;
                 }
-            }, 100);
+            }, 50);
         }
 
         function stopMeditation() {
             clearInterval(meditationInterval);
-            meditationActive = false;
+            meditationInterval = null;
             
-            if (meditationProgress >= 80) {
+            const resultElement = document.getElementById('meditation-result');
+            const percentElement = document.getElementById('meditation-percent');
+            percentElement.style.animation = 'none';
+            
+            if (meditationEnergy >= meditationTarget - 5 && meditationEnergy <= meditationTarget + 5) {
                 stats.meditation.success++;
                 updateStats();
                 checkAchievements();
-                document.getElementById('meditation-result').textContent = '✅ Успех! Вы достигли гармонии!';
+                resultElement.textContent = '✅ Успех! Вы достигли гармонии!';
+                resultElement.style.color = '#4CAF50';
             } else {
-                document.getElementById('meditation-result').textContent = '❌ Попробуйте снова. Сконцентрируйтесь лучше.';
+                resultElement.textContent = '❌ Попробуйте снова. Сконцентрируйтесь лучше.';
+                resultElement.style.color = '#F44336';
             }
             
-            document.getElementById('meditation-btn').textContent = 'Начать медитацию';
-            setTimeout(initMeditation, 2000);
-        }
-
-        function completeMeditation() {
-            clearInterval(meditationInterval);
-            stats.meditation.success++;
-            updateStats();
-            checkAchievements();
-            document.getElementById('meditation-result').textContent = '✅ Превосходно! Полная гармония достигнута!';
-            document.getElementById('meditation-btn').textContent = 'Начать медитацию';
-            setTimeout(initMeditation, 2000);
+            setTimeout(() => {
+                initMeditation();
+            }, 2000);
         }
 
         // Открытие игры
@@ -1141,7 +1141,6 @@
                 initNumberMatrix();
             } else if (gameId === 'meditation') {
                 initMeditation();
-                document.getElementById('meditation-btn').onclick = toggleMeditation;
             }
         }
 
@@ -1152,7 +1151,6 @@
             document.querySelector('.container').style.display = 'block';
             telekinesisGameActive = false;
             isCoinFlipping = false;
-            
             if (meditationInterval) {
                 clearInterval(meditationInterval);
                 meditationInterval = null;
