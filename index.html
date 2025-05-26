@@ -463,11 +463,12 @@
             font-size: 1.2rem;
         }
 
-        /* Стили для игры "Медитация-визуализация" */
+        /* Обновленные стили для игры "Медитация-визуализация" */
         .meditation-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
         .chakra-container {
@@ -475,20 +476,88 @@
             width: 200px;
             height: 200px;
             margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .chakra {
-            width: 100%;
-            height: 100%;
-            background: url('https://img.icons8.com/ios-filled/100/8A2BE2/chakra.png') center no-repeat;
-            background-size: contain;
-            opacity: 0.3;
-            transition: all 0.5s ease;
+        .chakra-wheel {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                violet, indigo, blue, green, yellow, orange, red, violet
+            );
+            position: relative;
+            opacity: 0.5;
+            transition: opacity 0.5s, transform 0.5s;
+            transform: scale(0.8);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
         }
 
-        .chakra.active {
+        .chakra-wheel.active {
             opacity: 1;
-            animation: pulse 2s infinite;
+            transform: scale(1);
+            animation: chakra-pulse 2s infinite alternate;
+        }
+
+        @keyframes chakra-pulse {
+            0% { box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(138, 43, 226, 0.8); }
+        }
+
+        .chakra-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            opacity: 0.3;
+            transition: opacity 0.5s;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        .chakra-wheel.active .chakra-center {
+            opacity: 0.8;
+            animation: center-pulse 2s infinite alternate;
+        }
+
+        @keyframes center-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .energy-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            z-index: 3;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .meditation-progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+            border-radius: 5px;
+            transition: width 0.3s;
         }
 
         .meditation-btn {
@@ -499,40 +568,46 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease;
-            margin-top: 20px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .meditation-btn:hover {
             background: rgba(153, 50, 204, 0.3);
         }
 
+        .meditation-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .meditation-result {
-            margin-top: 20px;
-            font-size: 1.2rem;
+            margin-top: 15px;
+            font-size: 1.1rem;
             text-align: center;
+            min-height: 20px;
         }
 
-        .breath-circle {
+        .breath-indicator {
             position: absolute;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            background: rgba(138, 43, 226, 0.3);
-            transform: translate(-50%, -50%);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
             pointer-events: none;
+            animation: breath-rotate 20s linear infinite;
         }
 
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite;
+        @keyframes breath-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+        .meditation-instruction {
+            font-size: 0.9rem;
+            color: #AAA;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
@@ -694,7 +769,16 @@
             <p>Сконцентрируйтесь на чакре и наполните её энергией:</p>
             <div class="meditation-container">
                 <div class="chakra-container">
-                    <div class="chakra" id="chakra"></div>
+                    <div class="breath-indicator"></div>
+                    <div class="chakra-wheel" id="chakra-wheel">
+                        <div class="chakra-center"></div>
+                    </div>
+                </div>
+                <div class="meditation-progress">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="meditation-instruction" id="meditation-instruction">
+                    Нажмите "Начать медитацию" и сосредоточьтесь на чакре
                 </div>
                 <button class="meditation-btn" id="meditation-btn">Начать медитацию</button>
                 <div class="meditation-result" id="meditation-result"></div>
@@ -1092,102 +1176,182 @@
             }, 2000);
         }
 
-        // Игра "Медитация-визуализация"
+        // Полностью переработанная игра "Медитация-визуализация"
         function initMeditation() {
-            const chakra = document.getElementById('chakra');
+            const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
+            const progressBar = document.getElementById('progress-bar');
+            const instruction = document.getElementById('meditation-instruction');
             
-            chakra.classList.remove('active');
+            // Сброс состояния
+            wheel.classList.remove('active');
+            progressBar.style.width = '0';
             result.textContent = '';
+            instruction.textContent = 'Нажмите "Начать медитацию" и сосредоточьтесь на чакре';
             btn.textContent = 'Начать медитацию';
+            btn.disabled = false;
             isMeditating = false;
+            meditationEnergy = 0;
             
-            // Удаляем все круги дыхания
-            document.querySelectorAll('.breath-circle').forEach(el => el.remove());
+            // Очистка частиц
+            document.querySelectorAll('.energy-particle').forEach(el => el.remove());
+            meditationParticles = [];
+            
+            // Установка обработчика кнопки
+            btn.onclick = startMeditation;
         }
 
-        function toggleMeditation() {
-            const chakra = document.getElementById('chakra');
+        function startMeditation() {
+            if (isMeditating) return;
+            
+            const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
+            const progressBar = document.getElementById('progress-bar');
+            const instruction = document.getElementById('meditation-instruction');
             
-            if (!isMeditating) {
-                // Начало медитации
-                isMeditating = true;
-                btn.textContent = 'Завершить медитацию';
-                chakra.classList.add('active');
-                result.textContent = 'Сконцентрируйтесь на чакре...';
-                
-                // Создаем круги дыхания
-                createBreathCircles();
-                
-                // Таймер успешной медитации
-                setTimeout(() => {
-                    if (isMeditating) {
-                        stats.meditation.success++;
-                        updateStats();
-                        checkAchievements();
-                        result.textContent = '✅ Успех! Вы достигли гармонии!';
-                        result.style.color = '#4CAF50';
-                    }
-                }, 3000 + Math.random() * 4000);
+            // Начало медитации
+            isMeditating = true;
+            btn.textContent = 'Завершить медитацию';
+            wheel.classList.add('active');
+            instruction.textContent = 'Сосредоточьтесь на чакре и дышите глубоко...';
+            meditationStartTime = Date.now();
+            meditationEnergy = 0;
+            progressBar.style.width = '0%';
+            
+            // Случайное время для успешной медитации (5-10 секунд)
+            meditationTimeout = 5000 + Math.random() * 5000;
+            
+            // Запуск анимации частиц
+            createEnergyParticles();
+            
+            // Обновление прогресса
+            meditationInterval = setInterval(updateMeditation, 100);
+        }
+
+        function stopMeditation(success = false) {
+            if (!isMeditating) return;
+            
+            const wheel = document.getElementById('chakra-wheel');
+            const btn = document.getElementById('meditation-btn');
+            const result = document.getElementById('meditation-result');
+            const progressBar = document.getElementById('progress-bar');
+            const instruction = document.getElementById('meditation-instruction');
+            
+            // Остановка медитации
+            clearInterval(meditationInterval);
+            isMeditating = false;
+            btn.disabled = true;
+            wheel.classList.remove('active');
+            
+            if (success) {
+                stats.meditation.success++;
+                updateStats();
+                checkAchievements();
+                result.textContent = '✅ Успех! Вы достигли гармонии!';
+                result.style.color = '#4CAF50';
             } else {
-                // Завершение медитации
-                isMeditating = false;
-                btn.textContent = 'Начать медитацию';
-                chakra.classList.remove('active');
-                
-                setTimeout(() => {
-                    initMeditation();
-                }, 2000);
+                result.textContent = 'Медитация прервана. Попробуйте снова.';
+                result.style.color = '#E6E6FA';
+            }
+            
+            // Через 2 секунды сбросить состояние
+            setTimeout(() => {
+                initMeditation();
+            }, 2000);
+        }
+
+        function updateMeditation() {
+            if (!isMeditating) return;
+            
+            const progressBar = document.getElementById('progress-bar');
+            const currentTime = Date.now();
+            const elapsed = currentTime - meditationStartTime;
+            
+            // Увеличение энергии медитации
+            if (meditationEnergy < 100) {
+                meditationEnergy = Math.min(100, (elapsed / meditationTimeout) * 100);
+                progressBar.style.width = `${meditationEnergy}%`;
+            }
+            
+            // Проверка на успешное завершение
+            if (elapsed >= meditationTimeout) {
+                stopMeditation(true);
             }
         }
 
-        function createBreathCircles() {
+        function createEnergyParticles() {
             if (!isMeditating) return;
             
             const container = document.querySelector('.chakra-container');
-            const circle = document.createElement('div');
-            circle.className = 'breath-circle';
+            const particle = document.createElement('div');
+            particle.className = 'energy-particle';
             
             // Случайная позиция вокруг чакры
             const angle = Math.random() * Math.PI * 2;
-            const distance = 50 + Math.random() * 50;
+            const distance = 100 + Math.random() * 50;
             const x = 100 + Math.cos(angle) * distance;
             const y = 100 + Math.sin(angle) * distance;
             
-            circle.style.left = `${x}px`;
-            circle.style.top = `${y}px`;
-            circle.style.width = '10px';
-            circle.style.height = '10px';
-            circle.style.opacity = '0.5';
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
             
-            container.appendChild(circle);
+            // Случайный размер и цвет
+            const size = 4 + Math.random() * 4;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
             
-            // Анимация роста и исчезновения
-            let size = 10;
-            let opacity = 0.5;
-            const growInterval = setInterval(() => {
-                size += 1;
-                opacity -= 0.02;
-                
-                circle.style.width = `${size}px`;
-                circle.style.height = `${size}px`;
-                circle.style.opacity = opacity;
-                
-                if (opacity <= 0) {
-                    clearInterval(growInterval);
-                    circle.remove();
-                }
-            }, 50);
+            const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.color = color;
             
-            // Создаем следующий круг
+            container.appendChild(particle);
+            meditationParticles.push(particle);
+            
+            // Анимация движения к центру
+            animateParticle(particle);
+            
+            // Создаем следующую частицу
             if (isMeditating) {
-                setTimeout(createBreathCircles, 500 + Math.random() * 1000);
+                setTimeout(createEnergyParticles, 200 + Math.random() * 300);
             }
         }
 
+        function animateParticle(particle) {
+            if (!isMeditating) return;
+            
+            const startX = parseFloat(particle.style.left);
+            const startY = parseFloat(particle.style.top);
+            const centerX = 100;
+            const centerY = 100;
+            const duration = 1000 + Math.random() * 1000;
+            const startTime = Date.now();
+            
+            function updateParticle() {
+                if (!isMeditating) return;
+                
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(1, elapsed / duration);
+                
+                // Параболическое движение к центру
+                const newX = startX + (centerX - startX) * progress;
+                const newY = startY + (centerY - startY) * progress;
+                
+                particle.style.left = `${newX}px`;
+                particle.style.top = `${newY}px`;
+                particle.style.opacity = 1 - progress * 0.8;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateParticle);
+                } else {
+                    particle.remove();
+                }
+            }
+            
+            requestAnimationFrame(updateParticle);
+        }
+        
         // Открытие игры
         function openGame(gameId) {
             document.querySelector('.container').style.display = 'none';
