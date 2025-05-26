@@ -337,12 +337,11 @@
         }
 
         /* Обновленные стили для игры "Орел и решка" */
-        .coin-game-container {
+        .coin-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            width: 100%;
+            margin: 20px 0;
         }
 
         .coin {
@@ -352,14 +351,6 @@
             position: relative;
             transform-style: preserve-3d;
             perspective: 1000px;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #FFD700;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
         }
 
         .coin-face {
@@ -371,6 +362,10 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
             box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
@@ -402,7 +397,6 @@
             gap: 15px;
             justify-content: center;
             margin-top: 20px;
-            width: 100%;
         }
 
         .coin-btn {
@@ -414,8 +408,6 @@
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s ease;
-            flex: 1;
-            max-width: 120px;
         }
 
         .coin-btn:hover {
@@ -666,7 +658,7 @@
         <div class="game-content active">
             <h2>Орел и решка</h2>
             <p>Предскажите результат подбрасывания монеты:</p>
-            <div class="coin-game-container">
+            <div class="coin-container">
                 <div class="coin" id="coin-element">
                     <div class="coin-face coin-front">ОРЁЛ</div>
                     <div class="coin-face coin-back">РЕШКА</div>
