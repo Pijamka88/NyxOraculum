@@ -320,6 +320,20 @@
             background: rgba(153, 50, 204, 0.3);
         }
 
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
         .close-btn, .reset-btn {
             margin-top: 30px;
             width: 100%;
@@ -336,37 +350,44 @@
             pointer-events: auto;
         }
 
-        /* Обновленные стили для игры "Орел и решка" */
-        .coin-container {
+        /* Полностью переработанные стили для игры "Орел и решка" */
+        .coin-game-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 20px 0;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+        }
+
+        .coin-container {
+            perspective: 1000px;
+            margin: 30px 0;
+            width: 150px;
+            height: 150px;
+            position: relative;
         }
 
         .coin {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
+            width: 100%;
+            height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            perspective: 1000px;
+            transition: transform 0.5s ease-out;
         }
 
         .coin-face {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 50%;
-            font-size: 1.8rem;
+            backface-visibility: hidden;
+            font-size: 2rem;
             font-weight: bold;
-            color: white;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
         }
 
         .coin-front {
@@ -380,7 +401,7 @@
         }
 
         .coin.flipping {
-            animation: flip-coin 2.5s cubic-bezier(0.4, 0.2, 0.2, 1) forwards;
+            animation: flip-coin 2.5s cubic-bezier(0.4, 2.5, 0.6, 0.5) forwards;
         }
 
         @keyframes flip-coin {
@@ -397,17 +418,21 @@
             gap: 15px;
             justify-content: center;
             margin-top: 20px;
+            width: 100%;
         }
 
         .coin-btn {
             background: rgba(138, 43, 226, 0.2);
             color: #E6E6FA;
             border: 2px solid #8A2BE2;
-            padding: 12px 25px;
+            padding: 12px 24px;
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
             transition: all 0.3s ease;
+            flex: 1;
+            max-width: 120px;
+            text-align: center;
         }
 
         .coin-btn:hover {
@@ -418,10 +443,9 @@
             transform: scale(0.95);
         }
 
-        .coin-result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            height: 24px;
+        .coin-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         /* Стили для игры "Числовая матрица" */
@@ -463,12 +487,11 @@
             font-size: 1.2rem;
         }
 
-        /* Обновленные стили для игры "Медитация-визуализация" */
+        /* Стили для игры "Медитация-визуализация" */
         .meditation-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100%;
         }
 
         .chakra-container {
@@ -476,88 +499,20 @@
             width: 200px;
             height: 200px;
             margin: 20px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .chakra-wheel {
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: conic-gradient(
-                violet, indigo, blue, green, yellow, orange, red, violet
-            );
-            position: relative;
-            opacity: 0.5;
-            transition: opacity 0.5s, transform 0.5s;
-            transform: scale(0.8);
-            box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
-        }
-
-        .chakra-wheel.active {
-            opacity: 1;
-            transform: scale(1);
-            animation: chakra-pulse 2s infinite alternate;
-        }
-
-        @keyframes chakra-pulse {
-            0% { box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); }
-            100% { box-shadow: 0 0 30px rgba(138, 43, 226, 0.8); }
-        }
-
-        .chakra-center {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2;
-            opacity: 0.3;
-            transition: opacity 0.5s;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-        }
-
-        .chakra-wheel.active .chakra-center {
-            opacity: 0.8;
-            animation: center-pulse 2s infinite alternate;
-        }
-
-        @keyframes center-pulse {
-            0% { transform: translate(-50%, -50%) scale(1); }
-            100% { transform: translate(-50%, -50%) scale(1.1); }
-        }
-
-        .energy-particle {
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.8);
-            pointer-events: none;
-            z-index: 3;
-            box-shadow: 0 0 10px currentColor;
-        }
-
-        .meditation-progress {
+        .chakra {
             width: 100%;
-            height: 10px;
-            background: rgba(138, 43, 226, 0.2);
-            border-radius: 5px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
+            height: 100%;
+            background: url('https://img.icons8.com/ios-filled/100/8A2BE2/chakra.png') center no-repeat;
+            background-size: contain;
+            opacity: 0.3;
+            transition: all 0.5s ease;
         }
 
-        .progress-bar {
-            height: 100%;
-            width: 0;
-            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
-            border-radius: 5px;
-            transition: width 0.3s;
+        .chakra.active {
+            opacity: 1;
+            animation: pulse 2s infinite;
         }
 
         .meditation-btn {
@@ -568,46 +523,26 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            margin-top: 10px;
+            transition: background 0.3s ease;
+            margin-top: 20px;
         }
 
         .meditation-btn:hover {
             background: rgba(153, 50, 204, 0.3);
         }
 
-        .meditation-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .meditation-result {
-            margin-top: 15px;
-            font-size: 1.1rem;
+            margin-top: 20px;
+            font-size: 1.2rem;
             text-align: center;
-            min-height: 20px;
         }
 
-        .breath-indicator {
+        .breath-circle {
             position: absolute;
-            width: 100%;
-            height: 100%;
             border-radius: 50%;
-            border: 2px dashed rgba(255, 255, 255, 0.3);
+            background: rgba(138, 43, 226, 0.3);
+            transform: translate(-50%, -50%);
             pointer-events: none;
-            animation: breath-rotate 20s linear infinite;
-        }
-
-        @keyframes breath-rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .meditation-instruction {
-            font-size: 0.9rem;
-            color: #AAA;
-            margin-top: 10px;
-            text-align: center;
         }
     </style>
 </head>
