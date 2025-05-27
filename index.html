@@ -1111,65 +1111,80 @@
     }
 
     // Обновленная игра "Орел и решка"
-    function flipCoin(guess) {
-        if (!isGameActive || isCoinFlipping) return;
+let coinFlipTimeout;
+let coinResultTimeout;
+
+function flipCoin(guess) {
+    if (!isGameActive || isCoinFlipping) return;
+    
+    isCoinFlipping = true;
+    const coin = document.getElementById('coin-element');
+    const resultDiv = document.getElementById('coin-result');
+    resultDiv.textContent = '';
+    
+    // Отключаем кнопки на время анимации
+    document.querySelectorAll('.coin-btn').forEach(btn => {
+        btn.disabled = true;
+    });
+    
+    // Определяем результат заранее
+    const result = Math.random() < 0.5 ? 'орел' : 'решка';
+    const isCorrect = guess === result;
+    
+    // Устанавливаем конечное вращение
+    const finalRotation = result === 'орел' ? 0 : 180;
+    coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
+    
+    // Обновляем статистику
+    stats.coin.total++;
+    if (isCorrect) {
+        stats.coin.correct++;
+    }
+    updateStats();
+    
+    // Запускаем анимацию
+    coin.classList.add('flipping');
+    
+    // Очищаем предыдущие таймеры, если они есть
+    clearTimeout(coinFlipTimeout);
+    clearTimeout(coinResultTimeout);
+    
+    // После завершения анимации показываем результат
+    coinFlipTimeout = setTimeout(() => {
+        // Проверяем, не было ли закрыто окно
+        if (document.getElementById('coin').style.display === 'none') {
+            isCoinFlipping = false;
+            return;
+        }
         
-        isCoinFlipping = true;
-        const coin = document.getElementById('coin-element');
-        const resultDiv = document.getElementById('coin-result');
-        resultDiv.textContent = '';
+        coin.classList.remove('flipping');
+        // Устанавливаем конечное положение
+        coin.style.transform = `rotateY(${finalRotation}deg)`;
         
-        // Отключаем кнопки на время анимации
+        // Показываем результат
+        if (isCorrect) {
+            resultDiv.textContent = '✅ Верно!';
+            resultDiv.style.color = '#4CAF50';
+        } else {
+            resultDiv.textContent = '❌ Неверно';
+            resultDiv.style.color = '#F44336';
+        }
+        
+        // Включаем кнопки обратно
         document.querySelectorAll('.coin-btn').forEach(btn => {
-            btn.disabled = true;
+            btn.disabled = false;
         });
         
-        // Определяем результат заранее
-        const result = Math.random() < 0.5 ? 'орел' : 'решка';
-        const isCorrect = guess === result;
+        isCoinFlipping = false;
         
-        // Устанавливаем конечное вращение
-        const finalRotation = result === 'орел' ? 0 : 180;
-        coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
-        
-        // Обновляем статистику
-        stats.coin.total++;
-        if (isCorrect) {
-            stats.coin.correct++;
-        }
-        updateStats();
-        
-        // Запускаем анимацию
-        coin.classList.add('flipping');
-        
-        // После завершения анимации показываем результат
-        setTimeout(() => {
-            coin.classList.remove('flipping');
-            // Устанавливаем конечное положение
-            coin.style.transform = `rotateY(${finalRotation}deg)`;
-            
-            // Показываем результат
-            if (isCorrect) {
-                resultDiv.textContent = '✅ Верно!';
-                resultDiv.style.color = '#4CAF50';
-            } else {
-                resultDiv.textContent = '❌ Неверно';
-                resultDiv.style.color = '#F44336';
-            }
-            
-            // Включаем кнопки обратно
-            document.querySelectorAll('.coin-btn').forEach(btn => {
-                btn.disabled = false;
-            });
-            
-            isCoinFlipping = false;
-            
-            // Через 1.5 секунды сбрасываем анимацию
-            setTimeout(() => {
+        // Через 1.5 секунды сбрасываем анимацию
+        coinResultTimeout = setTimeout(() => {
+            if (document.getElementById('coin').style.display === 'block') {
                 resultDiv.textContent = '';
-            }, 1500);
-        }, 2500);
-    }
+            }
+        }, 1500);
+    }, 2500);
+}
 
     // Игра "Числовая матрица"
     function initNumberMatrix() {
@@ -1395,51 +1410,67 @@
         requestAnimationFrame(updateParticle);
     }
 
-    // Открытие игры
-    function openGame(gameId) {
-        document.querySelector('.container').style.display = 'none';
-        document.getElementById(gameId).style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+// Открытие игры
+function openGame(gameId) {
+    document.querySelector('.container').style.display = 'none';
+    document.getElementById(gameId).style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    if (gameId === 'telekinesis') {
+        initTelekinesis();
+    } else if (gameId === 'dowsing') {
+        initDowsing();
+    } else if (gameId === 'number') {
+        initNumberMatrix();
+    } else if (gameId === 'meditation') {
+        initMeditation();
+    } else if (gameId === 'coin') {
+        // Сброс состояния монеты при открытии игры
+        const coin = document.getElementById('coin-element');
+        coin.classList.remove('flipping');
+        coin.style.transform = 'rotateY(0deg)';
+        document.getElementById('coin-result').textContent = '';
+        isCoinFlipping = false;
         
-        if (gameId === 'telekinesis') {
-            initTelekinesis();
-        } else if (gameId === 'dowsing') {
-            initDowsing();
-        } else if (gameId === 'number') {
-            initNumberMatrix();
-        } else if (gameId === 'meditation') {
-            initMeditation();
-        } else if (gameId === 'coin') {
-            // Сброс положения монеты при открытии игры
-            const coin = document.getElementById('coin-element');
-            coin.style.transform = 'rotateY(0deg)';
-            document.getElementById('coin-result').textContent = '';
-            isCoinFlipping = false;
-        }
+        // Включение кнопок
+        document.querySelectorAll('.coin-btn').forEach(btn => {
+            btn.disabled = false;
+        });
     }
+}
 
-    // Закрытие игры
-    function closeGame(gameId) {
-        document.getElementById(gameId).style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        document.querySelector('.container').style.display = 'block';
-        telekinesisGameActive = false;
+// Закрытие игры
+function closeGame(gameId) {
+    // Остановка всех процессов игры "Орел и решка"
+    if (gameId === 'coin') {
+        clearTimeout(coinFlipTimeout);
+        clearTimeout(coinResultTimeout);
+        isCoinFlipping = false;
         
-        // Остановка медитации при закрытии окна
-        if (gameId === 'meditation' && isMeditating) {
-            clearInterval(meditationInterval);
-            isMeditating = false;
-            initMeditation();
-        }
+        const coin = document.getElementById('coin-element');
+        coin.classList.remove('flipping');
+        coin.style.transform = 'rotateY(0deg)';
         
-        // Остановка анимации монеты при закрытии окна
-        if (gameId === 'coin' && isCoinFlipping) {
-            const coin = document.getElementById('coin-element');
-            coin.classList.remove('flipping');
-            isCoinFlipping = false;
-        }
+        document.getElementById('coin-result').textContent = '';
+        
+        document.querySelectorAll('.coin-btn').forEach(btn => {
+            btn.disabled = false;
+        });
     }
-
+    
+    // Остальной код закрытия игры
+    document.getElementById(gameId).style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    document.querySelector('.container').style.display = 'block';
+    telekinesisGameActive = false;
+    
+    // Остановка медитации при закрытии окна
+    if (gameId === 'meditation' && isMeditating) {
+        clearInterval(meditationInterval);
+        isMeditating = false;
+        initMeditation();
+    }
+}
     // Открытие статистики
     function openStats() {
         document.querySelector('.container').style.display = 'none';
