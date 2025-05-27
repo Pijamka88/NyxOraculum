@@ -905,6 +905,14 @@
         let meditationTarget = 0;
         let targetNumber = 0;
         let isMeditating = false;
+        
+        // Общие переменные
+        let isMeditating = false;
+        let meditationInterval;
+        let meditationEnergy = 0;
+        let meditationStartTime = 0;
+        let meditationTimeout = 0;
+        let meditationParticles = [];
 
         // Показать сообщение
         function showMessage(text, callback) {
@@ -1199,12 +1207,16 @@
             meditationParticles = [];
             
             // Установка обработчика кнопки
-            btn.onclick = startMeditation;
+            btn.onclick = function() {
+                if (!isMeditating) {
+                    startMeditation();
+                } else {
+                    stopMeditation(false);
+                }
+            };
         }
 
         function startMeditation() {
-            if (isMeditating) return;
-            
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
@@ -1231,8 +1243,6 @@
         }
 
         function stopMeditation(success = false) {
-            if (!isMeditating) return;
-            
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
@@ -1261,96 +1271,6 @@
             setTimeout(() => {
                 initMeditation();
             }, 2000);
-        }
-
-        function updateMeditation() {
-            if (!isMeditating) return;
-            
-            const progressBar = document.getElementById('progress-bar');
-            const currentTime = Date.now();
-            const elapsed = currentTime - meditationStartTime;
-            
-            // Увеличение энергии медитации
-            if (meditationEnergy < 100) {
-                meditationEnergy = Math.min(100, (elapsed / meditationTimeout) * 100);
-                progressBar.style.width = `${meditationEnergy}%`;
-            }
-            
-            // Проверка на успешное завершение
-            if (elapsed >= meditationTimeout) {
-                stopMeditation(true);
-            }
-        }
-
-        function createEnergyParticles() {
-            if (!isMeditating) return;
-            
-            const container = document.querySelector('.chakra-container');
-            const particle = document.createElement('div');
-            particle.className = 'energy-particle';
-            
-            // Случайная позиция вокруг чакры
-            const angle = Math.random() * Math.PI * 2;
-            const distance = 100 + Math.random() * 50;
-            const x = 100 + Math.cos(angle) * distance;
-            const y = 100 + Math.sin(angle) * distance;
-            
-            particle.style.left = `${x}px`;
-            particle.style.top = `${y}px`;
-            
-            // Случайный размер и цвет
-            const size = 4 + Math.random() * 4;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            
-            const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            particle.style.backgroundColor = color;
-            
-            container.appendChild(particle);
-            meditationParticles.push(particle);
-            
-            // Анимация движения к центру
-            animateParticle(particle);
-            
-            // Создаем следующую частицу
-            if (isMeditating) {
-                setTimeout(createEnergyParticles, 200 + Math.random() * 300);
-            }
-        }
-
-        function animateParticle(particle) {
-            if (!isMeditating) return;
-            
-            const startX = parseFloat(particle.style.left);
-            const startY = parseFloat(particle.style.top);
-            const centerX = 100;
-            const centerY = 100;
-            const duration = 1000 + Math.random() * 1000;
-            const startTime = Date.now();
-            
-            function updateParticle() {
-                if (!isMeditating) return;
-                
-                const elapsed = Date.now() - startTime;
-                const progress = Math.min(1, elapsed / duration);
-                
-                // Параболическое движение к центру
-                const newX = startX + (centerX - startX) * progress;
-                const newY = startY + (centerY - startY) * progress;
-                
-                particle.style.left = `${newX}px`;
-                particle.style.top = `${newY}px`;
-                particle.style.opacity = 1 - progress * 0.8;
-                
-                if (progress < 1) {
-                    requestAnimationFrame(updateParticle);
-                } else {
-                    particle.remove();
-                }
-            }
-            
-            requestAnimationFrame(updateParticle);
         }
 
         // Закрытие игры
