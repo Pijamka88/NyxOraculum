@@ -1177,6 +1177,13 @@
         }
 
         // Полностью переработанная игра "Медитация-визуализация"
+        let meditationInterval;
+        let meditationParticles = [];
+        let isMeditating = false;
+        let meditationStartTime = 0;
+        let meditationTimeout = 0;
+        let meditationEnergy = 0;
+
         function initMeditation() {
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
@@ -1199,12 +1206,16 @@
             meditationParticles = [];
             
             // Установка обработчика кнопки
-            btn.onclick = startMeditation;
+            btn.onclick = function() {
+                if (!isMeditating) {
+                    startMeditation();
+                } else {
+                    stopMeditation(false);
+                }
+            };
         }
 
         function startMeditation() {
-            if (isMeditating) return;
-            
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
