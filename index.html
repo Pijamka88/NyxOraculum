@@ -885,6 +885,7 @@
         // Общие переменные
         let isMeditating = false;
         let meditationInterval;
+        let meditationParticlesInterval;
         let meditationEnergy = 0;
         let meditationStartTime = 0;
         let meditationTimeout = 0;
@@ -1155,52 +1156,6 @@
             }, 2000);
         }
 
-        // Полностью переработанная игра "Медитация-визуализация"
-        let meditationInterval;
-        let meditationParticles = [];
-        let isMeditating = false;
-        let meditationStartTime = 0;
-        let meditationTimeout = 0;
-        let meditationEnergy = 0;
-
-        function initMeditation() {
-            const wheel = document.getElementById('chakra-wheel');
-            const btn = document.getElementById('meditation-btn');
-            const result = document.getElementById('meditation-result');
-            const progressBar = document.getElementById('progress-bar');
-            const instruction = document.getElementById('meditation-instruction');
-            
-            // Сброс состояния
-            wheel.classList.remove('active');
-            progressBar.style.width = '0';
-            result.textContent = '';
-            instruction.textContent = 'Нажмите "Начать медитацию" и сосредоточьтесь на чакре';
-            btn.textContent = 'Начать медитацию';
-            btn.disabled = false;
-            isMeditating = false;
-            meditationEnergy = 0;
-            
-            // Очистка частиц
-            document.querySelectorAll('.energy-particle').forEach(el => el.remove());
-            meditationParticles = [];
-            
-            // Установка обработчика кнопки
-            btn.onclick = function() {
-                if (!isMeditating) {
-                    startMeditation();
-                } else {
-                    stopMeditation(false);
-                }
-            };
-        }
-
-        function startMeditation() {
-            const wheel = document.getElementById('chakra-wheel');
-            const btn = document.getElementById('meditation-btn');
-            const result = document.getElementById('meditation-result');
-            const progressBar = document.getElementById('progress-bar');
-            const instruction = document.getElementById('meditation-instruction');
-            
         // Инициализация медитации
         function initMeditation() {
             const wheel = document.getElementById('chakra-wheel');
@@ -1220,6 +1175,7 @@
             meditationEnergy = 0;
             
             // Очистка частиц
+            clearInterval(meditationParticlesInterval);
             document.querySelectorAll('.energy-particle').forEach(el => el.remove());
             meditationParticles = [];
             
@@ -1234,6 +1190,8 @@
         }
 
         function startMeditation() {
+            if (isMeditating) return;
+            
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
@@ -1254,12 +1212,15 @@
             
             // Запуск анимации частиц
             createEnergyParticles();
+            meditationParticlesInterval = setInterval(createEnergyParticles, 500);
             
             // Обновление прогресса
             meditationInterval = setInterval(updateMeditation, 100);
         }
 
         function stopMeditation(success = false) {
+            if (!isMeditating) return;
+            
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
             const result = document.getElementById('meditation-result');
@@ -1267,6 +1228,7 @@
             
             // Остановка медитации
             clearInterval(meditationInterval);
+            clearInterval(meditationParticlesInterval);
             isMeditating = false;
             btn.disabled = true;
             wheel.classList.remove('active');
@@ -1289,44 +1251,90 @@
                 initMeditation();
             }, 2000);
         }
-        
-        // Открытие игры
-        function openGame(gameId) {
-            document.querySelector('.container').style.display = 'none';
-            document.getElementById(gameId).style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+
+        function updateMeditation() {
+            if (!isMeditating) return;
             
-            if (gameId === 'telekinesis') {
-                initTelekinesis();
-            } else if (gameId === 'dowsing') {
-                initDowsing();
-            } else if (gameId === 'number') {
-                initNumberMatrix();
-            } else if (gameId === 'meditation') {
-                initMeditation();
-                document.getElementById('meditation-btn').onclick = toggleMeditation;
-            } else if (gameId === 'coin') {
-                // Сброс положения монеты при открытии игры
-                const coin = document.getElementById('coin-element');
-                coin.style.transform = 'rotateY(0deg)';
-                document.getElementById('coin-result').textContent = '';
-                isCoinFlipping = false;
+            const progressBar = document.getElementById('progress-bar');
+            const currentTime = Date.now();
+            const elapsed = currentTime - meditationStartTime;
+            
+            // Увеличение энергии медитации
+            if (meditationEnergy < 100) {
+                meditationEnergy = Math.min(100, (elapsed / meditationTimeout) * 100);
+                progressBar.style.width = `${meditationEnergy}%`;
+            }
+            
+            // Проверка на успешное завершение
+            if (elapsed >= meditationTimeout) {
+                stopMeditation(true);
             }
         }
 
-        // Закрытие игры
-        function closeGame(gameId) {
-            document.getElementById(gameId).style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.querySelector('.container').style.display = 'block';
-            telekinesisGameActive = false;
-            isCoinFlipping = false;
+        function createEnergyParticles() {
+            if (!isMeditating) return;
             
-            // Остановка медитации при закрытии окна
-            if (gameId === 'meditation' && isMeditating) {
-                clearInterval(meditationInterval);
-                isMeditating = false;
+            const container = document.querySelector('.chakra-container');
+            const particle = document.createElement('div');
+            particle.className = 'energy-particle';
+            
+            // Случайная позиция вокруг чакры
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 100 + Math.random() * 50;
+            const x = 100 + Math.cos(angle) * distance;
+            const y = 100 + Math.sin(angle) * distance;
+            
+            particle.style.left = `${x}px`;
+            particle.style.top = `${y}px`;
+            
+            // Случайный размер и цвет
+            const size = 4 + Math.random() * 4;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            
+            const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            particle.style.backgroundColor = color;
+            
+            container.appendChild(particle);
+            meditationParticles.push(particle);
+            
+            // Анимация движения к центру
+            animateParticle(particle);
+        }
+
+        function animateParticle(particle) {
+            if (!isMeditating) return;
+            
+            const startX = parseFloat(particle.style.left);
+            const startY = parseFloat(particle.style.top);
+            const centerX = 100;
+            const centerY = 100;
+            const duration = 1000 + Math.random() * 1000;
+            const startTime = Date.now();
+            
+            function updateParticle() {
+                if (!isMeditating) return;
+                
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(1, elapsed / duration);
+                
+                // Параболическое движение к центру
+                const newX = startX + (centerX - startX) * progress;
+                const newY = startY + (centerY - startY) * progress;
+                
+                particle.style.left = `${newX}px`;
+                particle.style.top = `${newY}px`;
+                particle.style.opacity = 1 - progress * 0.8;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateParticle);
+                } else {
+                    particle.remove();
+                }
             }
+            
+            requestAnimationFrame(updateParticle);
         }
 
         // Открытие статистики
