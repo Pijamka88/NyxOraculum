@@ -492,6 +492,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
 
         .chakra-container {
@@ -499,20 +500,85 @@
             width: 200px;
             height: 200px;
             margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .chakra {
-            width: 100%;
-            height: 100%;
-            background: url('https://img.icons8.com/ios-filled/100/8A2BE2/chakra.png') center no-repeat;
-            background-size: contain;
-            opacity: 0.3;
-            transition: all 0.5s ease;
+        .chakra-wheel {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: conic-gradient(
+                violet, indigo, blue, green, yellow, orange, red, violet
+            );
+            position: relative;
+            opacity: 0.5;
+            transition: opacity 0.5s, transform 0.5s;
+            transform: scale(0.8);
         }
 
-        .chakra.active {
+        .chakra-wheel.active {
             opacity: 1;
-            animation: pulse 2s infinite;
+            transform: scale(1);
+            animation: chakra-pulse 2s infinite alternate;
+        }
+
+        @keyframes chakra-pulse {
+            0% { box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); }
+            100% { box-shadow: 0 0 30px rgba(138, 43, 226, 0.8); }
+        }
+
+        .chakra-center {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            opacity: 0.3;
+            transition: opacity 0.5s;
+        }
+
+        .chakra-wheel.active .chakra-center {
+            opacity: 0.8;
+            animation: center-pulse 2s infinite alternate;
+        }
+
+        @keyframes center-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            100% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .energy-particle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .meditation-progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+            border-radius: 5px;
+            transition: width 0.3s;
         }
 
         .meditation-btn {
@@ -523,26 +589,46 @@
             border-radius: 50px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s ease;
-            margin-top: 20px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
         .meditation-btn:hover {
             background: rgba(153, 50, 204, 0.3);
         }
 
-        .meditation-result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            text-align: center;
+        .meditation-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .breath-circle {
+        .meditation-result {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+            min-height: 20px;
+        }
+
+        .breath-indicator {
             position: absolute;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            background: rgba(138, 43, 226, 0.3);
-            transform: translate(-50%, -50%);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
             pointer-events: none;
+            animation: breath-rotate 20s linear infinite;
+        }
+
+        @keyframes breath-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .meditation-instruction {
+            font-size: 0.9rem;
+            color: #AAA;
+            margin-top: 10px;
+            text-align: center;
         }
     </style>
 </head>
