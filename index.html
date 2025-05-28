@@ -638,7 +638,7 @@
 <body>
     <!-- Звездный фон -->
     <div id="stars"></div>
-   <audio id="backgroundMusic" src="Opening.mp3" loop preload="auto"></audio>
+
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -1220,11 +1220,26 @@ function flipCoin(guess) {
         }, 2000);
     }
 
-// Игра "Медитация-дыхание 4-7-8" (исправленная версия)
+// Аудио элементы
+let backgroundMusic = new Audio('Opening.mp3');
+let meditationMusic = new Audio('Meditation.mp3');
+
+// Игра "Медитация-дыхание 4-7-8" (финальная версия)
 let meditationPhase = 'inhale'; // inhale, hold, exhale
 let meditationCycle = 0;
 let meditationSeconds = 0;
 let breathIndicatorAngle = 0;
+
+// Воспроизведение фоновой музыки при загрузке
+window.onload = function() {
+    backgroundMusic.loop = true;
+    backgroundMusic.volume = 0.3;
+    backgroundMusic.play().catch(e => console.log("Автовоспроизведение заблокировано"));
+    
+    // Инициализация других элементов...
+    createStars();
+    initMeditation();
+};
 
 function initMeditation() {
     const wheel = document.getElementById('chakra-wheel');
@@ -1233,13 +1248,17 @@ function initMeditation() {
     const progressBar = document.getElementById('progress-bar');
     const instruction = document.getElementById('meditation-instruction');
     
+    // Остановка музыки медитации, если играет
+    meditationMusic.pause();
+    meditationMusic.currentTime = 0;
+    
     // Полный сброс состояния
     wheel.classList.remove('active');
     progressBar.style.width = '0';
-    progressBar.style.background = 'linear-gradient(90deg, #8A2BE2, #00BFFF)'; // Исходный цвет
+    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой цвет
     result.textContent = '';
     instruction.textContent = 'Нажмите "Начать медитацию" для практики дыхания 4-7-8';
-    instruction.style.color = '#E6E6FA'; // Исходный цвет текста
+    instruction.style.color = '#E6E6FA';
     btn.textContent = 'Начать медитацию';
     btn.disabled = false;
     isMeditating = false;
@@ -1272,6 +1291,11 @@ function startMeditation() {
     const instruction = document.getElementById('meditation-instruction');
     const progressBar = document.getElementById('progress-bar');
     
+    // Запуск музыки медитации
+    meditationMusic.loop = true;
+    meditationMusic.volume = 0.2;
+    meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
+    
     isMeditating = true;
     btn.textContent = 'Завершить медитацию';
     wheel.classList.add('active');
@@ -1279,9 +1303,9 @@ function startMeditation() {
     meditationCycle = 0;
     meditationSeconds = 0;
     
-    // Сброс прогресс-бара
+    // Настройка прогресс-бара для вдоха
     progressBar.style.width = '0';
-    progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)'; // Цвет вдоха
+    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.7), rgba(139, 195, 74, 0.7))';
     
     // Запуск анимации частиц
     createEnergyParticles();
@@ -1299,16 +1323,21 @@ function stopMeditation(success = false) {
     clearInterval(meditationInterval);
     isMeditating = false;
     
+    // Остановка музыки медитации
+    meditationMusic.pause();
+    meditationMusic.currentTime = 0;
+    
     const wheel = document.getElementById('chakra-wheel');
     const btn = document.getElementById('meditation-btn');
     const result = document.getElementById('meditation-result');
     const instruction = document.getElementById('meditation-instruction');
     const progressBar = document.getElementById('progress-bar');
     
-    // Возврат к исходным цветам
+    // Возврат к исходному состоянию
     instruction.textContent = 'Медитация завершена';
     instruction.style.color = '#E6E6FA';
-    progressBar.style.background = 'linear-gradient(90deg, #8A2BE2, #00BFFF)';
+    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой цвет
+    progressBar.style.width = '0';
     
     btn.disabled = true;
     wheel.classList.remove('active');
@@ -1333,34 +1362,42 @@ function updateMeditation() {
     const progressBar = document.getElementById('progress-bar');
     meditationSeconds++;
     
-    // Логика дыхания 4-7-8
+    // Логика дыхания 4-7-8 с точным расчетом прогресса
     switch(meditationPhase) {
         case 'inhale':
-            progressBar.style.width = `${(meditationSeconds / 4) * 100}%`;
+            const inhaleProgress = Math.min(100, (meditationSeconds / 4) * 100);
+            progressBar.style.width = `${inhaleProgress}%`;
+            
             if (meditationSeconds >= 4) {
                 meditationPhase = 'hold';
                 meditationSeconds = 0;
                 progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, #FFC107, #FFEB3B)';
+                progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.7), rgba(255, 235, 59, 0.7))';
             }
             break;
+            
         case 'hold':
-            progressBar.style.width = `${(meditationSeconds / 7) * 100}%`;
+            const holdProgress = Math.min(100, (meditationSeconds / 7) * 100);
+            progressBar.style.width = `${holdProgress}%`;
+            
             if (meditationSeconds >= 7) {
                 meditationPhase = 'exhale';
                 meditationSeconds = 0;
                 progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, #F44336, #FF9800)';
+                progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.7), rgba(255, 152, 0, 0.7))';
             }
             break;
+            
         case 'exhale':
-            progressBar.style.width = `${(meditationSeconds / 8) * 100}%`;
+            const exhaleProgress = Math.min(100, (meditationSeconds / 8) * 100);
+            progressBar.style.width = `${exhaleProgress}%`;
+            
             if (meditationSeconds >= 8) {
                 meditationPhase = 'inhale';
                 meditationSeconds = 0;
                 meditationCycle++;
                 progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+                progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.7), rgba(139, 195, 74, 0.7))';
                 
                 // После полного цикла (4-7-8) считаем успех
                 if (meditationCycle >= 1) {
@@ -1474,6 +1511,12 @@ function animateParticle(particle) {
     
     requestAnimationFrame(updateParticle);
 }
+
+// При закрытии приложения останавливаем музыку
+window.addEventListener('beforeunload', function() {
+    backgroundMusic.pause();
+    meditationMusic.pause();
+});
 
 // Открытие игры
 function openGame(gameId) {
