@@ -638,7 +638,7 @@
 <body>
     <!-- Звездный фон -->
     <div id="stars"></div>
-
+   <audio id="backgroundMusic" src="Opening.mp3" loop preload="auto"></audio>
     <div class="container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
@@ -914,13 +914,7 @@
     let isGameActive = true;
     let telekinesisGameActive = false;
     let isCoinFlipping = false;
-    let meditationInterval;
-    let meditationParticles = [];
-    let meditationStartTime = 0;
-    let meditationTimeout = 0;
     let targetNumber = 0;
-    let isMeditating = false;
-    let meditationEnergy = 0;
 
     // Инициализация при загрузке страницы
     window.onload = function() {
@@ -1226,189 +1220,260 @@ function flipCoin(guess) {
         }, 2000);
     }
 
-    // Игра "Медитация-визуализация"
-    function initMeditation() {
-        const wheel = document.getElementById('chakra-wheel');
-        const btn = document.getElementById('meditation-btn');
-        const result = document.getElementById('meditation-result');
-        const progressBar = document.getElementById('progress-bar');
-        const instruction = document.getElementById('meditation-instruction');
-        
-        // Сброс состояния
-        wheel.classList.remove('active');
-        progressBar.style.width = '0';
-        result.textContent = '';
-        instruction.textContent = 'Нажмите "Начать медитацию" и сосредоточьтесь на чакре';
-        btn.textContent = 'Начать медитацию';
-        btn.disabled = false;
-        isMeditating = false;
-        meditationEnergy = 0;
-        
-        // Очистка частиц
-        document.querySelectorAll('.energy-particle').forEach(el => el.remove());
-        meditationParticles = [];
-        
-        // Установка обработчика кнопки
-        btn.onclick = toggleMeditation;
-    }
+// Игра "Медитация-дыхание 4-7-8" (исправленная версия)
+let meditationPhase = 'inhale'; // inhale, hold, exhale
+let meditationCycle = 0;
+let meditationSeconds = 0;
+let breathIndicatorAngle = 0;
 
-    function toggleMeditation() {
-        if (isMeditating) {
-            stopMeditation(false);
-        } else {
-            startMeditation();
-        }
-    }
+function initMeditation() {
+    const wheel = document.getElementById('chakra-wheel');
+    const btn = document.getElementById('meditation-btn');
+    const result = document.getElementById('meditation-result');
+    const progressBar = document.getElementById('progress-bar');
+    const instruction = document.getElementById('meditation-instruction');
+    
+    // Полный сброс состояния
+    wheel.classList.remove('active');
+    progressBar.style.width = '0';
+    progressBar.style.background = 'linear-gradient(90deg, #8A2BE2, #00BFFF)'; // Исходный цвет
+    result.textContent = '';
+    instruction.textContent = 'Нажмите "Начать медитацию" для практики дыхания 4-7-8';
+    instruction.style.color = '#E6E6FA'; // Исходный цвет текста
+    btn.textContent = 'Начать медитацию';
+    btn.disabled = false;
+    isMeditating = false;
+    meditationPhase = 'inhale';
+    meditationCycle = 0;
+    meditationSeconds = 0;
+    breathIndicatorAngle = 0;
+    
+    // Очистка частиц
+    document.querySelectorAll('.energy-particle').forEach(el => el.remove());
+    meditationParticles = [];
+    
+    // Установка обработчика кнопки
+    btn.onclick = toggleMeditation;
+}
 
-    function startMeditation() {
-        if (isMeditating) return;
-        
-        const wheel = document.getElementById('chakra-wheel');
-        const btn = document.getElementById('meditation-btn');
-        const result = document.getElementById('meditation-result');
-        const progressBar = document.getElementById('progress-bar');
-        const instruction = document.getElementById('meditation-instruction');
-        
-        // Начало медитации
-        isMeditating = true;
-        btn.textContent = 'Завершить медитацию';
-        wheel.classList.add('active');
-        instruction.textContent = 'Сосредоточьтесь на чакре и дышите глубоко...';
-        meditationStartTime = Date.now();
-        meditationEnergy = 0;
-        progressBar.style.width = '0%';
-        
-        // Случайное время для успешной медитации (5-10 секунд)
-        meditationTimeout = 5000 + Math.random() * 5000;
-        
-        // Запуск анимации частиц
-        createEnergyParticles();
-        
-        // Обновление прогресса
-        meditationInterval = setInterval(updateMeditation, 100);
+function toggleMeditation() {
+    if (isMeditating) {
+        stopMeditation(false);
+    } else {
+        startMeditation();
     }
+}
 
-    function stopMeditation(success = false) {
-        if (!isMeditating) return;
-        
-        const wheel = document.getElementById('chakra-wheel');
-        const btn = document.getElementById('meditation-btn');
-        const result = document.getElementById('meditation-result');
-        const progressBar = document.getElementById('progress-bar');
-        const instruction = document.getElementById('meditation-instruction');
-        
-        // Остановка медитации
-        clearInterval(meditationInterval);
-        isMeditating = false;
-        btn.disabled = true;
-        wheel.classList.remove('active');
-        
-        if (success) {
-            stats.meditation.success++;
-            updateStats();
-            checkAchievements();
-            result.textContent = '✅ Успех! Вы достигли гармонии!';
-            result.style.color = '#4CAF50';
-        } else {
-            result.textContent = 'Медитация прервана. Попробуйте снова.';
-            result.style.color = '#E6E6FA';
-        }
-        
-        // Через 2 секунды сбросить состояние
-        setTimeout(() => {
-            initMeditation();
-        }, 2000);
+function startMeditation() {
+    if (isMeditating) return;
+    
+    const wheel = document.getElementById('chakra-wheel');
+    const btn = document.getElementById('meditation-btn');
+    const instruction = document.getElementById('meditation-instruction');
+    const progressBar = document.getElementById('progress-bar');
+    
+    isMeditating = true;
+    btn.textContent = 'Завершить медитацию';
+    wheel.classList.add('active');
+    meditationPhase = 'inhale';
+    meditationCycle = 0;
+    meditationSeconds = 0;
+    
+    // Сброс прогресс-бара
+    progressBar.style.width = '0';
+    progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)'; // Цвет вдоха
+    
+    // Запуск анимации частиц
+    createEnergyParticles();
+    
+    // Запуск таймера дыхания
+    updateBreathIndicator();
+    meditationInterval = setInterval(updateMeditation, 1000);
+    
+    updateInstruction();
+}
+
+function stopMeditation(success = false) {
+    if (!isMeditating) return;
+    
+    clearInterval(meditationInterval);
+    isMeditating = false;
+    
+    const wheel = document.getElementById('chakra-wheel');
+    const btn = document.getElementById('meditation-btn');
+    const result = document.getElementById('meditation-result');
+    const instruction = document.getElementById('meditation-instruction');
+    const progressBar = document.getElementById('progress-bar');
+    
+    // Возврат к исходным цветам
+    instruction.textContent = 'Медитация завершена';
+    instruction.style.color = '#E6E6FA';
+    progressBar.style.background = 'linear-gradient(90deg, #8A2BE2, #00BFFF)';
+    
+    btn.disabled = true;
+    wheel.classList.remove('active');
+    
+    if (success) {
+        stats.meditation.success++;
+        updateStats();
+        checkAchievements();
+        result.textContent = '✅ Отличная практика! Вы завершили цикл 4-7-8';
+        result.style.color = '#4CAF50';
+    } else {
+        result.textContent = 'Медитация прервана. Попробуйте снова.';
+        result.style.color = '#E6E6FA';
     }
+    
+    setTimeout(initMeditation, 2000);
+}
 
-    function updateMeditation() {
-        if (!isMeditating) return;
-        
-        const progressBar = document.getElementById('progress-bar');
-        const currentTime = Date.now();
-        const elapsed = currentTime - meditationStartTime;
-        
-        // Увеличение энергии медитации
-        if (meditationEnergy < 100) {
-            meditationEnergy = Math.min(100, (elapsed / meditationTimeout) * 100);
-            progressBar.style.width = `${meditationEnergy}%`;
-        }
-        
-        // Проверка на успешное завершение
-        if (elapsed >= meditationTimeout) {
-            stopMeditation(true);
-        }
-    }
-
-    function createEnergyParticles() {
-        if (!isMeditating) return;
-        
-        const container = document.querySelector('.chakra-container');
-        const particle = document.createElement('div');
-        particle.className = 'energy-particle';
-        
-        // Случайная позиция вокруг чакры
-        const angle = Math.random() * Math.PI * 2;
-        const distance = 100 + Math.random() * 50;
-        const x = 100 + Math.cos(angle) * distance;
-        const y = 100 + Math.sin(angle) * distance;
-        
-        particle.style.left = `${x}px`;
-        particle.style.top = `${y}px`;
-        
-        // Случайный размер и цвет
-        const size = 4 + Math.random() * 4;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        
-        const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        particle.style.backgroundColor = color;
-        
-        container.appendChild(particle);
-        meditationParticles.push(particle);
-        
-        // Анимация движения к центру
-        animateParticle(particle);
-        
-        // Создаем следующую частицу
-        if (isMeditating) {
-            setTimeout(createEnergyParticles, 200 + Math.random() * 300);
-        }
-    }
-
-    function animateParticle(particle) {
-        if (!isMeditating) return;
-        
-        const startX = parseFloat(particle.style.left);
-        const startY = parseFloat(particle.style.top);
-        const centerX = 100;
-        const centerY = 100;
-        const duration = 1000 + Math.random() * 1000;
-        const startTime = Date.now();
-        
-        function updateParticle() {
-            if (!isMeditating) return;
-            
-            const elapsed = Date.now() - startTime;
-            const progress = Math.min(1, elapsed / duration);
-            
-            // Параболическое движение к центру
-            const newX = startX + (centerX - startX) * progress;
-            const newY = startY + (centerY - startY) * progress;
-            
-            particle.style.left = `${newX}px`;
-            particle.style.top = `${newY}px`;
-            particle.style.opacity = 1 - progress * 0.8;
-            
-            if (progress < 1) {
-                requestAnimationFrame(updateParticle);
-            } else {
-                particle.remove();
+function updateMeditation() {
+    if (!isMeditating) return;
+    
+    const progressBar = document.getElementById('progress-bar');
+    meditationSeconds++;
+    
+    // Логика дыхания 4-7-8
+    switch(meditationPhase) {
+        case 'inhale':
+            progressBar.style.width = `${(meditationSeconds / 4) * 100}%`;
+            if (meditationSeconds >= 4) {
+                meditationPhase = 'hold';
+                meditationSeconds = 0;
+                progressBar.style.width = '0';
+                progressBar.style.background = 'linear-gradient(90deg, #FFC107, #FFEB3B)';
             }
-        }
-        
-        requestAnimationFrame(updateParticle);
+            break;
+        case 'hold':
+            progressBar.style.width = `${(meditationSeconds / 7) * 100}%`;
+            if (meditationSeconds >= 7) {
+                meditationPhase = 'exhale';
+                meditationSeconds = 0;
+                progressBar.style.width = '0';
+                progressBar.style.background = 'linear-gradient(90deg, #F44336, #FF9800)';
+            }
+            break;
+        case 'exhale':
+            progressBar.style.width = `${(meditationSeconds / 8) * 100}%`;
+            if (meditationSeconds >= 8) {
+                meditationPhase = 'inhale';
+                meditationSeconds = 0;
+                meditationCycle++;
+                progressBar.style.width = '0';
+                progressBar.style.background = 'linear-gradient(90deg, #4CAF50, #8BC34A)';
+                
+                // После полного цикла (4-7-8) считаем успех
+                if (meditationCycle >= 1) {
+                    stopMeditation(true);
+                    return;
+                }
+            }
+            break;
     }
+    
+    updateInstruction();
+}
+
+function updateInstruction() {
+    const instruction = document.getElementById('meditation-instruction');
+    const remaining = meditationPhase === 'inhale' ? 4 - meditationSeconds :
+                     meditationPhase === 'hold' ? 7 - meditationSeconds :
+                     8 - meditationSeconds;
+    
+    switch(meditationPhase) {
+        case 'inhale':
+            instruction.textContent = `Вдох (${remaining} сек) → Задержка → Выдох`;
+            instruction.style.color = '#4CAF50'; // Зеленый
+            break;
+        case 'hold':
+            instruction.textContent = `Вдох → Задержка (${remaining} сек) → Выдох`;
+            instruction.style.color = '#FFC107'; // Желтый
+            break;
+        case 'exhale':
+            instruction.textContent = `Вдох → Задержка → Выдох (${remaining} сек)`;
+            instruction.style.color = '#F44336'; // Красный
+            break;
+    }
+}
+
+function updateBreathIndicator() {
+    if (!isMeditating) return;
+    
+    const breathIndicator = document.querySelector('.breath-indicator');
+    breathIndicatorAngle += 1;
+    breathIndicator.style.transform = `rotate(${breathIndicatorAngle}deg)`;
+    
+    requestAnimationFrame(updateBreathIndicator);
+}
+
+// Функции для частиц остаются без изменений
+function createEnergyParticles() {
+    if (!isMeditating) return;
+    
+    const container = document.querySelector('.chakra-container');
+    const particle = document.createElement('div');
+    particle.className = 'energy-particle';
+    
+    // Случайная позиция вокруг чакры
+    const angle = Math.random() * Math.PI * 2;
+    const distance = 100 + Math.random() * 50;
+    const x = 100 + Math.cos(angle) * distance;
+    const y = 100 + Math.sin(angle) * distance;
+    
+    particle.style.left = `${x}px`;
+    particle.style.top = `${y}px`;
+    
+    // Случайный размер и цвет
+    const size = 4 + Math.random() * 4;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    particle.style.backgroundColor = color;
+    
+    container.appendChild(particle);
+    meditationParticles.push(particle);
+    
+    animateParticle(particle);
+    
+    if (isMeditating) {
+        setTimeout(createEnergyParticles, 200 + Math.random() * 300);
+    }
+}
+
+function animateParticle(particle) {
+    if (!isMeditating) return;
+    
+    const startX = parseFloat(particle.style.left);
+    const startY = parseFloat(particle.style.top);
+    const centerX = 100;
+    const centerY = 100;
+    const duration = 1000 + Math.random() * 1000;
+    const startTime = Date.now();
+    
+    function updateParticle() {
+        if (!isMeditating) return;
+        
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        
+        const newX = startX + (centerX - startX) * progress;
+        const newY = startY + (centerY - startY) * progress;
+        
+        particle.style.left = `${newX}px`;
+        particle.style.top = `${newY}px`;
+        particle.style.opacity = 1 - progress * 0.8;
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateParticle);
+        } else {
+            particle.remove();
+        }
+    }
+    
+    requestAnimationFrame(updateParticle);
+}
 
 // Открытие игры
 function openGame(gameId) {
