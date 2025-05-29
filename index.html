@@ -915,6 +915,7 @@
     let telekinesisGameActive = false;
     let isCoinFlipping = false;
     let targetNumber = 0;
+    let backgroundMusicPlaying = true; // Флаг, что музыка играет
 
     // Инициализация при загрузке страницы
     window.onload = function() {
@@ -1522,11 +1523,20 @@ window.addEventListener('beforeunload', function() {
     meditationMusic.pause();
 });
 
+
+
 // Открытие игры
 function openGame(gameId) {
     document.querySelector('.container').style.display = 'none';
     document.getElementById(gameId).style.display = 'block';
     document.getElementById('overlay').style.display = 'block';
+
+    // Останавливаем фоновую музыку
+    if (backgroundMusicPlaying) {
+        backgroundMusic.pause();
+        backgroundMusic.currentTime = 0;
+        backgroundMusicPlaying = false;
+    }
     
     if (gameId === 'telekinesis') {
         initTelekinesis();
@@ -1558,29 +1568,33 @@ function closeGame(gameId) {
         clearTimeout(coinFlipTimeout);
         clearTimeout(coinResultTimeout);
         isCoinFlipping = false;
-        
         const coin = document.getElementById('coin-element');
         coin.classList.remove('flipping');
         coin.style.transform = 'rotateY(0deg)';
-        
         document.getElementById('coin-result').textContent = '';
-        
         document.querySelectorAll('.coin-btn').forEach(btn => {
             btn.disabled = false;
         });
     }
-    
-    // Остальной код закрытия игры
+
+    // Закрытие окна игры
     document.getElementById(gameId).style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
     document.querySelector('.container').style.display = 'block';
+
     telekinesisGameActive = false;
-    
+
     // Остановка медитации при закрытии окна
     if (gameId === 'meditation' && isMeditating) {
         clearInterval(meditationInterval);
         isMeditating = false;
         initMeditation();
+    }
+
+    // Возобновляем фоновую музыку, если она не играет
+    if (!backgroundMusicPlaying) {
+        backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
+        backgroundMusicPlaying = true;
     }
 }
     // Открытие статистики
