@@ -1221,25 +1221,38 @@ function flipCoin(guess) {
     }
 
 // Аудио элементы
-let backgroundMusic = new Audio('Opening.mp3');
-let meditationMusic = new Audio('Meditation.mp3');
+const backgroundMusic = new Audio('Opening.mp3');
+const meditationMusic = new Audio('Meditation.mp3');
+const clickSound = new Audio('Click.mp3');
 
-// Игра "Медитация-дыхание 4-7-8" (финальная версия)
-let meditationPhase = 'inhale'; // inhale, hold, exhale
+// Настройка громкости
+backgroundMusic.volume = 0.3;
+meditationMusic.volume = 0.4;
+clickSound.volume = 0.5;
+
+// Игра "Медитация-дыхание 4-7-8"
+let meditationPhase = 'inhale';
 let meditationCycle = 0;
 let meditationSeconds = 0;
 let breathIndicatorAngle = 0;
 
 // Воспроизведение фоновой музыки при загрузке
-window.onload = function() {
-    backgroundMusic.loop = true;
-    backgroundMusic.volume = 0.3;
-    backgroundMusic.play().catch(e => console.log("Автовоспроизведение заблокировано"));
-    
-    // Инициализация других элементов...
-    createStars();
-    initMeditation();
-};
+window.addEventListener('DOMContentLoaded', () => {
+    try {
+        backgroundMusic.loop = true;
+        backgroundMusic.play();
+    } catch (e) {
+        console.log("Автовоспроизведение музыки заблокировано");
+    }
+});
+
+// Обработчик клика для всех кнопок
+document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log("Не удалось воспроизвести звук клика"));
+    });
+});
 
 function initMeditation() {
     const wheel = document.getElementById('chakra-wheel');
@@ -1248,14 +1261,14 @@ function initMeditation() {
     const progressBar = document.getElementById('progress-bar');
     const instruction = document.getElementById('meditation-instruction');
     
-    // Остановка музыки медитации, если играет
+    // Остановка музыки медитации
     meditationMusic.pause();
     meditationMusic.currentTime = 0;
     
     // Полный сброс состояния
     wheel.classList.remove('active');
     progressBar.style.width = '0';
-    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой цвет
+    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой фон
     result.textContent = '';
     instruction.textContent = 'Нажмите "Начать медитацию" для практики дыхания 4-7-8';
     instruction.style.color = '#E6E6FA';
@@ -1270,9 +1283,6 @@ function initMeditation() {
     // Очистка частиц
     document.querySelectorAll('.energy-particle').forEach(el => el.remove());
     meditationParticles = [];
-    
-    // Установка обработчика кнопки
-    btn.onclick = toggleMeditation;
 }
 
 function toggleMeditation() {
@@ -1288,12 +1298,10 @@ function startMeditation() {
     
     const wheel = document.getElementById('chakra-wheel');
     const btn = document.getElementById('meditation-btn');
-    const instruction = document.getElementById('meditation-instruction');
     const progressBar = document.getElementById('progress-bar');
     
     // Запуск музыки медитации
     meditationMusic.loop = true;
-    meditationMusic.volume = 0.2;
     meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
     
     isMeditating = true;
@@ -1303,17 +1311,14 @@ function startMeditation() {
     meditationCycle = 0;
     meditationSeconds = 0;
     
-    // Настройка прогресс-бара для вдоха
+    // Настройка прогресс-бара
     progressBar.style.width = '0';
-    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.7), rgba(139, 195, 74, 0.7))';
+    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
     
-    // Запуск анимации частиц
+    // Запуск анимации
     createEnergyParticles();
-    
-    // Запуск таймера дыхания
     updateBreathIndicator();
     meditationInterval = setInterval(updateMeditation, 1000);
-    
     updateInstruction();
 }
 
@@ -1322,22 +1327,17 @@ function stopMeditation(success = false) {
     
     clearInterval(meditationInterval);
     isMeditating = false;
-    
-    // Остановка музыки медитации
     meditationMusic.pause();
     meditationMusic.currentTime = 0;
     
     const wheel = document.getElementById('chakra-wheel');
     const btn = document.getElementById('meditation-btn');
     const result = document.getElementById('meditation-result');
-    const instruction = document.getElementById('meditation-instruction');
     const progressBar = document.getElementById('progress-bar');
     
-    // Возврат к исходному состоянию
-    instruction.textContent = 'Медитация завершена';
-    instruction.style.color = '#E6E6FA';
-    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой цвет
+    // Сброс прогресс-бара
     progressBar.style.width = '0';
+    progressBar.style.background = 'rgba(138, 43, 226, 0.2)';
     
     btn.disabled = true;
     wheel.classList.remove('active');
@@ -1362,50 +1362,54 @@ function updateMeditation() {
     const progressBar = document.getElementById('progress-bar');
     meditationSeconds++;
     
-    // Логика дыхания 4-7-8 с точным расчетом прогресса
+    // Точный расчет прогресса для каждой фазы
+    let progress = 0;
+    let phaseComplete = false;
+    
     switch(meditationPhase) {
         case 'inhale':
-            const inhaleProgress = Math.min(100, (meditationSeconds / 4) * 100);
-            progressBar.style.width = `${inhaleProgress}%`;
-            
-            if (meditationSeconds >= 4) {
-                meditationPhase = 'hold';
-                meditationSeconds = 0;
-                progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.7), rgba(255, 235, 59, 0.7))';
-            }
+            progress = Math.min(100, (meditationSeconds / 4) * 100);
+            phaseComplete = meditationSeconds >= 4;
             break;
             
         case 'hold':
-            const holdProgress = Math.min(100, (meditationSeconds / 7) * 100);
-            progressBar.style.width = `${holdProgress}%`;
-            
-            if (meditationSeconds >= 7) {
-                meditationPhase = 'exhale';
-                meditationSeconds = 0;
-                progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.7), rgba(255, 152, 0, 0.7))';
-            }
+            progress = Math.min(100, (meditationSeconds / 7) * 100);
+            phaseComplete = meditationSeconds >= 7;
             break;
             
         case 'exhale':
-            const exhaleProgress = Math.min(100, (meditationSeconds / 8) * 100);
-            progressBar.style.width = `${exhaleProgress}%`;
-            
-            if (meditationSeconds >= 8) {
-                meditationPhase = 'inhale';
-                meditationSeconds = 0;
-                meditationCycle++;
-                progressBar.style.width = '0';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.7), rgba(139, 195, 74, 0.7))';
+            progress = Math.min(100, (meditationSeconds / 8) * 100);
+            phaseComplete = meditationSeconds >= 8;
+            break;
+    }
+    
+    progressBar.style.width = `${progress}%`;
+    
+    if (phaseComplete) {
+        meditationSeconds = 0;
+        
+        switch(meditationPhase) {
+            case 'inhale':
+                meditationPhase = 'hold';
+                progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
+                break;
                 
-                // После полного цикла (4-7-8) считаем успех
+            case 'hold':
+                meditationPhase = 'exhale';
+                progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
+                break;
+                
+            case 'exhale':
+                meditationPhase = 'inhale';
+                meditationCycle++;
+                progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
+                
                 if (meditationCycle >= 1) {
                     stopMeditation(true);
                     return;
                 }
-            }
-            break;
+                break;
+        }
     }
     
     updateInstruction();
