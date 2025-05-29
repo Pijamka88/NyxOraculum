@@ -17,31 +17,6 @@
             min-height: 100vh;
             overflow: hidden;
             touch-action: none;
-            position: relative;
-        }
-
-        /* Добавленные стили для звездного фона */
-        #stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
-
-        .star {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
-
-        @keyframes twinkle {
-            0% { opacity: 0.2; }
-            100% { opacity: 1; }
         }
 
         .container {
@@ -53,8 +28,6 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
-            position: relative;
-            z-index: 1;
         }
 
         h1 {
@@ -131,126 +104,6 @@
             margin-bottom: 20px;
             color: #E6E6FA;
             text-align: center;
-        }
-
-        .game-buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 0 auto;
-            max-width: 300px;
-        }
-
-        .game-btn {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto;
-        }
-
-        .game-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .game-btn:active {
-            transform: scale(0.95);
-        }
-
-        .telekinesis-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-            border: 2px dashed #8A2BE2;
-            border-radius: 15px;
-            margin: 20px auto;
-            overflow: hidden;
-        }
-
-        .telekinesis-object {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            background: #8A2BE2;
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            box-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
-            z-index: 2;
-        }
-
-        .target-object {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background: #FFD700;
-            border-radius: 50%;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-            z-index: 1;
-        }
-
-        .dowsing-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin: 20px auto;
-            max-width: 350px;
-        }
-
-        .dowsing-cell {
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            aspect-ratio: 1/1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 2rem;
-            min-width: 70px;
-            min-height: 70px;
-        }
-
-        .dowsing-cell:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
-
-        .dowsing-cell.opened {
-            background: rgba(70, 130, 180, 0.3);
-        }
-
-        .dowsing-cell.found {
-            background: rgba(50, 205, 50, 0.3);
-            animation: pulse 0.5s;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 999;
-            animation: fadeIn 0.5s ease;
         }
 
         /* Выравнивание статистики и достижений */
