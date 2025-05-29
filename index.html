@@ -28,6 +28,7 @@
             border: 2px solid #8A2BE2;
             width: 90%;
             max-width: 400px;
+            position: relative; /* Добавлено для позиционирования */
         }
 
         h1 {
@@ -99,20 +100,13 @@
             to { opacity: 1; }
         }
 
-        .game-window h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #E6E6FA;
-            text-align: center;
-        }
-
-        /* Выравнивание статистики и достижений */
+        /* Обновленные стили для окон статистики и достижений */
         .stats-window, .achievements-window {
             display: none;
             position: fixed;
-            top: 20px; /* Отступ сверху как у основного контейнера */
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             background: rgba(26, 26, 46, 0.95);
             padding: 20px;
             border-radius: 20px;
@@ -122,22 +116,6 @@
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .stats-window h2, .achievements-window h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #E6E6FA;
-            text-align: center;
-        }
-
-        .stats-window p, .achievements-window p {
-            font-size: 1rem;
-            margin: 10px 0;
-            color: #E6E6FA;
-            text-align: center;
         }
         
         .achievement-item {
