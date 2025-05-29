@@ -277,20 +277,30 @@
             text-align: center;
         }
 
-        .stats-window p, .achievements-window p {
-            font-size: 1rem;
-            margin: 10px 0;
-            color: #E6E6FA;
-            text-align: center;
-        }
+.stats-window p, .achievements-window p {
+    font-size: 1rem;
+    margin: 10px 0;
+    color: #E6E6FA;
+    text-align: left; 
+    padding-left: 10px; 
+}
 
-        .achievement-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            justify-content: center;
-        }
+.achievement-item {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Расстояние между иконкой и текстом */
+    margin-bottom: 10px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+.achievement-item.locked .achievement-text {
+    color: #888;
+}
+
+.achievement-item .achievement-text {
+    color: #E6E6FA;
+}
 
         .achievement-item img {
             width: 24px;
@@ -835,39 +845,39 @@
         <div id="achievement-list">
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Новичок телепатии (5 правильных ответов)
+              <div class="achievement-text">Новичок телепатии (5 правильных ответов)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер карт Зенера (10 правильных ответов)
+                <div class="achievement-text">Мастер карт Зенера (10 правильных ответов)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Цветовой провидец (15 правильных ответов)
+                <div class="achievement-text">Цветовой провидец (15 правильных ответов)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Экстрасенс (20 правильных ответов)
+                <div class="achievement-text">Экстрасенс (20 правильных ответов)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (5 успехов)
+                <div class="achievement-text">Мастер телекинеза (5 успехов)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Искатель сокровищ (3 найденных артефакта)
+                <div class="achievement-text">Искатель сокровищ (3 найденных артефакта)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Угадайка (10 правильных предсказаний монеты)
+               <div class="achievement-text">Угадайка (10 правильных предсказаний монеты)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Числовой провидец (50%+ точность в матрице)
+                <div class="achievement-text">Числовой провидец (50%+ точность в матрице)</div>
             </div>
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер медитации (5 успешных визуализаций)
+                <div class="achievement-text">Мастер медитации (5 успешных визуализаций)</div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
