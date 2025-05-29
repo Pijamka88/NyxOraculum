@@ -253,12 +253,13 @@
             animation: fadeIn 0.5s ease;
         }
 
+        /* Выравнивание статистики и достижений */
         .stats-window, .achievements-window {
             display: none;
             position: fixed;
-            top: 50%;
+            top: 20px; /* Отступ сверху как у основного контейнера */
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             background: rgba(26, 26, 46, 0.95);
             padding: 20px;
             border-radius: 20px;
@@ -268,6 +269,8 @@
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -283,7 +286,7 @@
             color: #E6E6FA;
             text-align: center;
         }
-
+        
         .achievement-item {
             display: flex;
             align-items: center;
