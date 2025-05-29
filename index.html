@@ -1,3 +1,6 @@
+Вот полный код с выровненными окнами "Статистика" и "Достижения" относительно первого элемента:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -243,11 +246,24 @@
             animation: fadeIn 0.5s ease;
         }
 
+        /* Выравнивание содержимого окон статистики и достижений */
+        .stats-content, .achievements-content {
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-bottom: 20px;
+        }
+
         .stats-window h2, .achievements-window h2 {
             font-size: 2rem;
             margin-bottom: 20px;
             color: #E6E6FA;
             text-align: center;
+            position: sticky;
+            top: 0;
+            background: rgba(26, 26, 46, 0.95);
+            padding-bottom: 10px;
+            z-index: 1;
         }
 
         .stats-window p, .achievements-window p {
@@ -262,7 +278,10 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            justify-content: center;
+            justify-content: flex-start;
+            padding: 5px 10px;
+            border-radius: 5px;
+            background: rgba(138, 43, 226, 0.1);
         }
 
         .achievement-item img {
@@ -335,7 +354,7 @@
         }
 
         .close-btn, .reset-btn {
-            margin-top: 30px;
+            margin-top: 20px;
             width: 100%;
             display: block;
             margin-left: auto;
@@ -545,6 +564,25 @@
             transform: translate(-50%, -50%);
             pointer-events: none;
         }
+
+        /* Стили для скроллбара */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(138, 43, 226, 0.1);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(138, 43, 226, 0.3);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(138, 43, 226, 0.5);
+        }
     </style>
 </head>
 <body>
@@ -718,14 +756,16 @@
     <!-- Статистика -->
     <div id="stats" class="stats-window">
         <h2>Статистика</h2>
-        <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
-        <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
-        <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
-        <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
-        <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
-        <p>Орел и решка: <span id="coin-stats">0/0</span></p>
-        <p>Числовая матрица: <span id="number-stats">0%</span> точности</p>
-        <p>Медитация: <span id="meditation-stats">0</span> успехов</p>
+        <div class="stats-content">
+            <p>Телепатия: <span id="telepathy-stats">0/0</span></p>
+            <p>Карты Зенера: <span id="zener-stats">0/0</span></p>
+            <p>Цветовая интуиция: <span id="color-stats">0/0</span></p>
+            <p>Телекинез: <span id="telekinesis-stats">0</span> успехов</p>
+            <p>Биолокация: <span id="dowsing-stats">0/0</span> (найдено/попыток)</p>
+            <p>Орел и решка: <span id="coin-stats">0/0</span></p>
+            <p>Числовая матрица: <span id="number-stats">0%</span> точности</p>
+            <p>Медитация: <span id="meditation-stats">0</span> успехов</p>
+        </div>
         <button class="btn reset-btn" onclick="resetStats()">Сбросить</button>
         <button class="btn close-btn" onclick="closeStats()">Закрыть</button>
     </div>
@@ -733,42 +773,44 @@
     <!-- Достижения -->
     <div id="achievements" class="achievements-window">
         <h2>Достижения</h2>
-        <div id="achievement-list">
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Новичок телепатии (5 правильных ответов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер карт Зенера (10 правильных ответов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Цветовой провидец (15 правильных ответов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Экстрасенс (20 правильных ответов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер телекинеза (5 успехов)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Искатель сокровищ (3 найденных артефакта)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Угадайка (10 правильных предсказаний монеты)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Числовой провидец (50%+ точность в матрице)
-            </div>
-            <div class="achievement-item locked">
-                <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                Мастер медитации (5 успешных визуализаций)
+        <div class="achievements-content">
+            <div id="achievement-list">
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Новичок телепатии (5 правильных ответов)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Мастер карт Зенера (10 правильных ответов)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Цветовой провидец (15 правильных ответов)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Экстрасенс (20 правильных ответов)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Мастер телекинеза (5 успехов)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Искатель сокровищ (3 найденных артефакта)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Угадайка (10 правильных предсказаний монеты)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Числовой провидец (50%+ точность в матрице)
+                </div>
+                <div class="achievement-item locked">
+                    <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
+                    Мастер медитации (5 успешных визуализаций)
+                </div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeAchievements()">Закрыть</button>
@@ -787,10 +829,8 @@
     <div id="stars"></div>
 
     <script>
-    // Звездный фон
-    function createStars() {
+        // Звездный фон
         const stars = document.getElementById('stars');
-        stars.innerHTML = ''; // Очищаем перед созданием новых звезд
         for (let i = 0; i < 100; i++) {
             const star = document.createElement('div');
             star.className = 'star';
@@ -799,79 +839,74 @@
             star.style.animationDelay = `${Math.random() * 2}s`;
             stars.appendChild(star);
         }
-    }
 
-    // Статистика и достижения
-    let stats = {
-        telepathy: { correct: 0, total: 0 },
-        zener: { correct: 0, total: 0 },
-        color: { correct: 0, total: 0 },
-        telekinesis: { success: 0 },
-        dowsing: { found: 0, attempts: 0 },
-        coin: { correct: 0, total: 0 },
-        number: { accuracy: 0, total: 0 },
-        meditation: { success: 0 }
-    };
-
-    let achievements = [];
-    let currentArtifactPosition = -1;
-    let isGameActive = true;
-    let telekinesisGameActive = false;
-    let isCoinFlipping = false;
-    let targetNumber = 0;
-
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-        createStars();
-        initMeditation();
-    };
-
-    // Показать сообщение
-    function showMessage(text, callback) {
-        isGameActive = false;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-        document.getElementById('message-text').textContent = text;
-        document.getElementById('message-box').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        
-        const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            if (callback) callback();
+        // Статистика и достижения
+        let stats = {
+            telepathy: { correct: 0, total: 0 },
+            zener: { correct: 0, total: 0 },
+            color: { correct: 0, total: 0 },
+            telekinesis: { success: 0 },
+            dowsing: { found: 0, attempts: 0 },
+            coin: { correct: 0, total: 0 },
+            number: { accuracy: 0, total: 0 },
+            meditation: { success: 0 }
         };
-    }
 
-    // Инициализация телекинеза
-    function initTelekinesis() {
-        const area = document.getElementById('telekinesis-area');
-        const object = document.getElementById('telekinesis-object');
-        const target = document.getElementById('target-object');
-        let isDragging = false;
-        let startX, startY, startLeft, startTop;
-        telekinesisGameActive = true;
+        let achievements = [];
+        let currentArtifactPosition = -1;
+        let isGameActive = true;
+        let telekinesisGameActive = false;
+        let isCoinFlipping = false;
+        let meditationInterval;
+        let meditationEnergy = 0;
+        let meditationTarget = 0;
+        let targetNumber = 0;
+        let isMeditating = false;
 
-        // Сброс позиции объекта
-        object.style.left = '50%';
-        object.style.top = '50%';
-        object.style.transform = 'translate(-50%, -50%)';
+        // Показать сообщение
+        function showMessage(text, callback) {
+            isGameActive = false;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('message-text').textContent = text;
+            document.getElementById('message-box').style.display = 'block';
+            
+            const button = document.getElementById('message-button');
+            button.onclick = function() {
+                document.getElementById('message-box').style.display = 'none';
+                isGameActive = true;
+                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+                if (callback) callback();
+            };
+        }
 
-        // Позиция цели (не в центре)
-        const rect = area.getBoundingClientRect();
-        let targetX, targetY;
-        
-        do {
-            targetX = Math.random() * (rect.width - 40);
-            targetY = Math.random() * (rect.height - 40);
-        } while (
-            Math.abs(targetX - rect.width/2) < 100 && 
-            Math.abs(targetY - rect.height/2) < 100
-        );
+        // Инициализация телекинеза
+        function initTelekinesis() {
+            const area = document.getElementById('telekinesis-area');
+            const object = document.getElementById('telekinesis-object');
+            const target = document.getElementById('target-object');
+            let isDragging = false;
+            let startX, startY, startLeft, startTop;
+            telekinesisGameActive = true;
 
-        target.style.left = targetX + 'px';
-        target.style.top = targetY + 'px';
+            // Сброс позиции объекта
+            object.style.left = '50%';
+            object.style.top = '50%';
+            object.style.transform = 'translate(-50%, -50%)';
+
+            // Позиция цели (не в центре)
+            const rect = area.getBoundingClientRect();
+            let targetX, targetY;
+            
+            do {
+                targetX = Math.random() * (rect.width - 40);
+                targetY = Math.random() * (rect.height - 40);
+            } while (
+                Math.abs(targetX - rect.width/2) < 100 && 
+                Math.abs(targetY - rect.height/2) < 100
+            );
+
+            target.style.left = targetX + 'px';
+            target.style.top = targetY + 'px';
 
         // Для мыши
         object.addEventListener('mousedown', startDrag);
