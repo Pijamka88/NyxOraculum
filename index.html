@@ -164,6 +164,11 @@
         .game-btn:active {
             transform: scale(0.95);
         }
+        
+        .game-btn:active, .btn:active, .coin-btn:active, .number-submit:active, .meditation-btn:active {
+    border-color: #FFD700 !important;
+    box-shadow: 0 0 10px #FFD700;
+}
 
         .telekinesis-container {
             width: 100%;
@@ -1571,42 +1576,44 @@ function openGame(gameId) {
     }
 }
 
-// Закрытие игры
-function closeGame(gameId) {
-    // Остановка всех процессов игры "Орел и решка"
-    if (gameId === 'coin') {
-        clearTimeout(coinFlipTimeout);
-        clearTimeout(coinResultTimeout);
-        isCoinFlipping = false;
-        const coin = document.getElementById('coin-element');
-        coin.classList.remove('flipping');
-        coin.style.transform = 'rotateY(0deg)';
-        document.getElementById('coin-result').textContent = '';
-        document.querySelectorAll('.coin-btn').forEach(btn => {
-            btn.disabled = false;
-        });
+    // Закрытие игры
+    function closeGame(gameId) {
+        // Остановка всех процессов игры "Орел и решка"
+        if (gameId === 'coin') {
+            clearTimeout(coinFlipTimeout);
+            clearTimeout(coinResultTimeout);
+            isCoinFlipping = false;
+            const coin = document.getElementById('coin-element');
+            coin.classList.remove('flipping');
+            coin.style.transform = 'rotateY(0deg)';
+            document.getElementById('coin-result').textContent = '';
+            document.querySelectorAll('.coin-btn').forEach(btn => {
+                btn.disabled = false;
+            });
+        }
+
+        // Сброс числовой матрицы
+        if (gameId === 'number') {
+            document.getElementById('accuracy-fill').style.width = '0%';
+            document.getElementById('number-guess').value = '';
+        }
+
+        // Закрытие окна игры
+        document.getElementById(gameId).style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
+
+        telekinesisGameActive = false;
+
+        // Остановка медитации при закрытии окна
+        if (gameId === 'meditation' && isMeditating) {
+            clearInterval(meditationInterval);
+            isMeditating = false;
+            initMeditation();
+        }
+
+        // Убрано автоматическое воспроизведение музыки при закрытии игры
     }
-
-    // Закрытие окна игры
-    document.getElementById(gameId).style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-    document.querySelector('.container').style.display = 'block';
-
-    telekinesisGameActive = false;
-
-    // Остановка медитации при закрытии окна
-    if (gameId === 'meditation' && isMeditating) {
-        clearInterval(meditationInterval);
-        isMeditating = false;
-        initMeditation();
-    }
-
-    // Возобновляем фоновую музыку, если она не играет
-    if (!backgroundMusicPlaying) {
-        backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
-        backgroundMusicPlaying = true;
-    }
-}
     // Открытие статистики
     function openStats() {
         document.querySelector('.container').style.display = 'none';
@@ -1742,6 +1749,23 @@ function closeGame(gameId) {
     function checkAchievements() {
         updateAchievements();
     }
+        // Измененная инициализация музыки
+    let musicPlayed = false;
+
+    window.addEventListener('DOMContentLoaded', () => {
+        if (!musicPlayed) {
+            try {
+                backgroundMusic.loop = true;
+                backgroundMusic.play().then(() => {
+                    musicPlayed = true;
+                }).catch(e => {
+                    console.log("Автовоспроизведение музыки заблокировано");
+                });
+            } catch (e) {
+                console.log("Автовоспроизведение музыки заблокировано");
+            }
+        }
+    });
 </script>
 </body>
 </html>
