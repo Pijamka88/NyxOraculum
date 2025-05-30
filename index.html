@@ -20,6 +20,30 @@
             position: relative;
         }
 
+        /* Анимация границ экрана */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 4px solid transparent;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF, #FF00FF, #8A2BE2) border-box;
+            background-size: 300% 300%;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            animation: borderGlow 8s linear infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
         /* Добавленные стили для звездного фона */
         #stars {
             position: fixed;
@@ -98,6 +122,11 @@
             transform: scale(0.95);
         }
 
+        .btn.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
         .btn img {
             width: 20px;
             height: 20px;
@@ -163,6 +192,11 @@
 
         .game-btn:active {
             transform: scale(0.95);
+        }
+
+        .game-btn.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .telekinesis-container {
@@ -277,30 +311,30 @@
             text-align: center;
         }
 
-.stats-window p, .achievements-window p {
-    font-size: 1rem;
-    margin: 10px 0;
-    color: #E6E6FA;
-    text-align: left; 
-    padding-left: 10px; 
-}
+        .stats-window p, .achievements-window p {
+            font-size: 1rem;
+            margin: 10px 0;
+            color: #E6E6FA;
+            text-align: left; 
+            padding-left: 10px; 
+        }
 
-.achievement-item {
-    display: flex;
-    align-items: center;
-    gap: 10px; /* Расстояние между иконкой и текстом */
-    margin-bottom: 10px;
-    text-align: left;
-    padding-left: 15px;
-}
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            text-align: left;
+            padding-left: 15px;
+        }
 
-.achievement-item.locked .achievement-text {
-    color: #888;
-}
+        .achievement-item.locked .achievement-text {
+            color: #888;
+        }
 
-.achievement-item .achievement-text {
-    color: #E6E6FA;
-}
+        .achievement-item .achievement-text {
+            color: #E6E6FA;
+        }
 
         .achievement-item img {
             width: 24px;
@@ -455,61 +489,67 @@
             transform: scale(0.95);
         }
 
+        .coin-btn.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        }
+
         .coin-result {
             margin-top: 20px;
             font-size: 1.2rem;
             height: 24px;
         }
 
-/* Стили для игры "Числовая матрица" */
-.number-matrix-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+        /* Стили для игры "Числовая матрица" */
+        .number-matrix-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-.number-input {
-    background: rgba(138, 43, 226, 0.2);
-    color: #E6E6FA;
-    border: 2px solid #8A2BE2;
-    padding: 15px;
-    font-size: 1.2rem;
-    border-radius: 10px;
-    width: 150px;
-    text-align: center;
-    margin: 20px 0;
-}
+        .number-input {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            width: 150px;
+            text-align: center;
+            margin: 20px 0;
+        }
 
-.number-submit {
-    background: rgba(138, 43, 226, 0.2);
-    color: #E6E6FA;
-    border: 2px solid #8A2BE2;
-    padding: 10px 20px;
-    border-radius: 50px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background 0.3s ease;
-}
+        .number-submit {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
 
-.number-submit:hover {
-    background: rgba(153, 50, 204, 0.3);
-}
+        .number-submit:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
 
-.accuracy-meter {
-    width: 100%;
-    height: 20px;
-    background: rgba(138, 43, 226, 0.2);
-    border-radius: 10px;
-    margin: 20px 0;
-    overflow: hidden;
-}
+        .accuracy-meter {
+            width: 100%;
+            height: 20px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 10px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
 
-.accuracy-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #8A2BE2, #00BFFF);
-    width: 0%;
-    transition: width 0.5s ease;
-}
+        .accuracy-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
         /* Обновленные стили для игры "Медитация-визуализация" */
         .meditation-container {
             display: flex;
@@ -623,6 +663,11 @@
         .meditation-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .meditation-btn.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .meditation-result {
@@ -795,21 +840,21 @@
         </div>
     </div>
 
-<!-- Игра "Числовая матрица" -->
-<div id="number" class="game-window">
-    <div class="game-content active">
-        <h2>Числовая матрица</h2>
-        <p>Угадайте число от 1 до 100:</p>
-        <div class="number-matrix-container">
-            <input type="number" min="1" max="100" class="number-input" id="number-guess" placeholder="1-100">
-            <button class="number-submit" onclick="checkNumberGuess()">Проверить</button>
-            <div class="accuracy-meter">
-                <div class="accuracy-fill" id="accuracy-fill"></div>
+    <!-- Игра "Числовая матрица" -->
+    <div id="number" class="game-window">
+        <div class="game-content active">
+            <h2>Числовая матрица</h2>
+            <p>Угадайте число от 1 до 100:</p>
+            <div class="number-matrix-container">
+                <input type="number" min="1" max="100" class="number-input" id="number-guess" placeholder="1-100">
+                <button class="number-submit" onclick="checkNumberGuess()">Проверить</button>
+                <div class="accuracy-meter">
+                    <div class="accuracy-fill" id="accuracy-fill"></div>
+                </div>
             </div>
+            <button class="btn close-btn" onclick="closeGame('number')">Закрыть</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('number')">Закрыть</button>
     </div>
-</div>
 
     <!-- Игра "Медитация-визуализация" -->
     <div id="meditation" class="game-window">
@@ -937,13 +982,27 @@
     let telekinesisGameActive = false;
     let isCoinFlipping = false;
     let targetNumber = 0;
-    let backgroundMusicPlaying = true; // Флаг, что музыка играет
+    let backgroundMusicPlaying = false; // Флаг, что музыка играет
+    let isMeditating = false;
+    let meditationInterval;
+    let meditationParticles = [];
 
     // Инициализация при загрузке страницы
     window.onload = function() {
         createStars();
         initMeditation();
+        playOpeningSound();
     };
+
+    // Проигрывание звука при открытии приложения (только один раз)
+    function playOpeningSound() {
+        if (!backgroundMusicPlaying) {
+            const openingSound = new Audio('Opening.mp3');
+            openingSound.volume = 0.3;
+            openingSound.play().catch(e => console.log("Не удалось воспроизвести звук открытия"));
+            backgroundMusicPlaying = true;
+        }
+    }
 
     // Показать сообщение
     function showMessage(text, callback) {
@@ -1128,481 +1187,444 @@
     }
 
     // Обновленная игра "Орел и решка"
-let coinFlipTimeout;
-let coinResultTimeout;
+    let coinFlipTimeout;
+    let coinResultTimeout;
 
-function flipCoin(guess) {
-    if (!isGameActive || isCoinFlipping) return;
-    
-    isCoinFlipping = true;
-    const coin = document.getElementById('coin-element');
-    const resultDiv = document.getElementById('coin-result');
-    resultDiv.textContent = '';
-    
-    // Отключаем кнопки на время анимации
-    document.querySelectorAll('.coin-btn').forEach(btn => {
-        btn.disabled = true;
-    });
-    
-    // Определяем результат заранее
-    const result = Math.random() < 0.5 ? 'орел' : 'решка';
-    const isCorrect = guess === result;
-    
-    // Устанавливаем конечное вращение
-    const finalRotation = result === 'орел' ? 0 : 180;
-    coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
-    
-    // Обновляем статистику
-    stats.coin.total++;
-    if (isCorrect) {
-        stats.coin.correct++;
-    }
-    updateStats();
-    
-    // Запускаем анимацию
-    coin.classList.add('flipping');
-    
-    // Очищаем предыдущие таймеры, если они есть
-    clearTimeout(coinFlipTimeout);
-    clearTimeout(coinResultTimeout);
-    
-    // После завершения анимации показываем результат
-    coinFlipTimeout = setTimeout(() => {
-        // Проверяем, не было ли закрыто окно
-        if (document.getElementById('coin').style.display === 'none') {
+    function flipCoin(guess) {
+        if (!isGameActive || isCoinFlipping) return;
+        
+        // Добавляем активный класс к нажатой кнопке
+        const buttons = document.querySelectorAll('.coin-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        const activeBtn = guess === 'орел' ? buttons[0] : buttons[1];
+        activeBtn.classList.add('active');
+        
+        isCoinFlipping = true;
+        const coin = document.getElementById('coin-element');
+        const resultDiv = document.getElementById('coin-result');
+        resultDiv.textContent = '';
+        
+        // Отключаем кнопки на время анимации
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        // Определяем результат заранее
+        const result = Math.random() < 0.5 ? 'орел' : 'решка';
+        const isCorrect = guess === result;
+        
+        // Устанавливаем конечное вращение
+        const finalRotation = result === 'орел' ? 0 : 180;
+        coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
+        
+        // Обновляем статистику
+        stats.coin.total++;
+        if (isCorrect) {
+            stats.coin.correct++;
+        }
+        updateStats();
+        
+        // Запускаем анимацию
+        coin.classList.add('flipping');
+        
+        // Очищаем предыдущие таймеры, если они есть
+        clearTimeout(coinFlipTimeout);
+        clearTimeout(coinResultTimeout);
+        
+        // После завершения анимации показываем результат
+        coinFlipTimeout = setTimeout(() => {
+            // Проверяем, не было ли закрыто окно
+            if (document.getElementById('coin').style.display === 'none') {
+                isCoinFlipping = false;
+                return;
+            }
+            
+            coin.classList.remove('flipping');
+            // Устанавливаем конечное положение
+            coin.style.transform = `rotateY(${finalRotation}deg)`;
+            
+            // Показываем результат
+            if (isCorrect) {
+                resultDiv.textContent = '✅ Верно!';
+                resultDiv.style.color = '#4CAF50';
+            } else {
+                resultDiv.textContent = '❌ Неверно';
+                resultDiv.style.color = '#F44336';
+            }
+            
+            // Включаем кнопки обратно
+            buttons.forEach(btn => {
+                btn.disabled = false;
+            });
+            
             isCoinFlipping = false;
+            
+            // Через 1.5 секунды сбрасываем анимацию
+            coinResultTimeout = setTimeout(() => {
+                if (document.getElementById('coin').style.display === 'block') {
+                    resultDiv.textContent = '';
+                    activeBtn.classList.remove('active');
+                }
+            }, 1500);
+        }, 2500);
+    }
+
+    // Игра "Числовая матрица"
+    function initNumberMatrix() {
+        document.getElementById('accuracy-fill').style.width = '0%';
+        document.getElementById('number-guess').value = '';
+    }
+
+    function checkNumberGuess() {
+        if (!isGameActive) return;
+        
+        const guess = parseInt(document.getElementById('number-guess').value);
+        if (isNaN(guess) || guess < 1 || guess > 100) {
+            showMessage('Введите число от 1 до 100');
             return;
         }
         
-        coin.classList.remove('flipping');
-        // Устанавливаем конечное положение
-        coin.style.transform = `rotateY(${finalRotation}deg)`;
+        const target = Math.floor(Math.random() * 100) + 1;
+        const difference = Math.abs(target - guess);
+        const accuracy = Math.max(0, 100 - difference);
         
-        // Показываем результат
-        if (isCorrect) {
-            resultDiv.textContent = '✅ Верно!';
-            resultDiv.style.color = '#4CAF50';
-        } else {
-            resultDiv.textContent = '❌ Неверно';
-            resultDiv.style.color = '#F44336';
-        }
-        
-        // Включаем кнопки обратно
-        document.querySelectorAll('.coin-btn').forEach(btn => {
-            btn.disabled = false;
-        });
-        
-        isCoinFlipping = false;
-        
-        // Через 1.5 секунды сбрасываем анимацию
-        coinResultTimeout = setTimeout(() => {
-            if (document.getElementById('coin').style.display === 'block') {
-                resultDiv.textContent = '';
-            }
-        }, 1500);
-    }, 2500);
-}
-
-// Игра "Числовая матрица"
-function checkNumberGuess() {
-    if (!isGameActive) return;
-    
-    const guess = parseInt(document.getElementById('number-guess').value);
-    if (isNaN(guess) || guess < 1 || guess > 100) {
-        showMessage('Введите число от 1 до 100');
-        return;
-    }
-    
-    const target = Math.floor(Math.random() * 100) + 1;
-    const difference = Math.abs(target - guess);
-    const accuracy = Math.max(0, 100 - difference);
-    
-    stats.number.total++;
-    stats.number.accuracy = (stats.number.accuracy * (stats.number.total - 1) + accuracy) / stats.number.total;
-    updateStats();
-    checkAchievements();
-    
-    document.getElementById('accuracy-fill').style.width = `${accuracy}%`;
-    showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`);
-    document.getElementById('number-guess').value = '';
-}
-
-// Аудио элементы
-const backgroundMusic = new Audio('Opening.mp3');
-const meditationMusic = new Audio('Meditation.mp3');
-const clickSound = new Audio('Click.mp3');
-
-// Настройка громкости
-backgroundMusic.volume = 0.3;
-meditationMusic.volume = 0.4;
-clickSound.volume = 0.5;
-
-// Игра "Медитация-дыхание 4-7-8"
-let meditationPhase = 'inhale';
-let meditationCycle = 0;
-let meditationSeconds = 0;
-let breathIndicatorAngle = 0;
-
-// Воспроизведение фоновой музыки при загрузке
-window.addEventListener('DOMContentLoaded', () => {
-    try {
-        backgroundMusic.loop = true;
-        backgroundMusic.play();
-    } catch (e) {
-        console.log("Автовоспроизведение музыки заблокировано");
-    }
-});
-
-// Обработчик клика для всех кнопок
-document.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-        clickSound.currentTime = 0;
-        clickSound.play().catch(e => console.log("Не удалось воспроизвести звук клика"));
-    });
-});
-
-function initMeditation() {
-    const wheel = document.getElementById('chakra-wheel');
-    const btn = document.getElementById('meditation-btn');
-    const result = document.getElementById('meditation-result');
-    const progressBar = document.getElementById('progress-bar');
-    const instruction = document.getElementById('meditation-instruction');
-    
-    // Остановка музыки медитации
-    meditationMusic.pause();
-    meditationMusic.currentTime = 0;
-    
-    // Полный сброс состояния
-    wheel.classList.remove('active');
-    progressBar.style.width = '0';
-    progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой фон
-    result.textContent = '';
-    instruction.textContent = 'Нажмите "Начать медитацию" для практики дыхания 4-7-8';
-    instruction.style.color = '#E6E6FA';
-    btn.textContent = 'Начать медитацию';
-    btn.disabled = false;
-    isMeditating = false;
-    meditationPhase = 'inhale';
-    meditationCycle = 0;
-    meditationSeconds = 0;
-    breathIndicatorAngle = 0;
-    
-    // Очистка частиц
-    document.querySelectorAll('.energy-particle').forEach(el => el.remove());
-    meditationParticles = [];
-}
-
-function toggleMeditation() {
-    if (isMeditating) {
-        stopMeditation(false);
-    } else {
-        startMeditation();
-    }
-}
-
-function startMeditation() {
-    if (isMeditating) return;
-    
-    const wheel = document.getElementById('chakra-wheel');
-    const btn = document.getElementById('meditation-btn');
-    const progressBar = document.getElementById('progress-bar');
-    
-    // Запуск музыки медитации
-    meditationMusic.loop = true;
-    meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
-    
-    isMeditating = true;
-    btn.textContent = 'Завершить медитацию';
-    wheel.classList.add('active');
-    meditationPhase = 'inhale';
-    meditationCycle = 0;
-    meditationSeconds = 0;
-    
-    // Настройка прогресс-бара
-    progressBar.style.width = '0';
-    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
-    
-    // Запуск анимации
-    createEnergyParticles();
-    updateBreathIndicator();
-    meditationInterval = setInterval(updateMeditation, 1000);
-    updateInstruction();
-}
-
-function stopMeditation(success = false) {
-    if (!isMeditating) return;
-    
-    clearInterval(meditationInterval);
-    isMeditating = false;
-    meditationMusic.pause();
-    meditationMusic.currentTime = 0;
-    
-    const wheel = document.getElementById('chakra-wheel');
-    const btn = document.getElementById('meditation-btn');
-    const result = document.getElementById('meditation-result');
-    const progressBar = document.getElementById('progress-bar');
-    
-    // Сброс прогресс-бара
-    progressBar.style.width = '0';
-    progressBar.style.background = 'rgba(138, 43, 226, 0.2)';
-    
-    btn.disabled = true;
-    wheel.classList.remove('active');
-    
-    if (success) {
-        stats.meditation.success++;
+        stats.number.total++;
+        stats.number.accuracy = (stats.number.accuracy * (stats.number.total - 1) + accuracy) / stats.number.total;
         updateStats();
         checkAchievements();
-        result.textContent = '✅ Отличная практика! Вы завершили цикл 4-7-8';
-        result.style.color = '#4CAF50';
-    } else {
-        result.textContent = 'Медитация прервана. Попробуйте снова.';
-        result.style.color = '#E6E6FA';
+        
+        document.getElementById('accuracy-fill').style.width = `${accuracy}%`;
+        showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`);
+        document.getElementById('number-guess').value = '';
     }
-    
-    setTimeout(initMeditation, 2000);
-}
 
-function updateMeditation() {
-    if (!isMeditating) return;
-    
-    const progressBar = document.getElementById('progress-bar');
-    meditationSeconds++;
-    
-    // Точный расчет прогресса для каждой фазы
-    let progress = 0;
-    let phaseComplete = false;
-    
-    switch(meditationPhase) {
-        case 'inhale':
-            progress = Math.min(100, (meditationSeconds / 4) * 100);
-            phaseComplete = meditationSeconds >= 4;
-            break;
-            
-        case 'hold':
-            progress = Math.min(100, (meditationSeconds / 7) * 100);
-            phaseComplete = meditationSeconds >= 7;
-            break;
-            
-        case 'exhale':
-            progress = Math.min(100, (meditationSeconds / 8) * 100);
-            phaseComplete = meditationSeconds >= 8;
-            break;
-    }
-    
-    progressBar.style.width = `${progress}%`;
-    
-    if (phaseComplete) {
+    // Игра "Медитация-дыхание 4-7-8"
+    function initMeditation() {
+        const wheel = document.getElementById('chakra-wheel');
+        const btn = document.getElementById('meditation-btn');
+        const result = document.getElementById('meditation-result');
+        const progressBar = document.getElementById('progress-bar');
+        const instruction = document.getElementById('meditation-instruction');
+        
+        // Остановка музыки медитации
+        meditationMusic.pause();
+        meditationMusic.currentTime = 0;
+        
+        // Полный сброс состояния
+        wheel.classList.remove('active');
+        progressBar.style.width = '0';
+        progressBar.style.background = 'rgba(138, 43, 226, 0.2)'; // Пустой фон
+        result.textContent = '';
+        instruction.textContent = 'Нажмите "Начать медитацию" для практики дыхания 4-7-8';
+        instruction.style.color = '#E6E6FA';
+        btn.textContent = 'Начать медитацию';
+        btn.disabled = false;
+        isMeditating = false;
+        meditationPhase = 'inhale';
+        meditationCycle = 0;
         meditationSeconds = 0;
+        breathIndicatorAngle = 0;
+        
+        // Очистка частиц
+        document.querySelectorAll('.energy-particle').forEach(el => el.remove());
+        meditationParticles = [];
+    }
+
+    function toggleMeditation() {
+        const btn = document.getElementById('meditation-btn');
+        if (isMeditating) {
+            btn.classList.remove('active');
+            stopMeditation(false);
+        } else {
+            btn.classList.add('active');
+            startMeditation();
+        }
+    }
+
+    function startMeditation() {
+        if (isMeditating) return;
+        
+        const wheel = document.getElementById('chakra-wheel');
+        const btn = document.getElementById('meditation-btn');
+        const progressBar = document.getElementById('progress-bar');
+        
+        // Запуск музыки медитации
+        meditationMusic.loop = true;
+        meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
+        
+        isMeditating = true;
+        btn.textContent = 'Завершить медитацию';
+        wheel.classList.add('active');
+        meditationPhase = 'inhale';
+        meditationCycle = 0;
+        meditationSeconds = 0;
+        
+        // Настройка прогресс-бара
+        progressBar.style.width = '0';
+        progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
+        
+        // Запуск анимации
+        createEnergyParticles();
+        updateBreathIndicator();
+        meditationInterval = setInterval(updateMeditation, 1000);
+        updateInstruction();
+    }
+
+    function stopMeditation(success = false) {
+        if (!isMeditating) return;
+        
+        clearInterval(meditationInterval);
+        isMeditating = false;
+        meditationMusic.pause();
+        meditationMusic.currentTime = 0;
+        
+        const wheel = document.getElementById('chakra-wheel');
+        const btn = document.getElementById('meditation-btn');
+        const result = document.getElementById('meditation-result');
+        const progressBar = document.getElementById('progress-bar');
+        
+        // Сброс прогресс-бара
+        progressBar.style.width = '0';
+        progressBar.style.background = 'rgba(138, 43, 226, 0.2)';
+        
+        btn.disabled = true;
+        wheel.classList.remove('active');
+        
+        if (success) {
+            stats.meditation.success++;
+            updateStats();
+            checkAchievements();
+            result.textContent = '✅ Отличная практика! Вы завершили цикл 4-7-8';
+            result.style.color = '#4CAF50';
+        } else {
+            result.textContent = 'Медитация прервана. Попробуйте снова.';
+            result.style.color = '#E6E6FA';
+        }
+        
+        setTimeout(initMeditation, 2000);
+    }
+
+    function updateMeditation() {
+        if (!isMeditating) return;
+        
+        const progressBar = document.getElementById('progress-bar');
+        meditationSeconds++;
+        
+        // Точный расчет прогресса для каждой фазы
+        let progress = 0;
+        let phaseComplete = false;
         
         switch(meditationPhase) {
             case 'inhale':
-                meditationPhase = 'hold';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
+                progress = Math.min(100, (meditationSeconds / 4) * 100);
+                phaseComplete = meditationSeconds >= 4;
                 break;
                 
             case 'hold':
-                meditationPhase = 'exhale';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
+                progress = Math.min(100, (meditationSeconds / 7) * 100);
+                phaseComplete = meditationSeconds >= 7;
                 break;
                 
             case 'exhale':
-                meditationPhase = 'inhale';
-                meditationCycle++;
-                progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
-                
-                if (meditationCycle >= 1) {
-                    stopMeditation(true);
-                    return;
-                }
+                progress = Math.min(100, (meditationSeconds / 8) * 100);
+                phaseComplete = meditationSeconds >= 8;
+                break;
+        }
+        
+        progressBar.style.width = `${progress}%`;
+        
+        if (phaseComplete) {
+            meditationSeconds = 0;
+            
+            switch(meditationPhase) {
+                case 'inhale':
+                    meditationPhase = 'hold';
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
+                    break;
+                    
+                case 'hold':
+                    meditationPhase = 'exhale';
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
+                    break;
+                    
+                case 'exhale':
+                    meditationPhase = 'inhale';
+                    meditationCycle++;
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
+                    
+                    if (meditationCycle >= 1) {
+                        stopMeditation(true);
+                        return;
+                    }
+                    break;
+            }
+        }
+        
+        updateInstruction();
+    }
+
+    function updateInstruction() {
+        const instruction = document.getElementById('meditation-instruction');
+        const remaining = meditationPhase === 'inhale' ? 4 - meditationSeconds :
+                         meditationPhase === 'hold' ? 7 - meditationSeconds :
+                         8 - meditationSeconds;
+        
+        switch(meditationPhase) {
+            case 'inhale':
+                instruction.textContent = `Вдох (${remaining} сек) → Задержка → Выдох`;
+                instruction.style.color = '#4CAF50'; // Зеленый
+                break;
+            case 'hold':
+                instruction.textContent = `Вдох → Задержка (${remaining} сек) → Выдох`;
+                instruction.style.color = '#FFC107'; // Желтый
+                break;
+            case 'exhale':
+                instruction.textContent = `Вдох → Задержка → Выдох (${remaining} сек)`;
+                instruction.style.color = '#F44336'; // Красный
                 break;
         }
     }
-    
-    updateInstruction();
-}
 
-function updateInstruction() {
-    const instruction = document.getElementById('meditation-instruction');
-    const remaining = meditationPhase === 'inhale' ? 4 - meditationSeconds :
-                     meditationPhase === 'hold' ? 7 - meditationSeconds :
-                     8 - meditationSeconds;
-    
-    switch(meditationPhase) {
-        case 'inhale':
-            instruction.textContent = `Вдох (${remaining} сек) → Задержка → Выдох`;
-            instruction.style.color = '#4CAF50'; // Зеленый
-            break;
-        case 'hold':
-            instruction.textContent = `Вдох → Задержка (${remaining} сек) → Выдох`;
-            instruction.style.color = '#FFC107'; // Желтый
-            break;
-        case 'exhale':
-            instruction.textContent = `Вдох → Задержка → Выдох (${remaining} сек)`;
-            instruction.style.color = '#F44336'; // Красный
-            break;
-    }
-}
-
-function updateBreathIndicator() {
-    if (!isMeditating) return;
-    
-    const breathIndicator = document.querySelector('.breath-indicator');
-    breathIndicatorAngle += 1;
-    breathIndicator.style.transform = `rotate(${breathIndicatorAngle}deg)`;
-    
-    requestAnimationFrame(updateBreathIndicator);
-}
-
-// Функции для частиц остаются без изменений
-function createEnergyParticles() {
-    if (!isMeditating) return;
-    
-    const container = document.querySelector('.chakra-container');
-    const particle = document.createElement('div');
-    particle.className = 'energy-particle';
-    
-    // Случайная позиция вокруг чакры
-    const angle = Math.random() * Math.PI * 2;
-    const distance = 100 + Math.random() * 50;
-    const x = 100 + Math.cos(angle) * distance;
-    const y = 100 + Math.sin(angle) * distance;
-    
-    particle.style.left = `${x}px`;
-    particle.style.top = `${y}px`;
-    
-    // Случайный размер и цвет
-    const size = 4 + Math.random() * 4;
-    particle.style.width = `${size}px`;
-    particle.style.height = `${size}px`;
-    
-    const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
-    const color = colors[Math.floor(Math.random() * colors.length)];
-    particle.style.backgroundColor = color;
-    
-    container.appendChild(particle);
-    meditationParticles.push(particle);
-    
-    animateParticle(particle);
-    
-    if (isMeditating) {
-        setTimeout(createEnergyParticles, 200 + Math.random() * 300);
-    }
-}
-
-function animateParticle(particle) {
-    if (!isMeditating) return;
-    
-    const startX = parseFloat(particle.style.left);
-    const startY = parseFloat(particle.style.top);
-    const centerX = 100;
-    const centerY = 100;
-    const duration = 1000 + Math.random() * 1000;
-    const startTime = Date.now();
-    
-    function updateParticle() {
+    function updateBreathIndicator() {
         if (!isMeditating) return;
         
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(1, elapsed / duration);
+        const breathIndicator = document.querySelector('.breath-indicator');
+        breathIndicatorAngle += 1;
+        breathIndicator.style.transform = `rotate(${breathIndicatorAngle}deg)`;
         
-        const newX = startX + (centerX - startX) * progress;
-        const newY = startY + (centerY - startY) * progress;
+        requestAnimationFrame(updateBreathIndicator);
+    }
+
+    function createEnergyParticles() {
+        if (!isMeditating) return;
         
-        particle.style.left = `${newX}px`;
-        particle.style.top = `${newY}px`;
-        particle.style.opacity = 1 - progress * 0.8;
+        const container = document.querySelector('.chakra-container');
+        const particle = document.createElement('div');
+        particle.className = 'energy-particle';
         
-        if (progress < 1) {
-            requestAnimationFrame(updateParticle);
-        } else {
-            particle.remove();
+        // Случайная позиция вокруг чакры
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 100 + Math.random() * 50;
+        const x = 100 + Math.cos(angle) * distance;
+        const y = 100 + Math.sin(angle) * distance;
+        
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        
+        // Случайный размер и цвет
+        const size = 4 + Math.random() * 4;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        
+        const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.backgroundColor = color;
+        
+        container.appendChild(particle);
+        meditationParticles.push(particle);
+        
+        animateParticle(particle);
+        
+        if (isMeditating) {
+            setTimeout(createEnergyParticles, 200 + Math.random() * 300);
         }
     }
-    
-    requestAnimationFrame(updateParticle);
-}
 
-// При закрытии приложения останавливаем музыку
-window.addEventListener('beforeunload', function() {
-    backgroundMusic.pause();
-    meditationMusic.pause();
-});
-
-
-
-// Открытие игры
-function openGame(gameId) {
-    document.querySelector('.container').style.display = 'none';
-    document.getElementById(gameId).style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-
-    // Останавливаем фоновую музыку
-    if (backgroundMusicPlaying) {
-        backgroundMusic.pause();
-        backgroundMusic.currentTime = 0;
-        backgroundMusicPlaying = false;
-    }
-    
-    if (gameId === 'telekinesis') {
-        initTelekinesis();
-    } else if (gameId === 'dowsing') {
-        initDowsing();
-    } else if (gameId === 'number') {
-        initNumberMatrix();
-    } else if (gameId === 'meditation') {
-        initMeditation();
-    } else if (gameId === 'coin') {
-        // Сброс состояния монеты при открытии игры
-        const coin = document.getElementById('coin-element');
-        coin.classList.remove('flipping');
-        coin.style.transform = 'rotateY(0deg)';
-        document.getElementById('coin-result').textContent = '';
-        isCoinFlipping = false;
+    function animateParticle(particle) {
+        if (!isMeditating) return;
         
-        // Включение кнопок
-        document.querySelectorAll('.coin-btn').forEach(btn => {
-            btn.disabled = false;
-        });
-    }
-}
-
-// Закрытие игры
-function closeGame(gameId) {
-    // Остановка всех процессов игры "Орел и решка"
-    if (gameId === 'coin') {
-        clearTimeout(coinFlipTimeout);
-        clearTimeout(coinResultTimeout);
-        isCoinFlipping = false;
-        const coin = document.getElementById('coin-element');
-        coin.classList.remove('flipping');
-        coin.style.transform = 'rotateY(0deg)';
-        document.getElementById('coin-result').textContent = '';
-        document.querySelectorAll('.coin-btn').forEach(btn => {
-            btn.disabled = false;
-        });
-    }
-
-    // Закрытие окна игры
-    document.getElementById(gameId).style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-    document.querySelector('.container').style.display = 'block';
-
-    telekinesisGameActive = false;
-
-    // Остановка медитации при закрытии окна
-    if (gameId === 'meditation' && isMeditating) {
-        clearInterval(meditationInterval);
-        isMeditating = false;
-        initMeditation();
+        const startX = parseFloat(particle.style.left);
+        const startY = parseFloat(particle.style.top);
+        const centerX = 100;
+        const centerY = 100;
+        const duration = 1000 + Math.random() * 1000;
+        const startTime = Date.now();
+        
+        function updateParticle() {
+            if (!isMeditating) return;
+            
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(1, elapsed / duration);
+            
+            const newX = startX + (centerX - startX) * progress;
+            const newY = startY + (centerY - startY) * progress;
+            
+            particle.style.left = `${newX}px`;
+            particle.style.top = `${newY}px`;
+            particle.style.opacity = 1 - progress * 0.8;
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateParticle);
+            } else {
+                particle.remove();
+            }
+        }
+        
+        requestAnimationFrame(updateParticle);
     }
 
-    // Возобновляем фоновую музыку, если она не играет
-    if (!backgroundMusicPlaying) {
-        backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
-        backgroundMusicPlaying = true;
+    // Открытие игры
+    function openGame(gameId) {
+        document.querySelector('.container').style.display = 'none';
+        document.getElementById(gameId).style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+
+        if (gameId === 'telekinesis') {
+            initTelekinesis();
+        } else if (gameId === 'dowsing') {
+            initDowsing();
+        } else if (gameId === 'number') {
+            initNumberMatrix();
+        } else if (gameId === 'meditation') {
+            initMeditation();
+        } else if (gameId === 'coin') {
+            // Сброс состояния монеты при открытии игры
+            const coin = document.getElementById('coin-element');
+            coin.classList.remove('flipping');
+            coin.style.transform = 'rotateY(0deg)';
+            document.getElementById('coin-result').textContent = '';
+            isCoinFlipping = false;
+            
+            // Включение кнопок
+            document.querySelectorAll('.coin-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('active');
+            });
+        }
     }
-}
+
+    // Закрытие игры
+    function closeGame(gameId) {
+        // Остановка всех процессов игры "Орел и решка"
+        if (gameId === 'coin') {
+            clearTimeout(coinFlipTimeout);
+            clearTimeout(coinResultTimeout);
+            isCoinFlipping = false;
+            const coin = document.getElementById('coin-element');
+            coin.classList.remove('flipping');
+            coin.style.transform = 'rotateY(0deg)';
+            document.getElementById('coin-result').textContent = '';
+            document.querySelectorAll('.coin-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('active');
+            });
+        }
+
+        // Закрытие окна игры
+        document.getElementById(gameId).style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.querySelector('.container').style.display = 'block';
+
+        telekinesisGameActive = false;
+
+        // Остановка медитации при закрытии окна
+        if (gameId === 'meditation' && isMeditating) {
+            clearInterval(meditationInterval);
+            isMeditating = false;
+            initMeditation();
+        }
+    }
+
     // Открытие статистики
     function openStats() {
         document.querySelector('.container').style.display = 'none';
@@ -1679,7 +1701,7 @@ function closeGame(gameId) {
         achievementList.innerHTML = achievementsData.map(achievement => `
             <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                ${achievement.id}
+                <div class="achievement-text">${achievement.id}</div>
             </div>
         `).join('');
     }
@@ -1687,6 +1709,11 @@ function closeGame(gameId) {
     // Телепатия
     function checkTelepathy(guess) {
         if (!isGameActive) return;
+        
+        // Добавляем активный класс к нажатой кнопке
+        document.querySelectorAll('.game-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = document.querySelector(`.game-btn:nth-child(${guess})`);
+        activeBtn.classList.add('active');
         
         const target = Math.floor(Math.random() * 10) + 1;
         stats.telepathy.total++;
@@ -1698,11 +1725,21 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем активный класс через 1 секунду
+        setTimeout(() => {
+            activeBtn.classList.remove('active');
+        }, 1000);
     }
 
     // Карты Зенера
     function checkZener(guess) {
         if (!isGameActive) return;
+        
+        // Добавляем активный класс к нажатой кнопке
+        document.querySelectorAll('.game-btn').forEach(btn => btn.classList.remove('active'));
+        const activeBtn = Array.from(document.querySelectorAll('.game-btn')).find(btn => btn.textContent === guess);
+        if (activeBtn) activeBtn.classList.add('active');
         
         const symbols = ['○', '□', '～', '✚', '★'];
         const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -1715,13 +1752,23 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем активный класс через 1 секунду
+        setTimeout(() => {
+            if (activeBtn) activeBtn.classList.remove('active');
+        }, 1000);
     }
 
     // Цветовая интуиция
     function checkColor(guess) {
         if (!isGameActive) return;
         
+        // Добавляем активный класс к нажатой кнопке
+        document.querySelectorAll('.game-btn').forEach(btn => btn.classList.remove('active'));
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+        const activeBtn = Array.from(document.querySelectorAll('.game-btn')).find((btn, i) => colors[i] === guess);
+        if (activeBtn) activeBtn.classList.add('active');
+        
         const target = colors[Math.floor(Math.random() * colors.length)];
         stats.color.total++;
         if (guess === target) {
@@ -1732,6 +1779,11 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем активный класс через 1 секунду
+        setTimeout(() => {
+            if (activeBtn) activeBtn.classList.remove('active');
+        }, 1000);
     }
 
     // Проверка достижений
