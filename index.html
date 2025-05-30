@@ -99,7 +99,8 @@
         }
 
         .btn.active {
-            border-color: yellow;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .btn img {
@@ -170,7 +171,8 @@
         }
 
         .game-btn.active {
-            border-color: yellow;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .telekinesis-container {
@@ -464,7 +466,8 @@
         }
 
         .coin-btn.active {
-            border-color: yellow;
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .coin-result {
@@ -505,6 +508,11 @@
 
 .number-submit:hover {
     background: rgba(153, 50, 204, 0.3);
+}
+
+.number-submit.active {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
 .accuracy-meter {
@@ -635,6 +643,11 @@
         .meditation-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+        }
+
+        .meditation-btn.active {
+            border-color: #FFD700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
         .meditation-result {
@@ -865,7 +878,7 @@
 
     <!-- Достижения -->
     <div id="achievements" class="achievements-window">
-        <h2>Достижения</h2>
+        <h2>Д достижения</h2>
         <div id="achievement-list">
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
@@ -956,16 +969,6 @@
     window.onload = function() {
         createStars();
         initMeditation();
-        
-        // Воспроизводим музыку только один раз при открытии приложения
-        if (!musicPlayedOnce) {
-            backgroundMusic.play().then(() => {
-                backgroundMusicPlaying = true;
-                musicPlayedOnce = true;
-            }).catch(e => {
-                console.log("Автовоспроизведение музыки заблокировано");
-            });
-        }
     };
 
     // Показать сообщение
@@ -1157,6 +1160,11 @@ let coinResultTimeout;
 function flipCoin(guess) {
     if (!isGameActive || isCoinFlipping) return;
     
+    // Добавляем класс active к нажатой кнопке
+    const buttons = document.querySelectorAll('.coin-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
     isCoinFlipping = true;
     const coin = document.getElementById('coin-element');
     const resultDiv = document.getElementById('coin-result');
@@ -1221,6 +1229,8 @@ function flipCoin(guess) {
         coinResultTimeout = setTimeout(() => {
             if (document.getElementById('coin').style.display === 'block') {
                 resultDiv.textContent = '';
+                // Удаляем класс active с кнопок
+                buttons.forEach(btn => btn.classList.remove('active'));
             }
         }, 1500);
     }, 2500);
@@ -1229,6 +1239,11 @@ function flipCoin(guess) {
 // Игра "Числовая матрица"
 function checkNumberGuess() {
     if (!isGameActive) return;
+    
+    // Добавляем класс active к кнопке
+    const button = document.querySelector('.number-submit');
+    button.classList.add('active');
+    setTimeout(() => button.classList.remove('active'), 300);
     
     const guess = parseInt(document.getElementById('number-guess').value);
     if (isNaN(guess) || guess < 1 || guess > 100) {
@@ -1266,19 +1281,28 @@ let meditationCycle = 0;
 let meditationSeconds = 0;
 let breathIndicatorAngle = 0;
 
+// Воспроизведение фоновой музыки при загрузке
+window.addEventListener('DOMContentLoaded', () => {
+    if (!musicPlayedOnce) {
+        try {
+            backgroundMusic.loop = true;
+            backgroundMusic.play().then(() => {
+                musicPlayedOnce = true;
+                backgroundMusicPlaying = true;
+            }).catch(e => {
+                console.log("Автовоспроизведение музыки заблокировано");
+            });
+        } catch (e) {
+            console.log("Автовоспроизведение музыки заблокировано");
+        }
+    }
+});
+
 // Обработчик клика для всех кнопок
 document.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
         clickSound.currentTime = 0;
         clickSound.play().catch(e => console.log("Не удалось воспроизвести звук клика"));
-        
-        // Добавляем класс active при нажатии
-        btn.classList.add('active');
-        
-        // Удаляем класс active через 200 мс
-        setTimeout(() => {
-            btn.classList.remove('active');
-        }, 200);
     });
 });
 
@@ -1328,6 +1352,9 @@ function startMeditation() {
     const btn = document.getElementById('meditation-btn');
     const progressBar = document.getElementById('progress-bar');
     
+    // Добавляем класс active к кнопке
+    btn.classList.add('active');
+    
     // Запуск музыки медитации
     meditationMusic.loop = true;
     meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
@@ -1369,6 +1396,7 @@ function stopMeditation(success = false) {
     
     btn.disabled = true;
     wheel.classList.remove('active');
+    btn.classList.remove('active');
     
     if (success) {
         stats.meditation.success++;
@@ -1599,7 +1627,15 @@ function closeGame(gameId) {
         document.getElementById('coin-result').textContent = '';
         document.querySelectorAll('.coin-btn').forEach(btn => {
             btn.disabled = false;
+            btn.classList.remove('active');
         });
+    }
+
+    // Сброс прогресс-бара в числовой матрице
+    if (gameId === 'number') {
+        document.getElementById('accuracy-fill').style.width = '0';
+        document.getElementById('number-guess').value = '';
+        document.querySelector('.number-submit').classList.remove('active');
     }
 
     // Закрытие окна игры
@@ -1615,14 +1651,21 @@ function closeGame(gameId) {
         isMeditating = false;
         initMeditation();
     }
-    
-    // Сброс прогресс-бара в числовой матрице
-    if (gameId === 'number') {
-        document.getElementById('accuracy-fill').style.width = '0';
-    }
 
-    // Не возобновляем фоновую музыку, так как она должна играть только один раз
+    // Возобновляем фоновую музыку, если она не играет и если это первое открытие
+    if (!backgroundMusicPlaying && !musicPlayedOnce) {
+        backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
+        backgroundMusicPlaying = true;
+        musicPlayedOnce = true;
+    }
 }
+
+// Инициализация числовой матрицы
+function initNumberMatrix() {
+    document.getElementById('accuracy-fill').style.width = '0';
+    document.getElementById('number-guess').value = '';
+}
+
     // Открытие статистики
     function openStats() {
         document.querySelector('.container').style.display = 'none';
@@ -1708,6 +1751,11 @@ function closeGame(gameId) {
     function checkTelepathy(guess) {
         if (!isGameActive) return;
         
+        // Добавляем класс active к нажатой кнопке
+        const buttons = document.querySelectorAll('.game-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
         const target = Math.floor(Math.random() * 10) + 1;
         stats.telepathy.total++;
         if (guess === target) {
@@ -1718,11 +1766,21 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем класс active через 300 мс
+        setTimeout(() => {
+            event.target.classList.remove('active');
+        }, 300);
     }
 
     // Карты Зенера
     function checkZener(guess) {
         if (!isGameActive) return;
+        
+        // Добавляем класс active к нажатой кнопке
+        const buttons = document.querySelectorAll('.game-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
         
         const symbols = ['○', '□', '～', '✚', '★'];
         const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -1735,11 +1793,21 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем класс active через 300 мс
+        setTimeout(() => {
+            event.target.classList.remove('active');
+        }, 300);
     }
 
     // Цветовая интуиция
     function checkColor(guess) {
         if (!isGameActive) return;
+        
+        // Добавляем класс active к нажатой кнопке
+        const buttons = document.querySelectorAll('.game-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
@@ -1752,6 +1820,11 @@ function closeGame(gameId) {
         }
         updateStats();
         checkAchievements();
+        
+        // Удаляем класс active через 300 мс
+        setTimeout(() => {
+            event.target.classList.remove('active');
+        }, 300);
     }
 
     // Проверка достижений
