@@ -878,7 +878,7 @@
 
     <!-- Достижения -->
     <div id="achievements" class="achievements-window">
-        <h2>Д достижения</h2>
+        <h2>Достижения</h2>
         <div id="achievement-list">
             <div class="achievement-item locked">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
@@ -964,6 +964,9 @@
     let targetNumber = 0;
     let backgroundMusicPlaying = false; // Флаг, что музыка играет
     let musicPlayedOnce = false; // Флаг, что музыка уже проигрывалась
+    let isMeditating = false;
+    let meditationInterval;
+    let meditationParticles = [];
 
     // Инициализация при загрузке страницы
     window.onload = function() {
@@ -985,7 +988,17 @@
             document.getElementById('overlay').style.display = 'none';
             isGameActive = true;
             document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            if (callback) callback();
+            
+            // Сбрасываем активные кнопки в играх телепатия, зенера и цвет
+            if (callback) {
+                const resetActiveButtons = () => {
+                    document.querySelectorAll('.game-btn.active').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    callback();
+                };
+                resetActiveButtons();
+            }
         };
     }
 
@@ -1275,12 +1288,6 @@ backgroundMusic.volume = 0.3;
 meditationMusic.volume = 0.4;
 clickSound.volume = 0.5;
 
-// Игра "Медитация-дыхание 4-7-8"
-let meditationPhase = 'inhale';
-let meditationCycle = 0;
-let meditationSeconds = 0;
-let breathIndicatorAngle = 0;
-
 // Воспроизведение фоновой музыки при загрузке
 window.addEventListener('DOMContentLoaded', () => {
     if (!musicPlayedOnce) {
@@ -1326,6 +1333,7 @@ function initMeditation() {
     instruction.style.color = '#E6E6FA';
     btn.textContent = 'Начать медитацию';
     btn.disabled = false;
+    btn.classList.remove('active');
     isMeditating = false;
     meditationPhase = 'inhale';
     meditationCycle = 0;
@@ -1442,30 +1450,33 @@ function updateMeditation() {
     progressBar.style.width = `${progress}%`;
     
     if (phaseComplete) {
-        meditationSeconds = 0;
-        
-        switch(meditationPhase) {
-            case 'inhale':
-                meditationPhase = 'hold';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
-                break;
-                
-            case 'hold':
-                meditationPhase = 'exhale';
-                progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
-                break;
-                
-            case 'exhale':
-                meditationPhase = 'inhale';
-                meditationCycle++;
-                progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
-                
-                if (meditationCycle >= 1) {
-                    stopMeditation(true);
-                    return;
-                }
-                break;
-        }
+        // Ждем 500мс перед сменой фазы, чтобы анимация завершилась
+        setTimeout(() => {
+            meditationSeconds = 0;
+            
+            switch(meditationPhase) {
+                case 'inhale':
+                    meditationPhase = 'hold';
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
+                    break;
+                    
+                case 'hold':
+                    meditationPhase = 'exhale';
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
+                    break;
+                    
+                case 'exhale':
+                    meditationPhase = 'inhale';
+                    meditationCycle++;
+                    progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
+                    
+                    if (meditationCycle >= 1) {
+                        stopMeditation(true);
+                        return;
+                    }
+                    break;
+            }
+        }, 500);
     }
     
     updateInstruction();
@@ -1503,7 +1514,6 @@ function updateBreathIndicator() {
     requestAnimationFrame(updateBreathIndicator);
 }
 
-// Функции для частиц остаются без изменений
 function createEnergyParticles() {
     if (!isMeditating) return;
     
@@ -1610,6 +1620,7 @@ function openGame(gameId) {
         // Включение кнопок
         document.querySelectorAll('.coin-btn').forEach(btn => {
             btn.disabled = false;
+            btn.classList.remove('active');
         });
     }
 }
@@ -1638,19 +1649,29 @@ function closeGame(gameId) {
         document.querySelector('.number-submit').classList.remove('active');
     }
 
+    // Сброс активных кнопок в телепатии, картах Зенера и цветовой интуиции
+    if (gameId === 'telepathy' || gameId === 'zener' || gameId === 'color') {
+        document.querySelectorAll('.game-btn.active').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+
+    // Сброс медитации
+    if (gameId === 'meditation') {
+        if (isMeditating) {
+            stopMeditation(false);
+        } else {
+            const btn = document.getElementById('meditation-btn');
+            btn.classList.remove('active');
+        }
+    }
+
     // Закрытие окна игры
     document.getElementById(gameId).style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
     document.querySelector('.container').style.display = 'block';
 
     telekinesisGameActive = false;
-
-    // Остановка медитации при закрытии окна
-    if (gameId === 'meditation' && isMeditating) {
-        clearInterval(meditationInterval);
-        isMeditating = false;
-        initMeditation();
-    }
 
     // Возобновляем фоновую музыку, если она не играет и если это первое открытие
     if (!backgroundMusicPlaying && !musicPlayedOnce) {
@@ -1766,11 +1787,6 @@ function initNumberMatrix() {
         }
         updateStats();
         checkAchievements();
-        
-        // Удаляем класс active через 300 мс
-        setTimeout(() => {
-            event.target.classList.remove('active');
-        }, 300);
     }
 
     // Карты Зенера
@@ -1793,11 +1809,6 @@ function initNumberMatrix() {
         }
         updateStats();
         checkAchievements();
-        
-        // Удаляем класс active через 300 мс
-        setTimeout(() => {
-            event.target.classList.remove('active');
-        }, 300);
     }
 
     // Цветовая интуиция
@@ -1820,11 +1831,6 @@ function initNumberMatrix() {
         }
         updateStats();
         checkAchievements();
-        
-        // Удаляем класс active через 300 мс
-        setTimeout(() => {
-            event.target.classList.remove('active');
-        }, 300);
     }
 
     // Проверка достижений
