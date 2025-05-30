@@ -98,6 +98,10 @@
             transform: scale(0.95);
         }
 
+        .btn.active {
+            border-color: yellow;
+        }
+
         .btn img {
             width: 20px;
             height: 20px;
@@ -164,11 +168,10 @@
         .game-btn:active {
             transform: scale(0.95);
         }
-        
-        .game-btn:active, .btn:active, .coin-btn:active, .number-submit:active, .meditation-btn:active {
-    border-color: #FFD700 !important;
-    box-shadow: 0 0 10px #FFD700;
-}
+
+        .game-btn.active {
+            border-color: yellow;
+        }
 
         .telekinesis-container {
             width: 100%;
@@ -460,51 +463,65 @@
             transform: scale(0.95);
         }
 
+        .coin-btn.active {
+            border-color: yellow;
+        }
+
         .coin-result {
             margin-top: 20px;
             font-size: 1.2rem;
             height: 24px;
         }
 
-        /* Стили для игры "Числовая матрица" */
-        .number-matrix-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* Стили для игры "Числовая матрица" */
+.number-matrix-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .number-input {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            padding: 15px;
-            font-size: 1.5rem;
-            width: 150px;
-            text-align: center;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
+.number-input {
+    background: rgba(138, 43, 226, 0.2);
+    color: #E6E6FA;
+    border: 2px solid #8A2BE2;
+    padding: 15px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    width: 150px;
+    text-align: center;
+    margin: 20px 0;
+}
 
-        .number-submit {
-            background: rgba(138, 43, 226, 0.2);
-            color: #E6E6FA;
-            border: 2px solid #8A2BE2;
-            padding: 10px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.3s ease;
-        }
+.number-submit {
+    background: rgba(138, 43, 226, 0.2);
+    color: #E6E6FA;
+    border: 2px solid #8A2BE2;
+    padding: 10px 20px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+}
 
-        .number-submit:hover {
-            background: rgba(153, 50, 204, 0.3);
-        }
+.number-submit:hover {
+    background: rgba(153, 50, 204, 0.3);
+}
 
-        .number-result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-        }
+.accuracy-meter {
+    width: 100%;
+    height: 20px;
+    background: rgba(138, 43, 226, 0.2);
+    border-radius: 10px;
+    margin: 20px 0;
+    overflow: hidden;
+}
 
+.accuracy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A2BE2, #00BFFF);
+    width: 0%;
+    transition: width 0.5s ease;
+}
         /* Обновленные стили для игры "Медитация-визуализация" */
         .meditation-container {
             display: flex;
@@ -790,19 +807,21 @@
         </div>
     </div>
 
-    <!-- Игра "Числовая матрица" -->
-    <div id="number" class="game-window">
-        <div class="game-content active">
-            <h2>Числовая матрица</h2>
-            <p>Угадайте число от 1 до 100:</p>
-            <div class="number-matrix-container">
-                <input type="number" class="number-input" id="number-input" min="1" max="100" placeholder="1-100">
-                <button class="number-submit" onclick="checkNumber()">Проверить</button>
-                <div class="number-result" id="number-result"></div>
+<!-- Игра "Числовая матрица" -->
+<div id="number" class="game-window">
+    <div class="game-content active">
+        <h2>Числовая матрица</h2>
+        <p>Угадайте число от 1 до 100:</p>
+        <div class="number-matrix-container">
+            <input type="number" min="1" max="100" class="number-input" id="number-guess" placeholder="1-100">
+            <button class="number-submit" onclick="checkNumberGuess()">Проверить</button>
+            <div class="accuracy-meter">
+                <div class="accuracy-fill" id="accuracy-fill"></div>
             </div>
-            <button class="btn close-btn" onclick="closeGame('number')">Закрыть</button>
         </div>
+        <button class="btn close-btn" onclick="closeGame('number')">Закрыть</button>
     </div>
+</div>
 
     <!-- Игра "Медитация-визуализация" -->
     <div id="meditation" class="game-window">
@@ -930,12 +949,23 @@
     let telekinesisGameActive = false;
     let isCoinFlipping = false;
     let targetNumber = 0;
-    let backgroundMusicPlaying = true; // Флаг, что музыка играет
+    let backgroundMusicPlaying = false; // Флаг, что музыка играет
+    let musicPlayedOnce = false; // Флаг, что музыка уже проигрывалась
 
     // Инициализация при загрузке страницы
     window.onload = function() {
         createStars();
         initMeditation();
+        
+        // Воспроизводим музыку только один раз при открытии приложения
+        if (!musicPlayedOnce) {
+            backgroundMusic.play().then(() => {
+                backgroundMusicPlaying = true;
+                musicPlayedOnce = true;
+            }).catch(e => {
+                console.log("Автовоспроизведение музыки заблокировано");
+            });
+        }
     };
 
     // Показать сообщение
@@ -1196,45 +1226,29 @@ function flipCoin(guess) {
     }, 2500);
 }
 
-    // Игра "Числовая матрица"
-    function initNumberMatrix() {
-        targetNumber = Math.floor(Math.random() * 100) + 1;
-        document.getElementById('number-input').value = '';
-        document.getElementById('number-result').textContent = '';
+// Игра "Числовая матрица"
+function checkNumberGuess() {
+    if (!isGameActive) return;
+    
+    const guess = parseInt(document.getElementById('number-guess').value);
+    if (isNaN(guess) || guess < 1 || guess > 100) {
+        showMessage('Введите число от 1 до 100');
+        return;
     }
-
-    function checkNumber() {
-        if (!isGameActive) return;
-        
-        const input = document.getElementById('number-input');
-        const guess = parseInt(input.value);
-        const resultDiv = document.getElementById('number-result');
-        
-        if (isNaN(guess) || guess < 1 || guess > 100) {
-            showMessage('Введите число от 1 до 100');
-            return;
-        }
-        
-        const difference = Math.abs(targetNumber - guess);
-        let accuracy = 0;
-        
-        if (difference === 0) {
-            accuracy = 100;
-            resultDiv.textContent = '✅ Точное попадание!';
-        } else {
-            accuracy = Math.max(0, 100 - difference);
-            resultDiv.textContent = `Точность: ${accuracy.toFixed(0)}%`;
-        }
-        
-        stats.number.total++;
-        stats.number.accuracy = (stats.number.accuracy * (stats.number.total - 1) + accuracy) / stats.number.total;
-        updateStats();
-        checkAchievements();
-        
-        setTimeout(() => {
-            initNumberMatrix();
-        }, 2000);
-    }
+    
+    const target = Math.floor(Math.random() * 100) + 1;
+    const difference = Math.abs(target - guess);
+    const accuracy = Math.max(0, 100 - difference);
+    
+    stats.number.total++;
+    stats.number.accuracy = (stats.number.accuracy * (stats.number.total - 1) + accuracy) / stats.number.total;
+    updateStats();
+    checkAchievements();
+    
+    document.getElementById('accuracy-fill').style.width = `${accuracy}%`;
+    showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`);
+    document.getElementById('number-guess').value = '';
+}
 
 // Аудио элементы
 const backgroundMusic = new Audio('Opening.mp3');
@@ -1252,21 +1266,19 @@ let meditationCycle = 0;
 let meditationSeconds = 0;
 let breathIndicatorAngle = 0;
 
-// Воспроизведение фоновой музыки при загрузке
-window.addEventListener('DOMContentLoaded', () => {
-    try {
-        backgroundMusic.loop = true;
-        backgroundMusic.play();
-    } catch (e) {
-        console.log("Автовоспроизведение музыки заблокировано");
-    }
-});
-
 // Обработчик клика для всех кнопок
 document.querySelectorAll('button').forEach(btn => {
     btn.addEventListener('click', () => {
         clickSound.currentTime = 0;
         clickSound.play().catch(e => console.log("Не удалось воспроизвести звук клика"));
+        
+        // Добавляем класс active при нажатии
+        btn.classList.add('active');
+        
+        // Удаляем класс active через 200 мс
+        setTimeout(() => {
+            btn.classList.remove('active');
+        }, 200);
     });
 });
 
@@ -1538,8 +1550,6 @@ window.addEventListener('beforeunload', function() {
     meditationMusic.pause();
 });
 
-
-
 // Открытие игры
 function openGame(gameId) {
     document.querySelector('.container').style.display = 'none';
@@ -1576,44 +1586,43 @@ function openGame(gameId) {
     }
 }
 
-    // Закрытие игры
-    function closeGame(gameId) {
-        // Остановка всех процессов игры "Орел и решка"
-        if (gameId === 'coin') {
-            clearTimeout(coinFlipTimeout);
-            clearTimeout(coinResultTimeout);
-            isCoinFlipping = false;
-            const coin = document.getElementById('coin-element');
-            coin.classList.remove('flipping');
-            coin.style.transform = 'rotateY(0deg)';
-            document.getElementById('coin-result').textContent = '';
-            document.querySelectorAll('.coin-btn').forEach(btn => {
-                btn.disabled = false;
-            });
-        }
-
-        // Сброс числовой матрицы
-        if (gameId === 'number') {
-            document.getElementById('accuracy-fill').style.width = '0%';
-            document.getElementById('number-guess').value = '';
-        }
-
-        // Закрытие окна игры
-        document.getElementById(gameId).style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        document.querySelector('.container').style.display = 'block';
-
-        telekinesisGameActive = false;
-
-        // Остановка медитации при закрытии окна
-        if (gameId === 'meditation' && isMeditating) {
-            clearInterval(meditationInterval);
-            isMeditating = false;
-            initMeditation();
-        }
-
-        // Убрано автоматическое воспроизведение музыки при закрытии игры
+// Закрытие игры
+function closeGame(gameId) {
+    // Остановка всех процессов игры "Орел и решка"
+    if (gameId === 'coin') {
+        clearTimeout(coinFlipTimeout);
+        clearTimeout(coinResultTimeout);
+        isCoinFlipping = false;
+        const coin = document.getElementById('coin-element');
+        coin.classList.remove('flipping');
+        coin.style.transform = 'rotateY(0deg)';
+        document.getElementById('coin-result').textContent = '';
+        document.querySelectorAll('.coin-btn').forEach(btn => {
+            btn.disabled = false;
+        });
     }
+
+    // Закрытие окна игры
+    document.getElementById(gameId).style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    document.querySelector('.container').style.display = 'block';
+
+    telekinesisGameActive = false;
+
+    // Остановка медитации при закрытии окна
+    if (gameId === 'meditation' && isMeditating) {
+        clearInterval(meditationInterval);
+        isMeditating = false;
+        initMeditation();
+    }
+    
+    // Сброс прогресс-бара в числовой матрице
+    if (gameId === 'number') {
+        document.getElementById('accuracy-fill').style.width = '0';
+    }
+
+    // Не возобновляем фоновую музыку, так как она должна играть только один раз
+}
     // Открытие статистики
     function openStats() {
         document.querySelector('.container').style.display = 'none';
@@ -1690,7 +1699,7 @@ function openGame(gameId) {
         achievementList.innerHTML = achievementsData.map(achievement => `
             <div class="achievement-item ${achievement.condition ? '' : 'locked'}">
                 <img src="https://img.icons8.com/ios-filled/50/ffffff/trophy.png" alt="Достижение">
-                ${achievement.id}
+                <div class="achievement-text">${achievement.id}</div>
             </div>
         `).join('');
     }
@@ -1749,23 +1758,6 @@ function openGame(gameId) {
     function checkAchievements() {
         updateAchievements();
     }
-        // Измененная инициализация музыки
-    let musicPlayed = false;
-
-    window.addEventListener('DOMContentLoaded', () => {
-        if (!musicPlayed) {
-            try {
-                backgroundMusic.loop = true;
-                backgroundMusic.play().then(() => {
-                    musicPlayed = true;
-                }).catch(e => {
-                    console.log("Автовоспроизведение музыки заблокировано");
-                });
-            } catch (e) {
-                console.log("Автовоспроизведение музыки заблокировано");
-            }
-        }
-    });
 </script>
 </body>
 </html>
