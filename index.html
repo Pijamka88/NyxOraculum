@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-        /* Обновленные стили для плавного перехода */
+        /* Стили для экрана входа */
         .login-screen {
             position: fixed;
             top: 0;
@@ -18,13 +18,7 @@
             align-items: center;
             flex-direction: column;
             z-index: 10000;
-            transition: opacity 1s ease, transform 1.5s cubic-bezier(0.2, 0.9, 0.1, 1.0);
-        }
-
-        .login-screen.hidden {
-            opacity: 0;
-            transform: scale(1.2);
-            pointer-events: none;
+            transition: opacity 1s, transform 1s;
         }
 
         .login-title {
@@ -34,24 +28,19 @@
             text-align: center;
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.8s 0.3s ease-out, transform 0.8s 0.3s cubic-bezier(0.2, 0.9, 0.1, 1.0);
+            transition: opacity 0.5s 0.5s, transform 0.5s 0.5s;
             text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
         }
 
-        .login-title.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .main-container {
+        .main-container-transition {
             opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s 0.5s ease-out, transform 1s 0.5s cubic-bezier(0.2, 0.9, 0.1, 1.0);
+            transform: scale(0.9);
+            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-
-        .main-container.visible {
+        
+        .main-container-visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: scale(1);
         }
 
         .login-btn-container {
@@ -831,7 +820,7 @@
         </div>
     </div>
 
-    <div class="container main-container" id="main-container" style="display: none;">
+    <div class="container main-container-transition" id="main-container" style="display: none;">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
@@ -1130,40 +1119,36 @@
             document.querySelector('.login-title').style.transform = 'translateY(0)';
         }, 100);
         
-    // Обновленный обработчик кнопки входа
+    // Обработчик кнопки входа с улучшенной анимацией
     document.getElementById('login-btn').addEventListener('click', function() {
-        // Анимация исчезновения экрана входа
+        // Анимация параллакса (увеличение и исчезновение)
         const loginScreen = document.getElementById('login-screen');
-        loginScreen.classList.add('hidden');
+        loginScreen.style.opacity = '0';
+        loginScreen.style.transform = 'scale(1.5)';
+        
+        // Воспроизводим музыку один раз
+        if (!musicPlayedOnce) {
+            backgroundMusic.loop = true;
+            backgroundMusic.play().then(() => {
+                musicPlayedOnce = true;
+                backgroundMusicPlaying = true;
+            }).catch(e => {
+                console.log("Автовоспроизведение музыки заблокировано");
+            });
+        }
         
         // Показываем основной интерфейс с анимацией
-        const mainContainer = document.getElementById('main-container');
-        mainContainer.style.display = 'block';
-        
-        // Запускаем анимацию появления после небольшой задержки
         setTimeout(() => {
-            mainContainer.classList.add('visible');
+            loginScreen.style.display = 'none';
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.style.display = 'block';
             
-            // Воспроизводим музыку один раз
-            if (!musicPlayedOnce) {
-                backgroundMusic.loop = true;
-                backgroundMusic.play().then(() => {
-                    musicPlayedOnce = true;
-                    backgroundMusicPlaying = true;
-                }).catch(e => {
-                    console.log("Автовоспроизведение музыки заблокировано");
-                });
-            }
-        }, 300);
-    });
-            
-            // Показываем основной интерфейс
+            // Запускаем анимацию появления через небольшой таймаут
             setTimeout(() => {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-container').style.display = 'block';
-            }, 1000);
-        });
-    };
+                mainContainer.classList.add('main-container-visible');
+            }, 50);
+        }, 800); // Уменьшил время ожидания для более плавного перехода
+    });
 
     // Аудио элементы
     const backgroundMusic = new Audio('Opening.mp3');
