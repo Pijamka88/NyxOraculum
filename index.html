@@ -6,47 +6,31 @@
     <title>NyxOraculum</title>
     <style>
         /* Стили для экрана входа */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(10,10,18,0.8), rgba(0,0,0,0.9));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            z-index: 10000;
-            transition: opacity 1s, transform 1s;
+    .login-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #19192d, #0F0F1A);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 10000;
+        transition: opacity 1s, transform 1s;
+    }
+
+        .login-title {
+            color: #E6E6FA;
+            font-size: 3rem;
+            margin-bottom: 80px;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s 0.5s, transform 0.5s 0.5s;
+            text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
         }
-
-.login-title {
-    color: #E6E6FA;
-    font-size: 3rem;
-    margin-bottom: 80px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s 0.5s, transform 0.5s 0.5s;
-    text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
-    animation: title-glow 4s infinite alternate;
-}
-
-@keyframes title-glow {
-    0% {
-        text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
-    }
-    33% {
-        text-shadow: 0 0 20px rgba(0, 191, 255, 0.8);
-    }
-    66% {
-        text-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
-    }
-    100% {
-        text-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
-    }
-}
 
         .login-btn-container {
             position: relative;
@@ -57,47 +41,53 @@
             align-items: center;
         }
 
-.login-btn {
-    width: 240px;
-    height: 240px;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 3px solid #8A2BE2;
-    color: #E6E6FA;
-    font-size: 2.2rem;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    z-index: 2;
-    box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
-    transition: all 0.3s ease;
-    animation: border-glow 3s infinite alternate;
-}
+    /* Обновил стиль кнопки входа */
+    .login-btn {
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 3px solid #8A2BE2;
+        color: #E6E6FA;
+        font-size: 2.2rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
+        transition: all 0.3s ease;
+        animation: button-glow 8s infinite linear;
+    }
 
-@keyframes border-glow {
-    0% {
-        border-color: #8A2BE2;
-        box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
+    /* Добавил новую анимацию для кнопки */
+    @keyframes button-glow {
+        0% { 
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
+            border-color: #8A2BE2;
+        }
+        20% { 
+            box-shadow: 0 0 40px rgba(0, 191, 255, 0.7);
+            border-color: #00BFFF;
+        }
+        40% { 
+            box-shadow: 0 0 40px rgba(255, 0, 255, 0.7);
+            border-color: #FF00FF;
+        }
+        60% { 
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
+            border-color: #FFD700;
+        }
+        80% { 
+            box-shadow: 0 0 40px rgba(0, 191, 255, 0.7);
+            border-color: #00BFFF;
+        }
+        100% { 
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
+            border-color: #8A2BE2;
+        }
     }
-    25% {
-        border-color: #00BFFF;
-        box-shadow: 0 0 40px rgba(0, 191, 255, 0.7);
-    }
-    50% {
-        border-color: #FF00FF;
-        box-shadow: 0 0 40px rgba(255, 0, 255, 0.7);
-    }
-    75% {
-        border-color: #FFD700;
-        box-shadow: 0 0 40px rgba(255, 215, 0, 0.7);
-    }
-    100% {
-        border-color: #8A2BE2;
-        box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
-    }
-}
 
         .login-btn:hover {
             box-shadow: 0 0 60px rgba(138, 43, 226, 1);
@@ -212,22 +202,22 @@
             transition: width 0.3s;
         }
 
-        /* Остальные стили остаются без изменений */
-        body {
-            font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
-            color: #E6E6FA;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            touch-action: none;
-            position: relative;
-        }
-
+    /* Обновил стиль body */
+    body {
+        font-family: 'Arial', sans-serif;
+        background: radial-gradient(circle at center, #19192d, #0F0F1A);
+        color: #E6E6FA;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        overflow: hidden;
+        touch-action: none;
+        position: relative;
+    }
+        
         #stars {
             position: fixed;
             top: 0;
@@ -1197,7 +1187,7 @@
         document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
         document.getElementById('message-text').textContent = text;
         document.getElementById('message-box').style.display = 'block';
-        // document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
         
         const button = document.getElementById('message-button');
         button.onclick = function() {
@@ -1783,7 +1773,7 @@
     function openGame(gameId) {
         document.getElementById('main-container').style.display = 'none';
         document.getElementById(gameId).style.display = 'block';
-       // document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
 
         // Останавливаем фоновую музыку
         if (backgroundMusicPlaying) {
@@ -1876,7 +1866,7 @@
     function openStats() {
         document.getElementById('main-container').style.display = 'none';
         document.getElementById('stats').style.display = 'block';
-        // document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
         updateStats();
     }
 
@@ -1891,7 +1881,7 @@
     function openAchievements() {
         document.getElementById('main-container').style.display = 'none';
         document.getElementById('achievements').style.display = 'block';
-        // document.getElementById('overlay').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
         updateAchievements();
     }
 
