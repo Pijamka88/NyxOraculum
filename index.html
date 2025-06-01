@@ -1818,9 +1818,9 @@ function showMessage(text, callback) {
         }
 
         // Закрытие окна игры
-        document.getElementById(gameId).style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('main-container').style.display = 'block';
+    document.getElementById(gameId).style.display = 'none';
+    document.getElementById('overlay').style.display = 'none'; // Добавьте эту строку
+    document.getElementById('main-container').style.display = 'block';
 
         telekinesisGameActive = false;
 
