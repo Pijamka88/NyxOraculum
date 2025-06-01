@@ -1152,31 +1152,31 @@
     });
 
     // Показать сообщение
-    function showMessage(text, callback) {
-        isGameActive = false;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-        document.getElementById('message-text').textContent = text;
-        document.getElementById('message-box').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+function showMessage(text, callback) {
+    isGameActive = false;
+    document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('message-text').textContent = text;
+    document.getElementById('message-box').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    const button = document.getElementById('message-button');
+    button.onclick = function() {
+        document.getElementById('message-box').style.display = 'none';
+        // Убрали строку, которая скрывает overlay
+        isGameActive = true;
+        document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
         
-        const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            
-            if (callback) {
-                const resetActiveButtons = () => {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    callback();
-                };
-                resetActiveButtons();
-            }
-        };
-    }
+        if (callback) {
+            const resetActiveButtons = () => {
+                document.querySelectorAll('.game-btn.active').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                callback();
+            };
+            resetActiveButtons();
+        }
+    };
+}
 
     // Инициализация телекинеза
     function initTelekinesis() {
