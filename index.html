@@ -5,20 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-        .main-container {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-            position: relative; /* Добавляем относительное позиционирование */
-            z-index: 1; /* Устанавливаем выше звездного фона */
-        }
-        
-        .main-container.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
         /* Стили для экрана входа */
-       .login-screen {
+        .login-screen {
             position: fixed;
             top: 0;
             left: 0;
@@ -200,7 +188,6 @@
             position: relative;
         }
 
-        /* Обновленные стили для звездного фона */
         #stars {
             position: fixed;
             top: 0;
@@ -208,7 +195,6 @@
             width: 100%;
             height: 100%;
             z-index: -1;
-            pointer-events: none; /* Звезды не должны перехватывать клики */
         }
 
         .star {
@@ -236,6 +222,14 @@
             max-width: 400px;
             position: relative;
             z-index: 1;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         h1 {
@@ -269,8 +263,6 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
-            position: relative; /* Добавляем относительное позиционирование */
-            z-index: 2; /* Устанавливаем выше других элементов */
         }
 
         .btn:hover {
@@ -520,7 +512,7 @@
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
-            z-index: 1002; /* Увеличено, чтобы было поверх overlay */
+            z-index: 1001;
             width: 80%;
             max-width: 300px;
             text-align: center;
@@ -810,7 +802,7 @@
 </head>
 <body>
     
-    <!-- Звездный фон (должен быть первым элементом в body) -->
+    <!-- Звездный фон -->
     <div id="stars"></div>
 
     <!-- Экран входа -->
@@ -824,8 +816,8 @@
             <button class="login-btn" id="login-btn">ВОЙТИ</button>
         </div>
     </div>
-    
-    <div class="container main-container" id="main-container" style="display: none;">
+
+    <div class="container" id="main-container">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
@@ -1071,7 +1063,7 @@
     <div class="overlay" id="overlay"></div>
 
 <script>
-    // Функция создания звезд (должна быть вызвана при загрузке)
+    // Звездный фон
     function createStars() {
         const stars = document.getElementById('stars');
         stars.innerHTML = ''; // Очищаем перед созданием новых звезд
@@ -1084,16 +1076,6 @@
             stars.appendChild(star);
         }
     }
-    
-        // Инициализация при загрузке страницы
-    window.onload = function() {
-        createStars(); // Создаем звездный фон
-
-        // Показываем элементы экрана входа с анимацией
-        setTimeout(() => {
-            document.querySelector('.login-title').style.opacity = '1';
-            document.querySelector('.login-title').style.transform = 'translateY(0)';
-        }, 100);
 
     // Статистика и достижения
     let stats = {
@@ -1123,6 +1105,17 @@
     let meditationSeconds = 0;
     let breathIndicatorAngle = 0;
 
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+        createStars();
+        initMeditation();
+        
+        // Показываем элементы экрана входа с анимацией
+        setTimeout(() => {
+            document.querySelector('.login-title').style.opacity = '1';
+            document.querySelector('.login-title').style.transform = 'translateY(0)';
+        }, 100);
+        
         // Обработчик кнопки входа
         document.getElementById('login-btn').addEventListener('click', function() {
             // Анимация параллакса (увеличение и исчезновение)
@@ -1148,9 +1141,9 @@
                 
                 // Запускаем анимацию появления через небольшой таймаут
                 setTimeout(() => {
-                    mainContainer.classList.add('active');
+                    mainContainer.classList.add('show');
                 }, 50);
-            }, 1000);
+            }, 800); // Уменьшил время задержки для более плавного перехода
         });
     };
 
@@ -1183,7 +1176,7 @@
         const button = document.getElementById('message-button');
         button.onclick = function() {
             document.getElementById('message-box').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
+            // Убрали строку, которая скрывает overlay
             isGameActive = true;
             document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
             
