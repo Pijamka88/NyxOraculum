@@ -1107,16 +1107,7 @@
     let meditationSeconds = 0;
     let breathIndicatorAngle = 0;
 
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-        createStars();
-        initMeditation();
-        
-        // Показываем элементы экрана входа с анимацией
-        setTimeout(() => {
-            document.querySelector('.login-title').style.opacity = '1';
-            document.querySelector('.login-title').style.transform = 'translateY(0)';
-        }, 100);
+
         
     // Обновленный обработчик кнопки входа
     document.getElementById('login-btn').addEventListener('click', function() {
