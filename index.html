@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
+            .main-container {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        
+        .main-container.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
         /* Стили для экрана входа */
-        .login-screen {
+       .login-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, #1A1A2E, #0F0F1A); /* Изменено на основной фон */
+            background: radial-gradient(circle, rgba(10,10,18,0.8), rgba(0,0,0,0.9));
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1108,30 +1118,35 @@
             document.querySelector('.login-title').style.transform = 'translateY(0)';
         }, 100);
         
-        // Обработчик кнопки входа
-        document.getElementById('login-btn').addEventListener('click', function() {
-            // Анимация параллакса (увеличение и исчезновение)
-            document.getElementById('login-screen').style.opacity = '0';
-            document.getElementById('login-screen').style.transform = 'scale(1.5)';
+    // Обновленный обработчик кнопки входа
+    document.getElementById('login-btn').addEventListener('click', function() {
+        // Анимация параллакса (увеличение и исчезновение)
+        document.getElementById('login-screen').style.opacity = '0';
+        document.getElementById('login-screen').style.transform = 'scale(1.5)';
+        
+        // Воспроизводим музыку один раз
+        if (!musicPlayedOnce) {
+            backgroundMusic.loop = true;
+            backgroundMusic.play().then(() => {
+                musicPlayedOnce = true;
+                backgroundMusicPlaying = true;
+            }).catch(e => {
+                console.log("Автовоспроизведение музыки заблокировано");
+            });
+        }
+        
+        // Показываем основной интерфейс с плавной анимацией
+        setTimeout(() => {
+            document.getElementById('login-screen').style.display = 'none';
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.style.display = 'block';
             
-            // Воспроизводим музыку один раз
-            if (!musicPlayedOnce) {
-                backgroundMusic.loop = true;
-                backgroundMusic.play().then(() => {
-                    musicPlayedOnce = true;
-                    backgroundMusicPlaying = true;
-                }).catch(e => {
-                    console.log("Автовоспроизведение музыки заблокировано");
-                });
-            }
-            
-            // Показываем основной интерфейс
+            // Запускаем анимацию появления через небольшой таймаут
             setTimeout(() => {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('main-container').style.display = 'block';
-            }, 1000);
-        });
-    };
+                mainContainer.classList.add('active');
+            }, 50);
+        }, 1000);
+    });
 
     // Аудио элементы
     const backgroundMusic = new Audio('Opening.mp3');
