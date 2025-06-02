@@ -12,7 +12,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle, rgba(10,10,18,0.8), rgba(0,0,0,0.9));
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A); /* Изменено на основной фон */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -30,17 +30,6 @@
             transform: translateY(20px);
             transition: opacity 0.5s 0.5s, transform 0.5s 0.5s;
             text-shadow: 0 0 15px rgba(138, 43, 226, 0.8);
-        }
-
-        .main-container-transition {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        
-        .main-container-visible {
-            opacity: 1;
-            transform: scale(1);
         }
 
         .login-btn-container {
@@ -515,7 +504,7 @@
             border-radius: 20px;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
             border: 2px solid #8A2BE2;
-            z-index: 1001;
+            z-index: 1002; /* Увеличено, чтобы было поверх overlay */
             width: 80%;
             max-width: 300px;
             text-align: center;
@@ -820,7 +809,7 @@
         </div>
     </div>
 
-    <div class="container main-container-transition" id="main-container" style="display: none;">
+ <div class="container" id="main-container" style="display: none;">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
@@ -1119,36 +1108,30 @@
             document.querySelector('.login-title').style.transform = 'translateY(0)';
         }, 100);
         
-    // Обработчик кнопки входа с улучшенной анимацией
-    document.getElementById('login-btn').addEventListener('click', function() {
-        // Анимация параллакса (увеличение и исчезновение)
-        const loginScreen = document.getElementById('login-screen');
-        loginScreen.style.opacity = '0';
-        loginScreen.style.transform = 'scale(1.5)';
-        
-        // Воспроизводим музыку один раз
-        if (!musicPlayedOnce) {
-            backgroundMusic.loop = true;
-            backgroundMusic.play().then(() => {
-                musicPlayedOnce = true;
-                backgroundMusicPlaying = true;
-            }).catch(e => {
-                console.log("Автовоспроизведение музыки заблокировано");
-            });
-        }
-        
-        // Показываем основной интерфейс с анимацией
-        setTimeout(() => {
-            loginScreen.style.display = 'none';
-            const mainContainer = document.getElementById('main-container');
-            mainContainer.style.display = 'block';
+        // Обработчик кнопки входа
+        document.getElementById('login-btn').addEventListener('click', function() {
+            // Анимация параллакса (увеличение и исчезновение)
+            document.getElementById('login-screen').style.opacity = '0';
+            document.getElementById('login-screen').style.transform = 'scale(1.5)';
             
-            // Запускаем анимацию появления через небольшой таймаут
+            // Воспроизводим музыку один раз
+            if (!musicPlayedOnce) {
+                backgroundMusic.loop = true;
+                backgroundMusic.play().then(() => {
+                    musicPlayedOnce = true;
+                    backgroundMusicPlaying = true;
+                }).catch(e => {
+                    console.log("Автовоспроизведение музыки заблокировано");
+                });
+            }
+            
+            // Показываем основной интерфейс
             setTimeout(() => {
-                mainContainer.classList.add('main-container-visible');
-            }, 50);
-        }, 800); // Уменьшил время ожидания для более плавного перехода
-    });
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-container').style.display = 'block';
+            }, 1000);
+        });
+    };
 
     // Аудио элементы
     const backgroundMusic = new Audio('Opening.mp3');
@@ -1169,31 +1152,31 @@
     });
 
     // Показать сообщение
-function showMessage(text, callback) {
-    isGameActive = false;
-    document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-    document.getElementById('message-text').textContent = text;
-    document.getElementById('message-box').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-    
-    const button = document.getElementById('message-button');
-    button.onclick = function() {
-        document.getElementById('message-box').style.display = 'none';
-        // Убрали строку, которая скрывает overlay
-        isGameActive = true;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+    function showMessage(text, callback) {
+        isGameActive = false;
+        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+        document.getElementById('message-text').textContent = text;
+        document.getElementById('message-box').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
         
-        if (callback) {
-            const resetActiveButtons = () => {
-                document.querySelectorAll('.game-btn.active').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                callback();
-            };
-            resetActiveButtons();
-        }
-    };
-}
+        const button = document.getElementById('message-button');
+        button.onclick = function() {
+            document.getElementById('message-box').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            isGameActive = true;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+            
+            if (callback) {
+                const resetActiveButtons = () => {
+                    document.querySelectorAll('.game-btn.active').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    callback();
+                };
+                resetActiveButtons();
+            }
+        };
+    }
 
     // Инициализация телекинеза
     function initTelekinesis() {
