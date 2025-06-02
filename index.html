@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-            .main-container {
+        .main-container {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 1s ease, transform 1s ease;
+            position: relative; /* Добавляем относительное позиционирование */
+            z-index: 1; /* Устанавливаем выше звездного фона */
         }
         
         .main-container.active {
@@ -804,7 +806,7 @@
 </head>
 <body>
     
-    <!-- Звездный фон -->
+    <!-- Звездный фон (должен быть первым элементом в body) -->
     <div id="stars"></div>
 
     <!-- Экран входа -->
@@ -818,8 +820,8 @@
             <button class="login-btn" id="login-btn">ВОЙТИ</button>
         </div>
     </div>
-
- <div class="container" id="main-container" style="display: none;">
+    
+    <div class="container main-container" id="main-container" style="display: none;">
         <h1>NyxOraculum</h1>
         <button class="btn" onclick="openGame('telepathy')">
             <img src="https://img.icons8.com/ios-filled/50/ffffff/brain.png" alt="Телепатия">
