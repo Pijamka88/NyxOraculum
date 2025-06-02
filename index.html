@@ -1067,7 +1067,7 @@
     <div class="overlay" id="overlay"></div>
 
 <script>
-    // Звездный фон
+    // Функция создания звезд (должна быть вызвана при загрузке)
     function createStars() {
         const stars = document.getElementById('stars');
         stars.innerHTML = ''; // Очищаем перед созданием новых звезд
@@ -1080,6 +1080,16 @@
             stars.appendChild(star);
         }
     }
+    
+        // Инициализация при загрузке страницы
+    window.onload = function() {
+        createStars(); // Создаем звездный фон
+
+        // Показываем элементы экрана входа с анимацией
+        setTimeout(() => {
+            document.querySelector('.login-title').style.opacity = '1';
+            document.querySelector('.login-title').style.transform = 'translateY(0)';
+        }, 100);
 
     // Статистика и достижения
     let stats = {
@@ -1109,37 +1119,36 @@
     let meditationSeconds = 0;
     let breathIndicatorAngle = 0;
 
-
-        
-    // Обновленный обработчик кнопки входа
-    document.getElementById('login-btn').addEventListener('click', function() {
-        // Анимация параллакса (увеличение и исчезновение)
-        document.getElementById('login-screen').style.opacity = '0';
-        document.getElementById('login-screen').style.transform = 'scale(1.5)';
-        
-        // Воспроизводим музыку один раз
-        if (!musicPlayedOnce) {
-            backgroundMusic.loop = true;
-            backgroundMusic.play().then(() => {
-                musicPlayedOnce = true;
-                backgroundMusicPlaying = true;
-            }).catch(e => {
-                console.log("Автовоспроизведение музыки заблокировано");
-            });
-        }
-        
-        // Показываем основной интерфейс с плавной анимацией
-        setTimeout(() => {
-            document.getElementById('login-screen').style.display = 'none';
-            const mainContainer = document.getElementById('main-container');
-            mainContainer.style.display = 'block';
+        // Обработчик кнопки входа
+        document.getElementById('login-btn').addEventListener('click', function() {
+            // Анимация параллакса (увеличение и исчезновение)
+            document.getElementById('login-screen').style.opacity = '0';
+            document.getElementById('login-screen').style.transform = 'scale(1.5)';
             
-            // Запускаем анимацию появления через небольшой таймаут
+            // Воспроизводим музыку один раз
+            if (!musicPlayedOnce) {
+                backgroundMusic.loop = true;
+                backgroundMusic.play().then(() => {
+                    musicPlayedOnce = true;
+                    backgroundMusicPlaying = true;
+                }).catch(e => {
+                    console.log("Автовоспроизведение музыки заблокировано");
+                });
+            }
+            
+            // Показываем основной интерфейс с плавной анимацией
             setTimeout(() => {
-                mainContainer.classList.add('active');
-            }, 50);
-        }, 1000);
-    });
+                document.getElementById('login-screen').style.display = 'none';
+                const mainContainer = document.getElementById('main-container');
+                mainContainer.style.display = 'block';
+                
+                // Запускаем анимацию появления через небольшой таймаут
+                setTimeout(() => {
+                    mainContainer.classList.add('active');
+                }, 50);
+            }, 1000);
+        });
+    };
 
     // Аудио элементы
     const backgroundMusic = new Audio('Opening.mp3');
