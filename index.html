@@ -798,52 +798,41 @@
             margin-top: 10px;
             text-align: center;
         }
-        /* Стили для карт Зенера */
+/* Стили для карт Зенера */
 .zener-card {
-    width: 50px;
-    height: 80px;
+    width: 60px;
+    height: 90px;
     border-radius: 8px;
     background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
     border: 2px solid #8A2BE2;
     cursor: pointer;
+    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    transition: all 0.3s ease;
+    color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.zener-card::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    border-radius: 5px;
-    pointer-events: none;
+    margin: 0 auto;
 }
 
 .zener-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(138, 43, 226, 0.5);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .zener-card.active {
     border-color: #FFD700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    transform: translateY(-5px);
 }
 
-/* Цвета символов */
-.zener-circle { color: #FF5252; }     /* Красный */
-.zener-square { color: #4CAF50; }     /* Зеленый */
-.zener-waves { color: #2196F3; }      /* Синий */
-.zener-cross { color: #FFC107; }      /* Желтый */
-.zener-star { color: #9C27B0; }       /* Фиолетовый */
+/* Цвета символов карт */
+.zener-card[data-symbol="○"] { color: #FF5252; } /* красный */
+.zener-card[data-symbol="□"] { color: #4CAF50; } /* зеленый */
+.zener-card[data-symbol="～"] { color: #2196F3; } /* синий */
+.zener-card[data-symbol="✚"] { color: #FFC107; } /* желтый */
+.zener-card[data-symbol="★"] { color: #9C27B0; } /* фиолетовый */
     </style>
 </head>
 <body>
@@ -1848,12 +1837,6 @@
 
     // Закрытие игры
     function closeGame(gameId) {
-        // В функции closeGame добавьте:
-if (gameId === 'zener') {
-    document.querySelectorAll('.zener-card.active').forEach(btn => {
-        btn.classList.remove('active');
-    });
-}
         // Остановка всех процессов игры "Орел и решка"
         if (gameId === 'coin') {
             clearTimeout(coinFlipTimeout);
@@ -2014,39 +1997,29 @@ if (gameId === 'zener') {
 function checkZener(guess) {
     if (!isGameActive) return;
     
-    // Сбрасываем активное состояние всех карт
-    document.querySelectorAll('.zener-card').forEach(btn => {
-        btn.classList.remove('active');
-    });
+    // Сброс предыдущего выделения
+    document.querySelectorAll('.zener-card').forEach(btn => btn.classList.remove('active'));
     
-    // Добавляем класс active к выбранной карте
+    // Добавляем класс active к нажатой кнопке
     event.target.classList.add('active');
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
     stats.zener.total++;
     
-    // Показываем результат через 500мс, чтобы анимация выделения успела сработать
-    setTimeout(() => {
-        if (guess === target) {
-            stats.zener.correct++;
-            showMessage('✅ Верно! Загадан: ' + target, () => {
-                // После закрытия сообщения сбрасываем выделение
-                document.querySelectorAll('.zener-card').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-            });
-        } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`, () => {
-                // После закрытия сообщения сбрасываем выделение
-                document.querySelectorAll('.zener-card').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-            });
-        }
-        updateStats();
-        checkAchievements();
-    }, 500);
+    // Функция для сброса выделения после показа сообщения
+    const resetSelection = () => {
+        document.querySelectorAll('.zener-card').forEach(btn => btn.classList.remove('active'));
+    };
+    
+    if (guess === target) {
+        stats.zener.correct++;
+        showMessage('✅ Верно! Загадан: ' + target, resetSelection);
+    } else {
+        showMessage(`❌ Неверно. Загадан: ${target}`, resetSelection);
+    }
+    updateStats();
+    checkAchievements();
 }
 
     // Цветовая интуиция
