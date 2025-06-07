@@ -800,38 +800,25 @@
         }
 /* Стили для карт Зенера */
 .zener-card {
-    width: 50px;
-    height: 80px;
+    width: 60px;
+    height: 90px;
     border-radius: 8px;
     background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 2px solid #8A2BE2;
+    border: 2px solid #B8860B;
     color: #E6E6FA;
     font-size: 2rem;
     cursor: pointer;
-    transition: all 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.zener-card::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 1px solid rgba(138, 43, 226, 0.5);
-    border-radius: 5px;
-    pointer-events: none;
+    margin: 0 auto;
 }
 
 .zener-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(138, 43, 226, 0.4);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
 }
 
 .zener-card:active {
@@ -843,12 +830,11 @@
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
 }
 
-/* Символы карт */
-.zener-circle { color: #8A2BE2; }
-.zener-square { color: #00BFFF; }
-.zener-waves { color: #FF00FF; }
-.zener-cross { color: #FFD700; }
-.zener-star { color: #4CAF50; }
+.zener-card.disabled {
+    opacity: 0.7;
+    border-color: #555;
+    pointer-events: none;
+}
     </style>
 </head>
 <body>
@@ -938,11 +924,11 @@
         <h2>Карты Зенера</h2>
         <p>Угадайте символ:</p>
         <div class="game-buttons">
-            <button class="zener-card zener-circle" onclick="checkZener('○')">○</button>
-            <button class="zener-card zener-square" onclick="checkZener('□')">□</button>
-            <button class="zener-card zener-waves" onclick="checkZener('～')">～</button>
-            <button class="zener-card zener-cross" onclick="checkZener('✚')">✚</button>
-            <button class="zener-card zener-star" onclick="checkZener('★')">★</button>
+            <button class="zener-card" onclick="checkZener('○')">○</button>
+            <button class="zener-card" onclick="checkZener('□')">□</button>
+            <button class="zener-card" onclick="checkZener('～')">～</button>
+            <button class="zener-card" onclick="checkZener('✚')">✚</button>
+            <button class="zener-card" onclick="checkZener('★')">★</button>
         </div>
         <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
@@ -1223,25 +1209,29 @@
         document.getElementById('message-text').textContent = text;
         document.getElementById('message-box').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
+        function showMessage(text, callback) {
+    isGameActive = false;
+    document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('message-text').textContent = text;
+    document.getElementById('message-box').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    const button = document.getElementById('message-button');
+    button.onclick = function() {
+        document.getElementById('message-box').style.display = 'none';
+        isGameActive = true;
+        document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
         
-        const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            // Убрали строку, которая скрывает overlay
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            
-            if (callback) {
-                const resetActiveButtons = () => {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    callback();
-                };
-                resetActiveButtons();
-            }
-        };
-    }
+        // Удаляем класс active со всех карт Зенера
+        document.querySelectorAll('.zener-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        
+        if (callback) {
+            callback();
+        }
+    };
+}
 
     // Инициализация телекинеза
     function initTelekinesis() {
