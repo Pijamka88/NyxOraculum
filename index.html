@@ -811,10 +811,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #FFD700; /* золотой цвет символов */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     margin: 0 auto;
 }
+
+/* Цвета символов для каждой карты */
+.zener-card[data-symbol="○"] { color: #FF5733; } /* красный */
+.zener-card[data-symbol="□"] { color: #33A1FF; } /* синий */
+.zener-card[data-symbol="～"] { color: #33FF57; } /* зеленый */
+.zener-card[data-symbol="✚"] { color: #FF33A1; } /* розовый */
+.zener-card[data-symbol="★"] { color: #FFD700; } /* золотой */
 
 .zener-card:hover {
     transform: translateY(-5px);
@@ -825,15 +831,6 @@
     border-color: #FFD700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
     transform: translateY(-5px);
-}
-
-/* Изменяем контейнер для карт */
-.zener-container {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
-    margin: 20px auto;
-    max-width: 400px;
 }
     </style>
 </head>
@@ -924,11 +921,11 @@
         <h2>Карты Зенера</h2>
         <p>Угадайте символ:</p>
         <div class="zener-container">
-            <button class="zener-card" onclick="checkZener('○')">○</button>
-            <button class="zener-card" onclick="checkZener('□')">□</button>
-            <button class="zener-card" onclick="checkZener('～')">～</button>
-            <button class="zener-card" onclick="checkZener('✚')">✚</button>
-            <button class="zener-card" onclick="checkZener('★')">★</button>
+            <button class="zener-card" data-symbol="○" onclick="checkZener('○')">○</button>
+            <button class="zener-card" data-symbol="□" onclick="checkZener('□')">□</button>
+            <button class="zener-card" data-symbol="～" onclick="checkZener('～')">～</button>
+            <button class="zener-card" data-symbol="✚" onclick="checkZener('✚')">✚</button>
+            <button class="zener-card" data-symbol="★" onclick="checkZener('★')">★</button>
         </div>
         <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
