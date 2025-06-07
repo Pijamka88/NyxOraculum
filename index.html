@@ -1215,31 +1215,22 @@
     });
 
     // Показать сообщение
-    function showMessage(text, callback) {
-        isGameActive = false;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-        document.getElementById('message-text').textContent = text;
-        document.getElementById('message-box').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+function showMessage(text, callback) {
+    isGameActive = false;
+    document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+    document.getElementById('message-text').textContent = text;
+    document.getElementById('message-box').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    const button = document.getElementById('message-button');
+    button.onclick = function() {
+        document.getElementById('message-box').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        isGameActive = true;
+        document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
         
-        const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            // Убрали строку, которая скрывает overlay
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            
-            if (callback) {
-                const resetActiveButtons = () => {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    callback();
-                };
-                resetActiveButtons();
-            }
-        };
-    }
+        if (callback) callback();
+    };
 
     // Инициализация телекинеза
     function initTelekinesis() {
@@ -1854,8 +1845,9 @@
                 btn.disabled = false;
                 btn.classList.remove('active');
             });
-                if (gameId === 'zener') {
-        document.querySelectorAll('.zener-card.active').forEach(card => {
+    if (gameId === 'zener') {
+        // Сбрасываем выделение всех карт при закрытии игры
+        document.querySelectorAll('.zener-card').forEach(card => {
             card.classList.remove('active');
         });
     }
@@ -2021,15 +2013,18 @@ function checkZener(guess) {
     setTimeout(() => {
         if (guess === target) {
             stats.zener.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
+            showMessage('✅ Верно! Загадан: ' + target, function() {
+                // Сбрасываем выделение после закрытия сообщения
+                cards.forEach(card => card.classList.remove('active'));
+            });
         } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
+            showMessage(`❌ Неверно. Загадан: ${target}`, function() {
+                // Сбрасываем выделение после закрытия сообщения
+                cards.forEach(card => card.classList.remove('active'));
+            });
         }
         updateStats();
         checkAchievements();
-        
-        // Сбрасываем выделение после показа результата
-        cards.forEach(card => card.classList.remove('active'));
     }, 300);
 }
 
