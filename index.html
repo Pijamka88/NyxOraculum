@@ -798,63 +798,43 @@
             margin-top: 10px;
             text-align: center;
         }
-    /* Добавьте эти стили в раздел style */
-    .zener-card {
-        width: 50px;
-        height: 80px;
-        border-radius: 8px;
-        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-        border: 2px solid #8A2BE2;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.8rem;
-        color: #E6E6FA;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-    }
+/* Стили для карт Зенера */
+.zener-card {
+    width: 60px;
+    height: 90px;
+    border-radius: 8px;
+    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+    border: 2px solid #8A2BE2;
+    cursor: pointer;
+    font-size: 2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFD700; /* золотой цвет символов */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin: 0 auto;
+}
 
-    .zener-card::before {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        bottom: 5px;
-        border: 1px solid rgba(138, 43, 226, 0.5);
-        border-radius: 5px;
-        pointer-events: none;
-    }
+.zener-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+}
 
-    .zener-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 15px rgba(138, 43, 226, 0.4);
-    }
+.zener-card.active {
+    border-color: #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    transform: translateY(-5px);
+}
 
-    .zener-card:active {
-        transform: translateY(0);
-    }
-
-    .zener-card.active {
-        border-color: #FFD700;
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-    }
-
-    /* Обновите стиль game-buttons для карт Зенера */
-    #zener .game-buttons {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 15px;
-        max-width: 250px;
-    }
-
-    @media (min-width: 400px) {
-        #zener .game-buttons {
-            grid-template-columns: repeat(5, 1fr);
-            max-width: 350px;
-        }
-    }
+/* Изменяем контейнер для карт */
+.zener-container {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin: 20px auto;
+    max-width: 400px;
+}
     </style>
 </head>
 <body>
@@ -943,7 +923,7 @@
     <div class="game-content active">
         <h2>Карты Зенера</h2>
         <p>Угадайте символ:</p>
-        <div class="game-buttons">
+        <div class="zener-container">
             <button class="zener-card" onclick="checkZener('○')">○</button>
             <button class="zener-card" onclick="checkZener('□')">□</button>
             <button class="zener-card" onclick="checkZener('～')">～</button>
@@ -2006,26 +1986,37 @@
     }
 
     // Карты Зенера
-    function checkZener(guess) {
-        if (!isGameActive) return;
-        
-        // Добавляем класс active к нажатой кнопке
-        const buttons = document.querySelectorAll('.game-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        
-        const symbols = ['○', '□', '～', '✚', '★'];
-        const target = symbols[Math.floor(Math.random() * symbols.length)];
-        stats.zener.total++;
-        if (guess === target) {
-            stats.zener.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
-        } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
-        }
-        updateStats();
-        checkAchievements();
+function checkZener(guess) {
+    if (!isGameActive) return;
+    
+    // Сбрасываем активное состояние всех карт
+    document.querySelectorAll('.zener-card').forEach(card => {
+        card.classList.remove('active');
+    });
+    
+    // Добавляем класс active к выбранной карте
+    event.target.classList.add('active');
+    
+    const symbols = ['○', '□', '～', '✚', '★'];
+    const target = symbols[Math.floor(Math.random() * symbols.length)];
+    stats.zener.total++;
+    
+    // Функция для сброса выделения после показа результата
+    const resetSelection = () => {
+        document.querySelectorAll('.zener-card').forEach(card => {
+            card.classList.remove('active');
+        });
+    };
+    
+    if (guess === target) {
+        stats.zener.correct++;
+        showMessage('✅ Верно! Загадан: ' + target, resetSelection);
+    } else {
+        showMessage(`❌ Неверно. Загадан: ${target}`, resetSelection);
     }
+    updateStats();
+    checkAchievements();
+}
 
     // Цветовая интуиция
     function checkColor(guess) {
