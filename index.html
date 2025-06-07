@@ -2000,29 +2000,26 @@
     }
 
     // Карты Зенера
-function checkZener(guess) {
-    if (!isGameActive) return;
-    
-    // Удаляем класс active со всех карт
-    document.querySelectorAll('.zener-card').forEach(card => {
-        card.classList.remove('active');
-    });
-    
-    // Добавляем класс active к выбранной карте
-    event.target.classList.add('active');
-    
-    const symbols = ['○', '□', '～', '✚', '★'];
-    const target = symbols[Math.floor(Math.random() * symbols.length)];
-    stats.zener.total++;
-    if (guess === target) {
-        stats.zener.correct++;
-        showMessage('✅ Верно! Загадан: ' + target);
-    } else {
-        showMessage(`❌ Неверно. Загадан: ${target}`);
+    function checkZener(guess) {
+        if (!isGameActive) return;
+        
+        // Добавляем класс active к нажатой кнопке
+        const buttons = document.querySelectorAll('.game-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        const symbols = ['○', '□', '～', '✚', '★'];
+        const target = symbols[Math.floor(Math.random() * symbols.length)];
+        stats.zener.total++;
+        if (guess === target) {
+            stats.zener.correct++;
+            showMessage('✅ Верно! Загадан: ' + target);
+        } else {
+            showMessage(`❌ Неверно. Загадан: ${target}`);
+        }
+        updateStats();
+        checkAchievements();
     }
-    updateStats();
-    checkAchievements();
-}
 
     // Цветовая интуиция
     function checkColor(guess) {
