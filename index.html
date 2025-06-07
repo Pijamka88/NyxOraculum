@@ -815,12 +815,12 @@
     margin: 0 auto;
 }
 
-/* Цвета символов для каждой карты */
-.zener-card[data-symbol="○"] { color: #FF5733; } /* красный */
-.zener-card[data-symbol="□"] { color: #33A1FF; } /* синий */
-.zener-card[data-symbol="～"] { color: #33FF57; } /* зеленый */
-.zener-card[data-symbol="✚"] { color: #FF33A1; } /* розовый */
-.zener-card[data-symbol="★"] { color: #FFD700; } /* золотой */
+/* Индивидуальные цвета для каждого символа */
+.zener-card[data-symbol="○"] { color: #FF5555; } /* Красный */
+.zener-card[data-symbol="□"] { color: #5555FF; } /* Синий */
+.zener-card[data-symbol="～"] { color: #55FF55; } /* Зеленый */
+.zener-card[data-symbol="✚"] { color: #FFAA00; } /* Оранжевый */
+.zener-card[data-symbol="★"] { color: #AA55FF; } /* Фиолетовый */
 
 .zener-card:hover {
     transform: translateY(-5px);
@@ -831,6 +831,23 @@
     border-color: #FFD700;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
     transform: translateY(-5px);
+}
+
+/* Добавим свечение символов */
+.zener-card::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    box-shadow: inset 0 0 10px currentColor;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.zener-card:hover::after,
+.zener-card.active::after {
+    opacity: 0.3;
 }
     </style>
 </head>
