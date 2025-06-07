@@ -313,13 +313,13 @@
             text-align: center;
         }
 
-.game-buttons {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 15px;
-    margin: 0 auto;
-    max-width: 350px;
-}
+        .game-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 0 auto;
+            max-width: 300px;
+        }
 
         .game-btn {
             background: rgba(138, 43, 226, 0.2);
@@ -798,43 +798,6 @@
             margin-top: 10px;
             text-align: center;
         }
-/* Стили для карт Зенера */
-.zener-card {
-    width: 60px;
-    height: 90px;
-    border-radius: 8px;
-    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 2px solid #B8860B;
-    color: #E6E6FA;
-    font-size: 2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    margin: 0 auto;
-}
-
-.zener-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
-}
-
-.zener-card:active {
-    transform: translateY(0);
-}
-
-.zener-card.active {
-    border-color: #FFD700;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-}
-
-.zener-card.disabled {
-    opacity: 0.7;
-    border-color: #555;
-    pointer-events: none;
-}
     </style>
 </head>
 <body>
@@ -919,20 +882,20 @@
         </div>
     </div>
 
-<div id="zener" class="game-window">
-    <div class="game-content active">
-        <h2>Карты Зенера</h2>
-        <p>Угадайте символ:</p>
-        <div class="game-buttons">
-            <button class="zener-card" onclick="checkZener('○')">○</button>
-            <button class="zener-card" onclick="checkZener('□')">□</button>
-            <button class="zener-card" onclick="checkZener('～')">～</button>
-            <button class="zener-card" onclick="checkZener('✚')">✚</button>
-            <button class="zener-card" onclick="checkZener('★')">★</button>
+    <div id="zener" class="game-window">
+        <div class="game-content active">
+            <h2>Карты Зенера</h2>
+            <p>Угадайте символ:</p>
+            <div class="game-buttons">
+                <button class="game-btn" onclick="checkZener('○')">○</button>
+                <button class="game-btn" onclick="checkZener('□')">□</button>
+                <button class="game-btn" onclick="checkZener('～')">～</button>
+                <button class="game-btn" onclick="checkZener('✚')">✚</button>
+                <button class="game-btn" onclick="checkZener('★')">★</button>
+            </div>
+            <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
         </div>
-        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
-</div>
 
     <div id="color" class="game-window">
         <div class="game-content active">
@@ -1209,29 +1172,25 @@
         document.getElementById('message-text').textContent = text;
         document.getElementById('message-box').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
-        function showMessage(text, callback) {
-    isGameActive = false;
-    document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-    document.getElementById('message-text').textContent = text;
-    document.getElementById('message-box').style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-    
-    const button = document.getElementById('message-button');
-    button.onclick = function() {
-        document.getElementById('message-box').style.display = 'none';
-        isGameActive = true;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
         
-        // Удаляем класс active со всех карт Зенера
-        document.querySelectorAll('.zener-card').forEach(card => {
-            card.classList.remove('active');
-        });
-        
-        if (callback) {
-            callback();
-        }
-    };
-}
+        const button = document.getElementById('message-button');
+        button.onclick = function() {
+            document.getElementById('message-box').style.display = 'none';
+            // Убрали строку, которая скрывает overlay
+            isGameActive = true;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+            
+            if (callback) {
+                const resetActiveButtons = () => {
+                    document.querySelectorAll('.game-btn.active').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    callback();
+                };
+                resetActiveButtons();
+            }
+        };
+    }
 
     // Инициализация телекинеза
     function initTelekinesis() {
