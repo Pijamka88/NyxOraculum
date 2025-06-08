@@ -800,13 +800,13 @@
         }
     /* Обновленные стили для карт Зенера */
     .zener-main-card {
-        width: 120px; /* Увеличили ширину */
-        height: 180px; /* Увеличили высоту */
+        width: 120px;
+        height: 180px;
         border-radius: 10px;
         background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
         border: 3px solid #8A2BE2;
         color: #E6E6FA;
-        font-size: 4rem; /* Увеличили размер символа */
+        font-size: 4rem;
         margin: 0 auto 20px;
         display: flex;
         align-items: center;
@@ -835,14 +835,15 @@
 
     .zener-main-card-front {
         background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 3px solid #8A2BE2;
     }
 
-.zener-main-card-back {
-    background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
-    transform: rotateY(180deg);
-    border: 2px solid #FFD700;
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-}
+    .zener-main-card-back {
+        background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
+        transform: rotateY(180deg);
+        border: 3px solid #FFD700; /* Толщина рамки как у лицевой стороны */
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
 
     .zener-main-card-back::before {
         content: '';
@@ -851,11 +852,10 @@
         left: 5px;
         right: 5px;
         bottom: 5px;
-        border: 1px solid rgba(138, 43, 226, 0.3); /* Сделали границу менее заметной */
-        border-radius: 5px;
+        border: 1px solid rgba(138, 43, 226, 0.3);
+        border-radius: 4px; /* Немного меньше, чем основная карта */
         pointer-events: none;
     }
-
     .zener-result {
         margin-top: 15px;
         font-size: 1.2rem;
