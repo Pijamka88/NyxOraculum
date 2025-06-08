@@ -909,6 +909,76 @@
 .zener-waves { color: white; }
 .zener-cross { color: white; }
 .zener-star { color: white; }
+
+    /* Стили для карт элементов */
+    .element-card {
+        width: 60px;
+        height: 90px;
+        border-radius: 8px;
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 2px solid #8A2BE2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .element-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(138, 43, 226, 0.5);
+    }
+
+    .element-card.missing {
+        background: rgba(138, 43, 226, 0.1);
+        border: 2px dashed #8A2BE2;
+    }
+
+    .elements-sequence {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .element-options {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .element-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        background: rgba(138, 43, 226, 0.2);
+        border: 2px solid #8A2BE2;
+        font-size: 1.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+    }
+
+    .element-btn:hover {
+        background: rgba(153, 50, 204, 0.3);
+    }
+
+    .element-btn.active {
+        border-color: #FFD700;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .sequence-info {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        text-align: center;
+    }
     </style>
 </head>
 <body>
@@ -973,25 +1043,16 @@
     </div>
 
     <!-- Игры -->
-    <div id="telepathy" class="game-window">
-        <div class="game-content active">
-            <h2>Телепатия</h2>
-            <p>Угадайте число от 1 до 10:</p>
-            <div class="game-buttons">
-                <button class="game-btn" onclick="checkTelepathy(1)">1</button>
-                <button class="game-btn" onclick="checkTelepathy(2)">2</button>
-                <button class="game-btn" onclick="checkTelepathy(3)">3</button>
-                <button class="game-btn" onclick="checkTelepathy(4)">4</button>
-                <button class="game-btn" onclick="checkTelepathy(5)">5</button>
-                <button class="game-btn" onclick="checkTelepathy(6)">6</button>
-                <button class="game-btn" onclick="checkTelepathy(7)">7</button>
-                <button class="game-btn" onclick="checkTelepathy(8)">8</button>
-                <button class="game-btn" onclick="checkTelepathy(9)">9</button>
-                <button class="game-btn" onclick="checkTelepathy(10)">10</button>
-            </div>
-            <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
-        </div>
+<div id="telepathy" class="game-window">
+    <div class="game-content active">
+        <h2>Телепатия</h2>
+        <p>Какой элемент пропущен в последовательности?</p>
+        <div class="sequence-info" id="sequence-info">Попытка 1 из 5</div>
+        <div class="elements-sequence" id="elements-sequence"></div>
+        <div class="element-options" id="element-options"></div>
+        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
+</div>
 
 <div id="zener" class="game-window">
     <div class="game-content active">
@@ -1197,7 +1258,185 @@
         }
     }
 
-    // Статистика и достижения
+ // Элементы для телепатии
+    const elements = {
+        '🔥': 'огонь',
+        '💧': 'вода',
+        '🌍': 'земля',
+        '🌬️': 'воздух',
+        '✨': 'эфир'
+    };
+
+    let currentSequence = [];
+    let correctAnswer = '';
+    let attempts = 0;
+    let totalAttempts = 5;
+    let correctAnswers = 0;
+
+    // Инициализация игры телепатии
+    function initTelepathy() {
+        attempts = 0;
+        correctAnswers = 0;
+        generateSequence();
+    }
+
+    // Генерация последовательности
+function generateSequence() {
+    attempts++;
+    if (attempts > totalAttempts) {
+        const accuracy = Math.round((correctAnswers / totalAttempts) * 100);
+        showMessage(`Тест завершен! Ваша точность: ${accuracy}%`, () => {
+            closeGame('telepathy');
+        });
+        return;
+    }
+
+    document.getElementById('sequence-info').textContent = `Попытка ${attempts} из ${totalAttempts}`;
+    
+    const elementKeys = Object.keys(elements);
+    currentSequence = [];
+    
+    // Создаем более сложные последовательности с разными паттернами
+    const patternType = Math.floor(Math.random() * 3); // 3 разных типа последовательностей
+    
+    // Базовый элемент, который будет повторяться
+    const baseElement = elementKeys[Math.floor(Math.random() * elementKeys.length)];
+    
+    // Определяем позицию пропуска (не первый и не последний)
+    const skipPosition = 1 + Math.floor(Math.random() * 3);
+    
+    switch(patternType) {
+        case 0: // Чередование двух элементов
+            const secondElement = elementKeys.find(el => el !== baseElement);
+            for (let i = 0; i < 5; i++) {
+                currentSequence.push(i % 2 === 0 ? baseElement : secondElement);
+            }
+            break;
+            
+        case 1: // Последовательность с одним отличающимся элементом в середине
+            for (let i = 0; i < 5; i++) {
+                if (i === 2) { // Середина последовательности
+                    let differentElement;
+                    do {
+                        differentElement = elementKeys[Math.floor(Math.random() * elementKeys.length)];
+                    } while (differentElement === baseElement);
+                    currentSequence.push(differentElement);
+                } else {
+                    currentSequence.push(baseElement);
+                }
+            }
+            break;
+            
+        case 2: // Случайная последовательность с преобладанием одного элемента
+            for (let i = 0; i < 5; i++) {
+                if (Math.random() < 0.7) { // 70% chance for base element
+                    currentSequence.push(baseElement);
+                } else {
+                    let differentElement;
+                    do {
+                        differentElement = elementKeys[Math.floor(Math.random() * elementKeys.length)];
+                    } while (differentElement === baseElement);
+                    currentSequence.push(differentElement);
+                }
+            }
+            break;
+    }
+    
+    // Запоминаем правильный ответ и создаем пропуск
+    correctAnswer = currentSequence[skipPosition];
+    currentSequence[skipPosition] = null;
+    
+    displaySequence();
+}
+    // Отображение последовательности
+function displaySequence() {
+    const sequenceContainer = document.getElementById('elements-sequence');
+    const optionsContainer = document.getElementById('element-options');
+    
+    sequenceContainer.innerHTML = '';
+    optionsContainer.innerHTML = '';
+    
+    // Отображаем последовательность с пропуском
+    currentSequence.forEach((element, index) => {
+        const card = document.createElement('div');
+        card.className = 'element-card';
+        
+        if (element) {
+            card.textContent = element;
+            card.title = elements[element];
+            
+            // Добавляем подсказку о позиции для сложных последовательностей
+            if (index === 0) card.title += " (начало)";
+            if (index === 4) card.title += " (конец)";
+        } else {
+            card.textContent = '?';
+            card.className = 'element-card missing';
+            card.title = 'Пропущенный элемент';
+        }
+        
+        sequenceContainer.appendChild(card);
+    });
+    
+    // Создаем варианты ответов (включая правильный и похожие)
+    const elementKeys = Object.keys(elements);
+    let options = [correctAnswer];
+    
+    // Добавляем варианты, которые встречаются в последовательности
+    currentSequence.forEach(el => {
+        if (el && !options.includes(el) && options.length < 3) {
+            options.push(el);
+        }
+    });
+    
+    // Добавляем случайные элементы, если нужно
+    while (options.length < 5) {
+        const randomElement = elementKeys[Math.floor(Math.random() * elementKeys.length)];
+        if (!options.includes(randomElement)) {
+            options.push(randomElement);
+        }
+    }
+    
+    // Перемешиваем варианты
+    options = options.sort(() => Math.random() - 0.5);
+    
+    // Создаем кнопки выбора
+    options.forEach(element => {
+        const btn = document.createElement('button');
+        btn.className = 'element-btn';
+        btn.textContent = element;
+        btn.title = elements[element];
+        btn.onclick = function() {
+            checkTelepathyAnswer(element);
+        };
+        optionsContainer.appendChild(btn);
+    });
+}
+
+    // Проверка ответа в телепатии
+    function checkTelepathyAnswer(selected) {
+        // Добавляем класс active к нажатой кнопке
+        const buttons = document.querySelectorAll('.element-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+        
+        // Блокируем кнопки после выбора
+        buttons.forEach(btn => {
+            btn.disabled = true;
+        });
+        
+        stats.telepathy.total++;
+        
+        if (selected === correctAnswer) {
+            stats.telepathy.correct++;
+            correctAnswers++;
+            showMessage(`✅ Верно! Пропущенный элемент: ${elements[correctAnswer]}`, generateSequence);
+        } else {
+            showMessage(`❌ Неверно. Правильный ответ: ${elements[correctAnswer]}`, generateSequence);
+        }
+        
+        updateStats();
+        checkAchievements();
+    }    // Статистика и достижения
     let stats = {
         telepathy: { correct: 0, total: 0 },
         zener: { correct: 0, total: 0 },
@@ -1892,6 +2131,10 @@
     });
 }
 
+    if (gameId === 'telepathy') {
+        initTelepathy();
+    }
+
         if (gameId === 'telekinesis') {
             initTelekinesis();
         } else if (gameId === 'dowsing') {
@@ -2058,27 +2301,6 @@ if (gameId === 'zener') {
                 <div class="achievement-text">${achievement.id}</div>
             </div>
         `).join('');
-    }
-
-    // Телепатия
-    function checkTelepathy(guess) {
-        if (!isGameActive) return;
-        
-        // Добавляем класс active к нажатой кнопке
-        const buttons = document.querySelectorAll('.game-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
-        
-        const target = Math.floor(Math.random() * 10) + 1;
-        stats.telepathy.total++;
-        if (guess === target) {
-            stats.telepathy.correct++;
-            showMessage('✅ Верно! Загадано: ' + target);
-        } else {
-            showMessage(`❌ Неверно. Загадано: ${target}`);
-        }
-        updateStats();
-        checkAchievements();
     }
 
     // Карты Зенера
