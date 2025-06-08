@@ -284,23 +284,27 @@
             filter: brightness(0) invert(1);
         }
 
-        .game-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-            animation: fadeIn 0.5s ease;
-        }
+.game-window {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 26, 46, 0.95);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    border: 2px solid #8A2BE2;
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    opacity: 0; /* Добавлено */
+    transition: opacity 0.3s ease; /* Добавлено */
+}
 
+.game-window.show {
+    opacity: 1; /* Добавлено */
+}
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -819,51 +823,51 @@
             text-align: center;
         }
     /* Обновленные стили для карт Зенера */
-    .zener-main-card {
-        width: 120px;
-        height: 180px;
-        border-radius: 10px;
-        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-        border: 3px solid #8A2BE2;
-        color: #E6E6FA;
-        font-size: 4rem;
-        margin: 0 auto 20px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        position: relative;
-        transform-style: preserve-3d;
-        transition: transform 0.8s;
-        cursor: pointer;
-    }
+.zener-main-card {
+    width: 120px;
+    height: 180px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+    border: 3px solid #8A2BE2;
+    color: #E6E6FA;
+    font-size: 4rem;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.8s;
+    cursor: pointer;
+}
 
     .zener-main-card.flipped {
         transform: rotateY(180deg);
     }
 
-    .zener-main-card-face {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        backface-visibility: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 7px;
-    }
+.zener-main-card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+}
 
-    .zener-main-card-front {
-        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-        border: 3px solid #8A2BE2;
-    }
+.zener-main-card-front {
+    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+    border: 3px solid #8A2BE2;
+}
 
-    .zener-main-card-back {
-        background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
-        transform: rotateY(180deg);
-        border: 3px solid #FFD700; /* Толщина рамки как у лицевой стороны */
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-    }
+.zener-main-card-back {
+    background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
+    transform: rotateY(180deg);
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+}
 
 .zener-main-card-back::before {
     content: '';
@@ -1646,22 +1650,25 @@ function updateLevelInfo() {
         document.getElementById('overlay').style.display = 'block';
         
         const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            // Убрали строку, которая скрывает overlay
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            
-            if (callback) {
-                const resetActiveButtons = () => {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                    callback();
-                };
-                resetActiveButtons();
-            }
-        };
+button.onclick = function() {
+    document.getElementById('message-box').style.display = 'none';
+    isGameActive = true;
+    document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+    
+    // Сброс активных кнопок в цветовой интуиции
+    if (document.getElementById('color').style.display === 'block') {
+        document.querySelectorAll('.game-btn.active').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+    
+    // Сброс прогресс-бара в числовой матрице
+    if (document.getElementById('number').style.display === 'block') {
+        document.getElementById('accuracy-fill').style.width = '0';
+    }
+    
+    if (callback) callback();
+};
     }
 
     // Инициализация телекинеза
@@ -1941,10 +1948,11 @@ function updateLevelInfo() {
     }
 
     // Инициализация числовой матрицы
-    function initNumberMatrix() {
-        document.getElementById('accuracy-fill').style.width = '0';
-        document.getElementById('number-guess').value = '';
-    }
+function initNumberMatrix() {
+    document.getElementById('accuracy-fill').style.width = '0';
+    document.getElementById('number-guess').value = '';
+    document.querySelector('.number-submit').classList.remove('active'); // Добавлено
+}
 
     // Медитация
     function initMeditation() {
@@ -2226,10 +2234,16 @@ function updateLevelInfo() {
     });
 
     // Открытие игры
-    function openGame(gameId) {
-        document.getElementById('main-container').style.display = 'none';
-        document.getElementById(gameId).style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
+function openGame(gameId) {
+    document.getElementById('main-container').style.display = 'none';
+    const gameWindow = document.getElementById(gameId);
+    gameWindow.style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    // Добавить плавное появление
+    setTimeout(() => {
+        gameWindow.classList.add('show');
+    }, 10);
 
         // Останавливаем фоновую музыку
         if (backgroundMusicPlaying) {
