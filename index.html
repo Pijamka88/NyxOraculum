@@ -284,30 +284,27 @@
             filter: brightness(0) invert(1);
         }
 
-        .game-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-            opacity: 0;
-            transform: translate(-50%, -50%) translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+.game-window {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 26, 46, 0.95);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    border: 2px solid #8A2BE2;
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    opacity: 0; /* Добавлено */
+    transition: opacity 0.3s ease; /* Добавлено */
+}
 
-        .game-window.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(0);
-        }
-
+.game-window.show {
+    opacity: 1; /* Добавлено */
+}
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -463,12 +460,6 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: 999;
             animation: fadeIn 0.5s ease;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .overlay.show {
-            opacity: 1;
         }
 
         .stats-window, .achievements-window {
@@ -486,14 +477,6 @@
             width: 90%;
             max-width: 400px;
             animation: fadeIn 0.5s ease;
-            opacity: 0;
-            transform: translate(-50%, -50%) translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .stats-window.show, .achievements-window.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(0);
         }
 
         .stats-window h2, .achievements-window h2 {
@@ -558,14 +541,6 @@
             max-width: 300px;
             text-align: center;
             animation: fadeIn 0.5s ease;
-            opacity: 0;
-            transform: translate(-50%, -50%) translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
-
-        .message-box.show {
-            opacity: 1;
-            transform: translate(-50%, -50%) translateY(0);
         }
 
         .message-box p {
@@ -1671,40 +1646,29 @@ function updateLevelInfo() {
         isGameActive = false;
         document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
         document.getElementById('message-text').textContent = text;
-        const messageBox = document.getElementById('message-box');
-        messageBox.style.display = 'block';
+        document.getElementById('message-box').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
         
-        setTimeout(() => {
-            messageBox.classList.add('show');
-            document.getElementById('overlay').classList.add('show');
-        }, 10);
-        
         const button = document.getElementById('message-button');
-        button.onclick = function() {
-            messageBox.classList.remove('show');
-            document.getElementById('overlay').classList.remove('show');
-            
-            setTimeout(() => {
-                messageBox.style.display = 'none';
-                isGameActive = true;
-                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-                
-                // Сброс активных кнопок в цветовой интуиции
-                if (document.getElementById('color').style.display === 'block') {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                }
-                
-                // Сброс прогресс-бара в числовой матрице
-                if (document.getElementById('number').style.display === 'block') {
-                    document.getElementById('accuracy-fill').style.width = '0';
-                }
-                
-                if (callback) callback();
-            }, 500);
-        };
+button.onclick = function() {
+    document.getElementById('message-box').style.display = 'none';
+    isGameActive = true;
+    document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+    
+    // Сброс активных кнопок в цветовой интуиции
+    if (document.getElementById('color').style.display === 'block') {
+        document.querySelectorAll('.game-btn.active').forEach(btn => {
+            btn.classList.remove('active');
+        });
+    }
+    
+    // Сброс прогресс-бара в числовой матрице
+    if (document.getElementById('number').style.display === 'block') {
+        document.getElementById('accuracy-fill').style.width = '0';
+    }
+    
+    if (callback) callback();
+};
     }
 
     // Инициализация телекинеза
@@ -1984,10 +1948,11 @@ function updateLevelInfo() {
     }
 
     // Инициализация числовой матрицы
-    function initNumberMatrix() {
-        document.getElementById('accuracy-fill').style.width = '0';
-        document.getElementById('number-guess').value = '';
-    }
+function initNumberMatrix() {
+    document.getElementById('accuracy-fill').style.width = '0';
+    document.getElementById('number-guess').value = '';
+    document.querySelector('.number-submit').classList.remove('active'); // Добавлено
+}
 
     // Медитация
     function initMeditation() {
@@ -2269,17 +2234,16 @@ function updateLevelInfo() {
     });
 
     // Открытие игры
-    function openGame(gameId) {
-        document.getElementById('main-container').style.display = 'none';
-        const gameWindow = document.getElementById(gameId);
-        gameWindow.style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        
-        // Запуск анимации
-        setTimeout(() => {
-            gameWindow.classList.add('show');
-            document.getElementById('overlay').classList.add('show');
-        }, 10);
+function openGame(gameId) {
+    document.getElementById('main-container').style.display = 'none';
+    const gameWindow = document.getElementById(gameId);
+    gameWindow.style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
+    
+    // Добавить плавное появление
+    setTimeout(() => {
+        gameWindow.classList.add('show');
+    }, 10);
 
         // Останавливаем фоновую музыку
         if (backgroundMusicPlaying) {
@@ -2289,14 +2253,14 @@ function updateLevelInfo() {
         }
 
         if (gameId === 'zener') {
-            document.querySelectorAll('.zener-card.active').forEach(card => {
-                card.classList.remove('active');
-            });
-        }
+    document.querySelectorAll('.zener-card.active').forEach(card => {
+        card.classList.remove('active');
+    });
+}
 
-        if (gameId === 'telepathy') {
-            initTelepathy();
-        }
+    if (gameId === 'telepathy') {
+        initTelepathy();
+    }
 
         if (gameId === 'telekinesis') {
             initTelekinesis();
@@ -2324,22 +2288,6 @@ function updateLevelInfo() {
 
     // Закрытие игры
     function closeGame(gameId) {
-        const gameWindow = document.getElementById(gameId);
-        gameWindow.classList.remove('show');
-        document.getElementById('overlay').classList.remove('show');
-        
-        // Ждем завершения анимации перед скрытием
-        setTimeout(() => {
-            gameWindow.style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-container').style.display = 'block';
-            
-            // Запускаем анимацию появления основного контейнера
-            setTimeout(() => {
-                document.getElementById('main-container').classList.add('show');
-            }, 50);
-        }, 500);
-
         // Остановка всех процессов игры "Орел и решка"
         if (gameId === 'coin') {
             clearTimeout(coinFlipTimeout);
@@ -2355,12 +2303,12 @@ function updateLevelInfo() {
             });
         }
 
-        // В функции closeGame, внутри условия if (gameId === 'zener')
-        if (gameId === 'zener') {
-            document.querySelectorAll('.zener-card.active').forEach(card => {
-                card.classList.remove('active');
-            });
-        }
+// В функции closeGame, внутри условия if (gameId === 'zener')
+if (gameId === 'zener') {
+    document.querySelectorAll('.zener-card.active').forEach(card => {
+        card.classList.remove('active');
+    });
+}
 
         // Сброс прогресс-бара в числовой матрице
         if (gameId === 'number') {
@@ -2386,6 +2334,11 @@ function updateLevelInfo() {
             }
         }
 
+        // Закрытие окна игры
+        document.getElementById(gameId).style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
+
         telekinesisGameActive = false;
 
         // Возобновляем фоновую музыку, если она не играет и если это первое открытие
@@ -2399,67 +2352,31 @@ function updateLevelInfo() {
     // Открытие статистики
     function openStats() {
         document.getElementById('main-container').style.display = 'none';
-        const statsWindow = document.getElementById('stats');
-        statsWindow.style.display = 'block';
+        document.getElementById('stats').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
-        
-        setTimeout(() => {
-            statsWindow.classList.add('show');
-            document.getElementById('overlay').classList.add('show');
-        }, 10);
-        
         updateStats();
     }
 
     // Закрытие статистики
     function closeStats() {
-        const statsWindow = document.getElementById('stats');
-        statsWindow.classList.remove('show');
-        document.getElementById('overlay').classList.remove('show');
-        
-        setTimeout(() => {
-            statsWindow.style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-container').style.display = 'block';
-            
-            // Запускаем анимацию появления основного контейнера
-            setTimeout(() => {
-                document.getElementById('main-container').classList.add('show');
-            }, 50);
-        }, 500);
+        document.getElementById('stats').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
     }
 
     // Открытие достижений
     function openAchievements() {
         document.getElementById('main-container').style.display = 'none';
-        const achievementsWindow = document.getElementById('achievements');
-        achievementsWindow.style.display = 'block';
+        document.getElementById('achievements').style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
-        
-        setTimeout(() => {
-            achievementsWindow.classList.add('show');
-            document.getElementById('overlay').classList.add('show');
-        }, 10);
-        
         updateAchievements();
     }
 
     // Закрытие достижений
     function closeAchievements() {
-        const achievementsWindow = document.getElementById('achievements');
-        achievementsWindow.classList.remove('show');
-        document.getElementById('overlay').classList.remove('show');
-        
-        setTimeout(() => {
-            achievementsWindow.style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('main-container').style.display = 'block';
-            
-            // Запускаем анимацию появления основного контейнера
-            setTimeout(() => {
-                document.getElementById('main-container').classList.add('show');
-            }, 50);
-        }, 500);
+        document.getElementById('achievements').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('main-container').style.display = 'block';
     }
 
     // Обновление статистики
