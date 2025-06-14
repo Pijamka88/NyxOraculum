@@ -284,27 +284,30 @@
             filter: brightness(0) invert(1);
         }
 
-.game-window {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(26, 26, 46, 0.95);
-    padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-    border: 2px solid #8A2BE2;
-    z-index: 1000;
-    width: 90%;
-    max-width: 400px;
-    opacity: 0; /* Добавлено */
-    transition: opacity 0.3s ease; /* Добавлено */
-}
+        .game-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.9);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
 
-.game-window.show {
-    opacity: 1; /* Добавлено */
-}
+        .game-window.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1650,25 +1653,16 @@ function updateLevelInfo() {
         document.getElementById('overlay').style.display = 'block';
         
         const button = document.getElementById('message-button');
-button.onclick = function() {
-    document.getElementById('message-box').style.display = 'none';
-    isGameActive = true;
-    document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-    
-    // Сброс активных кнопок в цветовой интуиции
-    if (document.getElementById('color').style.display === 'block') {
-        document.querySelectorAll('.game-btn.active').forEach(btn => {
-            btn.classList.remove('active');
-        });
-    }
-    
-    // Сброс прогресс-бара в числовой матрице
-    if (document.getElementById('number').style.display === 'block') {
-        document.getElementById('accuracy-fill').style.width = '0';
-    }
-    
-    if (callback) callback();
-};
+        button.onclick = function() {
+            document.getElementById('message-box').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            isGameActive = true;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+            
+            if (callback) {
+                callback();
+            }
+        };
     }
 
     // Инициализация телекинеза
@@ -1943,16 +1937,19 @@ button.onclick = function() {
         checkAchievements();
         
         document.getElementById('accuracy-fill').style.width = `${accuracy}%`;
-        showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`);
-        document.getElementById('number-guess').value = '';
+        showMessage(`Загадано: ${target}\nВаш ответ: ${guess}\nТочность: ${Math.round(accuracy)}%`, function() {
+            // Сброс после нажатия OK
+            document.getElementById('accuracy-fill').style.width = '0';
+            document.getElementById('number-guess').value = '';
+            document.querySelector('.number-submit').classList.remove('active');
+        });
     }
 
     // Инициализация числовой матрицы
-function initNumberMatrix() {
-    document.getElementById('accuracy-fill').style.width = '0';
-    document.getElementById('number-guess').value = '';
-    document.querySelector('.number-submit').classList.remove('active'); // Добавлено
-}
+    function initNumberMatrix() {
+        document.getElementById('accuracy-fill').style.width = '0';
+        document.getElementById('number-guess').value = '';
+    }
 
     // Медитация
     function initMeditation() {
@@ -2234,119 +2231,131 @@ function initNumberMatrix() {
     });
 
     // Открытие игры
-function openGame(gameId) {
-    document.getElementById('main-container').style.display = 'none';
-    const gameWindow = document.getElementById(gameId);
-    gameWindow.style.display = 'block';
-    document.getElementById('overlay').style.display = 'block';
-    
-    // Добавить плавное появление
-    setTimeout(() => {
-        gameWindow.classList.add('show');
-    }, 10);
+    function openGame(gameId) {
+        const mainContainer = document.getElementById('main-container');
+        mainContainer.style.opacity = '0';
+        mainContainer.style.transform = 'translateY(20px)';
+        mainContainer.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
 
-        // Останавливаем фоновую музыку
-        if (backgroundMusicPlaying) {
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-            backgroundMusicPlaying = false;
-        }
+        setTimeout(() => {
+            mainContainer.style.display = 'none';
+            const gameWindow = document.getElementById(gameId);
+            gameWindow.style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
 
-        if (gameId === 'zener') {
-    document.querySelectorAll('.zener-card.active').forEach(card => {
-        card.classList.remove('active');
-    });
-}
+            // Анимация появления игрового окна
+            setTimeout(() => {
+                gameWindow.style.opacity = '1';
+                gameWindow.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 50);
 
-    if (gameId === 'telepathy') {
-        initTelepathy();
-    }
+            // Останавливаем фоновую музыку
+            if (backgroundMusicPlaying) {
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
+                backgroundMusicPlaying = false;
+            }
 
-        if (gameId === 'telekinesis') {
-            initTelekinesis();
-        } else if (gameId === 'dowsing') {
-            initDowsing();
-        } else if (gameId === 'number') {
-            initNumberMatrix();
-        } else if (gameId === 'meditation') {
-            initMeditation();
-        } else if (gameId === 'coin') {
-            // Сброс состояния монеты при открытии игры
-            const coin = document.getElementById('coin-element');
-            coin.classList.remove('flipping');
-            coin.style.transform = 'rotateY(0deg)';
-            document.getElementById('coin-result').textContent = '';
-            isCoinFlipping = false;
-            
-            // Включение кнопок
-            document.querySelectorAll('.coin-btn').forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove('active');
-            });
-        }
+            if (gameId === 'zener') {
+                document.querySelectorAll('.zener-card.active').forEach(card => {
+                    card.classList.remove('active');
+                });
+            }
+
+            if (gameId === 'telepathy') {
+                initTelepathy();
+            }
+
+            if (gameId === 'telekinesis') {
+                initTelekinesis();
+            } else if (gameId === 'dowsing') {
+                initDowsing();
+            } else if (gameId === 'number') {
+                initNumberMatrix();
+            } else if (gameId === 'meditation') {
+                initMeditation();
+            } else if (gameId === 'coin') {
+                // Сброс состояния монеты при открытии игры
+                const coin = document.getElementById('coin-element');
+                coin.classList.remove('flipping');
+                coin.style.transform = 'rotateY(0deg)';
+                document.getElementById('coin-result').textContent = '';
+                isCoinFlipping = false;
+                
+                // Включение кнопок
+                document.querySelectorAll('.coin-btn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('active');
+                });
+            }
+        }, 500);
     }
 
     // Закрытие игры
     function closeGame(gameId) {
-        // Остановка всех процессов игры "Орел и решка"
-        if (gameId === 'coin') {
-            clearTimeout(coinFlipTimeout);
-            clearTimeout(coinResultTimeout);
-            isCoinFlipping = false;
-            const coin = document.getElementById('coin-element');
-            coin.classList.remove('flipping');
-            coin.style.transform = 'rotateY(0deg)';
-            document.getElementById('coin-result').textContent = '';
-            document.querySelectorAll('.coin-btn').forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove('active');
-            });
-        }
+        const gameWindow = document.getElementById(gameId);
+        gameWindow.style.opacity = '0';
+        gameWindow.style.transform = 'translate(-50%, -50%) scale(0.9)';
 
-// В функции closeGame, внутри условия if (gameId === 'zener')
-if (gameId === 'zener') {
-    document.querySelectorAll('.zener-card.active').forEach(card => {
-        card.classList.remove('active');
-    });
-}
-
-        // Сброс прогресс-бара в числовой матрице
-        if (gameId === 'number') {
-            document.getElementById('accuracy-fill').style.width = '0';
-            document.getElementById('number-guess').value = '';
-            document.querySelector('.number-submit').classList.remove('active');
-        }
-
-        // Сброс активных кнопок в телепатии, картах Зенера и цветовой интуиции
-        if (gameId === 'telepathy' || gameId === 'zener' || gameId === 'color') {
-            document.querySelectorAll('.game-btn.active').forEach(btn => {
-                btn.classList.remove('active');
-            });
-        }
-
-        // Сброс медитации
-        if (gameId === 'meditation') {
-            if (isMeditating) {
-                stopMeditation(false);
-            } else {
-                const btn = document.getElementById('meditation-btn');
-                btn.classList.remove('active');
+        setTimeout(() => {
+            gameWindow.style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+            
+            const mainContainer = document.getElementById('main-container');
+            mainContainer.style.display = 'block';
+            setTimeout(() => {
+                mainContainer.style.opacity = '1';
+                mainContainer.style.transform = 'translateY(0)';
+            }, 50);
+            
+            // Остановка всех процессов игры "Орел и решка"
+            if (gameId === 'coin') {
+                clearTimeout(coinFlipTimeout);
+                clearTimeout(coinResultTimeout);
+                isCoinFlipping = false;
+                const coin = document.getElementById('coin-element');
+                coin.classList.remove('flipping');
+                coin.style.transform = 'rotateY(0deg)';
+                document.getElementById('coin-result').textContent = '';
+                document.querySelectorAll('.coin-btn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('active');
+                });
             }
-        }
 
-        // Закрытие окна игры
-        document.getElementById(gameId).style.display = 'none';
-        document.getElementById('overlay').style.display = 'none';
-        document.getElementById('main-container').style.display = 'block';
+            // Сброс прогресс-бара в числовой матрице
+            if (gameId === 'number') {
+                document.getElementById('accuracy-fill').style.width = '0';
+                document.getElementById('number-guess').value = '';
+                document.querySelector('.number-submit').classList.remove('active');
+            }
 
-        telekinesisGameActive = false;
+            // Сброс активных кнопок в телепатии, картах Зенера и цветовой интуиции
+            if (gameId === 'telepathy' || gameId === 'zener' || gameId === 'color') {
+                document.querySelectorAll('.game-btn.active').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+            }
 
-        // Возобновляем фоновую музыку, если она не играет и если это первое открытие
-        if (!backgroundMusicPlaying && !musicPlayedOnce) {
-            backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
-            backgroundMusicPlaying = true;
-            musicPlayedOnce = true;
-        }
+            // Сброс медитации
+            if (gameId === 'meditation') {
+                if (isMeditating) {
+                    stopMeditation(false);
+                } else {
+                    const btn = document.getElementById('meditation-btn');
+                    btn.classList.remove('active');
+                }
+            }
+
+            telekinesisGameActive = false;
+
+            // Возобновляем фоновую музыку, если она не играет и если это первое открытие
+            if (!backgroundMusicPlaying && !musicPlayedOnce) {
+                backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
+                backgroundMusicPlaying = true;
+                musicPlayedOnce = true;
+            }
+        }, 500);
     }
 
     // Открытие статистики
@@ -2508,7 +2517,6 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к нажатой кнопке
         const buttons = document.querySelectorAll('.game-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
@@ -2516,11 +2524,14 @@ function getSymbolClass(symbol) {
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
         stats.color.total++;
+        
+        showMessage(guess === target ? '✅ Верно! Загадан: ' + target : `❌ Неверно. Загадан: ${target}`, function() {
+            // Этот callback выполнится после нажатия OK
+            buttons.forEach(btn => btn.classList.remove('active'));
+        });
+        
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
-        } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
         }
         updateStats();
         checkAchievements();
