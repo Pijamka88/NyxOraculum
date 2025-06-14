@@ -102,7 +102,7 @@ NyxOraculum — это интерактивная платформа с набо
 
 ```bash
 # Клонировать репозиторий
-git clone https://github.com/ваш-username/NyxOraculum.git
+git clone https://github.com//Pijamka88/NyxOraculum.git
 
 # Перейти в директорию проекта
 cd NyxOraculum
