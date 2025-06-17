@@ -1206,6 +1206,148 @@
         color: #9370DB;
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
+        /* Стили для цветовой интуиции */
+    .color-game-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .color-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .color-orb {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.3),
+            inset 0 0 15px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .color-orb::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: radial-gradient(circle at 30% 30%, 
+            rgba(255, 255, 255, 0.8) 0%, 
+            rgba(255, 255, 255, 0) 60%);
+        opacity: 0.5;
+        border-radius: 50%;
+    }
+
+    .color-orb::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 70% 70%, 
+            rgba(0, 0, 0, 0.3) 0%, 
+            transparent 70%);
+        border-radius: 50%;
+    }
+
+    .paint-effect {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        opacity: 0.9;
+        background: radial-gradient(circle at 30% 30%, 
+            var(--paint-color-1) 0%, 
+            var(--paint-color-2) 50%, 
+            var(--paint-color-3) 100%);
+        filter: blur(5px);
+        animation: paint-swirl 15s infinite linear;
+        mix-blend-mode: multiply;
+    }
+
+    .orb-core {
+        position: absolute;
+        top: 15%;
+        left: 15%;
+        width: 70%;
+        height: 70%;
+        border-radius: 50%;
+        background: radial-gradient(circle at 40% 40%, 
+            rgba(255, 255, 255, 0.8) 0%, 
+            rgba(255, 255, 255, 0.2) 70%);
+        filter: blur(2px);
+    }
+
+    @keyframes paint-swirl {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.1); }
+        100% { transform: rotate(360deg) scale(1); }
+    }
+
+    .color-orb:hover {
+        transform: scale(1.1);
+        box-shadow: 
+            0 0 30px rgba(255, 255, 255, 0.5),
+            inset 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+
+    .color-orb.active {
+        transform: scale(0.95);
+        box-shadow: 
+            0 0 30px var(--active-glow),
+            inset 0 0 20px rgba(0, 0, 0, 0.7);
+    }
+
+    /* Цвета шаров */
+    .color-orb.red {
+        --paint-color-1: #ff0000;
+        --paint-color-2: #cc0000;
+        --paint-color-3: #990000;
+        --active-glow: rgba(255, 0, 0, 0.7);
+    }
+
+    .color-orb.blue {
+        --paint-color-1: #0000ff;
+        --paint-color-2: #0000cc;
+        --paint-color-3: #000099;
+        --active-glow: rgba(0, 0, 255, 0.7);
+    }
+
+    .color-orb.green {
+        --paint-color-1: #00ff00;
+        --paint-color-2: #00cc00;
+        --paint-color-3: #009900;
+        --active-glow: rgba(0, 255, 0, 0.7);
+    }
+
+    .color-orb.yellow {
+        --paint-color-1: #ffff00;
+        --paint-color-2: #ffcc00;
+        --paint-color-3: #ff9900;
+        --active-glow: rgba(255, 255, 0, 0.7);
+    }
+
+    .color-orb.purple {
+        --paint-color-1: #800080;
+        --paint-color-2: #660066;
+        --paint-color-3: #4b0082;
+        --active-glow: rgba(128, 0, 128, 0.7);
+    }
     </style>
 </head>
 <body>
@@ -1304,20 +1446,37 @@
     </div>
 </div>
 
-    <div id="color" class="game-window">
-        <div class="game-content active">
-            <h2>Цветовая интуиция</h2>
-            <p>Угадайте цвет:</p>
-<div class="game-buttons">
-    <button class="game-btn" style="background: radial-gradient(circle, #FF0000, #8B0000);" onclick="checkColor('красный')"></button>
-    <button class="game-btn" style="background: radial-gradient(circle, #0000FF, #00008B);" onclick="checkColor('синий')"></button>
-    <button class="game-btn" style="background: radial-gradient(circle, #00FF00, #006400);" onclick="checkColor('зеленый')"></button>
-    <button class="game-btn" style="background: radial-gradient(circle, #FFFF00, #FFD700);" onclick="checkColor('желтый')"></button>
-    <button class="game-btn" style="background: radial-gradient(circle, #800080, #4B0082);" onclick="checkColor('фиолетовый')"></button>
-</div>
+<div id="color" class="game-window">
+    <div class="game-content active">
+        <h2>Цветовая интуиция</h2>
+        <p>Угадайте цвет магического шара:</p>
+        <div class="color-game-container">
+            <div class="color-buttons" id="color-buttons">
+                <div class="color-orb red" onclick="checkColor('красный')">
+                    <div class="paint-effect"></div>
+                    <div class="orb-core"></div>
+                </div>
+                <div class="color-orb blue" onclick="checkColor('синий')">
+                    <div class="paint-effect"></div>
+                    <div class="orb-core"></div>
+                </div>
+                <div class="color-orb green" onclick="checkColor('зеленый')">
+                    <div class="paint-effect"></div>
+                    <div class="orb-core"></div>
+                </div>
+                <div class="color-orb yellow" onclick="checkColor('желтый')">
+                    <div class="paint-effect"></div>
+                    <div class="orb-core"></div>
+                </div>
+                <div class="color-orb purple" onclick="checkColor('фиолетовый')">
+                    <div class="paint-effect"></div>
+                    <div class="orb-core"></div>
+                </div>
+            </div>
             <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
         </div>
     </div>
+</div>
 
     <div id="telekinesis" class="game-window">
         <div class="game-content active">
@@ -2566,10 +2725,10 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к нажатой кнопке
-        const buttons = document.querySelectorAll('.game-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+           // Добавляем класс active к нажатому шару
+        const orbs = document.querySelectorAll('.color-orb');
+        orbs.forEach(orb => orb.classList.remove('active'));
+        event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
@@ -2582,6 +2741,11 @@ function getSymbolClass(symbol) {
         }
         updateStats();
         checkAchievements();
+        
+        // Через 1 секунду снимаем выделение
+        setTimeout(() => {
+            orbs.forEach(orb => orb.classList.remove('active'));
+        }, 1000);
     }
 
     // Проверка достижений
