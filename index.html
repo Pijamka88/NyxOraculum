@@ -1007,6 +1007,7 @@
     }
 
     /* Стили для порталов */
+    /* Стили для порталов */
     .portals-container {
         display: flex;
         flex-wrap: wrap;
@@ -1023,7 +1024,6 @@
         border-radius: 50%;
         overflow: hidden;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
     }
 
     .portal::before {
@@ -1106,8 +1106,8 @@
 
     .portal-particle {
         position: absolute;
-        width: 2px;
-        height: 2px;
+        width: 3px; /* Увеличили размер частиц */
+        height: 3px;
         border-radius: 50%;
         background: currentColor;
         opacity: 0;
@@ -1134,7 +1134,6 @@
 
     .portal:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
     }
 
     .portal:hover .portal-symbol {
@@ -1171,36 +1170,41 @@
         100% { box-shadow: 0 0 10px rgba(244, 67, 54, 0.5); }
     }
 
-    /* Цвета элементов */
+    /* Цвета элементов с индивидуальными тенями */
     .portal[data-element="▲"] {
         --portal-color-1: #FF4500;
         --portal-color-2: #FF8C00;
         --portal-color-3: #FF6347;
         color: #FF4500;
+        box-shadow: 0 0 20px rgba(255, 69, 0, 0.5); /* Оранжевая тень для огня */
     }
     .portal[data-element="▼"] {
         --portal-color-1: #1E90FF;
         --portal-color-2: #00BFFF;
         --portal-color-3: #87CEFA;
         color: #1E90FF;
+        box-shadow: 0 0 20px rgba(30, 144, 255, 0.5); /* Синяя тень для воды */
     }
     .portal[data-element="■"] {
         --portal-color-1: #8B4513;
         --portal-color-2: #A0522D;
         --portal-color-3: #D2691E;
         color: #8B4513;
+        box-shadow: 0 0 20px rgba(139, 69, 19, 0.5); /* Коричневая тень для земли */
     }
     .portal[data-element="◊"] {
         --portal-color-1: #87CEEB;
         --portal-color-2: #ADD8E6;
         --portal-color-3: #B0E0E6;
         color: #87CEEB;
+        box-shadow: 0 0 20px rgba(135, 206, 235, 0.5); /* Голубая тень для воздуха */
     }
     .portal[data-element="○"] {
         --portal-color-1: #9370DB;
         --portal-color-2: #8A2BE2;
         --portal-color-3: #9932CC;
         color: #9370DB;
+        box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     </style>
 </head>
@@ -1539,7 +1543,7 @@ function initTelepathy() {
             };
             container.appendChild(portal);
 
-            // Создаем частицы с эффектом спирали
+            // Создаем частицы с эффектом спирали (увеличенные)
             const particlesContainer = document.getElementById(`particles-${index}`);
             for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
