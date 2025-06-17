@@ -1207,42 +1207,34 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .color-game-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .color-buttons {
+    .magic-balls-container {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 15px;
         margin: 20px 0;
         flex-wrap: wrap;
     }
 
-    .color-btn {
-        position: relative;
+    .magic-ball {
         width: 80px;
         height: 80px;
         border-radius: 50%;
+        position: relative;
         cursor: pointer;
         transition: all 0.3s ease;
-        overflow: hidden;
         box-shadow: 
-            0 10px 25px rgba(0, 0, 0, 0.3),
-            inset 0 -10px 20px rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.2);
+            0 0 15px rgba(255, 255, 255, 0.3),
+            inset 0 0 10px rgba(255, 255, 255, 0.2);
+        overflow: hidden;
     }
 
-    .color-btn::before {
+    .magic-ball::before {
         content: '';
         position: absolute;
-        top: -20%;
-        left: -20%;
-        width: 140%;
-        height: 140%;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
         background: radial-gradient(circle at 30% 30%, 
             rgba(255, 255, 255, 0.8) 0%, 
             rgba(255, 255, 255, 0) 60%);
@@ -1250,109 +1242,91 @@
         opacity: 0.6;
     }
 
-    .color-btn::after {
+    .magic-ball::after {
         content: '';
         position: absolute;
-        bottom: -10%;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 20%;
+        left: 20%;
         width: 60%;
-        height: 20%;
-        background: rgba(0, 0, 0, 0.15);
+        height: 60%;
+        background: radial-gradient(circle at 40% 40%, 
+            rgba(255, 255, 255, 0.9) 0%, 
+            rgba(255, 255, 255, 0) 70%);
         border-radius: 50%;
-        filter: blur(5px);
+        opacity: 0.4;
     }
 
-    .liquid-effect {
+    .magic-ball-inner {
         position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
         border-radius: 50%;
         background: radial-gradient(circle at 30% 30%, 
-            var(--color-light) 0%, 
-            var(--color-dark) 80%);
-        animation: liquid-move 8s infinite ease-in-out;
-        opacity: 0.9;
+            var(--ball-color-light) 0%, 
+            var(--ball-color-dark) 80%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        box-shadow: 
+            inset 0 0 15px rgba(0, 0, 0, 0.5),
+            0 0 10px rgba(255, 255, 255, 0.1);
     }
 
-    .bubble {
-        position: absolute;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 50%;
-        animation: bubble-float 5s infinite ease-in-out;
-    }
-
-    @keyframes liquid-move {
-        0%, 100% { transform: translate(0, 0) rotate(0deg); }
-        25% { transform: translate(-5%, 5%) rotate(-5deg); }
-        50% { transform: translate(5%, -5%) rotate(5deg); }
-        75% { transform: translate(-5%, -5%) rotate(-5deg); }
-    }
-
-    @keyframes bubble-float {
-        0% { 
-            transform: translate(0, 0) scale(0.8);
-            opacity: 0.5;
-        }
-        50% { 
-            transform: translate(var(--bubble-x), var(--bubble-y)) scale(1.2);
-            opacity: 0.8;
-        }
-        100% { 
-            transform: translate(0, 0) scale(0.8);
-            opacity: 0.5;
-        }
-    }
-
-    .color-btn:hover {
+    .magic-ball:hover {
         transform: scale(1.1);
         box-shadow: 
-            0 15px 30px rgba(0, 0, 0, 0.4),
-            inset 0 -10px 20px rgba(255, 255, 255, 0.2);
+            0 0 25px rgba(255, 255, 255, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.3);
     }
 
-    .color-btn:active {
+    .magic-ball:active {
         transform: scale(0.95);
     }
 
-    .color-btn.active {
+    .magic-ball.active {
         box-shadow: 
-            0 0 30px var(--color-glow),
-            inset 0 -10px 20px rgba(255, 255, 255, 0.3);
-        border-color: rgba(255, 255, 255, 0.5);
+            0 0 30px var(--ball-glow-color),
+            inset 0 0 20px rgba(255, 255, 255, 0.4);
+        animation: ball-pulse 1.5s infinite alternate;
     }
 
-    /* Цвета шаров */
-    .color-btn.red {
-        --color-light: #FF6B6B;
-        --color-dark: #FF0000;
-        --color-glow: rgba(255, 0, 0, 0.7);
+    @keyframes ball-pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.05); }
     }
 
-    .color-btn.blue {
-        --color-light: #70A1FF;
-        --color-dark: #1E90FF;
-        --color-glow: rgba(30, 144, 255, 0.7);
+    /* Цвета магических шаров */
+    .magic-ball[data-color="красный"] {
+        --ball-color-light: #FF3333;
+        --ball-color-dark: #CC0000;
+        --ball-glow-color: rgba(255, 51, 51, 0.7);
     }
 
-    .color-btn.green {
-        --color-light: #7BED9F;
-        --color-dark: #2ED573;
-        --color-glow: rgba(46, 213, 115, 0.7);
+    .magic-ball[data-color="синий"] {
+        --ball-color-light: #3366FF;
+        --ball-color-dark: #0033CC;
+        --ball-glow-color: rgba(51, 102, 255, 0.7);
     }
 
-    .color-btn.yellow {
-        --color-light: #FFEAA7;
-        --color-dark: #FFD700;
-        --color-glow: rgba(255, 215, 0, 0.7);
+    .magic-ball[data-color="зеленый"] {
+        --ball-color-light: #33CC33;
+        --ball-color-dark: #009900;
+        --ball-glow-color: rgba(51, 204, 51, 0.7);
     }
 
-    .color-btn.purple {
-        --color-light: #CDC2FF;
-        --color-dark: #8A2BE2;
-        --color-glow: rgba(138, 43, 226, 0.7);
+    .magic-ball[data-color="желтый"] {
+        --ball-color-light: #FFFF33;
+        --ball-color-dark: #FFCC00;
+        --ball-glow-color: rgba(255, 255, 51, 0.7);
+    }
+
+    .magic-ball[data-color="фиолетовый"] {
+        --ball-color-light: #CC66FF;
+        --ball-color-dark: #9933CC;
+        --ball-glow-color: rgba(204, 102, 255, 0.7);
     }
     </style>
 </head>
@@ -1455,40 +1429,22 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Угадайте цвет:</p>
-        <div class="color-game-container">
-            <div class="color-buttons">
-                <div class="color-btn red" onclick="checkColor('красный')">
-                    <div class="liquid-effect"></div>
-                    <!-- Пузырьки -->
-                    <div class="bubble" style="--bubble-x: 10px; --bubble-y: -15px; width: 15px; height: 15px; top: 20%; left: 30%;"></div>
-                    <div class="bubble" style="--bubble-x: -5px; --bubble-y: 10px; width: 10px; height: 10px; top: 60%; left: 50%;"></div>
-                    <div class="bubble" style="--bubble-x: 15px; --bubble-y: 5px; width: 8px; height: 8px; top: 40%; left: 20%;"></div>
-                </div>
-                <div class="color-btn blue" onclick="checkColor('синий')">
-                    <div class="liquid-effect"></div>
-                    <div class="bubble" style="--bubble-x: -10px; --bubble-y: 15px; width: 12px; height: 12px; top: 30%; left: 40%;"></div>
-                    <div class="bubble" style="--bubble-x: 5px; --bubble-y: -10px; width: 8px; height: 8px; top: 50%; left: 60%;"></div>
-                    <div class="bubble" style="--bubble-x: -15px; --bubble-y: -5px; width: 6px; height: 6px; top: 70%; left: 30%;"></div>
-                </div>
-                <div class="color-btn green" onclick="checkColor('зеленый')">
-                    <div class="liquid-effect"></div>
-                    <div class="bubble" style="--bubble-x: 12px; --bubble-y: -8px; width: 14px; height: 14px; top: 25%; left: 35%;"></div>
-                    <div class="bubble" style="--bubble-x: -8px; --bubble-y: 12px; width: 9px; height: 9px; top: 65%; left: 45%;"></div>
-                    <div class="bubble" style="--bubble-x: 7px; --bubble-y: 7px; width: 7px; height: 7px; top: 45%; left: 25%;"></div>
-                </div>
-                <div class="color-btn yellow" onclick="checkColor('желтый')">
-                    <div class="liquid-effect"></div>
-                    <div class="bubble" style="--bubble-x: -12px; --bubble-y: 8px; width: 16px; height: 16px; top: 35%; left: 25%;"></div>
-                    <div class="bubble" style="--bubble-x: 8px; --bubble-y: -12px; width: 10px; height: 10px; top: 55%; left: 65%;"></div>
-                    <div class="bubble" style="--bubble-x: -7px; --bubble-y: -7px; width: 6px; height: 6px; top: 75%; left: 35%;"></div>
-                </div>
-                <div class="color-btn purple" onclick="checkColor('фиолетовый')">
-                    <div class="liquid-effect"></div>
-                    <div class="bubble" style="--bubble-x: 15px; --bubble-y: -5px; width: 13px; height: 13px; top: 30%; left: 40%;"></div>
-                    <div class="bubble" style="--bubble-x: -5px; --bubble-y: 15px; width: 7px; height: 7px; top: 60%; left: 50%;"></div>
-                    <div class="bubble" style="--bubble-x: 10px; --bubble-y: 10px; width: 5px; height: 5px; top: 40%; left: 20%;"></div>
-                </div>
+        <p>Угадайте цвет магического шара:</p>
+        <div class="magic-balls-container" id="magic-balls-container">
+            <div class="magic-ball" data-color="красный" onclick="checkColor('красный')">
+                <div class="magic-ball-inner"></div>
+            </div>
+            <div class="magic-ball" data-color="синий" onclick="checkColor('синий')">
+                <div class="magic-ball-inner"></div>
+            </div>
+            <div class="magic-ball" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="magic-ball-inner"></div>
+            </div>
+            <div class="magic-ball" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="magic-ball-inner"></div>
+            </div>
+            <div class="magic-ball" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="magic-ball-inner"></div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
@@ -2742,31 +2698,25 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к нажатой кнопке
-        const buttons = document.querySelectorAll('.color-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        // Добавляем класс active к нажатому шару
+        const balls = document.querySelectorAll('.magic-ball');
+        balls.forEach(ball => ball.classList.remove('active'));
         event.target.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
         stats.color.total++;
+        
+        // Анимация выбранного шара
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
+            showMessage('✅ Верно! Это ' + target + ' шар');
         } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
+            showMessage(`❌ Неверно. Это ${target} шар`);
         }
+        
         updateStats();
         checkAchievements();
-        
-        // Через 1 секунду снимаем подсветку
-        setTimeout(() => {
-            buttons.forEach(btn => btn.classList.remove('active'));
-        }, 1000);
-    }
-    // Проверка достижений
-    function checkAchievements() {
-        updateAchievements();
     }
 </script>
 </body>
