@@ -1207,101 +1207,135 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .aura-container {
+    .aurora-container {
         display: flex;
         justify-content: center;
-        gap: 25px;
+        gap: 20px;
         margin: 30px 0;
         flex-wrap: wrap;
     }
 
-    .aura-orb {
+    .aurora-orb {
         width: 100px;
         height: 100px;
         position: relative;
         cursor: pointer;
         border-radius: 50%;
         overflow: hidden;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
         transition: all 0.3s ease;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
-    .aura-glow {
+    .aurora-orb::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: rgba(10, 10, 20, 0.7);
+        border-radius: 50%;
+        z-index: 1;
+        backdrop-filter: blur(2px);
+    }
+
+    .aurora-effect {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+        z-index: 2;
         border-radius: 50%;
-        animation: aura-pulse 3s infinite ease-in-out;
+        overflow: hidden;
         opacity: 0.8;
-        filter: blur(10px);
     }
 
-    @keyframes aura-pulse {
-        0%, 100% {
-            transform: scale(0.9);
+    .aurora-core {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, 
+            rgba(255,255,255,0.2) 0%, 
+            transparent 70%);
+        animation: aurora-pulse 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes aurora-pulse {
+        0% {
+            transform: scale(0.8);
             opacity: 0.7;
         }
-        50% {
-            transform: scale(1.1);
-            opacity: 1;
+        100% {
+            transform: scale(1.2);
+            opacity: 0.9;
         }
     }
 
-    .aura-core {
+    .aurora-waves {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 60%;
-        height: 60%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.1);
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background: conic-gradient(
+            from 0deg,
+            var(--aurora-color-1) 0%,
+            var(--aurora-color-2) 30%,
+            var(--aurora-color-3) 70%,
+            var(--aurora-color-1) 100%
+        );
+        animation: aurora-rotate 20s infinite linear;
+        opacity: 0.6;
+    }
+
+    @keyframes aurora-rotate {
+        0% { transform: rotate(0deg) scale(1); }
+        100% { transform: rotate(360deg) scale(1.1); }
+    }
+
+    .aurora-orb:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+    }
+
+    .aurora-orb.active {
+        border-color: #FFD700;
         box-shadow: 
-            inset 0 0 20px rgba(255, 255, 255, 0.1),
-            0 0 30px rgba(255, 255, 255, 0.2);
+            0 0 30px rgba(255, 215, 0, 0.7),
+            inset 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
-    .aura-orb:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    /* Цвета Aurora */
+    .aurora-orb[data-color="красный"] {
+        --aurora-color-1: rgba(255, 0, 0, 0.7);
+        --aurora-color-2: rgba(255, 69, 0, 0.9);
+        --aurora-color-3: rgba(255, 0, 0, 0.5);
     }
 
-    .aura-orb.active {
-        box-shadow: 0 0 30px rgba(255, 215, 0, 0.7);
+    .aurora-orb[data-color="синий"] {
+        --aurora-color-1: rgba(0, 0, 255, 0.7);
+        --aurora-color-2: rgba(30, 144, 255, 0.9);
+        --aurora-color-3: rgba(0, 0, 255, 0.5);
     }
 
-    /* Цвета аур */
-    .aura-orb[data-color="красный"] .aura-glow {
-        background: radial-gradient(circle, 
-            rgba(255, 0, 0, 0.8), 
-            rgba(255, 69, 0, 0.4));
+    .aurora-orb[data-color="зеленый"] {
+        --aurora-color-1: rgba(0, 255, 0, 0.7);
+        --aurora-color-2: rgba(50, 205, 50, 0.9);
+        --aurora-color-3: rgba(0, 255, 0, 0.5);
     }
 
-    .aura-orb[data-color="синий"] .aura-glow {
-        background: radial-gradient(circle, 
-            rgba(0, 0, 255, 0.8), 
-            rgba(30, 144, 255, 0.4));
+    .aurora-orb[data-color="желтый"] {
+        --aurora-color-1: rgba(255, 255, 0, 0.7);
+        --aurora-color-2: rgba(255, 215, 0, 0.9);
+        --aurora-color-3: rgba(255, 255, 0, 0.5);
     }
 
-    .aura-orb[data-color="зеленый"] .aura-glow {
-        background: radial-gradient(circle, 
-            rgba(0, 255, 0, 0.8), 
-            rgba(50, 205, 50, 0.4));
-    }
-
-    .aura-orb[data-color="желтый"] .aura-glow {
-        background: radial-gradient(circle, 
-            rgba(255, 255, 0, 0.8), 
-            rgba(255, 215, 0, 0.4));
-    }
-
-    .aura-orb[data-color="фиолетовый"] .aura-glow {
-        background: radial-gradient(circle, 
-            rgba(128, 0, 128, 0.8), 
-            rgba(153, 50, 204, 0.4));
+    .aurora-orb[data-color="фиолетовый"] {
+        --aurora-color-1: rgba(128, 0, 128, 0.7);
+        --aurora-color-2: rgba(153, 50, 204, 0.9);
+        --aurora-color-3: rgba(128, 0, 128, 0.5);
     }
     </style>
 </head>
@@ -1404,27 +1438,37 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Почувствуйте и выберите шар с загаданной аурой:</p>
-        <div class="aura-container" id="color-buttons">
-            <div class="aura-orb" data-color="красный" onclick="checkColor('красный')">
-                <div class="aura-glow"></div>
-                <div class="aura-core"></div>
+        <p>Выберите шар с загаданной энергией Aurora:</p>
+        <div class="aurora-container" id="color-buttons">
+            <div class="aurora-orb" data-color="красный" onclick="checkColor('красный')">
+                <div class="aurora-effect">
+                    <div class="aurora-waves"></div>
+                    <div class="aurora-core"></div>
+                </div>
             </div>
-            <div class="aura-orb" data-color="синий" onclick="checkColor('синий')">
-                <div class="aura-glow"></div>
-                <div class="aura-core"></div>
+            <div class="aurora-orb" data-color="синий" onclick="checkColor('синий')">
+                <div class="aurora-effect">
+                    <div class="aurora-waves"></div>
+                    <div class="aurora-core"></div>
+                </div>
             </div>
-            <div class="aura-orb" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="aura-glow"></div>
-                <div class="aura-core"></div>
+            <div class="aurora-orb" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="aurora-effect">
+                    <div class="aurora-waves"></div>
+                    <div class="aurora-core"></div>
+                </div>
             </div>
-            <div class="aura-orb" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="aura-glow"></div>
-                <div class="aura-core"></div>
+            <div class="aurora-orb" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="aurora-effect">
+                    <div class="aurora-waves"></div>
+                    <div class="aurora-core"></div>
+                </div>
             </div>
-            <div class="aura-orb" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="aura-glow"></div>
-                <div class="aura-core"></div>
+            <div class="aurora-orb" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="aurora-effect">
+                    <div class="aurora-waves"></div>
+                    <div class="aurora-core"></div>
+                </div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
