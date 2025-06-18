@@ -1207,41 +1207,31 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .color-game-container {
+    .liquid-container {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
-
-    .color-buttons {
-        display: flex;
-        flex-wrap: wrap;
         justify-content: center;
         gap: 15px;
         margin: 20px 0;
+        flex-wrap: wrap;
     }
 
-    .color-btn {
-        position: relative;
+    .liquid-glass {
         width: 80px;
         height: 120px;
+        position: relative;
+        cursor: pointer;
         border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 
+            0 0 15px rgba(255, 255, 255, 0.3),
+            inset 0 0 20px rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
         background: rgba(255, 255, 255, 0.1);
         backdrop-filter: blur(5px);
         border: 2px solid rgba(255, 255, 255, 0.3);
-        cursor: pointer;
-        overflow: hidden;
-        box-shadow: 
-            0 0 15px rgba(0, 0, 0, 0.3),
-            inset 0 0 10px rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
     }
 
-    .color-btn::before {
+    .liquid-glass::before {
         content: '';
         position: absolute;
         top: 0;
@@ -1252,101 +1242,70 @@
         border-radius: 8px 8px 0 0;
     }
 
-    .color-btn::after {
-        content: '';
+    .liquid-content {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 60px;
-        background: var(--liquid-color);
+        height: 60%;
         border-radius: 0 0 8px 8px;
-        animation: liquid-wave 4s infinite ease-in-out;
-        box-shadow: 
-            inset 0 10px 20px rgba(0, 0, 0, 0.3),
-            0 0 10px var(--liquid-glow);
-    }
-
-    .color-btn .liquid-surface {
-        position: absolute;
-        bottom: 60px;
-        left: 0;
-        right: 0;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.3);
-        z-index: 2;
-    }
-
-    .color-btn .bubbles {
-        position: absolute;
-        bottom: 60px;
-        left: 0;
-        right: 0;
-        height: 60px;
-        z-index: 1;
         overflow: hidden;
     }
 
-    .color-btn .bubble {
+    .liquid-acid {
         position: absolute;
-        background: rgba(255, 255, 255, 0.6);
-        border-radius: 50%;
-        animation: bubble-rise 4s infinite ease-in;
-    }
-
-    .color-btn .label {
-        position: absolute;
-        top: 8px;
+        bottom: 0;
         left: 0;
         right: 0;
-        text-align: center;
-        color: white;
-        font-size: 0.8rem;
-        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        z-index: 3;
+        height: 100%;
+        animation: liquid-wave 4s infinite ease-in-out;
+        opacity: 0.8;
     }
 
     @keyframes liquid-wave {
         0%, 100% {
             transform: translateY(0) scaleX(1);
-            border-radius: 0 0 8px 8px;
+            border-radius: 40% 40% 60% 60% / 40% 40% 60% 60%;
         }
         50% {
-            transform: translateY(-5px) scaleX(1.05);
-            border-radius: 0 0 12px 12px;
+            transform: translateY(-10px) scaleX(0.95);
+            border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
         }
     }
 
-    @keyframes bubble-rise {
-        0% {
-            transform: translateY(0) scale(0.3);
-            opacity: 0;
-        }
-        20% {
-            opacity: 0.8;
-        }
-        100% {
-            transform: translateY(-100px) scale(0.8);
-            opacity: 0;
-        }
-    }
-
-    .color-btn:hover {
+    .liquid-glass:hover {
         transform: translateY(-5px);
         box-shadow: 
-            0 5px 20px rgba(0, 0, 0, 0.4),
-            inset 0 0 15px rgba(255, 255, 255, 0.3);
+            0 5px 25px rgba(255, 255, 255, 0.5),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    .color-btn:active {
-        transform: translateY(-2px);
-    }
-
-    .color-btn.active {
+    .liquid-glass.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 20px rgba(255, 215, 0, 0.7),
-            inset 0 0 15px rgba(255, 255, 255, 0.3);
+            0 0 30px rgba(255, 215, 0, 0.7),
+            inset 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Цвета кислоты */
+    .liquid-glass[data-color="красный"] .liquid-acid {
+        background: linear-gradient(to top, #FF0000, #FF4500);
+    }
+
+    .liquid-glass[data-color="синий"] .liquid-acid {
+        background: linear-gradient(to top, #0000FF, #1E90FF);
+    }
+
+    .liquid-glass[data-color="зеленый"] .liquid-acid {
+        background: linear-gradient(to top, #00FF00, #32CD32);
+    }
+
+    .liquid-glass[data-color="желтый"] .liquid-acid {
+        background: linear-gradient(to top, #FFFF00, #FFD700);
+    }
+
+    .liquid-glass[data-color="фиолетовый"] .liquid-acid {
+        background: linear-gradient(to top, #800080, #9932CC);
     }
     </style>
 </head>
@@ -1449,42 +1408,35 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите колбу с ядовитым раствором:</p>
-        <div class="color-game-container">
-            <div class="color-buttons">
-                <button class="color-btn" onclick="checkColor('красный')" 
-                    style="--liquid-color: rgba(255, 0, 0, 0.7); --liquid-glow: rgba(255, 0, 0, 0.5)">
-                    <div class="label">Красный</div>
-                    <div class="liquid-surface"></div>
-                    <div class="bubbles" id="red-bubbles"></div>
-                </button>
-                <button class="color-btn" onclick="checkColor('синий')" 
-                    style="--liquid-color: rgba(0, 0, 255, 0.7); --liquid-glow: rgba(0, 0, 255, 0.5)">
-                    <div class="label">Синий</div>
-                    <div class="liquid-surface"></div>
-                    <div class="bubbles" id="blue-bubbles"></div>
-                </button>
-                <button class="color-btn" onclick="checkColor('зеленый')" 
-                    style="--liquid-color: rgba(0, 255, 0, 0.7); --liquid-glow: rgba(0, 255, 0, 0.5)">
-                    <div class="label">Зеленый</div>
-                    <div class="liquid-surface"></div>
-                    <div class="bubbles" id="green-bubbles"></div>
-                </button>
-                <button class="color-btn" onclick="checkColor('желтый')" 
-                    style="--liquid-color: rgba(255, 255, 0, 0.7); --liquid-glow: rgba(255, 255, 0, 0.5)">
-                    <div class="label">Желтый</div>
-                    <div class="liquid-surface"></div>
-                    <div class="bubbles" id="yellow-bubbles"></div>
-                </button>
-                <button class="color-btn" onclick="checkColor('фиолетовый')" 
-                    style="--liquid-color: rgba(128, 0, 128, 0.7); --liquid-glow: rgba(128, 0, 128, 0.5)">
-                    <div class="label">Фиолетовый</div>
-                    <div class="liquid-surface"></div>
-                    <div class="bubbles" id="purple-bubbles"></div>
-                </button>
+        <p>Выберите сосуд с загаданным цветом:</p>
+        <div class="liquid-container" id="color-buttons">
+            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
+                </div>
             </div>
-            <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
+                </div>
+            </div>
+            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
+                </div>
+            </div>
+            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
+                </div>
+            </div>
+            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
+                </div>
+            </div>
         </div>
+        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
     </div>
 </div>
 
@@ -2735,14 +2687,15 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к нажатому шару
-        const balls = document.querySelectorAll('.magic-ball');
-        balls.forEach(ball => ball.classList.remove('active'));
-        event.target.classList.add('active');
+        // Добавляем класс active к выбранному сосуду
+        const glasses = document.querySelectorAll('.liquid-glass');
+        glasses.forEach(glass => glass.classList.remove('active'));
+        event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
         stats.color.total++;
+        
         if (guess === target) {
             stats.color.correct++;
             showMessage('✅ Верно! Загадан: ' + target);
