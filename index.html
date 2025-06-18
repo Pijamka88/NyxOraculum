@@ -1207,7 +1207,7 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .potion-container {
+    .liquid-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1215,169 +1215,103 @@
         flex-wrap: wrap;
     }
 
-    .potion-flask {
-        width: 100px;
-        height: 120px;
+    .liquid-glass {
+        width: 90px;
+        height: 130px;
         position: relative;
         cursor: pointer;
-        border-radius: 50% 50% 10% 10% / 60% 60% 10% 10%;
+        border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
         overflow: hidden;
         box-shadow: 
-            0 0 25px rgba(138, 43, 226, 0.5),
-            inset 0 0 30px rgba(255, 255, 255, 0.2);
+            0 0 20px rgba(255, 255, 255, 0.4),
+            inset 0 0 25px rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
-        background: rgba(30, 30, 50, 0.3);
-        backdrop-filter: blur(5px);
-        border: 2px solid rgba(138, 43, 226, 0.5);
-        z-index: 1;
-    }
-
-    .potion-flask::before {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        height: 20px;
         background: rgba(255, 255, 255, 0.15);
-        border-radius: 50%;
-        z-index: 3;
+        backdrop-filter: blur(8px);
+        border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .potion-flask::after {
+    .liquid-glass::before {
         content: '';
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
         right: 0;
-        height: 15px;
-        background: rgba(0, 0, 0, 0.3);
+        height: 30px;
+        background: rgba(255, 255, 255, 0.3);
         border-radius: 50% 50% 0 0 / 100% 100% 0 0;
         z-index: 2;
     }
 
-    .potion-liquid {
+    .liquid-content {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         height: 60%;
+        border-radius: 0 0 40% 40% / 0 0 60% 60%;
         overflow: hidden;
-        border-radius: 50% 50% 0 0 / 20% 20% 0 0;
-        z-index: 1;
     }
 
-    .potion-wave {
+    .liquid-acid {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 200%;
-        animation: mystic-wave 6s infinite linear;
-        opacity: 0.9;
-        filter: brightness(1.2);
+        height: 100%;
+        animation: liquid-flow 6s infinite linear;
+        opacity: 0.85;
+        background-size: 200% 100%;
     }
 
-    @keyframes mystic-wave {
+    @keyframes liquid-flow {
         0% {
-            transform: translateX(-100%) skewX(-15deg);
+            background-position: 0% 50%;
+            border-radius: 40% 60% 60% 40% / 70% 70% 30% 30%;
+        }
+        50% {
+            background-position: 100% 50%;
+            border-radius: 60% 40% 40% 60% / 30% 30% 70% 70%;
         }
         100% {
-            transform: translateX(100%) skewX(-15deg);
+            background-position: 0% 50%;
+            border-radius: 40% 60% 60% 40% / 70% 70% 30% 30%;
         }
     }
 
-    .potion-flask:hover {
+    .liquid-glass:hover {
         transform: translateY(-8px) scale(1.05);
         box-shadow: 
-            0 10px 35px rgba(138, 43, 226, 0.8),
-            inset 0 0 40px rgba(255, 255, 255, 0.3);
+            0 8px 30px rgba(255, 255, 255, 0.6),
+            inset 0 0 30px rgba(255, 255, 255, 0.4);
     }
 
-    .potion-flask.active {
+    .liquid-glass.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 40px rgba(255, 215, 0, 0.9),
-            inset 0 0 30px rgba(255, 215, 0, 0.5);
+            0 0 35px rgba(255, 215, 0, 0.8),
+            inset 0 0 25px rgba(255, 215, 0, 0.5);
     }
 
-    /* Мистические цвета жидкостей */
-    .potion-flask[data-color="красный"] .potion-wave {
-        background: linear-gradient(90deg, 
-            rgba(255, 0, 0, 0) 0%, 
-            rgba(255, 69, 0, 0.8) 20%, 
-            rgba(255, 0, 0, 0.9) 50%, 
-            rgba(255, 69, 0, 0.8) 80%, 
-            rgba(255, 0, 0, 0) 100%);
+    /* Цвета кислоты с горизонтальными градиентами */
+    .liquid-glass[data-color="красный"] .liquid-acid {
+        background: linear-gradient(90deg, #FF0000, #FF4500, #FF0000);
     }
 
-    .potion-flask[data-color="синий"] .potion-wave {
-        background: linear-gradient(90deg, 
-            rgba(0, 0, 255, 0) 0%, 
-            rgba(30, 144, 255, 0.8) 20%, 
-            rgba(0, 0, 255, 0.9) 50%, 
-            rgba(30, 144, 255, 0.8) 80%, 
-            rgba(0, 0, 255, 0) 100%);
+    .liquid-glass[data-color="синий"] .liquid-acid {
+        background: linear-gradient(90deg, #0000FF, #1E90FF, #0000FF);
     }
 
-    .potion-flask[data-color="зеленый"] .potion-wave {
-        background: linear-gradient(90deg, 
-            rgba(0, 255, 0, 0) 0%, 
-            rgba(50, 205, 50, 0.8) 20%, 
-            rgba(0, 255, 0, 0.9) 50%, 
-            rgba(50, 205, 50, 0.8) 80%, 
-            rgba(0, 255, 0, 0) 100%);
+    .liquid-glass[data-color="зеленый"] .liquid-acid {
+        background: linear-gradient(90deg, #00FF00, #32CD32, #00FF00);
     }
 
-    .potion-flask[data-color="желтый"] .potion-wave {
-        background: linear-gradient(90deg, 
-            rgba(255, 255, 0, 0) 0%, 
-            rgba(255, 215, 0, 0.8) 20%, 
-            rgba(255, 255, 0, 0.9) 50%, 
-            rgba(255, 215, 0, 0.8) 80%, 
-            rgba(255, 255, 0, 0) 100%);
+    .liquid-glass[data-color="желтый"] .liquid-acid {
+        background: linear-gradient(90deg, #FFFF00, #FFD700, #FFFF00);
     }
 
-    .potion-flask[data-color="фиолетовый"] .potion-wave {
-        background: linear-gradient(90deg, 
-            rgba(128, 0, 128, 0) 0%, 
-            rgba(147, 112, 219, 0.8) 20%, 
-            rgba(128, 0, 128, 0.9) 50%, 
-            rgba(147, 112, 219, 0.8) 80%, 
-            rgba(128, 0, 128, 0) 100%);
-    }
-
-    .potion-glow {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 80%;
-        height: 80%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        filter: blur(15px);
-        opacity: 0.3;
-        z-index: 0;
-    }
-
-    .potion-flask[data-color="красный"] .potion-glow {
-        background: radial-gradient(circle, #FF0000, transparent 70%);
-    }
-
-    .potion-flask[data-color="синий"] .potion-glow {
-        background: radial-gradient(circle, #0000FF, transparent 70%);
-    }
-
-    .potion-flask[data-color="зеленый"] .potion-glow {
-        background: radial-gradient(circle, #00FF00, transparent 70%);
-    }
-
-    .potion-flask[data-color="желтый"] .potion-glow {
-        background: radial-gradient(circle, #FFFF00, transparent 70%);
-    }
-
-    .potion-flask[data-color="фиолетовый"] .potion-glow {
-        background: radial-gradient(circle, #800080, transparent 70%);
+    .liquid-glass[data-color="фиолетовый"] .liquid-acid {
+        background: linear-gradient(90deg, #800080, #9932CC, #800080);
     }
     </style>
 </head>
@@ -1480,36 +1414,31 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите колбу с загаданным зельем:</p>
-        <div class="potion-container" id="color-buttons">
-            <div class="potion-flask" data-color="красный" onclick="checkColor('красный')">
-                <div class="potion-glow"></div>
-                <div class="potion-liquid">
-                    <div class="potion-wave"></div>
+        <p>Выберите сосуд с загаданным цветом:</p>
+        <div class="liquid-container" id="color-buttons">
+            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="potion-flask" data-color="синий" onclick="checkColor('синий')">
-                <div class="potion-glow"></div>
-                <div class="potion-liquid">
-                    <div class="potion-wave"></div>
+            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="potion-flask" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="potion-glow"></div>
-                <div class="potion-liquid">
-                    <div class="potion-wave"></div>
+            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="potion-flask" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="potion-glow"></div>
-                <div class="potion-liquid">
-                    <div class="potion-wave"></div>
+            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="potion-flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="potion-glow"></div>
-                <div class="potion-liquid">
-                    <div class="potion-wave"></div>
+            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid-content">
+                    <div class="liquid-acid"></div>
                 </div>
             </div>
         </div>
