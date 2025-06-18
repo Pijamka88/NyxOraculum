@@ -1207,49 +1207,64 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
+    /* Стили для цветовой интуиции */
     .liquid-container {
         display: flex;
         justify-content: center;
-        gap: 15px;
-        margin: 20px 0;
+        gap: 25px;
+        margin: 30px 0;
         flex-wrap: wrap;
     }
 
-    .liquid-glass {
+    .liquid-vial {
         width: 80px;
-        height: 120px;
+        height: 140px;
         position: relative;
         cursor: pointer;
-        border-radius: 10px;
+        border-radius: 50% 50% 10px 10px;
         overflow: hidden;
         box-shadow: 
-            0 0 15px rgba(255, 255, 255, 0.3),
-            inset 0 0 20px rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
-        border: 2px solid rgba(255, 255, 255, 0.3);
+            0 0 25px rgba(138, 43, 226, 0.5),
+            inset 0 0 30px rgba(255, 255, 255, 0.15);
+        transition: all 0.4s ease;
+        background: rgba(30, 30, 50, 0.3);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(138, 43, 226, 0.5);
+        transform-style: preserve-3d;
     }
 
-    .liquid-glass::before {
+    .liquid-vial::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 30px;
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 8px 8px 0 0;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        height: 20px;
+        background: rgba(200, 200, 255, 0.1);
+        border-radius: 50%;
+        z-index: 2;
     }
 
-    .liquid-content {
+    .liquid-vial::after {
+        content: '';
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
-        height: 60%;
-        border-radius: 0 0 8px 8px;
+        height: 15px;
+        background: rgba(138, 43, 226, 0.3);
+        border-radius: 0 0 10px 10px;
+    }
+
+    .liquid-content {
+        position: absolute;
+        bottom: 15px;
+        left: 10px;
+        right: 10px;
+        height: 70%;
+        border-radius: 50% 50% 30px 30px;
         overflow: hidden;
+        transform: translateZ(10px);
     }
 
     .liquid-acid {
@@ -1258,54 +1273,69 @@
         left: 0;
         right: 0;
         height: 100%;
-        animation: liquid-wave 4s infinite ease-in-out;
-        opacity: 0.8;
+        opacity: 0.85;
+        background-size: 200% 100%;
+        animation: liquid-flow 6s infinite linear, liquid-glow 4s infinite alternate;
     }
 
-    @keyframes liquid-wave {
-        0%, 100% {
-            transform: translateY(0) scaleX(1);
-            border-radius: 40% 40% 60% 60% / 40% 40% 60% 60%;
+    @keyframes liquid-flow {
+        0% {
+            background-position: 0% 50%;
+            border-radius: 40% 40% 60% 60% / 50% 50% 50% 50%;
         }
         50% {
-            transform: translateY(-10px) scaleX(0.95);
-            border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+            background-position: 100% 50%;
+            border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+        }
+        100% {
+            background-position: 0% 50%;
+            border-radius: 40% 40% 60% 60% / 50% 50% 50% 50%;
         }
     }
 
-    .liquid-glass:hover {
-        transform: translateY(-5px);
-        box-shadow: 
-            0 5px 25px rgba(255, 255, 255, 0.5),
-            inset 0 0 20px rgba(255, 255, 255, 0.3);
+    @keyframes liquid-glow {
+        0% { filter: brightness(1); box-shadow: inset 0 0 15px rgba(255,255,255,0.3); }
+        100% { filter: brightness(1.3); box-shadow: inset 0 0 30px rgba(255,255,255,0.6); }
     }
 
-    .liquid-glass.active {
+    .liquid-vial:hover {
+        transform: translateY(-8px) rotateX(10deg);
+        box-shadow: 
+            0 10px 35px rgba(138, 43, 226, 0.7),
+            inset 0 0 40px rgba(255, 255, 255, 0.25);
+    }
+
+    .liquid-vial.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 30px rgba(255, 215, 0, 0.7),
-            inset 0 0 20px rgba(255, 215, 0, 0.3);
+            0 0 40px rgba(255, 215, 0, 0.8),
+            inset 0 0 30px rgba(255, 215, 0, 0.4);
     }
 
-    /* Цвета кислоты */
-    .liquid-glass[data-color="красный"] .liquid-acid {
-        background: linear-gradient(to top, #FF0000, #FF4500);
+    /* Цвета мистических жидкостей */
+    .liquid-vial[data-color="красный"] .liquid-acid {
+        background: linear-gradient(90deg, 
+            #FF0000, #FF4500, #FF0000);
     }
 
-    .liquid-glass[data-color="синий"] .liquid-acid {
-        background: linear-gradient(to top, #0000FF, #1E90FF);
+    .liquid-vial[data-color="синий"] .liquid-acid {
+        background: linear-gradient(90deg, 
+            #0000FF, #1E90FF, #0000FF);
     }
 
-    .liquid-glass[data-color="зеленый"] .liquid-acid {
-        background: linear-gradient(to top, #00FF00, #32CD32);
+    .liquid-vial[data-color="зеленый"] .liquid-acid {
+        background: linear-gradient(90deg, 
+            #00FF00, #32CD32, #00FF00);
     }
 
-    .liquid-glass[data-color="желтый"] .liquid-acid {
-        background: linear-gradient(to top, #FFFF00, #FFD700);
+    .liquid-vial[data-color="желтый"] .liquid-acid {
+        background: linear-gradient(90deg, 
+            #FFFF00, #FFD700, #FFFF00);
     }
 
-    .liquid-glass[data-color="фиолетовый"] .liquid-acid {
-        background: linear-gradient(to top, #800080, #9932CC);
+    .liquid-vial[data-color="фиолетовый"] .liquid-acid {
+        background: linear-gradient(90deg, 
+            #800080, #9932CC, #800080);
     }
     </style>
 </head>
@@ -1408,29 +1438,29 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите сосуд с загаданным цветом:</p>
+        <p>Почувствуйте вибрацию мистического эликсира:</p>
         <div class="liquid-container" id="color-buttons">
-            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
+            <div class="liquid-vial" data-color="красный" onclick="checkColor('красный')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
+            <div class="liquid-vial" data-color="синий" onclick="checkColor('синий')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
+            <div class="liquid-vial" data-color="зеленый" onclick="checkColor('зеленый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
+            <div class="liquid-vial" data-color="желтый" onclick="checkColor('желтый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
             </div>
-            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+            <div class="liquid-vial" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
@@ -2687,9 +2717,8 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранному сосуду
-        const glasses = document.querySelectorAll('.liquid-glass');
-        glasses.forEach(glass => glass.classList.remove('active'));
+        const vials = document.querySelectorAll('.liquid-vial');
+        vials.forEach(vial => vial.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2698,9 +2727,9 @@ function getSymbolClass(symbol) {
         
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
+            showMessage('✅ Верно! Вибрация соответствует ' + target + ' эликсиру');
         } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
+            showMessage(`❌ Неверно. Это был ${target} эликсир`);
         }
         updateStats();
         checkAchievements();
