@@ -1207,7 +1207,6 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    /* Стили для цветовой интуиции */
     .liquid-container {
         display: flex;
         justify-content: center;
@@ -1216,102 +1215,124 @@
         flex-wrap: wrap;
     }
 
-    .liquid-glass {
+    .liquid-orb {
         width: 100px;
         height: 100px;
         position: relative;
         cursor: pointer;
         border-radius: 50%;
         overflow: hidden;
-        box-shadow: 
-            0 0 20px rgba(255, 255, 255, 0.3),
-            inset 0 0 30px rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
         transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(5px);
-        border: 2px solid rgba(255, 255, 255, 0.4);
+        border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
-    .liquid-glass::before {
+    .liquid-orb::before {
         content: '';
         position: absolute;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        height: 20px;
-        background: rgba(255, 255, 255, 0.3);
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: rgba(26, 26, 46, 0.7);
         border-radius: 50%;
-        z-index: 2;
+        z-index: 1;
     }
 
     .liquid-content {
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
-        right: 0;
-        height: 60%;
+        width: 100%;
+        height: 100%;
+        z-index: 2;
         overflow: hidden;
-        border-radius: 0 0 50% 50%;
+        border-radius: 50%;
     }
 
     .liquid-acid {
         position: absolute;
-        bottom: 0;
+        top: 0;
         left: 0;
-        right: 0;
+        width: 200%;
         height: 100%;
-        opacity: 0.85;
-        background-size: 200% 100%;
         animation: liquid-flow 6s infinite linear;
+        opacity: 0.8;
+        transform-origin: center center;
     }
 
     @keyframes liquid-flow {
         0% {
-            background-position: 0% 50%;
+            transform: translateX(-50%) rotate(0deg);
+            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+        }
+        50% {
+            transform: translateX(0%) rotate(180deg);
+            border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%;
         }
         100% {
-            background-position: 200% 50%;
+            transform: translateX(-50%) rotate(360deg);
+            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
         }
     }
 
-    .liquid-glass:hover {
-        transform: translateY(-8px) scale(1.05);
-        box-shadow: 
-            0 8px 30px rgba(255, 255, 255, 0.5),
-            inset 0 0 30px rgba(255, 255, 255, 0.3);
+    .liquid-orb:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
     }
 
-    .liquid-glass.active {
+    .liquid-orb.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 35px rgba(255, 215, 0, 0.8),
-            inset 0 0 25px rgba(255, 215, 0, 0.4);
+            0 0 30px rgba(255, 215, 0, 0.7),
+            inset 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
-    /* Цвета кислоты с горизонтальными градиентами */
-    .liquid-glass[data-color="красный"] .liquid-acid {
+    /* Цвета кислоты с эффектом порталов */
+    .liquid-orb[data-color="красный"] .liquid-acid {
         background: linear-gradient(90deg, 
-            #FF0000, #FF4500, #FF0000, #FF6347, #FF0000);
+            rgba(255, 0, 0, 0.7), 
+            rgba(255, 69, 0, 0.9),
+            rgba(255, 0, 0, 0.7));
     }
 
-    .liquid-glass[data-color="синий"] .liquid-acid {
+    .liquid-orb[data-color="синий"] .liquid-acid {
         background: linear-gradient(90deg, 
-            #0000FF, #1E90FF, #0000FF, #00BFFF, #0000FF);
+            rgba(0, 0, 255, 0.7), 
+            rgba(30, 144, 255, 0.9),
+            rgba(0, 0, 255, 0.7));
     }
 
-    .liquid-glass[data-color="зеленый"] .liquid-acid {
+    .liquid-orb[data-color="зеленый"] .liquid-acid {
         background: linear-gradient(90deg, 
-            #00FF00, #32CD32, #00FF00, #7CFC00, #00FF00);
+            rgba(0, 255, 0, 0.7), 
+            rgba(50, 205, 50, 0.9),
+            rgba(0, 255, 0, 0.7));
     }
 
-    .liquid-glass[data-color="желтый"] .liquid-acid {
+    .liquid-orb[data-color="желтый"] .liquid-acid {
         background: linear-gradient(90deg, 
-            #FFFF00, #FFD700, #FFFF00, #FFEA00, #FFFF00);
+            rgba(255, 255, 0, 0.7), 
+            rgba(255, 215, 0, 0.9),
+            rgba(255, 255, 0, 0.7));
     }
 
-    .liquid-glass[data-color="фиолетовый"] .liquid-acid {
+    .liquid-orb[data-color="фиолетовый"] .liquid-acid {
         background: linear-gradient(90deg, 
-            #800080, #9932CC, #800080, #BA55D3, #800080);
+            rgba(128, 0, 128, 0.7), 
+            rgba(153, 50, 204, 0.9),
+            rgba(128, 0, 128, 0.7));
+    }
+
+    .orb-symbol {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        z-index: 3;
+        text-shadow: 0 0 10px currentColor;
+        color: white;
     }
     </style>
 </head>
@@ -1414,32 +1435,37 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите колбу с загаданным цветом:</p>
+        <p>Выберите сферу с загаданным цветом энергии:</p>
         <div class="liquid-container" id="color-buttons">
-            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
+            <div class="liquid-orb" data-color="красный" onclick="checkColor('красный')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
+                <div class="orb-symbol">▲</div>
             </div>
-            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
+            <div class="liquid-orb" data-color="синий" onclick="checkColor('синий')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
+                <div class="orb-symbol">▼</div>
             </div>
-            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
+            <div class="liquid-orb" data-color="зеленый" onclick="checkColor('зеленый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
+                <div class="orb-symbol">■</div>
             </div>
-            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
+            <div class="liquid-orb" data-color="желтый" onclick="checkColor('желтый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
+                <div class="orb-symbol">◊</div>
             </div>
-            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+            <div class="liquid-orb" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
                 <div class="liquid-content">
                     <div class="liquid-acid"></div>
                 </div>
+                <div class="orb-symbol">○</div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
@@ -2693,9 +2719,9 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранной колбе
-        const flasks = document.querySelectorAll('.potion-flask');
-        flasks.forEach(flask => flask.classList.remove('active'));
+        // Добавляем класс active к выбранной сфере
+        const orbs = document.querySelectorAll('.liquid-orb');
+        orbs.forEach(orb => orb.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2704,9 +2730,9 @@ function getSymbolClass(symbol) {
         
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадано: ' + target);
+            showMessage('✅ Верно! Загадана энергия: ' + target);
         } else {
-            showMessage(`❌ Неверно. Загадано: ${target}`);
+            showMessage(`❌ Неверно. Загадана энергия: ${target}`);
         }
         updateStats();
         checkAchievements();
