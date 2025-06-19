@@ -1207,7 +1207,7 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .aurora-container {
+    .liquid-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1215,127 +1215,114 @@
         flex-wrap: wrap;
     }
 
-    .aurora-orb {
-        width: 100px;
-        height: 100px;
+    .liquid-glass {
+        width: 90px;
+        height: 140px;
         position: relative;
         cursor: pointer;
-        border-radius: 50%;
+        border-radius: 8px 8px 20px 20px;
         overflow: hidden;
-        box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+        box-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.3),
+            inset 0 0 30px rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
-        border: 2px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(6px);
+        border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .aurora-orb::before {
+    .liquid-glass::before {
         content: '';
-        position: absolute;
-        top: -10%;
-        left: -10%;
-        width: 120%;
-        height: 120%;
-        background: rgba(10, 10, 20, 0.7);
-        border-radius: 50%;
-        z-index: 1;
-        backdrop-filter: blur(2px);
-    }
-
-    .aurora-effect {
         position: absolute;
         top: 0;
         left: 0;
-        width: 100%;
-        height: 100%;
+        right: 0;
+        height: 25px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 8px 8px 0 0;
         z-index: 2;
-        border-radius: 50%;
+    }
+
+    .liquid-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 70%;
+        border-radius: 0 0 18px 18px;
         overflow: hidden;
-        opacity: 0.8;
     }
 
-    .aurora-core {
+    .liquid-vortex {
         position: absolute;
-        width: 100%;
+        bottom: 0;
+        left: 0;
+        right: 0;
         height: 100%;
-        background: radial-gradient(circle at center, 
-            rgba(255,255,255,0.2) 0%, 
-            transparent 70%);
-        animation: aurora-pulse 8s infinite alternate ease-in-out;
-    }
-
-    @keyframes aurora-pulse {
-        0% {
-            transform: scale(0.8);
-            opacity: 0.7;
-        }
-        100% {
-            transform: scale(1.2);
-            opacity: 0.9;
-        }
-    }
-
-    .aurora-waves {
-        position: absolute;
-        width: 200%;
-        height: 200%;
-        top: -50%;
-        left: -50%;
+        opacity: 0.85;
         background: conic-gradient(
-            from 0deg,
-            var(--aurora-color-1) 0%,
-            var(--aurora-color-2) 30%,
-            var(--aurora-color-3) 70%,
-            var(--aurora-color-1) 100%
+            from 180deg,
+            var(--acid-color-1),
+            var(--acid-color-2),
+            var(--acid-color-3),
+            var(--acid-color-1)
         );
-        animation: aurora-rotate 20s infinite linear;
-        opacity: 0.6;
+        mask: radial-gradient(
+            circle at center,
+            transparent 30%,
+            black 70%
+        );
+        animation: vortex-rotate 8s linear infinite;
     }
 
-    @keyframes aurora-rotate {
+    @keyframes vortex-rotate {
         0% { transform: rotate(0deg) scale(1); }
         100% { transform: rotate(360deg) scale(1.1); }
     }
 
-    .aurora-orb:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+    .liquid-glass:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 
+            0 8px 30px rgba(255, 255, 255, 0.5),
+            inset 0 0 30px rgba(255, 255, 255, 0.3);
     }
 
-    .aurora-orb.active {
+    .liquid-glass.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 30px rgba(255, 215, 0, 0.7),
-            inset 0 0 20px rgba(255, 215, 0, 0.3);
+            0 0 35px rgba(255, 215, 0, 0.8),
+            inset 0 0 25px rgba(255, 215, 0, 0.4);
     }
 
-    /* Цвета Aurora */
-    .aurora-orb[data-color="красный"] {
-        --aurora-color-1: rgba(255, 0, 0, 0.7);
-        --aurora-color-2: rgba(255, 69, 0, 0.9);
-        --aurora-color-3: rgba(255, 0, 0, 0.5);
+    /* Цвета вихрей */
+    .liquid-glass[data-color="красный"] {
+        --acid-color-1: #FF0000;
+        --acid-color-2: #FF4500;
+        --acid-color-3: #FF6347;
     }
 
-    .aurora-orb[data-color="синий"] {
-        --aurora-color-1: rgba(0, 0, 255, 0.7);
-        --aurora-color-2: rgba(30, 144, 255, 0.9);
-        --aurora-color-3: rgba(0, 0, 255, 0.5);
+    .liquid-glass[data-color="синий"] {
+        --acid-color-1: #0000FF;
+        --acid-color-2: #1E90FF;
+        --acid-color-3: #00BFFF;
     }
 
-    .aurora-orb[data-color="зеленый"] {
-        --aurora-color-1: rgba(0, 255, 0, 0.7);
-        --aurora-color-2: rgba(50, 205, 50, 0.9);
-        --aurora-color-3: rgba(0, 255, 0, 0.5);
+    .liquid-glass[data-color="зеленый"] {
+        --acid-color-1: #00FF00;
+        --acid-color-2: #32CD32;
+        --acid-color-3: #7CFC00;
     }
 
-    .aurora-orb[data-color="желтый"] {
-        --aurora-color-1: rgba(255, 255, 0, 0.7);
-        --aurora-color-2: rgba(255, 215, 0, 0.9);
-        --aurora-color-3: rgba(255, 255, 0, 0.5);
+    .liquid-glass[data-color="желтый"] {
+        --acid-color-1: #FFFF00;
+        --acid-color-2: #FFD700;
+        --acid-color-3: #FFEA00;
     }
 
-    .aurora-orb[data-color="фиолетовый"] {
-        --aurora-color-1: rgba(128, 0, 128, 0.7);
-        --aurora-color-2: rgba(153, 50, 204, 0.9);
-        --aurora-color-3: rgba(128, 0, 128, 0.5);
+    .liquid-glass[data-color="фиолетовый"] {
+        --acid-color-1: #800080;
+        --acid-color-2: #9932CC;
+        --acid-color-3: #8A2BE2;
     }
     </style>
 </head>
@@ -1438,36 +1425,31 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите шар с загаданной энергией Aurora:</p>
-        <div class="aurora-container" id="color-buttons">
-            <div class="aurora-orb" data-color="красный" onclick="checkColor('красный')">
-                <div class="aurora-effect">
-                    <div class="aurora-waves"></div>
-                    <div class="aurora-core"></div>
+        <p>Выберите колбу с загаданным цветом вихря:</p>
+        <div class="liquid-container" id="color-buttons">
+            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid-content">
+                    <div class="liquid-vortex"></div>
                 </div>
             </div>
-            <div class="aurora-orb" data-color="синий" onclick="checkColor('синий')">
-                <div class="aurora-effect">
-                    <div class="aurora-waves"></div>
-                    <div class="aurora-core"></div>
+            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid-content">
+                    <div class="liquid-vortex"></div>
                 </div>
             </div>
-            <div class="aurora-orb" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="aurora-effect">
-                    <div class="aurora-waves"></div>
-                    <div class="aurora-core"></div>
+            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid-content">
+                    <div class="liquid-vortex"></div>
                 </div>
             </div>
-            <div class="aurora-orb" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="aurora-effect">
-                    <div class="aurora-waves"></div>
-                    <div class="aurora-core"></div>
+            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid-content">
+                    <div class="liquid-vortex"></div>
                 </div>
             </div>
-            <div class="aurora-orb" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="aurora-effect">
-                    <div class="aurora-waves"></div>
-                    <div class="aurora-core"></div>
+            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid-content">
+                    <div class="liquid-vortex"></div>
                 </div>
             </div>
         </div>
@@ -2710,9 +2692,8 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранной сфере
-        const orbs = document.querySelectorAll('.liquid-orb');
-        orbs.forEach(orb => orb.classList.remove('active'));
+        const glasses = document.querySelectorAll('.liquid-glass');
+        glasses.forEach(glass => glass.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2721,9 +2702,9 @@ function getSymbolClass(symbol) {
         
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадана энергия: ' + target);
+            showMessage('✅ Верно! Загадан: ' + target);
         } else {
-            showMessage(`❌ Неверно. Загадана энергия: ${target}`);
+            showMessage(`❌ Неверно. Загадан: ${target}`);
         }
         updateStats();
         checkAchievements();
