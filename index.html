@@ -1207,119 +1207,113 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .liquid-container {
+    /* Стили для цветовой интуиции */
+    .flask-container {
         display: flex;
         justify-content: center;
-        gap: 20px;
+        gap: 25px;
         margin: 30px 0;
         flex-wrap: wrap;
     }
 
-    .liquid-btn {
-        width: 90px;
-        height: 90px;
+    .flask {
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         position: relative;
         cursor: pointer;
         overflow: hidden;
         box-shadow: 
-            0 0 20px rgba(255, 255, 255, 0.3),
+            0 2px 25px rgba(0, 0, 0, 0.3),
             inset 0 0 15px rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
-        background: rgba(30, 30, 40, 0.7);
-        backdrop-filter: blur(5px);
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(3px);
         border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .liquid-fill {
+    .liquid {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         height: 50%;
         overflow: hidden;
-        transform-origin: center bottom;
+        border-radius: 0 0 50% 50%;
     }
 
-    .liquid-surface {
+    .liquid-wave {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        background: linear-gradient(
-            to bottom,
-            var(--liquid-color-1) 0%,
-            var(--liquid-color-2) 100%
-        );
-        border-radius: 50%;
-        animation: 
-            liquid-wave 8s infinite ease-in-out,
-            liquid-shimmer 12s infinite linear;
+        top: -20px;
+        left: -10%;
+        width: 120%;
+        height: 200%;
+        background: var(--liquid-color);
+        animation: liquid-flow 8s ease-in-out infinite;
+        border-radius: 40% 40% 60% 60%;
+        filter: brightness(1.1);
     }
 
-    @keyframes liquid-wave {
+    @keyframes liquid-flow {
         0%, 100% {
-            transform: translateY(0) rotate(0deg);
-            border-radius: 50% 50% 60% 60% / 40% 40% 60% 60%;
+            transform: rotate(0deg) translateY(0) scale(1);
+            border-radius: 40% 40% 60% 60%;
         }
         25% {
-            transform: translateY(-5px) rotate(2deg);
-            border-radius: 48% 52% 58% 62% / 38% 42% 58% 62%;
+            transform: rotate(2deg) translateY(-5px) scale(1.05);
+            border-radius: 45% 45% 55% 55%;
         }
         50% {
-            transform: translateY(-8px) rotate(-1deg);
-            border-radius: 52% 48% 62% 58% / 42% 38% 62% 58%;
+            transform: rotate(-2deg) translateY(-8px) scale(1.03);
+            border-radius: 50% 50% 50% 50%;
         }
         75% {
-            transform: translateY(-3px) rotate(1deg);
-            border-radius: 48% 52% 58% 62% / 38% 42% 58% 62%;
+            transform: rotate(1deg) translateY(-3px) scale(1.02);
+            border-radius: 42% 42% 58% 58%;
         }
     }
 
-    @keyframes liquid-shimmer {
-        0% { background-position: 0% 50%; }
-        100% { background-position: 100% 50%; }
+    .flask::after {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 50%;
+        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3);
+        pointer-events: none;
     }
 
-    .liquid-btn:hover {
-        transform: scale(1.1);
+    .flask:hover {
+        transform: translateY(-5px) scale(1.05);
         box-shadow: 
-            0 0 30px rgba(255, 255, 255, 0.5),
+            0 5px 30px rgba(0, 0, 0, 0.4),
             inset 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    .liquid-btn.active {
+    .flask.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 40px rgba(255, 215, 0, 0.8),
-            inset 0 0 20px rgba(255, 215, 0, 0.4);
+            0 0 40px rgba(255, 215, 0, 0.6),
+            inset 0 0 25px rgba(255, 215, 0, 0.3);
     }
 
     /* Цвета жидкостей */
-    .liquid-btn[data-color="красный"] {
-        --liquid-color-1: rgba(255, 50, 50, 0.9);
-        --liquid-color-2: rgba(255, 0, 0, 0.7);
+    .flask[data-color="красный"] {
+        --liquid-color: linear-gradient(to bottom, #ff2400, #ff4d00);
     }
-
-    .liquid-btn[data-color="синий"] {
-        --liquid-color-1: rgba(50, 150, 255, 0.9);
-        --liquid-color-2: rgba(0, 100, 255, 0.7);
+    .flask[data-color="синий"] {
+        --liquid-color: linear-gradient(to bottom, #0077ff, #00a2ff);
     }
-
-    .liquid-btn[data-color="зеленый"] {
-        --liquid-color-1: rgba(50, 255, 50, 0.9);
-        --liquid-color-2: rgba(0, 200, 0, 0.7);
+    .flask[data-color="зеленый"] {
+        --liquid-color: linear-gradient(to bottom, #00cc00, #00e600);
     }
-
-    .liquid-btn[data-color="желтый"] {
-        --liquid-color-1: rgba(255, 255, 50, 0.9);
-        --liquid-color-2: rgba(255, 200, 0, 0.7);
+    .flask[data-color="желтый"] {
+        --liquid-color: linear-gradient(to bottom, #ffd700, #ffff00);
     }
-
-    .liquid-btn[data-color="фиолетовый"] {
-        --liquid-color-1: rgba(180, 50, 255, 0.9);
-        --liquid-color-2: rgba(150, 0, 255, 0.7);
+    .flask[data-color="фиолетовый"] {
+        --liquid-color: linear-gradient(to bottom, #8a2be2, #9932cc);
     }
     </style>
 </head>
@@ -1422,31 +1416,31 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите сосуд с загаданной жидкостью:</p>
-        <div class="liquid-container" id="color-buttons">
-            <div class="liquid-btn" data-color="красный" onclick="checkColor('красный')">
-                <div class="liquid-fill">
-                    <div class="liquid-surface"></div>
+        <p>Выберите колбу с загаданным цветом:</p>
+        <div class="flask-container" id="color-buttons">
+            <div class="flask" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid">
+                    <div class="liquid-wave"></div>
                 </div>
             </div>
-            <div class="liquid-btn" data-color="синий" onclick="checkColor('синий')">
-                <div class="liquid-fill">
-                    <div class="liquid-surface"></div>
+            <div class="flask" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid">
+                    <div class="liquid-wave"></div>
                 </div>
             </div>
-            <div class="liquid-btn" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="liquid-fill">
-                    <div class="liquid-surface"></div>
+            <div class="flask" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid">
+                    <div class="liquid-wave"></div>
                 </div>
             </div>
-            <div class="liquid-btn" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="liquid-fill">
-                    <div class="liquid-surface"></div>
+            <div class="flask" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid">
+                    <div class="liquid-wave"></div>
                 </div>
             </div>
-            <div class="liquid-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="liquid-fill">
-                    <div class="liquid-surface"></div>
+            <div class="flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid">
+                    <div class="liquid-wave"></div>
                 </div>
             </div>
         </div>
@@ -2689,9 +2683,8 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранному сосуду
-        const liquids = document.querySelectorAll('.liquid-btn');
-        liquids.forEach(liquid => liquid.classList.remove('active'));
+        const flasks = document.querySelectorAll('.flask');
+        flasks.forEach(flask => flask.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2710,8 +2703,8 @@ function getSymbolClass(symbol) {
 
     function resetSelection() {
         setTimeout(() => {
-            document.querySelectorAll('.liquid-btn').forEach(btn => {
-                btn.classList.remove('active');
+            document.querySelectorAll('.flask').forEach(flask => {
+                flask.classList.remove('active');
             });
         }, 300);
     }
