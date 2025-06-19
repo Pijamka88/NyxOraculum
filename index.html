@@ -1207,7 +1207,8 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .liquid-container {
+    /* Стили для цветовой интуиции */
+    .vortex-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1215,114 +1216,106 @@
         flex-wrap: wrap;
     }
 
-    .liquid-glass {
+    .vortex-btn {
         width: 90px;
-        height: 140px;
+        height: 90px;
+        border-radius: 50%;
         position: relative;
         cursor: pointer;
-        border-radius: 8px 8px 20px 20px;
         overflow: hidden;
         box-shadow: 
             0 0 20px rgba(255, 255, 255, 0.3),
-            inset 0 0 30px rgba(255, 255, 255, 0.2);
+            inset 0 0 15px rgba(255, 255, 255, 0.2);
         transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(6px);
+        background: rgba(30, 30, 40, 0.7);
+        backdrop-filter: blur(5px);
         border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .liquid-glass::before {
+    .vortex-btn::before {
         content: '';
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 25px;
-        background: rgba(255, 255, 255, 0.25);
-        border-radius: 8px 8px 0 0;
+        top: -25%;
+        left: -25%;
+        width: 150%;
+        height: 150%;
+        background: conic-gradient(
+            from 0deg,
+            var(--vortex-color-1) 0%,
+            var(--vortex-color-2) 30%,
+            var(--vortex-color-3) 70%,
+            var(--vortex-color-1) 100%
+        );
+        border-radius: 50%;
+        animation: vortex-spin 3s linear infinite;
+        opacity: 0.7;
+        filter: blur(15px);
+    }
+
+    @keyframes vortex-spin {
+        0% { transform: rotate(0deg) scale(1); }
+        50% { transform: rotate(180deg) scale(1.1); }
+        100% { transform: rotate(360deg) scale(1); }
+    }
+
+    .vortex-center {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 40%;
+        height: 40%;
+        border-radius: 50%;
+        background: rgba(20, 20, 30, 0.9);
+        box-shadow: 
+            inset 0 0 10px rgba(0, 0, 0, 0.8),
+            0 0 10px rgba(255, 255, 255, 0.1);
         z-index: 2;
     }
 
-    .liquid-content {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 70%;
-        border-radius: 0 0 18px 18px;
-        overflow: hidden;
-    }
-
-    .liquid-vortex {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 100%;
-        opacity: 0.85;
-        background: conic-gradient(
-            from 180deg,
-            var(--acid-color-1),
-            var(--acid-color-2),
-            var(--acid-color-3),
-            var(--acid-color-1)
-        );
-        mask: radial-gradient(
-            circle at center,
-            transparent 30%,
-            black 70%
-        );
-        animation: vortex-rotate 8s linear infinite;
-    }
-
-    @keyframes vortex-rotate {
-        0% { transform: rotate(0deg) scale(1); }
-        100% { transform: rotate(360deg) scale(1.1); }
-    }
-
-    .liquid-glass:hover {
-        transform: translateY(-8px) scale(1.05);
+    .vortex-btn:hover {
+        transform: scale(1.1);
         box-shadow: 
-            0 8px 30px rgba(255, 255, 255, 0.5),
-            inset 0 0 30px rgba(255, 255, 255, 0.3);
+            0 0 30px rgba(255, 255, 255, 0.5),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    .liquid-glass.active {
+    .vortex-btn.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 35px rgba(255, 215, 0, 0.8),
-            inset 0 0 25px rgba(255, 215, 0, 0.4);
+            0 0 40px rgba(255, 215, 0, 0.8),
+            inset 0 0 20px rgba(255, 215, 0, 0.4);
     }
 
     /* Цвета вихрей */
-    .liquid-glass[data-color="красный"] {
-        --acid-color-1: #FF0000;
-        --acid-color-2: #FF4500;
-        --acid-color-3: #FF6347;
+    .vortex-btn[data-color="красный"] {
+        --vortex-color-1: #FF0000;
+        --vortex-color-2: #FF4500;
+        --vortex-color-3: #FF6347;
     }
 
-    .liquid-glass[data-color="синий"] {
-        --acid-color-1: #0000FF;
-        --acid-color-2: #1E90FF;
-        --acid-color-3: #00BFFF;
+    .vortex-btn[data-color="синий"] {
+        --vortex-color-1: #0000FF;
+        --vortex-color-2: #1E90FF;
+        --vortex-color-3: #00BFFF;
     }
 
-    .liquid-glass[data-color="зеленый"] {
-        --acid-color-1: #00FF00;
-        --acid-color-2: #32CD32;
-        --acid-color-3: #7CFC00;
+    .vortex-btn[data-color="зеленый"] {
+        --vortex-color-1: #00FF00;
+        --vortex-color-2: #32CD32;
+        --vortex-color-3: #7CFC00;
     }
 
-    .liquid-glass[data-color="желтый"] {
-        --acid-color-1: #FFFF00;
-        --acid-color-2: #FFD700;
-        --acid-color-3: #FFEA00;
+    .vortex-btn[data-color="желтый"] {
+        --vortex-color-1: #FFFF00;
+        --vortex-color-2: #FFD700;
+        --vortex-color-3: #FFEA00;
     }
 
-    .liquid-glass[data-color="фиолетовый"] {
-        --acid-color-1: #800080;
-        --acid-color-2: #9932CC;
-        --acid-color-3: #8A2BE2;
+    .vortex-btn[data-color="фиолетовый"] {
+        --vortex-color-1: #800080;
+        --vortex-color-2: #9932CC;
+        --vortex-color-3: #8A2BE2;
     }
     </style>
 </head>
@@ -1425,32 +1418,22 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите колбу с загаданным цветом вихря:</p>
-        <div class="liquid-container" id="color-buttons">
-            <div class="liquid-glass" data-color="красный" onclick="checkColor('красный')">
-                <div class="liquid-content">
-                    <div class="liquid-vortex"></div>
-                </div>
+        <p>Выберите вихрь с загаданным цветом:</p>
+        <div class="vortex-container" id="color-buttons">
+            <div class="vortex-btn" data-color="красный" onclick="checkColor('красный')">
+                <div class="vortex-center"></div>
             </div>
-            <div class="liquid-glass" data-color="синий" onclick="checkColor('синий')">
-                <div class="liquid-content">
-                    <div class="liquid-vortex"></div>
-                </div>
+            <div class="vortex-btn" data-color="синий" onclick="checkColor('синий')">
+                <div class="vortex-center"></div>
             </div>
-            <div class="liquid-glass" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="liquid-content">
-                    <div class="liquid-vortex"></div>
-                </div>
+            <div class="vortex-btn" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="vortex-center"></div>
             </div>
-            <div class="liquid-glass" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="liquid-content">
-                    <div class="liquid-vortex"></div>
-                </div>
+            <div class="vortex-btn" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="vortex-center"></div>
             </div>
-            <div class="liquid-glass" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="liquid-content">
-                    <div class="liquid-vortex"></div>
-                </div>
+            <div class="vortex-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="vortex-center"></div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
