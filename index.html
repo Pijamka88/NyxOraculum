@@ -1207,7 +1207,7 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .vortex-container {
+    .liquid-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1215,7 +1215,7 @@
         flex-wrap: wrap;
     }
 
-    .vortex-btn {
+    .liquid-btn {
         width: 90px;
         height: 90px;
         border-radius: 50%;
@@ -1231,112 +1231,95 @@
         border: 2px solid rgba(255, 255, 255, 0.4);
     }
 
-    .vortex-liquid {
+    .liquid-fill {
         position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
         height: 50%;
         overflow: hidden;
-        transform-origin: bottom center;
+        transform-origin: center bottom;
     }
 
-    .vortex-effect {
+    .liquid-surface {
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-            from 0deg,
-            var(--vortex-color-1) 0%,
-            var(--vortex-color-2) 30%,
-            var(--vortex-color-3) 70%,
-            var(--vortex-color-1) 100%
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        background: linear-gradient(
+            to bottom,
+            var(--liquid-color-1) 0%,
+            var(--liquid-color-2) 100%
         );
         border-radius: 50%;
         animation: 
-            vortex-spin 3s linear infinite,
-            liquid-splash 8s ease-in-out infinite;
-        opacity: 0.8;
-        filter: blur(15px);
+            liquid-wave 8s infinite ease-in-out,
+            liquid-shimmer 12s infinite linear;
     }
 
-    @keyframes vortex-spin {
-        0% { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(180deg) scale(1.1); }
-        100% { transform: rotate(360deg) scale(1); }
-    }
-
-    @keyframes liquid-splash {
-        0%, 100% { 
-            transform: rotate(0deg) scaleY(1) scaleX(1);
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+    @keyframes liquid-wave {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+            border-radius: 50% 50% 60% 60% / 40% 40% 60% 60%;
         }
-        20% { 
-            transform: rotate(5deg) scaleY(0.95) scaleX(1.05);
-            border-radius: 50% 50% 40% 60% / 50% 40% 60% 50%;
+        25% {
+            transform: translateY(-5px) rotate(2deg);
+            border-radius: 48% 52% 58% 62% / 38% 42% 58% 62%;
         }
-        40% { 
-            transform: rotate(-3deg) scaleY(1.05) scaleX(0.95);
-            border-radius: 60% 40% 50% 50% / 40% 50% 50% 60%;
+        50% {
+            transform: translateY(-8px) rotate(-1deg);
+            border-radius: 52% 48% 62% 58% / 42% 38% 62% 58%;
         }
-        60% { 
-            transform: rotate(2deg) scaleY(0.98) scaleX(1.02);
-            border-radius: 40% 60% 60% 40% / 60% 50% 50% 40%;
+        75% {
+            transform: translateY(-3px) rotate(1deg);
+            border-radius: 48% 52% 58% 62% / 38% 42% 58% 62%;
         }
     }
 
-    .vortex-btn:hover {
+    @keyframes liquid-shimmer {
+        0% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
+    }
+
+    .liquid-btn:hover {
         transform: scale(1.1);
         box-shadow: 
             0 0 30px rgba(255, 255, 255, 0.5),
             inset 0 0 20px rgba(255, 255, 255, 0.3);
     }
 
-    .vortex-btn.active {
+    .liquid-btn.active {
         border-color: #FFD700;
         box-shadow: 
             0 0 40px rgba(255, 215, 0, 0.8),
             inset 0 0 20px rgba(255, 215, 0, 0.4);
-        animation: btn-press 0.5s ease;
     }
 
-    @keyframes btn-press {
-        0% { transform: scale(1.1); }
-        50% { transform: scale(0.95); }
-        100% { transform: scale(1.1); }
+    /* Цвета жидкостей */
+    .liquid-btn[data-color="красный"] {
+        --liquid-color-1: rgba(255, 50, 50, 0.9);
+        --liquid-color-2: rgba(255, 0, 0, 0.7);
     }
 
-    /* Цвета вихрей */
-    .vortex-btn[data-color="красный"] {
-        --vortex-color-1: #FF0000;
-        --vortex-color-2: #FF4500;
-        --vortex-color-3: #FF6347;
+    .liquid-btn[data-color="синий"] {
+        --liquid-color-1: rgba(50, 150, 255, 0.9);
+        --liquid-color-2: rgba(0, 100, 255, 0.7);
     }
 
-    .vortex-btn[data-color="синий"] {
-        --vortex-color-1: #0000FF;
-        --vortex-color-2: #1E90FF;
-        --vortex-color-3: #00BFFF;
+    .liquid-btn[data-color="зеленый"] {
+        --liquid-color-1: rgba(50, 255, 50, 0.9);
+        --liquid-color-2: rgba(0, 200, 0, 0.7);
     }
 
-    .vortex-btn[data-color="зеленый"] {
-        --vortex-color-1: #00FF00;
-        --vortex-color-2: #32CD32;
-        --vortex-color-3: #7CFC00;
+    .liquid-btn[data-color="желтый"] {
+        --liquid-color-1: rgba(255, 255, 50, 0.9);
+        --liquid-color-2: rgba(255, 200, 0, 0.7);
     }
 
-    .vortex-btn[data-color="желтый"] {
-        --vortex-color-1: #FFFF00;
-        --vortex-color-2: #FFD700;
-        --vortex-color-3: #FFEA00;
-    }
-
-    .vortex-btn[data-color="фиолетовый"] {
-        --vortex-color-1: #800080;
-        --vortex-color-2: #9932CC;
-        --vortex-color-3: #8A2BE2;
+    .liquid-btn[data-color="фиолетовый"] {
+        --liquid-color-1: rgba(180, 50, 255, 0.9);
+        --liquid-color-2: rgba(150, 0, 255, 0.7);
     }
     </style>
 </head>
@@ -1439,31 +1422,31 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите вихрь с загаданным цветом:</p>
-        <div class="vortex-container" id="color-buttons">
-            <div class="vortex-btn" data-color="красный" onclick="checkColor('красный')">
-                <div class="vortex-liquid">
-                    <div class="vortex-effect"></div>
+        <p>Выберите сосуд с загаданной жидкостью:</p>
+        <div class="liquid-container" id="color-buttons">
+            <div class="liquid-btn" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid-fill">
+                    <div class="liquid-surface"></div>
                 </div>
             </div>
-            <div class="vortex-btn" data-color="синий" onclick="checkColor('синий')">
-                <div class="vortex-liquid">
-                    <div class="vortex-effect"></div>
+            <div class="liquid-btn" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid-fill">
+                    <div class="liquid-surface"></div>
                 </div>
             </div>
-            <div class="vortex-btn" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="vortex-liquid">
-                    <div class="vortex-effect"></div>
+            <div class="liquid-btn" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid-fill">
+                    <div class="liquid-surface"></div>
                 </div>
             </div>
-            <div class="vortex-btn" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="vortex-liquid">
-                    <div class="vortex-effect"></div>
+            <div class="liquid-btn" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid-fill">
+                    <div class="liquid-surface"></div>
                 </div>
             </div>
-            <div class="vortex-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="vortex-liquid">
-                    <div class="vortex-effect"></div>
+            <div class="liquid-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid-fill">
+                    <div class="liquid-surface"></div>
                 </div>
             </div>
         </div>
@@ -2706,18 +2689,10 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранному вихрю
-        const vortexes = document.querySelectorAll('.vortex-btn');
-        vortexes.forEach(vortex => vortex.classList.remove('active'));
-        const selectedBtn = event.currentTarget;
-        selectedBtn.classList.add('active');
-        
-        // Анимация плескания при нажатии
-        const liquid = selectedBtn.querySelector('.vortex-liquid');
-        liquid.style.animation = 'strong-splash 0.8s ease';
-        setTimeout(() => {
-            liquid.style.animation = '';
-        }, 800);
+        // Добавляем класс active к выбранному сосуду
+        const liquids = document.querySelectorAll('.liquid-btn');
+        liquids.forEach(liquid => liquid.classList.remove('active'));
+        event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
         const target = colors[Math.floor(Math.random() * colors.length)];
@@ -2725,35 +2700,21 @@ function getSymbolClass(symbol) {
         
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target, resetColorSelection);
+            showMessage('✅ Верно! Загадан: ' + target, resetSelection);
         } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`, resetColorSelection);
+            showMessage(`❌ Неверно. Загадан: ${target}`, resetSelection);
         }
         updateStats();
         checkAchievements();
     }
 
-    function resetColorSelection() {
-        // Снимаем выделение через 300мс после закрытия сообщения
+    function resetSelection() {
         setTimeout(() => {
-            document.querySelectorAll('.vortex-btn').forEach(btn => {
+            document.querySelectorAll('.liquid-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
         }, 300);
     }
-
-    // Добавляем стиль для сильного плескания при нажатии
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes strong-splash {
-            0%, 100% { transform: scaleY(1) scaleX(1); }
-            20% { transform: scaleY(0.8) scaleX(1.2); }
-            40% { transform: scaleY(1.2) scaleX(0.8); }
-            60% { transform: scaleY(0.9) scaleX(1.1); }
-            80% { transform: scaleY(1.1) scaleX(0.9); }
-        }
-    `;
-    document.head.appendChild(style);
 </script>
 </body>
 </html>
