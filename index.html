@@ -1207,7 +1207,8 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    .liquid-circle-container {
+    /* Стили для цветовой интуиции */
+    .liquid-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1215,7 +1216,7 @@
         flex-wrap: wrap;
     }
 
-    .liquid-circle {
+    .liquid-btn {
         width: 90px;
         height: 90px;
         border-radius: 50%;
@@ -1223,8 +1224,8 @@
         cursor: pointer;
         overflow: hidden;
         box-shadow: 
-            0 0 15px rgba(255, 255, 255, 0.2),
-            inset 0 0 10px rgba(255, 255, 255, 0.1);
+            0 0 20px rgba(255, 255, 255, 0.2),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
         background: rgba(30, 30, 40, 0.5);
         border: 2px solid rgba(255, 255, 255, 0.3);
@@ -1236,60 +1237,54 @@
         left: 0;
         right: 0;
         height: 50%;
-        transform-origin: center bottom;
-        animation: liquid-pulse 4s infinite ease-in-out;
+        animation: liquid-wave 4s infinite ease-in-out;
         opacity: 0.8;
+        transform-origin: bottom center;
     }
 
-    @keyframes liquid-pulse {
+    @keyframes liquid-wave {
         0%, 100% {
             transform: scaleY(1) scaleX(1);
-            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+            border-radius: 0 0 50% 50% / 0 0 40% 40%;
         }
         50% {
             transform: scaleY(1.05) scaleX(0.95);
-            border-radius: 0 0 40% 40% / 0 0 80% 80%;
+            border-radius: 0 0 50% 50% / 0 0 60% 60%;
         }
     }
 
-    .liquid-circle:hover {
+    .liquid-btn:hover {
         transform: scale(1.05);
         box-shadow: 
             0 0 25px rgba(255, 255, 255, 0.3),
-            inset 0 0 15px rgba(255, 255, 255, 0.2);
+            inset 0 0 20px rgba(255, 255, 255, 0.2);
     }
 
-    .liquid-circle.active {
+    .liquid-btn.active {
         border-color: #FFD700;
         box-shadow: 
             0 0 30px rgba(255, 215, 0, 0.7),
             inset 0 0 20px rgba(255, 215, 0, 0.3);
-        transition: all 0.1s ease;
     }
 
-    .liquid-circle.active .liquid-fill {
-        opacity: 1;
-        animation: liquid-pulse 2s infinite ease-in-out;
-    }
-
-    /* Цвета заполнения */
-    .liquid-circle[data-color="красный"] .liquid-fill {
+    /* Цвета жидкости */
+    .liquid-btn[data-color="красный"] .liquid-fill {
         background: linear-gradient(to top, #FF0000, #FF4500);
     }
 
-    .liquid-circle[data-color="синий"] .liquid-fill {
+    .liquid-btn[data-color="синий"] .liquid-fill {
         background: linear-gradient(to top, #0000FF, #1E90FF);
     }
 
-    .liquid-circle[data-color="зеленый"] .liquid-fill {
+    .liquid-btn[data-color="зеленый"] .liquid-fill {
         background: linear-gradient(to top, #00FF00, #32CD32);
     }
 
-    .liquid-circle[data-color="желтый"] .liquid-fill {
+    .liquid-btn[data-color="желтый"] .liquid-fill {
         background: linear-gradient(to top, #FFFF00, #FFD700);
     }
 
-    .liquid-circle[data-color="фиолетовый"] .liquid-fill {
+    .liquid-btn[data-color="фиолетовый"] .liquid-fill {
         background: linear-gradient(to top, #800080, #9932CC);
     }
     </style>
@@ -1393,21 +1388,21 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите круг с загаданным цветом:</p>
-        <div class="liquid-circle-container" id="color-buttons">
-            <div class="liquid-circle" data-color="красный" onclick="checkColor('красный')">
+        <p>Выберите сосуд с загаданным цветом:</p>
+        <div class="liquid-container" id="color-buttons">
+            <div class="liquid-btn" data-color="красный" onclick="checkColor('красный')">
                 <div class="liquid-fill"></div>
             </div>
-            <div class="liquid-circle" data-color="синий" onclick="checkColor('синий')">
+            <div class="liquid-btn" data-color="синий" onclick="checkColor('синий')">
                 <div class="liquid-fill"></div>
             </div>
-            <div class="liquid-circle" data-color="зеленый" onclick="checkColor('зеленый')">
+            <div class="liquid-btn" data-color="зеленый" onclick="checkColor('зеленый')">
                 <div class="liquid-fill"></div>
             </div>
-            <div class="liquid-circle" data-color="желтый" onclick="checkColor('желтый')">
+            <div class="liquid-btn" data-color="желтый" onclick="checkColor('желтый')">
                 <div class="liquid-fill"></div>
             </div>
-            <div class="liquid-circle" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+            <div class="liquid-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
                 <div class="liquid-fill"></div>
             </div>
         </div>
@@ -2650,9 +2645,9 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Добавляем класс active к выбранному кругу
-        const circles = document.querySelectorAll('.liquid-circle');
-        circles.forEach(circle => circle.classList.remove('active'));
+        // Добавляем класс active к выбранной кнопке
+        const buttons = document.querySelectorAll('.liquid-btn');
+        buttons.forEach(btn => btn.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2670,13 +2665,10 @@ function getSymbolClass(symbol) {
     }
 
     function resetColorSelection() {
-        // Плавное снятие выделения через 0.5 секунды
-        setTimeout(() => {
-            const activeCircle = document.querySelector('.liquid-circle.active');
-            if (activeCircle) {
-                activeCircle.classList.remove('active');
-            }
-        }, 500);
+        // Сбрасываем выделение после закрытия сообщения
+        document.querySelectorAll('.liquid-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
     }
 </script>
 </body>
