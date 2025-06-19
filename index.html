@@ -1207,8 +1207,7 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    /* Стили для цветовой интуиции */
-    .vortex-container {
+    .liquid-circle-container {
         display: flex;
         justify-content: center;
         gap: 20px;
@@ -1216,7 +1215,7 @@
         flex-wrap: wrap;
     }
 
-    .vortex-btn {
+    .liquid-circle {
         width: 90px;
         height: 90px;
         border-radius: 50%;
@@ -1224,98 +1223,74 @@
         cursor: pointer;
         overflow: hidden;
         box-shadow: 
-            0 0 20px rgba(255, 255, 255, 0.3),
-            inset 0 0 15px rgba(255, 255, 255, 0.2);
+            0 0 15px rgba(255, 255, 255, 0.2),
+            inset 0 0 10px rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
-        background: rgba(30, 30, 40, 0.7);
-        backdrop-filter: blur(5px);
-        border: 2px solid rgba(255, 255, 255, 0.4);
+        background: rgba(30, 30, 40, 0.5);
+        border: 2px solid rgba(255, 255, 255, 0.3);
     }
 
-    .vortex-btn::before {
-        content: '';
+    .liquid-fill {
         position: absolute;
-        top: -25%;
-        left: -25%;
-        width: 150%;
-        height: 150%;
-        background: conic-gradient(
-            from 0deg,
-            var(--vortex-color-1) 0%,
-            var(--vortex-color-2) 30%,
-            var(--vortex-color-3) 70%,
-            var(--vortex-color-1) 100%
-        );
-        border-radius: 50%;
-        animation: vortex-spin 3s linear infinite;
-        opacity: 0.7;
-        filter: blur(15px);
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        transform-origin: center bottom;
+        animation: liquid-pulse 4s infinite ease-in-out;
+        opacity: 0.8;
     }
 
-    @keyframes vortex-spin {
-        0% { transform: rotate(0deg) scale(1); }
-        50% { transform: rotate(180deg) scale(1.1); }
-        100% { transform: rotate(360deg) scale(1); }
+    @keyframes liquid-pulse {
+        0%, 100% {
+            transform: scaleY(1) scaleX(1);
+            border-radius: 0 0 50% 50% / 0 0 100% 100%;
+        }
+        50% {
+            transform: scaleY(1.05) scaleX(0.95);
+            border-radius: 0 0 40% 40% / 0 0 80% 80%;
+        }
     }
 
-    .vortex-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 40%;
-        height: 40%;
-        border-radius: 50%;
-        background: rgba(20, 20, 30, 0.9);
+    .liquid-circle:hover {
+        transform: scale(1.05);
         box-shadow: 
-            inset 0 0 10px rgba(0, 0, 0, 0.8),
-            0 0 10px rgba(255, 255, 255, 0.1);
-        z-index: 2;
+            0 0 25px rgba(255, 255, 255, 0.3),
+            inset 0 0 15px rgba(255, 255, 255, 0.2);
     }
 
-    .vortex-btn:hover {
-        transform: scale(1.1);
-        box-shadow: 
-            0 0 30px rgba(255, 255, 255, 0.5),
-            inset 0 0 20px rgba(255, 255, 255, 0.3);
-    }
-
-    .vortex-btn.active {
+    .liquid-circle.active {
         border-color: #FFD700;
         box-shadow: 
-            0 0 40px rgba(255, 215, 0, 0.8),
-            inset 0 0 20px rgba(255, 215, 0, 0.4);
+            0 0 30px rgba(255, 215, 0, 0.7),
+            inset 0 0 20px rgba(255, 215, 0, 0.3);
+        transition: all 0.1s ease;
     }
 
-    /* Цвета вихрей */
-    .vortex-btn[data-color="красный"] {
-        --vortex-color-1: #FF0000;
-        --vortex-color-2: #FF4500;
-        --vortex-color-3: #FF6347;
+    .liquid-circle.active .liquid-fill {
+        opacity: 1;
+        animation: liquid-pulse 2s infinite ease-in-out;
     }
 
-    .vortex-btn[data-color="синий"] {
-        --vortex-color-1: #0000FF;
-        --vortex-color-2: #1E90FF;
-        --vortex-color-3: #00BFFF;
+    /* Цвета заполнения */
+    .liquid-circle[data-color="красный"] .liquid-fill {
+        background: linear-gradient(to top, #FF0000, #FF4500);
     }
 
-    .vortex-btn[data-color="зеленый"] {
-        --vortex-color-1: #00FF00;
-        --vortex-color-2: #32CD32;
-        --vortex-color-3: #7CFC00;
+    .liquid-circle[data-color="синий"] .liquid-fill {
+        background: linear-gradient(to top, #0000FF, #1E90FF);
     }
 
-    .vortex-btn[data-color="желтый"] {
-        --vortex-color-1: #FFFF00;
-        --vortex-color-2: #FFD700;
-        --vortex-color-3: #FFEA00;
+    .liquid-circle[data-color="зеленый"] .liquid-fill {
+        background: linear-gradient(to top, #00FF00, #32CD32);
     }
 
-    .vortex-btn[data-color="фиолетовый"] {
-        --vortex-color-1: #800080;
-        --vortex-color-2: #9932CC;
-        --vortex-color-3: #8A2BE2;
+    .liquid-circle[data-color="желтый"] .liquid-fill {
+        background: linear-gradient(to top, #FFFF00, #FFD700);
+    }
+
+    .liquid-circle[data-color="фиолетовый"] .liquid-fill {
+        background: linear-gradient(to top, #800080, #9932CC);
     }
     </style>
 </head>
@@ -1418,22 +1393,22 @@
 <div id="color" class="game-window">
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите вихрь с загаданным цветом:</p>
-        <div class="vortex-container" id="color-buttons">
-            <div class="vortex-btn" data-color="красный" onclick="checkColor('красный')">
-                <div class="vortex-center"></div>
+        <p>Выберите круг с загаданным цветом:</p>
+        <div class="liquid-circle-container" id="color-buttons">
+            <div class="liquid-circle" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid-fill"></div>
             </div>
-            <div class="vortex-btn" data-color="синий" onclick="checkColor('синий')">
-                <div class="vortex-center"></div>
+            <div class="liquid-circle" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid-fill"></div>
             </div>
-            <div class="vortex-btn" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="vortex-center"></div>
+            <div class="liquid-circle" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid-fill"></div>
             </div>
-            <div class="vortex-btn" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="vortex-center"></div>
+            <div class="liquid-circle" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid-fill"></div>
             </div>
-            <div class="vortex-btn" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="vortex-center"></div>
+            <div class="liquid-circle" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid-fill"></div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
@@ -2675,8 +2650,9 @@ function getSymbolClass(symbol) {
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        const glasses = document.querySelectorAll('.liquid-glass');
-        glasses.forEach(glass => glass.classList.remove('active'));
+        // Добавляем класс active к выбранному кругу
+        const circles = document.querySelectorAll('.liquid-circle');
+        circles.forEach(circle => circle.classList.remove('active'));
         event.currentTarget.classList.add('active');
         
         const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
@@ -2685,12 +2661,22 @@ function getSymbolClass(symbol) {
         
         if (guess === target) {
             stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target);
+            showMessage('✅ Верно! Загадан: ' + target, resetColorSelection);
         } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`);
+            showMessage(`❌ Неверно. Загадан: ${target}`, resetColorSelection);
         }
         updateStats();
         checkAchievements();
+    }
+
+    function resetColorSelection() {
+        // Плавное снятие выделения через 0.5 секунды
+        setTimeout(() => {
+            const activeCircle = document.querySelector('.liquid-circle.active');
+            if (activeCircle) {
+                activeCircle.classList.remove('active');
+            }
+        }, 500);
     }
 </script>
 </body>
