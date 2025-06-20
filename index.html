@@ -1241,79 +1241,38 @@
         border-radius: 0 0 50% 50%;
     }
 
-    .liquid-wave {
+    .vortex {
         position: absolute;
-        top: -20px;
-        left: -10%;
-        width: 120%;
+        top: 0;
+        left: 0;
+        width: 100%;
         height: 200%;
         background: var(--liquid-color);
-        animation: 
-            liquid-flow 8s ease-in-out infinite,
-            vortex-spin 15s linear infinite;
-        border-radius: 40% 40% 60% 60%;
+        animation: vortex-spin 12s linear infinite;
+        border-radius: 45% 47% 42% 44%;
         filter: brightness(1.1);
-        transform-origin: center center;
-    }
-
-    @keyframes liquid-flow {
-        0%, 100% {
-            transform: translateY(0) scale(1);
-            border-radius: 40% 40% 60% 60%;
-        }
-        25% {
-            transform: translateY(-5px) scale(1.05);
-            border-radius: 45% 45% 55% 55%;
-        }
-        50% {
-            transform: translateY(-8px) scale(1.03);
-            border-radius: 50% 50% 50% 50%;
-        }
-        75% {
-            transform: translateY(-3px) scale(1.02);
-            border-radius: 42% 42% 58% 58%;
-        }
     }
 
     @keyframes vortex-spin {
         0% {
-            transform: rotate(0deg);
+            transform: rotate(0deg) translateY(0) scale(1);
+            border-radius: 45% 47% 42% 44%;
         }
-        100% {
-            transform: rotate(360deg);
-        }
-    }
-
-    .vortex-particles {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-    }
-
-    .particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        border-radius: 50%;
-        background: white;
-        opacity: 0.6;
-        animation: particle-orbit 5s linear infinite;
-        filter: blur(0.5px);
-    }
-
-    @keyframes particle-orbit {
-        0% {
-            transform: rotate(0deg) translateX(20px) rotate(0deg);
-            opacity: 0.6;
+        25% {
+            transform: rotate(90deg) translateY(-5px) scale(1.02);
+            border-radius: 47% 45% 44% 42%;
         }
         50% {
-            transform: rotate(180deg) translateX(25px) rotate(-180deg);
-            opacity: 0.3;
+            transform: rotate(180deg) translateY(-8px) scale(1.05);
+            border-radius: 42% 44% 45% 47%;
+        }
+        75% {
+            transform: rotate(270deg) translateY(-5px) scale(1.02);
+            border-radius: 44% 42% 47% 45%;
         }
         100% {
-            transform: rotate(360deg) translateX(20px) rotate(-360deg);
-            opacity: 0.6;
+            transform: rotate(360deg) translateY(0) scale(1);
+            border-radius: 45% 47% 42% 44%;
         }
     }
 
@@ -1345,21 +1304,46 @@
             inset 0 0 25px rgba(255, 215, 0, 0.3);
     }
 
-    /* Цвета жидкостей */
+    /* Цвета жидкостей с градиентами для эффекта глубины */
     .flask[data-color="красный"] {
-        --liquid-color: linear-gradient(to bottom, #ff2400, #ff4d00);
+        --liquid-color: radial-gradient(
+            ellipse at center,
+            #ff2400 0%,
+            #cc1d00 50%,
+            #991600 100%
+        );
     }
     .flask[data-color="синий"] {
-        --liquid-color: linear-gradient(to bottom, #0077ff, #00a2ff);
+        --liquid-color: radial-gradient(
+            ellipse at center,
+            #0077ff 0%,
+            #005ecc 50%,
+            #003d99 100%
+        );
     }
     .flask[data-color="зеленый"] {
-        --liquid-color: linear-gradient(to bottom, #00cc00, #00e600);
+        --liquid-color: radial-gradient(
+            ellipse at center,
+            #00cc00 0%,
+            #00a300 50%,
+            #007a00 100%
+        );
     }
     .flask[data-color="желтый"] {
-        --liquid-color: linear-gradient(to bottom, #ffd700, #ffff00);
+        --liquid-color: radial-gradient(
+            ellipse at center,
+            #ffd700 0%,
+            #ccac00 50%,
+            #998100 100%
+        );
     }
     .flask[data-color="фиолетовый"] {
-        --liquid-color: linear-gradient(to bottom, #8a2be2, #9932cc);
+        --liquid-color: radial-gradient(
+            ellipse at center,
+            #8a2be2 0%,
+            #6e22b5 50%,
+            #521a88 100%
+        );
     }
     </style>
 </head>
@@ -1466,32 +1450,27 @@
         <div class="flask-container" id="color-buttons">
             <div class="flask" data-color="красный" onclick="checkColor('красный')">
                 <div class="liquid">
-                    <div class="liquid-wave"></div>
-                    <div class="vortex-particles" id="particles-red"></div>
+                    <div class="vortex"></div>
                 </div>
             </div>
             <div class="flask" data-color="синий" onclick="checkColor('синий')">
                 <div class="liquid">
-                    <div class="liquid-wave"></div>
-                    <div class="vortex-particles" id="particles-blue"></div>
+                    <div class="vortex"></div>
                 </div>
             </div>
             <div class="flask" data-color="зеленый" onclick="checkColor('зеленый')">
                 <div class="liquid">
-                    <div class="liquid-wave"></div>
-                    <div class="vortex-particles" id="particles-green"></div>
+                    <div class="vortex"></div>
                 </div>
             </div>
             <div class="flask" data-color="желтый" onclick="checkColor('желтый')">
                 <div class="liquid">
-                    <div class="liquid-wave"></div>
-                    <div class="vortex-particles" id="particles-yellow"></div>
+                    <div class="vortex"></div>
                 </div>
             </div>
             <div class="flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
                 <div class="liquid">
-                    <div class="liquid-wave"></div>
-                    <div class="vortex-particles" id="particles-purple"></div>
+                    <div class="vortex"></div>
                 </div>
             </div>
         </div>
