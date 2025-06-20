@@ -1,207 +1,307 @@
-<!-- Стили для цветовой интуиции -->
-<style>
-    /* Основные стили контейнера */
-    .vortex-container {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        margin: 30px 0;
-        flex-wrap: wrap;
-    }
-
-    /* Стили колбы с жидкостью */
-    .vortex-flask {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        position: relative;
-        cursor: pointer;
-        overflow: hidden;
-        box-shadow: 
-            0 2px 25px rgba(0, 0, 0, 0.3),
-            inset 0 0 15px rgba(255, 255, 255, 0.2);
-        transition: all 0.3s ease;
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(3px);
-        border: 2px solid rgba(255, 255, 255, 0.4);
-    }
-
-    /* Контейнер для жидкости */
-    .liquid-container {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 50%;
-        overflow: hidden;
-        border-radius: 0 0 50% 50%;
-    }
-
-    /* Анимация вихря жидкости */
-    .liquid-vortex {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 200%;
-        background: var(--liquid-color);
-        animation: 
-            vortex-rotate 15s linear infinite,
-            liquid-wave 8s ease-in-out infinite;
-        border-radius: 40%;
-        filter: brightness(1.1);
-        transform-origin: center center;
-    }
-
-    /* Вращение вихря */
-    @keyframes vortex-rotate {
-        0% { transform: rotate(0deg) scale(1); }
-        100% { transform: rotate(360deg) scale(1); }
-    }
-
-    /* Волнообразное движение */
-    @keyframes liquid-wave {
-        0%, 100% { 
-            transform: rotate(0deg) translateY(0) scale(1);
-            border-radius: 40% 40% 60% 60%;
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Цветовая интуиция</title>
+    <style>
+        /* Основные стили */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: radial-gradient(circle, #1A1A2E, #0F0F1A);
+            color: #E6E6FA;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
         }
-        25% { 
-            transform: rotate(0deg) translateY(-5px) scale(1.02);
-            border-radius: 45% 45% 55% 55%;
+
+        /* Стили для игры */
+        .game-window {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(26, 26, 46, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            border: 2px solid #8A2BE2;
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
-        50% { 
-            transform: rotate(0deg) translateY(-8px) scale(1.01);
-            border-radius: 50% 50% 50% 50%;
+
+        .game-window.show {
+            opacity: 1;
         }
-        75% { 
-            transform: rotate(0deg) translateY(-3px) scale(1.03);
-            border-radius: 42% 42% 58% 58%;
+
+        .game-window h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+            background: linear-gradient(90deg, #00BFFF, #8A2BE2, #FF00FF, #00BFFF);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 8s linear infinite;
         }
-    }
 
-    /* Эффект стекла */
-    .vortex-flask::after {
-        content: '';
-        position: absolute;
-        top: 5px;
-        left: 5px;
-        right: 5px;
-        bottom: 5px;
-        border-radius: 50%;
-        box-shadow: 
-            inset 0 0 20px rgba(255, 255, 255, 0.3),
-            inset 0 -10px 30px rgba(0, 0, 0, 0.2);
-        pointer-events: none;
-    }
+        @keyframes glow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    /* Эффект при наведении */
-    .vortex-flask:hover {
-        transform: translateY(-5px) scale(1.05);
-        box-shadow: 
-            0 5px 30px rgba(0, 0, 0, 0.4),
-            inset 0 0 20px rgba(255, 255, 255, 0.3);
-    }
+        /* Стили для колб */
+        .flasks-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
 
-    /* Выделение активной колбы */
-    .vortex-flask.active {
-        border-color: #FFD700;
-        box-shadow: 
-            0 0 40px rgba(255, 215, 0, 0.6),
-            inset 0 0 25px rgba(255, 215, 0, 0.3);
-    }
+        .flask {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            box-shadow: 
+                0 2px 25px rgba(0, 0, 0, 0.3),
+                inset 0 0 15px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(3px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
 
-    /* Цвета жидкостей */
-    .vortex-flask[data-color="красный"] {
-        --liquid-color: linear-gradient(135deg, #ff2400, #ff4d00);
-    }
-    .vortex-flask[data-color="синий"] {
-        --liquid-color: linear-gradient(135deg, #0077ff, #00a2ff);
-    }
-    .vortex-flask[data-color="зеленый"] {
-        --liquid-color: linear-gradient(135deg, #00cc00, #00e600);
-    }
-    .vortex-flask[data-color="желтый"] {
-        --liquid-color: linear-gradient(135deg, #ffd700, #ffff00);
-    }
-    .vortex-flask[data-color="фиолетовый"] {
-        --liquid-color: linear-gradient(135deg, #8a2be2, #9932cc);
-    }
-</style>
+        .liquid {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            overflow: hidden;
+            border-radius: 0 0 50% 50%;
+        }
 
-<!-- HTML структура игры -->
-<div id="color" class="game-window">
-    <div class="game-content active">
+        .liquid-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--liquid-color);
+            animation: 
+                liquid-wave 8s ease-in-out infinite,
+                vortex-spin 15s linear infinite;
+            transform-origin: center center;
+        }
+
+        @keyframes liquid-wave {
+            0%, 100% {
+                transform: rotate(0deg) translateY(0) scale(1);
+                border-radius: 40% 40% 60% 60%;
+            }
+            25% {
+                transform: rotate(2deg) translateY(-5px) scale(1.05);
+                border-radius: 45% 45% 55% 55%;
+            }
+            50% {
+                transform: rotate(-2deg) translateY(-8px) scale(1.03);
+                border-radius: 50% 50% 50% 50%;
+            }
+            75% {
+                transform: rotate(1deg) translateY(-3px) scale(1.02);
+                border-radius: 42% 42% 58% 58%;
+            }
+        }
+
+        @keyframes vortex-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.02); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .flask::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border-radius: 50%;
+            box-shadow: 
+                inset 0 0 20px rgba(255, 255, 255, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+
+        .flask:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 5px 30px rgba(0, 0, 0, 0.4),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .flask.active {
+            border-color: #FFD700;
+            box-shadow: 
+                0 0 40px rgba(255, 215, 0, 0.6),
+                inset 0 0 25px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Цвета жидкостей */
+        .flask[data-color="красный"] {
+            --liquid-color: linear-gradient(135deg, 
+                rgba(255, 50, 0, 0.9) 0%, 
+                rgba(255, 100, 0, 0.9) 50%, 
+                rgba(255, 50, 0, 0.9) 100%);
+        }
+        .flask[data-color="синий"] {
+            --liquid-color: linear-gradient(135deg, 
+                rgba(0, 100, 255, 0.9) 0%, 
+                rgba(0, 150, 255, 0.9) 50%, 
+                rgba(0, 100, 255, 0.9) 100%);
+        }
+        .flask[data-color="зеленый"] {
+            --liquid-color: linear-gradient(135deg, 
+                rgba(0, 200, 0, 0.9) 0%, 
+                rgba(50, 220, 50, 0.9) 50%, 
+                rgba(0, 200, 0, 0.9) 100%);
+        }
+        .flask[data-color="желтый"] {
+            --liquid-color: linear-gradient(135deg, 
+                rgba(255, 220, 0, 0.9) 0%, 
+                rgba(255, 240, 0, 0.9) 50%, 
+                rgba(255, 220, 0, 0.9) 100%);
+        }
+        .flask[data-color="фиолетовый"] {
+            --liquid-color: linear-gradient(135deg, 
+                rgba(150, 0, 255, 0.9) 0%, 
+                rgba(180, 50, 255, 0.9) 50%, 
+                rgba(150, 0, 255, 0.9) 100%);
+        }
+
+        /* Кнопка закрытия */
+        .btn {
+            background: rgba(138, 43, 226, 0.2);
+            color: #E6E6FA;
+            border: 2px solid #8A2BE2;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+            width: 150px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: rgba(153, 50, 204, 0.3);
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <!-- Окно цветовой интуиции -->
+    <div id="color" class="game-window">
         <h2>Цветовая интуиция</h2>
-        <p>Выберите колбу с загаданным цветом жидкости:</p>
-        <div class="vortex-container" id="color-buttons">
-            <div class="vortex-flask" data-color="красный" onclick="checkColor('красный')">
-                <div class="liquid-container">
-                    <div class="liquid-vortex"></div>
+        <p>Выберите колбу с загаданным цветом:</p>
+        <div class="flasks-container" id="color-buttons">
+            <div class="flask" data-color="красный" onclick="checkColor('красный')">
+                <div class="liquid">
+                    <div class="liquid-content"></div>
                 </div>
             </div>
-            <div class="vortex-flask" data-color="синий" onclick="checkColor('синий')">
-                <div class="liquid-container">
-                    <div class="liquid-vortex"></div>
+            <div class="flask" data-color="синий" onclick="checkColor('синий')">
+                <div class="liquid">
+                    <div class="liquid-content"></div>
                 </div>
             </div>
-            <div class="vortex-flask" data-color="зеленый" onclick="checkColor('зеленый')">
-                <div class="liquid-container">
-                    <div class="liquid-vortex"></div>
+            <div class="flask" data-color="зеленый" onclick="checkColor('зеленый')">
+                <div class="liquid">
+                    <div class="liquid-content"></div>
                 </div>
             </div>
-            <div class="vortex-flask" data-color="желтый" onclick="checkColor('желтый')">
-                <div class="liquid-container">
-                    <div class="liquid-vortex"></div>
+            <div class="flask" data-color="желтый" onclick="checkColor('желтый')">
+                <div class="liquid">
+                    <div class="liquid-content"></div>
                 </div>
             </div>
-            <div class="vortex-flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
-                <div class="liquid-container">
-                    <div class="liquid-vortex"></div>
+            <div class="flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
+                <div class="liquid">
+                    <div class="liquid-content"></div>
                 </div>
             </div>
         </div>
-        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+        <button class="btn close-btn" onclick="closeGame()">Закрыть</button>
     </div>
-</div>
 
-<!-- JavaScript логика -->
-<script>
-    // Функция проверки выбранного цвета
-    function checkColor(guess) {
-        if (!isGameActive) return;
-        
-        // Снимаем выделение со всех колб
-        const flasks = document.querySelectorAll('.vortex-flask');
-        flasks.forEach(flask => flask.classList.remove('active'));
-        
-        // Добавляем выделение к выбранной колбе
-        event.currentTarget.classList.add('active');
-        
-        // Генерируем случайный целевой цвет
-        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-        const target = colors[Math.floor(Math.random() * colors.length)];
-        
-        // Обновляем статистику
-        stats.color.total++;
-        
-        // Проверяем результат
-        if (guess === target) {
-            stats.color.correct++;
-            showMessage('✅ Верно! Загадан: ' + target, resetSelection);
-        } else {
-            showMessage(`❌ Неверно. Загадан: ${target}`, resetSelection);
+    <script>
+        // Инициализация игры
+        function initGame() {
+            document.getElementById('color').classList.add('show');
         }
-        
-        updateStats();
-        checkAchievements();
-    }
 
-    // Сброс выделения колб
-    function resetSelection() {
-        setTimeout(() => {
-            document.querySelectorAll('.vortex-flask').forEach(flask => {
-                flask.classList.remove('active');
-            });
-        }, 300);
-    }
-</script>
+        // Проверка выбранного цвета
+        function checkColor(guess) {
+            const flasks = document.querySelectorAll('.flask');
+            flasks.forEach(flask => flask.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+            const target = colors[Math.floor(Math.random() * colors.length)];
+            
+            if (guess === target) {
+                showMessage('✅ Верно! Загадан: ' + target, resetSelection);
+            } else {
+                showMessage(`❌ Неверно. Загадан: ${target}`, resetSelection);
+            }
+        }
+
+        // Сброс выделения
+        function resetSelection() {
+            setTimeout(() => {
+                document.querySelectorAll('.flask').forEach(flask => {
+                    flask.classList.remove('active');
+                });
+            }, 300);
+        }
+
+        // Показать сообщение
+        function showMessage(text, callback) {
+            alert(text);
+            if (callback) callback();
+        }
+
+        // Закрыть игру
+        function closeGame() {
+            document.getElementById('color').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('color').style.display = 'none';
+            }, 300);
+        }
+
+        // Запуск игры при загрузке
+        window.onload = function() {
+            document.getElementById('color').style.display = 'block';
+            setTimeout(initGame, 10);
+        };
+    </script>
+</body>
+</html>
