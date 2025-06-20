@@ -1207,7 +1207,6 @@
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
     /* Стили для цветовой интуиции */
-    /* Стили для цветовой интуиции */
     .flask-container {
         display: flex;
         justify-content: center;
@@ -1249,27 +1248,72 @@
         width: 120%;
         height: 200%;
         background: var(--liquid-color);
-        animation: liquid-flow 8s ease-in-out infinite;
+        animation: 
+            liquid-flow 8s ease-in-out infinite,
+            vortex-spin 15s linear infinite;
         border-radius: 40% 40% 60% 60%;
         filter: brightness(1.1);
+        transform-origin: center center;
     }
 
     @keyframes liquid-flow {
         0%, 100% {
-            transform: rotate(0deg) translateY(0) scale(1);
+            transform: translateY(0) scale(1);
             border-radius: 40% 40% 60% 60%;
         }
         25% {
-            transform: rotate(2deg) translateY(-5px) scale(1.05);
+            transform: translateY(-5px) scale(1.05);
             border-radius: 45% 45% 55% 55%;
         }
         50% {
-            transform: rotate(-2deg) translateY(-8px) scale(1.03);
+            transform: translateY(-8px) scale(1.03);
             border-radius: 50% 50% 50% 50%;
         }
         75% {
-            transform: rotate(1deg) translateY(-3px) scale(1.02);
+            transform: translateY(-3px) scale(1.02);
             border-radius: 42% 42% 58% 58%;
+        }
+    }
+
+    @keyframes vortex-spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    .vortex-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+    }
+
+    .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: white;
+        opacity: 0.6;
+        animation: particle-orbit 5s linear infinite;
+        filter: blur(0.5px);
+    }
+
+    @keyframes particle-orbit {
+        0% {
+            transform: rotate(0deg) translateX(20px) rotate(0deg);
+            opacity: 0.6;
+        }
+        50% {
+            transform: rotate(180deg) translateX(25px) rotate(-180deg);
+            opacity: 0.3;
+        }
+        100% {
+            transform: rotate(360deg) translateX(20px) rotate(-360deg);
+            opacity: 0.6;
         }
     }
 
@@ -1281,7 +1325,9 @@
         right: 5px;
         bottom: 5px;
         border-radius: 50%;
-        box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            inset 0 0 20px rgba(255, 255, 255, 0.3),
+            inset 0 -10px 30px rgba(0, 0, 0, 0.2);
         pointer-events: none;
     }
 
@@ -1421,26 +1467,31 @@
             <div class="flask" data-color="красный" onclick="checkColor('красный')">
                 <div class="liquid">
                     <div class="liquid-wave"></div>
+                    <div class="vortex-particles" id="particles-red"></div>
                 </div>
             </div>
             <div class="flask" data-color="синий" onclick="checkColor('синий')">
                 <div class="liquid">
                     <div class="liquid-wave"></div>
+                    <div class="vortex-particles" id="particles-blue"></div>
                 </div>
             </div>
             <div class="flask" data-color="зеленый" onclick="checkColor('зеленый')">
                 <div class="liquid">
                     <div class="liquid-wave"></div>
+                    <div class="vortex-particles" id="particles-green"></div>
                 </div>
             </div>
             <div class="flask" data-color="желтый" onclick="checkColor('желтый')">
                 <div class="liquid">
                     <div class="liquid-wave"></div>
+                    <div class="vortex-particles" id="particles-yellow"></div>
                 </div>
             </div>
             <div class="flask" data-color="фиолетовый" onclick="checkColor('фиолетовый')">
                 <div class="liquid">
                     <div class="liquid-wave"></div>
+                    <div class="vortex-particles" id="particles-purple"></div>
                 </div>
             </div>
         </div>
@@ -2680,6 +2731,25 @@ function getSymbolClass(symbol) {
 }
 
     // Цветовая интуиция
+    // Создание частиц для вихря
+    function createParticles() {
+        const colors = ['red', 'blue', 'green', 'yellow', 'purple'];
+        colors.forEach(color => {
+            const container = document.getElementById(`particles-${color}`);
+            for (let i = 0; i < 8; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.animationDelay = `${i * 0.3}s`;
+                container.appendChild(particle);
+            }
+        });
+    }
+
+    // Инициализация при загрузке
+    window.onload = function() {
+        createParticles();
+    };
+
     function checkColor(guess) {
         if (!isGameActive) return;
         
