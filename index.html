@@ -41,112 +41,113 @@
             align-items: center;
         }
 
-        .login-btn {
-            width: 240px;
-            height: 240px;
-            border-radius: 50%;
-            background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-            border: 3px solid #8A2BE2;
-            color: #E6E6FA;
-            font-size: 2.2rem;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 0 40px rgba(138, 43, 226, 0.7);
-            transition: all 0.3s ease;
+    /* Обновленная кнопка входа с анимацией портала */
+    .login-btn {
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: none; /* Убрал фиолетовую границу */
+        color: #E6E6FA;
+        font-size: 2.2rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s ease;
+        /* Анимация портала */
+        box-shadow: 
+            0 0 20px rgba(138, 43, 226, 0.5),
+            0 0 40px rgba(138, 43, 226, 0.3),
+            inset 0 0 20px rgba(138, 43, 226, 0.2);
+        animation: portal-pulse 3s infinite alternate;
+    }
+
+    /* Новая анимация пульсации портала */
+    @keyframes portal-pulse {
+        0% {
+            box-shadow: 
+                0 0 20px rgba(138, 43, 226, 0.5),
+                0 0 40px rgba(138, 43, 226, 0.3),
+                inset 0 0 20px rgba(138, 43, 226, 0.2);
+            transform: scale(1);
         }
-
-        .login-btn:hover {
-            box-shadow: 0 0 60px rgba(138, 43, 226, 1);
+        100% {
+            box-shadow: 
+                0 0 40px rgba(138, 43, 226, 0.8),
+                0 0 80px rgba(138, 43, 226, 0.5),
+                inset 0 0 30px rgba(138, 43, 226, 0.3);
+            transform: scale(1.05);
         }
+    }
 
-        .login-btn:active {
-            transform: scale(0.95);
-        }
-/* Обновленные стили для лепестков розы */
-.rose-petal {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    opacity: 0.4;
-    filter: blur(30px);
-    animation: petal-rotate 15s infinite linear;
-    z-index: 1;
-    transform-origin: center;
-    mix-blend-mode: screen;
-}
+    .login-btn:hover {
+        animation: portal-pulse 1.5s infinite alternate;
+    }
 
-/* Цвета лепестков с плавными переходами */
-.rose-petal:nth-child(1) {
-    background: radial-gradient(circle at 30% 50%, 
-                rgba(255, 20, 147, 0.7), 
-                transparent 70%);
-    animation-delay: 0s;
-}
-.rose-petal:nth-child(2) {
-    background: radial-gradient(circle at 70% 50%, 
-                rgba(255, 215, 0, 0.7), 
-                transparent 70%);
-    animation-delay: -2s;
-}
-.rose-petal:nth-child(3) {
-    background: radial-gradient(circle at 50% 30%, 
-                rgba(255, 140, 0, 0.7), 
-                transparent 70%);
-    animation-delay: -4s;
-}
-.rose-petal:nth-child(4) {
-    background: radial-gradient(circle at 50% 70%, 
-                rgba(255, 0, 0, 0.7), 
-                transparent 70%);
-    animation-delay: -6s;
-}
-.rose-petal:nth-child(5) {
-    background: radial-gradient(circle at 20% 80%, 
-                rgba(147, 112, 219, 0.7), 
-                transparent 70%);
-    animation-delay: -8s;
-}
-.rose-petal:nth-child(6) {
-    background: radial-gradient(circle at 80% 20%, 
-                rgba(0, 191, 255, 0.7), 
-                transparent 70%);
-    animation-delay: -10s;
-}
-.rose-petal:nth-child(7) {
-    background: radial-gradient(circle at 80% 80%, 
-                rgba(30, 144, 255, 0.7), 
-                transparent 70%);
-    animation-delay: -12s;
-}
+    .login-btn:active {
+        transform: scale(0.95) !important;
+        animation: none;
+    }
+    /* Обновленные стили для лепестков розы (уменьшенные и с новыми цветами) */
+    .rose-petal {
+        position: absolute;
+        width: 80%; /* Уменьшил размер */
+        height: 80%;
+        border-radius: 50%;
+        opacity: 0.6; /* Увеличил прозрачность */
+        filter: blur(20px); /* Уменьшил размытие */
+        animation: petal-rotate 15s infinite linear;
+        z-index: 1;
+        transform-origin: center;
+        mix-blend-mode: screen;
+    }
 
-/* Новая анимация вращения по часовой стрелке */
-@keyframes petal-rotate {
-    0% {
-        transform: rotate(0deg) scale(1);
-        opacity: 0.3;
+    /* Новые насыщенные цвета с фиолетовыми и синими оттенками */
+    .rose-petal:nth-child(1) {
+        background: radial-gradient(circle at 30% 50%, 
+                    rgba(138, 43, 226, 0.8), /* Фиолетовый */
+                    transparent 70%);
+        animation-delay: 0s;
     }
-    25% {
-        transform: rotate(90deg) scale(1.1);
-        opacity: 0.6;
+    .rose-petal:nth-child(2) {
+        background: radial-gradient(circle at 70% 50%, 
+                    rgba(75, 0, 130, 0.8), /* Индиго */
+                    transparent 70%);
+        animation-delay: -2s;
     }
-    50% {
-        transform: rotate(180deg) scale(1);
-        opacity: 0.4;
+    .rose-petal:nth-child(3) {
+        background: radial-gradient(circle at 50% 30%, 
+                    rgba(123, 104, 238, 0.8), /* Средний сине-фиолетовый */
+                    transparent 70%);
+        animation-delay: -4s;
     }
-    75% {
-        transform: rotate(270deg) scale(1.05);
-        opacity: 0.7;
+    .rose-petal:nth-child(4) {
+        background: radial-gradient(circle at 50% 70%, 
+                    rgba(106, 90, 205, 0.8), /* Сланцево-синий */
+                    transparent 70%);
+        animation-delay: -6s;
     }
-    100% {
-        transform: rotate(360deg) scale(1);
-        opacity: 0.3;
+    .rose-petal:nth-child(5) {
+        background: radial-gradient(circle at 20% 80%, 
+                    rgba(72, 61, 139, 0.8), /* Темный сланцево-синий */
+                    transparent 70%);
+        animation-delay: -8s;
     }
-}
+    .rose-petal:nth-child(6) {
+        background: radial-gradient(circle at 80% 20%, 
+                    rgba(65, 105, 225, 0.8), /* Королевский синий */
+                    transparent 70%);
+        animation-delay: -10s;
+    }
+    .rose-petal:nth-child(7) {
+        background: radial-gradient(circle at 80% 80%, 
+                    rgba(100, 149, 237, 0.8), /* Васильковый */
+                    transparent 70%);
+        animation-delay: -12s;
+    }
 
         /* Обновленные стили для монеты */
         .coin {
