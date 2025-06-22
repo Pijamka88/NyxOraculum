@@ -66,54 +66,87 @@
         .login-btn:active {
             transform: scale(0.95);
         }
+/* Обновленные стили для лепестков розы */
+.rose-petal {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    opacity: 0.4;
+    filter: blur(30px);
+    animation: petal-rotate 15s infinite linear;
+    z-index: 1;
+    transform-origin: center;
+    mix-blend-mode: screen;
+}
 
-        .smoke-circle {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.3;
-            filter: blur(30px);
-            animation: smoke-animation 8s infinite ease-in-out;
-            z-index: 1;
-        }
+/* Цвета лепестков с плавными переходами */
+.rose-petal:nth-child(1) {
+    background: radial-gradient(circle at 30% 50%, 
+                rgba(255, 20, 147, 0.7), 
+                transparent 70%);
+    animation-delay: 0s;
+}
+.rose-petal:nth-child(2) {
+    background: radial-gradient(circle at 70% 50%, 
+                rgba(255, 215, 0, 0.7), 
+                transparent 70%);
+    animation-delay: -2s;
+}
+.rose-petal:nth-child(3) {
+    background: radial-gradient(circle at 50% 30%, 
+                rgba(255, 140, 0, 0.7), 
+                transparent 70%);
+    animation-delay: -4s;
+}
+.rose-petal:nth-child(4) {
+    background: radial-gradient(circle at 50% 70%, 
+                rgba(255, 0, 0, 0.7), 
+                transparent 70%);
+    animation-delay: -6s;
+}
+.rose-petal:nth-child(5) {
+    background: radial-gradient(circle at 20% 80%, 
+                rgba(147, 112, 219, 0.7), 
+                transparent 70%);
+    animation-delay: -8s;
+}
+.rose-petal:nth-child(6) {
+    background: radial-gradient(circle at 80% 20%, 
+                rgba(0, 191, 255, 0.7), 
+                transparent 70%);
+    animation-delay: -10s;
+}
+.rose-petal:nth-child(7) {
+    background: radial-gradient(circle at 80% 80%, 
+                rgba(30, 144, 255, 0.7), 
+                transparent 70%);
+    animation-delay: -12s;
+}
 
-        .smoke-circle:nth-child(1) {
-            width: 360px;
-            height: 360px;
-            background: radial-gradient(circle, #8A2BE2, transparent 70%);
-            animation-delay: 0s;
-        }
-
-        .smoke-circle:nth-child(2) {
-            width: 440px;
-            height: 440px;
-            background: radial-gradient(circle, #00BFFF, transparent 70%);
-            animation-delay: 1s;
-        }
-
-        .smoke-circle:nth-child(3) {
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, #FF00FF, transparent 70%);
-            animation-delay: 2s;
-        }
-
-        .smoke-circle:nth-child(4) {
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, #FFD700, transparent 70%);
-            animation-delay: 3s;
-        }
-
-        @keyframes smoke-animation {
-            0%, 100% {
-                transform: scale(1) rotate(0deg);
-                opacity: 0.2;
-            }
-            50% {
-                transform: scale(1.2) rotate(180deg);
-                opacity: 0.4;
-            }
-        } 
+/* Новая анимация вращения по часовой стрелке */
+@keyframes petal-rotate {
+    0% {
+        transform: rotate(0deg) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: rotate(90deg) scale(1.1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: rotate(180deg) scale(1);
+        opacity: 0.4;
+    }
+    75% {
+        transform: rotate(270deg) scale(1.05);
+        opacity: 0.7;
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+        opacity: 0.3;
+    }
+}
 
         /* Обновленные стили для монеты */
         .coin {
@@ -1341,10 +1374,15 @@
     <div class="login-screen" id="login-screen">
         <h1 class="login-title">NyxOraculum</h1>
         <div class="login-btn-container">
-            <div class="smoke-circle"></div>
-            <div class="smoke-circle"></div>
-            <div class="smoke-circle"></div>
-            <div class="smoke-circle"></div>
+            <!-- Лепестки розы с новыми цветами -->
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            <div class="rose-petal"></div>
+            
             <button class="login-btn" id="login-btn">ВОЙТИ</button>
         </div>
     </div>
