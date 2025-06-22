@@ -1206,37 +1206,43 @@
         color: #9370DB;
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
-    /* Основные стили контейнера */
-    .compact-vortex-container {
+    /* Основные стили */
+    .soft-vortex-container {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 15px;
-        margin: 25px auto;
-        padding: 15px;
-        max-width: 400px;
+        gap: 20px;
+        margin: 30px 0;
     }
 
-    /* Корпус для вихря */
-    .vortex-housing {
-        width: 80px;
-        height: 80px;
+    /* Мягкие контейнеры для вихрей */
+    .soft-vortex {
+        width: 100px;
+        height: 100px;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        background: rgba(40, 40, 70, 0.3);
+        background: rgba(30, 30, 50, 0.3);
         border: 1px solid rgba(255, 255, 255, 0.15);
         box-shadow: 
-            inset 0 0 10px rgba(0, 0, 0, 0.4),
-            0 2px 8px rgba(0, 0, 0, 0.2);
+            0 0 10px rgba(0, 0, 0, 0.2),
+            inset 0 0 5px rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
         overflow: hidden;
     }
 
-    /* Компактный вихрь */
-    .compact-vortex {
+    .soft-vortex:hover {
+        transform: scale(1.08);
+        box-shadow: 
+            0 0 20px rgba(0, 0, 0, 0.3),
+            inset 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Чистая вихревая энергия */
+    .vortex-essence {
         width: 70px;
         height: 70px;
         border-radius: 50%;
@@ -1247,88 +1253,73 @@
             var(--vortex-color-3),
             var(--vortex-color-1)
         );
-        animation: vortex-rotate 5s linear infinite;
-        opacity: 0.85;
-        filter: blur(5px);
+        animation: essence-spin 5s linear infinite;
+        opacity: 0.9;
+        filter: blur(6px);
     }
 
     /* Цветовые схемы */
-    .compact-vortex[data-color="красный"] {
-        --vortex-color-1: rgba(255, 60, 60, 0.8);
-        --vortex-color-2: rgba(255, 90, 60, 0.8);
-        --vortex-color-3: rgba(255, 120, 60, 0.8);
+    .vortex-essence[data-color="красный"] {
+        --vortex-color-1: rgba(255, 50, 50, 0.8);
+        --vortex-color-2: rgba(255, 100, 50, 0.8);
+        --vortex-color-3: rgba(255, 150, 50, 0.8);
     }
 
-    .compact-vortex[data-color="синий"] {
-        --vortex-color-1: rgba(60, 120, 255, 0.8);
-        --vortex-color-2: rgba(80, 150, 255, 0.8);
-        --vortex-color-3: rgba(120, 180, 255, 0.8);
+    .vortex-essence[data-color="синий"] {
+        --vortex-color-1: rgba(50, 100, 255, 0.8);
+        --vortex-color-2: rgba(50, 150, 255, 0.8);
+        --vortex-color-3: rgba(100, 200, 255, 0.8);
     }
 
-    .compact-vortex[data-color="зеленый"] {
-        --vortex-color-1: rgba(60, 255, 60, 0.8);
-        --vortex-color-2: rgba(90, 255, 90, 0.8);
-        --vortex-color-3: rgba(120, 255, 120, 0.8);
+    .vortex-essence[data-color="зеленый"] {
+        --vortex-color-1: rgba(50, 255, 50, 0.8);
+        --vortex-color-2: rgba(100, 255, 100, 0.8);
+        --vortex-color-3: rgba(150, 255, 150, 0.8);
     }
 
-    .compact-vortex[data-color="желтый"] {
-        --vortex-color-1: rgba(255, 255, 60, 0.8);
-        --vortex-color-2: rgba(255, 235, 60, 0.8);
-        --vortex-color-3: rgba(255, 210, 60, 0.8);
+    .vortex-essence[data-color="желтый"] {
+        --vortex-color-1: rgba(255, 255, 50, 0.8);
+        --vortex-color-2: rgba(255, 225, 50, 0.8);
+        --vortex-color-3: rgba(255, 200, 50, 0.8);
     }
 
-    .compact-vortex[data-color="фиолетовый"] {
-        --vortex-color-1: rgba(180, 60, 255, 0.8);
-        --vortex-color-2: rgba(200, 90, 255, 0.8);
-        --vortex-color-3: rgba(220, 120, 255, 0.8);
+    .vortex-essence[data-color="фиолетовый"] {
+        --vortex-color-1: rgba(150, 50, 255, 0.8);
+        --vortex-color-2: rgba(180, 80, 255, 0.8);
+        --vortex-color-3: rgba(200, 120, 255, 0.8);
     }
 
     /* Анимации */
-    @keyframes vortex-rotate {
+    @keyframes essence-spin {
         0% { transform: rotate(0deg); }
         100% { transform: rotate(360deg); }
     }
 
-    @keyframes housing-hover {
+    @keyframes soft-pulse {
         0% { transform: scale(1); }
-        50% { transform: scale(1.08); }
+        50% { transform: scale(1.1); }
         100% { transform: scale(1); }
     }
 
-    @keyframes housing-active {
-        0% { box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2); }
-        50% { box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.3); }
-        100% { box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2); }
-    }
-
     /* Состояния */
-    .vortex-housing:hover {
-        transform: scale(1.05);
-        box-shadow: 
-            inset 0 0 15px rgba(0, 0, 0, 0.5),
-            0 4px 10px rgba(0, 0, 0, 0.25);
+    .soft-vortex.active {
+        animation: soft-pulse 1.5s infinite;
     }
 
-    .vortex-housing.active {
-        animation: 
-            housing-active 1.5s infinite,
-            housing-hover 2s infinite;
-    }
-
-    .vortex-housing.correct {
+    .soft-vortex.correct {
         animation: none;
         border-color: rgba(100, 255, 100, 0.5);
         box-shadow: 
-            inset 0 0 20px rgba(76, 175, 80, 0.4),
-            0 0 25px rgba(76, 175, 80, 0.3);
+            0 0 25px rgba(76, 175, 80, 0.5),
+            inset 0 0 10px rgba(100, 255, 100, 0.3);
     }
 
-    .vortex-housing.wrong {
+    .soft-vortex.wrong {
         animation: none;
         border-color: rgba(255, 100, 100, 0.5);
         box-shadow: 
-            inset 0 0 20px rgba(244, 67, 54, 0.4),
-            0 0 25px rgba(244, 67, 54, 0.3);
+            0 0 25px rgba(244, 67, 54, 0.5),
+            inset 0 0 10px rgba(255, 100, 100, 0.3);
     }
     </style>
 </head>
@@ -1432,21 +1423,21 @@
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
         <p>Почувствуйте энергетический вихрь и угадайте его цвет:</p>
-        <div class="compact-vortex-container">
-            <div class="vortex-housing" onclick="checkColor('красный')">
-                <div class="compact-vortex" data-color="красный"></div>
+        <div class="soft-vortex-container">
+            <div class="soft-vortex" onclick="checkColor('красный')">
+                <div class="vortex-essence" data-color="красный"></div>
             </div>
-            <div class="vortex-housing" onclick="checkColor('синий')">
-                <div class="compact-vortex" data-color="синий"></div>
+            <div class="soft-vortex" onclick="checkColor('синий')">
+                <div class="vortex-essence" data-color="синий"></div>
             </div>
-            <div class="vortex-housing" onclick="checkColor('зеленый')">
-                <div class="compact-vortex" data-color="зеленый"></div>
+            <div class="soft-vortex" onclick="checkColor('зеленый')">
+                <div class="vortex-essence" data-color="зеленый"></div>
             </div>
-            <div class="vortex-housing" onclick="checkColor('желтый')">
-                <div class="compact-vortex" data-color="желтый"></div>
+            <div class="soft-vortex" onclick="checkColor('желтый')">
+                <div class="vortex-essence" data-color="желтый"></div>
             </div>
-            <div class="vortex-housing" onclick="checkColor('фиолетовый')">
-                <div class="compact-vortex" data-color="фиолетовый"></div>
+            <div class="soft-vortex" onclick="checkColor('фиолетовый')">
+                <div class="vortex-essence" data-color="фиолетовый"></div>
             </div>
         </div>
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
@@ -2696,55 +2687,75 @@ function getSymbolClass(symbol) {
     }
 }
 
-    // Цветовая интуиция - компактные вихри
-    function checkColor(guess) {
-        if (!isGameActive) return;
-        
-        // Сброс предыдущих состояний
-        document.querySelectorAll('.vortex-housing').forEach(housing => {
-            housing.classList.remove('active', 'correct', 'wrong');
-        });
-        
-        // Активация выбранного вихря
-        const selectedHousing = event.currentTarget;
-        selectedHousing.classList.add('active');
-        
-        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-        const target = colors[Math.floor(Math.random() * colors.length)];
-        stats.color.total++;
-        
-        // Блокировка на время анимации
-        document.querySelectorAll('.vortex-housing').forEach(housing => {
-            housing.style.pointerEvents = 'none';
-        });
-        
-        if (guess === target) {
-            stats.color.correct++;
-            selectedHousing.classList.add('correct');
-            setTimeout(() => {
-                showMessage('✅ Верно! Это ' + target + ' энергия', resetHousings);
-            }, 1500);
-        } else {
-            selectedHousing.classList.add('wrong');
-            setTimeout(() => {
-                showMessage(`❌ Неверно. Это была ${target} энергия`, resetHousings);
-            }, 1500);
-        }
-        
-        updateStats();
-        checkAchievements();
+    // Цветовая интуиция
+function checkColor(guess) {
+    if (!isGameActive) return;
+    
+    // Сброс только активного состояния
+    document.querySelectorAll('.soft-vortex').forEach(v => {
+        v.classList.remove('active');
+    });
+    
+    // Активация выбранного вихря
+    const selectedVortex = event.currentTarget;
+    selectedVortex.classList.add('active');
+    
+    const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+    const target = colors[Math.floor(Math.random() * colors.length)];
+    stats.color.total++;
+    
+    // Блокировка на время анимации
+    document.querySelectorAll('.soft-vortex').forEach(v => {
+        v.style.pointerEvents = 'none';
+    });
+    
+    if (guess === target) {
+        stats.color.correct++;
+        selectedVortex.classList.add('correct');
+        setTimeout(() => {
+            showMessage('✅ Верно! Это ' + target + ' энергия', () => {
+                // Снимаем только блокировку, оставляя подсветку
+                document.querySelectorAll('.soft-vortex').forEach(v => {
+                    v.style.pointerEvents = 'auto';
+                    v.classList.remove('active');
+                });
+                // Убираем подсветку через дополнительную задержку
+                setTimeout(() => {
+                    selectedVortex.classList.remove('correct');
+                }, 500);
+            });
+        }, 1500);
+    } else {
+        selectedVortex.classList.add('wrong');
+        setTimeout(() => {
+            showMessage(`❌ Неверно. Это была ${target} энергия`, () => {
+                // Снимаем только блокировку, оставляя подсветку
+                document.querySelectorAll('.soft-vortex').forEach(v => {
+                    v.style.pointerEvents = 'auto';
+                    v.classList.remove('active');
+                });
+                // Убираем подсветку через дополнительную задержку
+                setTimeout(() => {
+                    selectedVortex.classList.remove('wrong');
+                }, 500);
+            });
+        }, 1500);
     }
+    
+    updateStats();
+    checkAchievements();
+}
 
-    function resetHousings() {
-        document.querySelectorAll('.vortex-housing').forEach(housing => {
-            housing.style.pointerEvents = 'auto';
-            housing.classList.remove('active', 'correct', 'wrong');
-            housing.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-            housing.style.boxShadow = 
-                'inset 0 0 10px rgba(0, 0, 0, 0.4), ' +
-                '0 2px 8px rgba(0, 0, 0, 0.2)';
-        });
-    }
+function resetVortexes() {
+    document.querySelectorAll('.soft-vortex').forEach(v => {
+        v.style.pointerEvents = 'auto';
+        v.classList.remove('active', 'correct', 'wrong');
+        v.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+        v.style.boxShadow = 
+            '0 0 10px rgba(0, 0, 0, 0.2), ' +
+            'inset 0 0 5px rgba(255, 255, 255, 0.1)';
+    });
+}
 </script>
 </body>
 </html>
