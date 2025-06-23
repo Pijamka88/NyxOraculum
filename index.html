@@ -1240,32 +1240,36 @@
         color: #9370DB;
         box-shadow: 0 0 20px rgba(147, 112, 219, 0.5); /* Фиолетовая тень для эфира */
     }
-    /* Основные стили */
+    /* Контейнер для вихрей */
     .soft-vortex-container {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 25px;
         margin: 30px 0;
+        perspective: 1000px;
     }
-/* Обновленные стили для мягких вихрей */
-.soft-vortex {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background: rgba(30, 30, 50, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 
-        0 0 10px rgba(0, 0, 0, 0.2),
-        inset 0 0 5px rgba(255, 255, 255, 0.1);
-    transition: all 0.5s ease;
-    backdrop-filter: blur(2px);
-    overflow: hidden;
-}
+
+    /* Стили для мягких вихрей */
+    .soft-vortex {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: rgba(30, 30, 50, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 
+            0 0 15px rgba(0, 0, 0, 0.3),
+            inset 0 0 8px rgba(255, 255, 255, 0.15);
+        transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        backdrop-filter: blur(3px);
+        overflow: hidden;
+        position: relative;
+        transform-style: preserve-3d;
+    }
 
 /* Чистая вихревая энергия с разными скоростями анимации */
 .vortex-essence {
@@ -1482,37 +1486,39 @@
     <div class="game-content active">
         <h2>Цветовая интуиция</h2>
         <p>Почувствуйте энергетический вихрь и угадайте его цвет:</p>
+        
         <div class="soft-vortex-container">
-            <!-- Красный вихрь с самой быстрой анимацией -->
+            <!-- Красный вихрь -->
             <div class="soft-vortex" onclick="checkColor('красный')">
                 <div class="vortex-essence" data-color="красный"></div>
-                <div class="vortex-label">Красный</div>
+                <div class="vortex-glow"></div>
             </div>
             
-            <!-- Синий вихрь с плавной медленной анимацией -->
+            <!-- Синий вихрь -->
             <div class="soft-vortex" onclick="checkColor('синий')">
                 <div class="vortex-essence" data-color="синий"></div>
-                <div class="vortex-label">Синий</div>
+                <div class="vortex-glow"></div>
             </div>
             
-            <!-- Зеленый вихрь со средней скоростью -->
+            <!-- Зеленый вихрь -->
             <div class="soft-vortex" onclick="checkColor('зеленый')">
                 <div class="vortex-essence" data-color="зеленый"></div>
-                <div class="vortex-label">Зеленый</div>
+                <div class="vortex-glow"></div>
             </div>
             
-            <!-- Желтый вихрь с быстрой пульсацией -->
+            <!-- Желтый вихрь -->
             <div class="soft-vortex" onclick="checkColor('желтый')">
                 <div class="vortex-essence" data-color="желтый"></div>
-                <div class="vortex-label">Желтый</div>
+                <div class="vortex-glow"></div>
             </div>
             
-            <!-- Фиолетовый вихрь с самой медленной анимацией -->
+            <!-- Фиолетовый вихрь -->
             <div class="soft-vortex" onclick="checkColor('фиолетовый')">
                 <div class="vortex-essence" data-color="фиолетовый"></div>
-                <div class="vortex-label">Фиолетовый</div>
+                <div class="vortex-glow"></div>
             </div>
         </div>
+        
         <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
     </div>
 </div>
@@ -2769,50 +2775,62 @@ function checkColor(guess) {
         v.classList.remove('active', 'correct', 'wrong');
     });
     
-    // Активация выбранного вихря
-    const selectedVortex = event.currentTarget;
-    selectedVortex.classList.add('active');
+    // Активация     function checkColor(guess) {
+        if (!isGameActive) return;
+        
+        // Сброс предыдущих состояний
+        document.querySelectorAll('.soft-vortex').forEach(v => {
+            v.classList.remove('active', 'correct', 'wrong');
+        });
+        
+        // Активация выбранного вихря
+        const selectedVortex = event.currentTarget;
+        selectedVortex.classList.add('active');
+        
+        const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
+        const target = colors[Math.floor(Math.random() * colors.length)];
+        stats.color.total++;
+        
+        // Блокировка на время анимации
+        document.querySelectorAll('.soft-vortex').forEach(v => {
+            v.style.pointerEvents = 'none';
+        });
+        
+        // Задержка для анимации
+        setTimeout(() => {
+            if (guess === target) {
+                stats.color.correct++;
+                selectedVortex.classList.remove('active');
+                selectedVortex.classList.add('correct');
+                
+                setTimeout(() => {
+                    showMessage('✅ Верно! Это ' + target + ' энергия', () => {
+                        resetVortexes();
+                    });
+                }, 1500);
+            } else {
+                selectedVortex.classList.remove('active');
+                selectedVortex.classList.add('wrong');
+                
+                setTimeout(() => {
+                    showMessage(`❌ Неверно. Это была ${target} энергия`, () => {
+                        resetVortexes();
+                    });
+                }, 1500);
+            }
+            
+            updateStats();
+            checkAchievements();
+        }, 500);
+    }
     
-    const colors = ['красный', 'синий', 'зеленый', 'желтый', 'фиолетовый'];
-    const target = colors[Math.floor(Math.random() * colors.length)];
-    stats.color.total++;
-    
-    // Блокировка на время анимации
-    document.querySelectorAll('.soft-vortex').forEach(v => {
-        v.style.pointerEvents = 'none';
-    });
-    
-    setTimeout(() => {
-        if (guess === target) {
-            stats.color.correct++;
-            selectedVortex.classList.remove('active');
-            selectedVortex.classList.add('correct');
-            setTimeout(() => {
-                showMessage('✅ Верно! Это ' + target + ' энергия', () => {
-                    resetVortexes();
-                });
-            }, 1500);
-        } else {
-            selectedVortex.classList.remove('active');
-            selectedVortex.classList.add('wrong');
-            setTimeout(() => {
-                showMessage(`❌ Неверно. Это была ${target} энергия`, () => {
-                    resetVortexes();
-                });
-            }, 1500);
-        }
-    }, 500);
-    
-    updateStats();
-    checkAchievements();
-}
-
-function resetVortexes() {
-    document.querySelectorAll('.soft-vortex').forEach(v => {
-        v.style.pointerEvents = 'auto';
-        v.classList.remove('active', 'correct', 'wrong');
-    });
-}
+    // Сброс вихрей после выбора
+    function resetVortexes() {
+        document.querySelectorAll('.soft-vortex').forEach(v => {
+            v.style.pointerEvents = 'auto';
+            v.classList.remove('active', 'correct', 'wrong');
+        });
+    }
         // Проверка достижений
     function checkAchievements() {
         updateAchievements();
