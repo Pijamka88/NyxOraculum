@@ -1249,56 +1249,68 @@
         margin: 30px 0;
     }
 
-    /* Мягкие контейнеры для вихрей */
+    /* Обновленные стили для цветовой интуиции (капли энергии) */
     .soft-vortex {
         width: 100px;
         height: 100px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: relative;
         cursor: pointer;
-        background: rgba(30, 30, 50, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-            0 0 10px rgba(0, 0, 0, 0.2),
-            inset 0 0 5px rgba(255, 255, 255, 0.1);
+        background: transparent;
+        border: none;
         transition: all 0.3s ease;
-        backdrop-filter: blur(2px);
-        overflow: hidden;
+        overflow: visible;
     }
 
-    .soft-vortex:hover {
-        transform: scale(1.08);
-        box-shadow: 
-            0 0 20px rgba(0, 0, 0, 0.3),
-            inset 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    /* Чистая вихревая энергия */
     .vortex-essence {
-        width: 70px;
-        height: 70px;
-        border-radius: 50%;
-        background: conic-gradient(
-            from 0deg,
-            var(--vortex-color-1),
-            var(--vortex-color-2),
-            var(--vortex-color-3),
-            var(--vortex-color-1)
-        );
+        position: absolute;
+        width: 60px;
+        height: 80px; /* Форма капли */
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Форма капли */
+        background: radial-gradient(circle at 30% 40%, 
+            var(--vortex-color-1), 
+            var(--vortex-color-2), 
+            var(--vortex-color-3));
         animation: 
-            essence-spin 5s linear infinite,
-            essence-pulse 2s ease-in-out infinite alternate;
+            essence-orbit 8s linear infinite,
+            essence-pulse 3s ease-in-out infinite alternate;
         opacity: 0.9;
         filter: blur(6px);
         transform-origin: center;
+        box-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
 
-    /* Новая анимация пульсации */
+    /* Анимация орбиты (движение по кругу) */
+    @keyframes essence-orbit {
+        0% {
+            transform: 
+                translate(0, 0) 
+                rotate(0deg);
+        }
+        100% {
+            transform: 
+                translate(calc(cos(360deg) * 50px), calc(sin(360deg) * 50px))
+                rotate(360deg);
+        }
+    }
+
+    /* Анимация пульсации */
     @keyframes essence-pulse {
-        0% { transform: scale(1); opacity: 0.8; }
-        100% { transform: scale(1.1); opacity: 1; }
+        0% { 
+            transform: 
+                translate(calc(cos(0deg) * 50px), calc(sin(0deg) * 50px))
+                scale(0.9);
+            opacity: 0.8; 
+        }
+        50% { 
+            opacity: 1;
+            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+        }
+        100% { 
+            transform: 
+                translate(calc(cos(0deg) * 50px), calc(sin(0deg) * 50px))
+                scale(1.1);
+            opacity: 0.9; 
+        }
     }
 
     /* Обновленные цветовые схемы с более яркими цветами */
@@ -1332,37 +1344,24 @@
         --vortex-color-3: rgba(200, 120, 255, 0.9);
     }
 
-    /* Анимации */
-    @keyframes essence-spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
+    /* Состояния при взаимодействии */
+    .soft-vortex:hover .vortex-essence {
+        animation: 
+            essence-orbit 4s linear infinite,
+            essence-pulse 1.5s ease-in-out infinite alternate;
     }
 
-    @keyframes soft-pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
-    }
-
-    /* Состояния */
-    .soft-vortex.active {
-        animation: soft-pulse 1.5s infinite;
-    }
-
-    .soft-vortex.correct {
+    .soft-vortex.active .vortex-essence {
         animation: none;
-        border-color: rgba(100, 255, 100, 0.5);
-        box-shadow: 
-            0 0 25px rgba(76, 175, 80, 0.5),
-            inset 0 0 10px rgba(100, 255, 100, 0.3);
+        transform: translate(0, 0) scale(1.2);
     }
 
-    .soft-vortex.wrong {
-        animation: none;
-        border-color: rgba(255, 100, 100, 0.5);
-        box-shadow: 
-            0 0 25px rgba(244, 67, 54, 0.5),
-            inset 0 0 10px rgba(255, 100, 100, 0.3);
+    .soft-vortex.correct .vortex-essence {
+        box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);
+    }
+
+    .soft-vortex.wrong .vortex-essence {
+        box-shadow: 0 0 40px rgba(244, 67, 54, 0.8);
     }
     </style>
 </head>
