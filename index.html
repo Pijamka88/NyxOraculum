@@ -1284,103 +1284,81 @@
         inset 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-/* Горизонтальная капля с вихревым вращением */
+/* Горизонтальная капля, движущаяся по радиусу */
 .vortex-essence {
     width: 60px; /* ширина больше высоты для горизонтальной ориентации */
-    height: 40px;
-    border-radius: 50% 50% 50% 50% / 40% 60% 60% 40%; /* горизонтальная капля */
+    height: 40px; /* уменьшенная высота */
+    border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%; /* горизонтальная капля */
     position: absolute;
-    animation: 
-        vortex-spin 4s linear infinite,
-        essence-pulse 3s ease-in-out infinite alternate;
+    animation: essence-orbit 6s linear infinite;
     opacity: 0.9;
     filter: blur(4px);
     transform-origin: center;
-    top: 50%;
     left: 50%;
-    margin-top: -20px;
-    margin-left: -30px;
+    top: 50%;
+    margin-left: -30px; /* половина ширины */
+    margin-top: -20px; /* половина высоты */
 }
 
-/* Вихревое вращение с небольшим смещением */
-@keyframes vortex-spin {
+/* Анимация движения по радиусу */
+@keyframes essence-orbit {
     0% { 
-        transform: rotate(0deg) scale(1) translateX(0);
-        border-radius: 50% 50% 50% 50% / 40% 60% 60% 40%;
+        transform: rotate(0deg) translateX(30px) rotate(0deg);
+        opacity: 0.8;
     }
-    25% {
-        transform: rotate(90deg) scale(0.9) translateX(5px);
-        border-radius: 50% 50% 50% 50% / 60% 40% 60% 40%;
-    }
-    50% {
-        transform: rotate(180deg) scale(0.8) translateX(0);
-        border-radius: 50% 50% 50% 50% / 40% 60% 60% 40%;
-    }
-    75% {
-        transform: rotate(270deg) scale(0.9) translateX(-5px);
-        border-radius: 50% 50% 50% 50% / 60% 40% 60% 40%;
+    50% { 
+        opacity: 1;
     }
     100% { 
-        transform: rotate(360deg) scale(1) translateX(0);
-        border-radius: 50% 50% 50% 50% / 40% 60% 60% 40%;
+        transform: rotate(360deg) translateX(30px) rotate(-360deg);
+        opacity: 0.8;
     }
 }
 
-/* Пульсация прозрачности */
-@keyframes essence-pulse {
-    0% { opacity: 0.7; transform: scale(1); }
-    50% { opacity: 0.9; transform: scale(1.1); }
-    100% { opacity: 0.7; transform: scale(1); }
-}
-
-/* Обновленные цветовые градиенты */
+/* Обновленные цветовые схемы */
 .vortex-essence[data-color="красный"] {
-    background: radial-gradient(circle at 60% 50%, 
+    background: radial-gradient(circle at 40% 50%, 
         rgba(255, 50, 50, 0.9), 
-        rgba(255, 100, 50, 0.5));
+        rgba(255, 100, 50, 0.7));
 }
 
 .vortex-essence[data-color="синий"] {
-    background: radial-gradient(circle at 60% 50%, 
+    background: radial-gradient(circle at 40% 50%, 
         rgba(50, 100, 255, 0.9), 
-        rgba(50, 150, 255, 0.5));
+        rgba(50, 150, 255, 0.7));
 }
 
 .vortex-essence[data-color="зеленый"] {
-    background: radial-gradient(circle at 60% 50%, 
+    background: radial-gradient(circle at 40% 50%, 
         rgba(50, 255, 50, 0.9), 
-        rgba(100, 255, 100, 0.5));
+        rgba(100, 255, 100, 0.7));
 }
 
 .vortex-essence[data-color="желтый"] {
-    background: radial-gradient(circle at 60% 50%, 
+    background: radial-gradient(circle at 40% 50%, 
         rgba(255, 255, 50, 0.9), 
-        rgba(255, 225, 50, 0.5));
+        rgba(255, 225, 50, 0.7));
 }
 
 .vortex-essence[data-color="фиолетовый"] {
-    background: radial-gradient(circle at 60% 50%, 
+    background: radial-gradient(circle at 40% 50%, 
         rgba(150, 50, 255, 0.9), 
-        rgba(180, 80, 255, 0.5));
+        rgba(180, 80, 255, 0.7));
 }
 
-/* Состояния при выборе */
-.soft-vortex.correct .vortex-essence,
-.soft-vortex.wrong .vortex-essence {
-    animation: none;
-    filter: blur(2px);
+/* Состояния */
+.soft-vortex.correct {
+    border-color: rgba(100, 255, 100, 0.5);
+    box-shadow: 
+        0 0 25px rgba(76, 175, 80, 0.5),
+        inset 0 0 10px rgba(100, 255, 100, 0.3);
 }
 
-.soft-vortex.correct .vortex-essence {
-    background: radial-gradient(circle at 60% 50%, 
-        rgba(100, 255, 100, 0.9), 
-        rgba(150, 255, 150, 0.7));
-}
-
-.soft-vortex.wrong .vortex-essence {
-    background: radial-gradient(circle at 60% 50%, 
-        rgba(255, 100, 100, 0.9), 
-        rgba(255, 150, 150, 0.7));
+.soft-vortex.wrong {
+    border-color: rgba(255, 100, 100, 0.5);
+    box-shadow: 
+        0 0 25px rgba(244, 67, 54, 0.5),
+        inset 0 0 10px rgba(255, 100, 100, 0.3);
 }
     </style>
 </head>
