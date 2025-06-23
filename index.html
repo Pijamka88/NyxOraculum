@@ -1249,119 +1249,115 @@
         margin: 30px 0;
     }
 
-    /* Обновленные стили для цветовой интуиции (капли энергии) */
+    /* Обновленные стили для цветовой интуиции */
     .soft-vortex {
         width: 100px;
         height: 100px;
-        position: relative;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         cursor: pointer;
-        background: transparent;
-        border: none;
+        background: rgba(30, 30, 50, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            0 0 10px rgba(0, 0, 0, 0.2),
+            inset 0 0 5px rgba(255, 255, 255, 0.1);
         transition: all 0.3s ease;
-        overflow: visible;
+        backdrop-filter: blur(2px);
+        overflow: hidden;
+        position: relative;
     }
 
+    /* Новая форма капли для вихревой энергии */
     .vortex-essence {
-        position: absolute;
         width: 60px;
-        height: 80px; /* Форма капли */
-        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Форма капли */
-        background: radial-gradient(circle at 30% 40%, 
-            var(--vortex-color-1), 
-            var(--vortex-color-2), 
-            var(--vortex-color-3));
+        height: 80px;
+        background: var(--vortex-color-1);
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+        position: absolute;
         animation: 
-            essence-orbit 8s linear infinite,
-            essence-pulse 3s ease-in-out infinite alternate;
+            drop-rotate 8s linear infinite,
+            essence-pulse 2s ease-in-out infinite alternate;
         opacity: 0.9;
-        filter: blur(6px);
+        filter: blur(8px);
         transform-origin: center;
-        box-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
 
-    /* Анимация орбиты (движение по кругу) */
-    @keyframes essence-orbit {
-        0% {
-            transform: 
-                translate(0, 0) 
-                rotate(0deg);
-        }
-        100% {
-            transform: 
-                translate(calc(cos(360deg) * 50px), calc(sin(360deg) * 50px))
-                rotate(360deg);
-        }
-    }
-
-    /* Анимация пульсации */
-    @keyframes essence-pulse {
+    /* Новая анимация вращения капли */
+    @keyframes drop-rotate {
         0% { 
-            transform: 
-                translate(calc(cos(0deg) * 50px), calc(sin(0deg) * 50px))
-                scale(0.9);
-            opacity: 0.8; 
+            transform: rotate(0deg) translateX(30px) rotate(0deg);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
         }
-        50% { 
-            opacity: 1;
-            box-shadow: 0 0 30px rgba(255,255,255,0.5);
+        25% {
+            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
+        }
+        50% {
+            transform: rotate(180deg) translateX(30px) rotate(-180deg);
+            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+        }
+        75% {
+            border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%;
         }
         100% { 
-            transform: 
-                translate(calc(cos(0deg) * 50px), calc(sin(0deg) * 50px))
-                scale(1.1);
-            opacity: 0.9; 
+            transform: rotate(360deg) translateX(30px) rotate(-360deg);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
         }
     }
 
     /* Обновленные цветовые схемы с более яркими цветами */
     .vortex-essence[data-color="красный"] {
         --vortex-color-1: rgba(255, 50, 50, 0.9);
-        --vortex-color-2: rgba(255, 100, 50, 0.9);
-        --vortex-color-3: rgba(255, 150, 50, 0.9);
+        box-shadow: 0 0 20px rgba(255, 50, 50, 0.6);
     }
 
     .vortex-essence[data-color="синий"] {
         --vortex-color-1: rgba(50, 100, 255, 0.9);
-        --vortex-color-2: rgba(50, 150, 255, 0.9);
-        --vortex-color-3: rgba(100, 200, 255, 0.9);
+        box-shadow: 0 0 20px rgba(50, 100, 255, 0.6);
     }
 
     .vortex-essence[data-color="зеленый"] {
         --vortex-color-1: rgba(50, 255, 50, 0.9);
-        --vortex-color-2: rgba(100, 255, 100, 0.9);
-        --vortex-color-3: rgba(150, 255, 150, 0.9);
+        box-shadow: 0 0 20px rgba(50, 255, 50, 0.6);
     }
 
     .vortex-essence[data-color="желтый"] {
         --vortex-color-1: rgba(255, 255, 50, 0.9);
-        --vortex-color-2: rgba(255, 225, 50, 0.9);
-        --vortex-color-3: rgba(255, 200, 50, 0.9);
+        box-shadow: 0 0 20px rgba(255, 255, 50, 0.6);
     }
 
     .vortex-essence[data-color="фиолетовый"] {
         --vortex-color-1: rgba(150, 50, 255, 0.9);
-        --vortex-color-2: rgba(180, 80, 255, 0.9);
-        --vortex-color-3: rgba(200, 120, 255, 0.9);
+        box-shadow: 0 0 20px rgba(150, 50, 255, 0.6);
     }
 
-    /* Состояния при взаимодействии */
-    .soft-vortex:hover .vortex-essence {
-        animation: 
-            essence-orbit 4s linear infinite,
-            essence-pulse 1.5s ease-in-out infinite alternate;
+    /* Остальные стили остаются без изменений */
+    .soft-vortex:hover {
+        transform: scale(1.08);
+        box-shadow: 
+            0 0 20px rgba(0, 0, 0, 0.3),
+            inset 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
-    .soft-vortex.active .vortex-essence {
+    .soft-vortex.active {
+        animation: soft-pulse 1.5s infinite;
+    }
+
+    .soft-vortex.correct {
         animation: none;
-        transform: translate(0, 0) scale(1.2);
+        border-color: rgba(100, 255, 100, 0.5);
+        box-shadow: 
+            0 0 25px rgba(76, 175, 80, 0.5),
+            inset 0 0 10px rgba(100, 255, 100, 0.3);
     }
 
-    .soft-vortex.correct .vortex-essence {
-        box-shadow: 0 0 40px rgba(76, 175, 80, 0.8);
-    }
-
-    .soft-vortex.wrong .vortex-essence {
-        box-shadow: 0 0 40px rgba(244, 67, 54, 0.8);
+    .soft-vortex.wrong {
+        animation: none;
+        border-color: rgba(255, 100, 100, 0.5);
+        box-shadow: 
+            0 0 25px rgba(244, 67, 54, 0.5),
+            inset 0 0 10px rgba(255, 100, 100, 0.3);
     }
     </style>
 </head>
