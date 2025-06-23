@@ -1267,13 +1267,6 @@
     overflow: hidden;
 }
 
-.soft-vortex:hover {
-    transform: scale(1.08);
-    box-shadow: 
-        0 0 20px rgba(0, 0, 0, 0.3),
-        inset 0 0 10px rgba(255, 255, 255, 0.2);
-}
-
 /* Чистая вихревая энергия с разными скоростями анимации */
 .vortex-essence {
     width: 70px;
@@ -1286,63 +1279,83 @@
         var(--vortex-color-3),
         var(--vortex-color-1)
     );
-    animation: 
-        essence-spin 5s linear infinite,
-        essence-pulse 3s ease-in-out infinite alternate;
     opacity: 0.9;
     filter: blur(6px);
     transform-origin: center;
+    position: relative;
 }
 
-/* Индивидуальные скорости вращения для каждого цвета */
+/* Индивидуальные анимации для каждого цвета */
 .vortex-essence[data-color="красный"] {
-    animation-duration: 4s, 2.5s;
-    animation-delay: 0s, 0.3s;
+    animation: 
+        essence-spin 4s linear infinite,
+        essence-pulse 1.8s ease-in-out infinite alternate;
+    animation-delay: 0.3s;
 }
+
 .vortex-essence[data-color="синий"] {
-    animation-duration: 6s, 3.5s;
-    animation-delay: 0.2s, 0.5s;
+    animation: 
+        essence-spin 5s linear infinite reverse,
+        essence-pulse 2.2s ease-in-out infinite alternate;
+    animation-delay: 0.5s;
 }
+
 .vortex-essence[data-color="зеленый"] {
-    animation-duration: 5s, 3s;
-    animation-delay: 0.1s, 0.4s;
+    animation: 
+        essence-spin 3.5s linear infinite,
+        essence-pulse 1.5s ease-in-out infinite alternate;
+    animation-delay: 0.7s;
 }
+
 .vortex-essence[data-color="желтый"] {
-    animation-duration: 4.5s, 2.8s;
-    animation-delay: 0.3s, 0.6s;
+    animation: 
+        essence-spin 4.8s linear infinite reverse,
+        essence-pulse 2s ease-in-out infinite alternate;
+    animation-delay: 0.2s;
 }
+
 .vortex-essence[data-color="фиолетовый"] {
-    animation-duration: 5.5s, 3.2s;
-    animation-delay: 0.4s, 0.7s;
+    animation: 
+        essence-spin 6s linear infinite,
+        essence-pulse 2.5s ease-in-out infinite alternate;
+    animation-delay: 0.4s;
 }
 
-/* Обновленная анимация пульсации */
-@keyframes essence-pulse {
-    0% { 
-        transform: scale(1); 
-        opacity: 0.8; 
-        box-shadow: 0 0 15px rgba(255,255,255,0.3);
-    }
-    50% { 
-        opacity: 1;
-        box-shadow: 0 0 25px rgba(255,255,255,0.5);
-    }
-    100% { 
-        transform: scale(1.1); 
-        opacity: 0.9;
-        box-shadow: 0 0 20px rgba(255,255,255,0.4);
-    }
-}
-
-/* Анимация вращения */
+/* Анимации */
 @keyframes essence-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/* Состояния вихрей */
+@keyframes essence-pulse {
+    0% { 
+        transform: scale(0.95); 
+        opacity: 0.8; 
+    }
+    100% { 
+        transform: scale(1.05); 
+        opacity: 1; 
+    }
+}
+
+/* Плавное увеличение при наведении */
+.soft-vortex:hover {
+    transform: scale(1.08);
+    box-shadow: 
+        0 0 20px rgba(0, 0, 0, 0.3),
+        inset 0 0 10px rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+/* Анимации для состояний */
 .soft-vortex.active {
-    animation: soft-pulse 2s infinite ease-in-out;
+    animation: soft-pulse 1.5s infinite;
+}
+
+@keyframes soft-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .soft-vortex.correct {
@@ -1351,7 +1364,7 @@
     box-shadow: 
         0 0 25px rgba(76, 175, 80, 0.5),
         inset 0 0 10px rgba(100, 255, 100, 0.3);
-    transition: all 0.7s ease-out;
+    transition: all 0.5s ease;
 }
 
 .soft-vortex.wrong {
@@ -1360,13 +1373,7 @@
     box-shadow: 
         0 0 25px rgba(244, 67, 54, 0.5),
         inset 0 0 10px rgba(255, 100, 100, 0.3);
-    transition: all 0.7s ease-out;
-}
-
-@keyframes soft-pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    transition: all 0.5s ease;
 }
     </style>
 </head>
