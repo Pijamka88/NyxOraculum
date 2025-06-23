@@ -1269,46 +1269,39 @@
         position: relative;
     }
 
-    .soft-vortex:hover {
-        transform: scale(1.08);
-        box-shadow: 
-            0 0 20px rgba(0, 0, 0, 0.3),
-            inset 0 0 10px rgba(255, 255, 255, 0.2);
-    }
-
-    /* Каплевидные вихри с новой анимацией */
+    /* Каплевидная форма вихря */
     .vortex-essence {
         width: 40px; /* Уменьшенный размер */
         height: 60px; /* Вытянутая форма капли */
-        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Форма капли */
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
         position: absolute;
         animation: 
-            drop-rotate 8s linear infinite,
-            drop-pulse 3s ease-in-out infinite alternate;
+            droplet-rotate 8s linear infinite,
+            droplet-pulse 3s ease-in-out infinite alternate;
         opacity: 0.9;
         filter: blur(4px);
         transform-origin: center;
     }
 
-    /* Новая анимация вращения капли по кругу */
-    @keyframes drop-rotate {
+    /* Анимация движения капли по кругу */
+    @keyframes droplet-rotate {
         0% { 
-            transform: rotate(0deg) translateX(30px) rotate(0deg);
+            transform: rotate(0deg) translateY(-30px) rotate(0deg);
+            opacity: 0.8;
         }
         100% { 
-            transform: rotate(360deg) translateX(30px) rotate(-360deg);
+            transform: rotate(360deg) translateY(-30px) rotate(-360deg);
+            opacity: 1;
         }
     }
 
     /* Анимация пульсации капли */
-    @keyframes drop-pulse {
+    @keyframes droplet-pulse {
         0% { 
-            transform: rotate(0deg) translateX(30px) rotate(0deg) scale(0.9);
-            opacity: 0.8;
+            transform: rotate(0deg) translateY(-30px) rotate(0deg) scale(0.9);
         }
         100% { 
-            transform: rotate(0deg) translateX(30px) rotate(0deg) scale(1.1);
-            opacity: 1;
+            transform: rotate(0deg) translateY(-30px) rotate(0deg) scale(1.1);
         }
     }
 
@@ -1317,51 +1310,71 @@
         background: radial-gradient(circle at 30% 40%, 
             rgba(255, 50, 50, 0.9), 
             rgba(255, 100, 50, 0.7));
+        box-shadow: 0 0 15px rgba(255, 50, 50, 0.6);
     }
 
     .vortex-essence[data-color="синий"] {
         background: radial-gradient(circle at 30% 40%, 
             rgba(50, 100, 255, 0.9), 
             rgba(50, 150, 255, 0.7));
+        box-shadow: 0 0 15px rgba(50, 100, 255, 0.6);
     }
 
     .vortex-essence[data-color="зеленый"] {
         background: radial-gradient(circle at 30% 40%, 
             rgba(50, 255, 50, 0.9), 
             rgba(100, 255, 100, 0.7));
+        box-shadow: 0 0 15px rgba(50, 255, 50, 0.6);
     }
 
     .vortex-essence[data-color="желтый"] {
         background: radial-gradient(circle at 30% 40%, 
             rgba(255, 255, 50, 0.9), 
             rgba(255, 225, 50, 0.7));
+        box-shadow: 0 0 15px rgba(255, 255, 50, 0.6);
     }
 
     .vortex-essence[data-color="фиолетовый"] {
         background: radial-gradient(circle at 30% 40%, 
             rgba(150, 50, 255, 0.9), 
             rgba(180, 80, 255, 0.7));
+        box-shadow: 0 0 15px rgba(150, 50, 255, 0.6);
     }
 
-    /* Состояния при выборе */
-    .soft-vortex.active {
-        animation: soft-pulse 1.5s infinite;
+    /* Состояния при взаимодействии */
+    .soft-vortex:hover .vortex-essence {
+        animation: 
+            droplet-rotate 5s linear infinite,
+            droplet-pulse 1.5s ease-in-out infinite alternate;
     }
 
-    .soft-vortex.correct {
-        animation: none;
-        border-color: rgba(100, 255, 100, 0.5);
-        box-shadow: 
-            0 0 25px rgba(76, 175, 80, 0.5),
-            inset 0 0 10px rgba(100, 255, 100, 0.3);
+    .soft-vortex.active .vortex-essence {
+        animation: 
+            droplet-rotate 3s linear infinite,
+            droplet-pulse 0.8s ease-in-out infinite alternate;
     }
 
-    .soft-vortex.wrong {
-        animation: none;
-        border-color: rgba(255, 100, 100, 0.5);
-        box-shadow: 
-            0 0 25px rgba(244, 67, 54, 0.5),
-            inset 0 0 10px rgba(255, 100, 100, 0.3);
+    .soft-vortex.correct .vortex-essence {
+        animation: 
+            droplet-rotate 3s linear infinite,
+            correct-pulse 1s ease-in-out infinite alternate;
+    }
+
+    .soft-vortex.wrong .vortex-essence {
+        animation: 
+            droplet-rotate 3s linear infinite,
+            wrong-pulse 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes correct-pulse {
+        0% { box-shadow: 0 0 15px currentColor; }
+        100% { box-shadow: 0 0 30px currentColor; }
+    }
+
+    @keyframes wrong-pulse {
+        0% { transform: rotate(0deg) translateY(-30px) rotate(0deg) scale(1); }
+        50% { transform: rotate(0deg) translateY(-30px) rotate(0deg) scale(1.2); }
+        100% { transform: rotate(0deg) translateY(-30px) rotate(0deg) scale(1); }
     }
     </style>
 </head>
