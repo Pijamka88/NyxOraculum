@@ -1269,70 +1269,6 @@
         position: relative;
     }
 
-    /* Новая форма капли для вихревой энергии */
-    .vortex-essence {
-        width: 60px;
-        height: 80px;
-        background: var(--vortex-color-1);
-        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-        position: absolute;
-        animation: 
-            drop-rotate 8s linear infinite,
-            essence-pulse 2s ease-in-out infinite alternate;
-        opacity: 0.9;
-        filter: blur(8px);
-        transform-origin: center;
-    }
-
-    /* Новая анимация вращения капли */
-    @keyframes drop-rotate {
-        0% { 
-            transform: rotate(0deg) translateX(30px) rotate(0deg);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-        }
-        25% {
-            border-radius: 40% 60% 60% 40% / 60% 40% 60% 40%;
-        }
-        50% {
-            transform: rotate(180deg) translateX(30px) rotate(-180deg);
-            border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-        }
-        75% {
-            border-radius: 60% 40% 40% 60% / 40% 60% 40% 60%;
-        }
-        100% { 
-            transform: rotate(360deg) translateX(30px) rotate(-360deg);
-            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-        }
-    }
-
-    /* Обновленные цветовые схемы с более яркими цветами */
-    .vortex-essence[data-color="красный"] {
-        --vortex-color-1: rgba(255, 50, 50, 0.9);
-        box-shadow: 0 0 20px rgba(255, 50, 50, 0.6);
-    }
-
-    .vortex-essence[data-color="синий"] {
-        --vortex-color-1: rgba(50, 100, 255, 0.9);
-        box-shadow: 0 0 20px rgba(50, 100, 255, 0.6);
-    }
-
-    .vortex-essence[data-color="зеленый"] {
-        --vortex-color-1: rgba(50, 255, 50, 0.9);
-        box-shadow: 0 0 20px rgba(50, 255, 50, 0.6);
-    }
-
-    .vortex-essence[data-color="желтый"] {
-        --vortex-color-1: rgba(255, 255, 50, 0.9);
-        box-shadow: 0 0 20px rgba(255, 255, 50, 0.6);
-    }
-
-    .vortex-essence[data-color="фиолетовый"] {
-        --vortex-color-1: rgba(150, 50, 255, 0.9);
-        box-shadow: 0 0 20px rgba(150, 50, 255, 0.6);
-    }
-
-    /* Остальные стили остаются без изменений */
     .soft-vortex:hover {
         transform: scale(1.08);
         box-shadow: 
@@ -1340,6 +1276,74 @@
             inset 0 0 10px rgba(255, 255, 255, 0.2);
     }
 
+    /* Каплевидные вихри с новой анимацией */
+    .vortex-essence {
+        width: 40px; /* Уменьшенный размер */
+        height: 60px; /* Вытянутая форма капли */
+        border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; /* Форма капли */
+        position: absolute;
+        animation: 
+            drop-rotate 8s linear infinite,
+            drop-pulse 3s ease-in-out infinite alternate;
+        opacity: 0.9;
+        filter: blur(4px);
+        transform-origin: center;
+    }
+
+    /* Новая анимация вращения капли по кругу */
+    @keyframes drop-rotate {
+        0% { 
+            transform: rotate(0deg) translateX(30px) rotate(0deg);
+        }
+        100% { 
+            transform: rotate(360deg) translateX(30px) rotate(-360deg);
+        }
+    }
+
+    /* Анимация пульсации капли */
+    @keyframes drop-pulse {
+        0% { 
+            transform: rotate(0deg) translateX(30px) rotate(0deg) scale(0.9);
+            opacity: 0.8;
+        }
+        100% { 
+            transform: rotate(0deg) translateX(30px) rotate(0deg) scale(1.1);
+            opacity: 1;
+        }
+    }
+
+    /* Обновленные цветовые схемы */
+    .vortex-essence[data-color="красный"] {
+        background: radial-gradient(circle at 30% 40%, 
+            rgba(255, 50, 50, 0.9), 
+            rgba(255, 100, 50, 0.7));
+    }
+
+    .vortex-essence[data-color="синий"] {
+        background: radial-gradient(circle at 30% 40%, 
+            rgba(50, 100, 255, 0.9), 
+            rgba(50, 150, 255, 0.7));
+    }
+
+    .vortex-essence[data-color="зеленый"] {
+        background: radial-gradient(circle at 30% 40%, 
+            rgba(50, 255, 50, 0.9), 
+            rgba(100, 255, 100, 0.7));
+    }
+
+    .vortex-essence[data-color="желтый"] {
+        background: radial-gradient(circle at 30% 40%, 
+            rgba(255, 255, 50, 0.9), 
+            rgba(255, 225, 50, 0.7));
+    }
+
+    .vortex-essence[data-color="фиолетовый"] {
+        background: radial-gradient(circle at 30% 40%, 
+            rgba(150, 50, 255, 0.9), 
+            rgba(180, 80, 255, 0.7));
+    }
+
+    /* Состояния при выборе */
     .soft-vortex.active {
         animation: soft-pulse 1.5s infinite;
     }
