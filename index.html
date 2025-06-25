@@ -34,33 +34,33 @@
 
         .login-btn-container {
             position: relative;
-            width: 500px;
-            height: 500px;
+            width: 300px; /* Уменьшил контейнер */
+            height: 300px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* Обновленная кнопка входа с анимацией портала */
+        /* Обновленная кнопка входа */
         .login-btn {
-            width: 240px;
-            height: 240px;
+            width: 120px; /* Уменьшил кнопку */
+            height: 120px;
             border-radius: 50%;
             background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
             border: none;
             color: #E6E6FA;
-            font-size: 2.2rem;
+            font-size: 1.5rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            z-index: 2;
+            z-index: 10; /* Увеличил z-index */
             transition: all 0.3s ease;
             box-shadow: 
-                0 0 20px rgba(138, 43, 226, 0.5),
-                0 0 40px rgba(138, 43, 226, 0.3),
-                inset 0 0 20px rgba(138, 43, 226, 0.2);
+                0 0 15px rgba(138, 43, 226, 0.7),
+                0 0 30px rgba(138, 43, 226, 0.5),
+                inset 0 0 15px rgba(138, 43, 226, 0.3);
             animation: portal-pulse 3s infinite alternate;
         }
 
@@ -68,78 +68,125 @@
         @keyframes portal-pulse {
             0% {
                 box-shadow: 
-                    0 0 20px rgba(138, 43, 226, 0.5),
-                    0 0 40px rgba(138, 43, 226, 0.3),
-                    inset 0 0 20px rgba(138, 43, 226, 0.2);
+                    0 0 15px rgba(138, 43, 226, 0.7),
+                    0 0 30px rgba(138, 43, 226, 0.5),
+                    inset 0 0 15px rgba(138, 43, 226, 0.3);
                 transform: scale(1);
             }
             100% {
                 box-shadow: 
-                    0 0 40px rgba(138, 43, 226, 0.8),
-                    0 0 80px rgba(138, 43, 226, 0.5),
-                    inset 0 0 30px rgba(138, 43, 226, 0.3);
+                    0 0 30px rgba(138, 43, 226, 0.9),
+                    0 0 60px rgba(138, 43, 226, 0.7),
+                    inset 0 0 25px rgba(138, 43, 226, 0.5);
                 transform: scale(1.05);
             }
         }
 
-        .login-btn:hover {
-            animation: portal-pulse 1.5s infinite alternate;
-        }
-
-        .login-btn:active {
-            transform: scale(0.95) !important;
-            animation: none;
-        }
-
-        /* Анимация урагана (заменяет лепестки розы) */
-        .hurricane {
+        /* Эффект тоннеля */
+        .tunnel {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            opacity: 0.7;
-            filter: blur(30px);
-            animation: hurricane-rotate 20s infinite linear;
             z-index: 1;
+            overflow: hidden;
+        }
+
+        .tunnel-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            opacity: 0.8;
+            filter: blur(15px);
+            animation: tunnel-rotate infinite linear;
             transform-origin: center;
             mix-blend-mode: screen;
         }
 
-        /* Цвета урагана: розовый, фиолетовый, синий */
-        .hurricane:nth-child(1) {
-            background: radial-gradient(circle at 30% 50%, 
-                        rgba(255, 0, 128, 0.8), /* Розовый */
-                        transparent 70%);
-            animation-delay: 0s;
-            animation-duration: 25s;
-        }
-        .hurricane:nth-child(2) {
-            background: radial-gradient(circle at 70% 50%, 
-                        rgba(138, 43, 226, 0.8), /* Фиолетовый */
-                        transparent 70%);
-            animation-delay: -5s;
-            animation-duration: 30s;
-        }
-        .hurricane:nth-child(3) {
-            background: radial-gradient(circle at 50% 30%, 
-                        rgba(0, 128, 255, 0.8), /* Синий */
-                        transparent 70%);
-            animation-delay: -10s;
-            animation-duration: 35s;
+        /* Цвета тоннеля: розовый, фиолетовый, синий */
+        .tunnel-layer:nth-child(1) {
+            background: conic-gradient(
+                from 0deg,
+                rgba(255, 0, 128, 0.9), /* Розовый */
+                rgba(138, 43, 226, 0.7), /* Фиолетовый */
+                rgba(0, 128, 255, 0.9) /* Синий */
+            );
+            animation-duration: 20s;
         }
 
-        /* Анимация вращения урагана */
-        @keyframes hurricane-rotate {
+        .tunnel-layer:nth-child(2) {
+            background: conic-gradient(
+                from 120deg,
+                rgba(0, 128, 255, 0.7), /* Синий */
+                rgba(255, 0, 128, 0.9), /* Розовый */
+                rgba(138, 43, 226, 0.7) /* Фиолетовый */
+            );
+            animation-duration: 25s;
+            animation-direction: reverse;
+        }
+
+        .tunnel-layer:nth-child(3) {
+            background: conic-gradient(
+                from 240deg,
+                rgba(138, 43, 226, 0.7), /* Фиолетовый */
+                rgba(0, 128, 255, 0.9), /* Синий */
+                rgba(255, 0, 128, 0.7) /* Розовый */
+            );
+            animation-duration: 30s;
+        }
+
+        /* Анимация вращения тоннеля */
+        @keyframes tunnel-rotate {
             0% {
                 transform: rotate(0deg) scale(1);
-            }
-            50% {
-                transform: rotate(180deg) scale(1.2);
             }
             100% {
                 transform: rotate(360deg) scale(1);
             }
-        }.
+        }
+
+        /* Эффект глубины тоннеля */
+        .tunnel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at center,
+                transparent 30%,
+                rgba(0, 0, 0, 0.9) 80%
+            );
+            z-index: 2;
+        }
+
+        /* Эффект частиц в тоннеле */
+        .tunnel-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            z-index: 1;
+            animation: tunnel-particle linear infinite;
+        }
+
+        @keyframes tunnel-particle {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(5);
+                opacity: 0;
+            }
+        }
 
         /* Обновленные стили для монеты */
         .coin {
@@ -1439,18 +1486,20 @@
     <!-- Звездный фон -->
     <div id="stars"></div>
 
-    <!-- Экран входа -->
+<!-- Экран входа -->
     <div class="login-screen" id="login-screen">
         <h1 class="login-title">NyxOraculum</h1>
         <div class="login-btn-container">
-            <!-- Элементы урагана -->
-            <div class="hurricane"></div>
-            <div class="hurricane"></div>
-            <div class="hurricane"></div>
+            <!-- Тоннель из 3 слоев -->
+            <div class="tunnel" id="tunnel">
+                <div class="tunnel-layer"></div>
+                <div class="tunnel-layer"></div>
+                <div class="tunnel-layer"></div>
+            </div>
             
             <button class="login-btn" id="login-btn">ВОЙТИ</button>
         </div>
-    </div>
+    </div>##
 
     <div class="container" id="main-container">
         <h1>NyxOraculum</h1>
@@ -1726,7 +1775,7 @@
     // Звездный фон
     function createStars() {
         const stars = document.getElementById('stars');
-        stars.innerHTML = ''; // Очищаем перед созданием новых звезд
+        stars.innerHTML = '';
         for (let i = 0; i < 100; i++) {
             const star = document.createElement('div');
             star.className = 'star';
@@ -1736,6 +1785,46 @@
             stars.appendChild(star);
         }
     }
+
+    // Создание частиц для тоннеля
+    function createTunnelParticles() {
+        const tunnel = document.getElementById('tunnel');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'tunnel-particle';
+            particle.style.left = `${50 + (Math.random() - 0.5) * 20}%`;
+            particle.style.top = `${50 + (Math.random() - 0.5) * 20}%`;
+            particle.style.animationDuration = `${3 + Math.random() * 4}s`;
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+            particle.style.opacity = '0';
+            tunnel.appendChild(particle);
+        }
+    }
+
+    window.onload = function() {
+        createStars();
+        createTunnelParticles();
+        
+        setTimeout(() => {
+            document.querySelector('.login-title').style.opacity = '1';
+            document.querySelector('.login-title').style.transform = 'translateY(0)';
+        }, 100);
+        
+        document.getElementById('login-btn').addEventListener('click', function() {
+            document.getElementById('login-screen').style.opacity = '0';
+            document.getElementById('login-screen').style.transform = 'scale(1.5)';
+            
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                const mainContainer = document.getElementById('main-container');
+                mainContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    mainContainer.classList.add('show');
+                }, 50);
+            }, 800);
+        });
+    };
 
 // Элементы для телепатии (порталы)
     const elements = {
