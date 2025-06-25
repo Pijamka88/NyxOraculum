@@ -34,8 +34,8 @@
 
         .login-btn-container {
             position: relative;
-            width: 300px; /* Уменьшил контейнер */
-            height: 300px;
+            width: 400px; /* Уменьшил контейнер */
+            height: 400px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -43,24 +43,24 @@
 
         /* Обновленная кнопка входа */
         .login-btn {
-            width: 120px; /* Уменьшил кнопку */
-            height: 120px;
+            width: 180px; /* Уменьшил кнопку */
+            height: 180px;
             border-radius: 50%;
             background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
             border: none;
             color: #E6E6FA;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            z-index: 10; /* Увеличил z-index */
+            z-index: 3; /* Увеличил z-index */
             transition: all 0.3s ease;
             box-shadow: 
-                0 0 15px rgba(138, 43, 226, 0.7),
-                0 0 30px rgba(138, 43, 226, 0.5),
-                inset 0 0 15px rgba(138, 43, 226, 0.3);
+                0 0 20px rgba(138, 43, 226, 0.5),
+                0 0 40px rgba(138, 43, 226, 0.3),
+                inset 0 0 20px rgba(138, 43, 226, 0.2);
             animation: portal-pulse 3s infinite alternate;
         }
 
@@ -68,123 +68,121 @@
         @keyframes portal-pulse {
             0% {
                 box-shadow: 
-                    0 0 15px rgba(138, 43, 226, 0.7),
-                    0 0 30px rgba(138, 43, 226, 0.5),
-                    inset 0 0 15px rgba(138, 43, 226, 0.3);
+                    0 0 20px rgba(138, 43, 226, 0.5),
+                    0 0 40px rgba(138, 43, 226, 0.3),
+                    inset 0 0 20px rgba(138, 43, 226, 0.2);
                 transform: scale(1);
             }
             100% {
                 box-shadow: 
-                    0 0 30px rgba(138, 43, 226, 0.9),
-                    0 0 60px rgba(138, 43, 226, 0.7),
-                    inset 0 0 25px rgba(138, 43, 226, 0.5);
+                    0 0 40px rgba(138, 43, 226, 0.8),
+                    0 0 80px rgba(138, 43, 226, 0.5),
+                    inset 0 0 30px rgba(138, 43, 226, 0.3);
                 transform: scale(1.05);
             }
         }
 
-        /* Эффект тоннеля */
+        /* Анимация тоннеля (урагана) */
         .tunnel {
             position: absolute;
-            width: 100%;
-            height: 100%;
+            width: 80%; /* Уменьшил размер */
+            height: 80%;
             border-radius: 50%;
+            opacity: 0.9;
+            filter: blur(25px);
+            animation: tunnel-spin 15s infinite linear;
             z-index: 1;
-            overflow: hidden;
+            transform-origin: center;
+            mix-blend-mode: screen;
+            background: conic-gradient(
+                from 0deg,
+                rgba(255, 0, 128, 0.8),  /* Розовый */
+                rgba(138, 43, 226, 0.8), /* Фиолетовый */
+                rgba(0, 128, 255, 0.8),  /* Синий */
+                rgba(255, 0, 128, 0.8)   /* Розовый */
+            );
+            box-shadow: 
+                inset 0 0 50px rgba(255, 0, 128, 0.3),
+                inset 0 0 100px rgba(138, 43, 226, 0.2),
+                inset 0 0 150px rgba(0, 128, 255, 0.1);
         }
 
-        .tunnel-layer {
+        /* Второй слой тоннеля для объема */
+        .tunnel-outer {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            opacity: 0.8;
-            filter: blur(15px);
-            animation: tunnel-rotate infinite linear;
+            opacity: 0.6;
+            filter: blur(40px);
+            animation: tunnel-spin-reverse 20s infinite linear;
+            z-index: 0;
             transform-origin: center;
             mix-blend-mode: screen;
-        }
-
-        /* Цвета тоннеля: розовый, фиолетовый, синий */
-        .tunnel-layer:nth-child(1) {
-            background: conic-gradient(
-                from 0deg,
-                rgba(255, 0, 128, 0.9), /* Розовый */
-                rgba(138, 43, 226, 0.7), /* Фиолетовый */
-                rgba(0, 128, 255, 0.9) /* Синий */
+            background: radial-gradient(
+                circle at center,
+                transparent 30%,
+                rgba(255, 0, 128, 0.4) 70%,
+                rgba(138, 43, 226, 0.3) 90%,
+                rgba(0, 128, 255, 0.2) 100%
             );
-            animation-duration: 20s;
-        }
-
-        .tunnel-layer:nth-child(2) {
-            background: conic-gradient(
-                from 120deg,
-                rgba(0, 128, 255, 0.7), /* Синий */
-                rgba(255, 0, 128, 0.9), /* Розовый */
-                rgba(138, 43, 226, 0.7) /* Фиолетовый */
-            );
-            animation-duration: 25s;
-            animation-direction: reverse;
-        }
-
-        .tunnel-layer:nth-child(3) {
-            background: conic-gradient(
-                from 240deg,
-                rgba(138, 43, 226, 0.7), /* Фиолетовый */
-                rgba(0, 128, 255, 0.9), /* Синий */
-                rgba(255, 0, 128, 0.7) /* Розовый */
-            );
-            animation-duration: 30s;
         }
 
         /* Анимация вращения тоннеля */
-        @keyframes tunnel-rotate {
+        @keyframes tunnel-spin {
             0% {
                 transform: rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+                opacity: 1;
             }
             100% {
                 transform: rotate(360deg) scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Обратное вращение для внешнего слоя */
+        @keyframes tunnel-spin-reverse {
+            0% {
+                transform: rotate(0deg) scale(1.2);
+                opacity: 0.6;
+            }
+            50% {
+                transform: rotate(-180deg) scale(1.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotate(-360deg) scale(1.2);
+                opacity: 0.6;
             }
         }
 
         /* Эффект глубины тоннеля */
-        .tunnel::before {
-            content: '';
+        .tunnel-depth {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            width: 60%;
+            height: 60%;
+            border-radius: 50%;
             background: radial-gradient(
                 circle at center,
-                transparent 30%,
-                rgba(0, 0, 0, 0.9) 80%
+                rgba(0, 0, 0, 0.9) 0%,
+                transparent 70%
             );
             z-index: 2;
+            animation: tunnel-pulse 5s infinite alternate;
         }
 
-        /* Эффект частиц в тоннеле */
-        .tunnel-particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-            z-index: 1;
-            animation: tunnel-particle linear infinite;
-        }
-
-        @keyframes tunnel-particle {
+        @keyframes tunnel-pulse {
             0% {
-                transform: translate(-50%, -50%) scale(0.5);
-                opacity: 0;
-            }
-            10% {
+                transform: scale(1);
                 opacity: 0.8;
             }
             100% {
-                transform: translate(-50%, -50%) scale(5);
-                opacity: 0;
+                transform: scale(1.1);
+                opacity: 0.9;
             }
         }
 
@@ -1486,20 +1484,18 @@
     <!-- Звездный фон -->
     <div id="stars"></div>
 
-<!-- Экран входа -->
+    <!-- Экран входа -->
     <div class="login-screen" id="login-screen">
         <h1 class="login-title">NyxOraculum</h1>
         <div class="login-btn-container">
-            <!-- Тоннель из 3 слоев -->
-            <div class="tunnel" id="tunnel">
-                <div class="tunnel-layer"></div>
-                <div class="tunnel-layer"></div>
-                <div class="tunnel-layer"></div>
-            </div>
+            <!-- Тоннель из энергий -->
+            <div class="tunnel-outer"></div>
+            <div class="tunnel"></div>
+            <div class="tunnel-depth"></div>
             
             <button class="login-btn" id="login-btn">ВОЙТИ</button>
         </div>
-    </div>##
+    </div>
 
     <div class="container" id="main-container">
         <h1>NyxOraculum</h1>
