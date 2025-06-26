@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-        /* Общие стили */
+        /* Основные стили */
         body {
             font-family: 'Arial', sans-serif;
             background: radial-gradient(circle, #1A1A2E, #0F0F1A);
@@ -80,7 +80,6 @@
             align-items: center;
         }
 
-        /* Кнопка входа с анимацией портала */
         .login-btn {
             width: 180px;
             height: 180px;
@@ -118,6 +117,15 @@
                     inset 0 0 30px rgba(138, 43, 226, 0.3);
                 transform: scale(1.05);
             }
+        }
+
+        .login-btn:hover {
+            animation: portal-pulse 1.5s infinite alternate;
+        }
+
+        .login-btn:active {
+            transform: scale(0.95) !important;
+            animation: none;
         }
 
         /* Анимация тоннеля */
@@ -165,6 +173,36 @@
             );
         }
 
+        @keyframes tunnel-spin {
+            0% {
+                transform: rotate(0deg) scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: rotate(180deg) scale(1.1);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(360deg) scale(1);
+                opacity: 0.8;
+            }
+        }
+
+        @keyframes tunnel-spin-reverse {
+            0% {
+                transform: rotate(0deg) scale(1.2);
+                opacity: 0.6;
+            }
+            50% {
+                transform: rotate(-180deg) scale(1.3);
+                opacity: 0.8;
+            }
+            100% {
+                transform: rotate(-360deg) scale(1.2);
+                opacity: 0.6;
+            }
+        }
+
         .tunnel-depth {
             position: absolute;
             width: 60%;
@@ -179,21 +217,15 @@
             animation: tunnel-pulse 5s infinite alternate;
         }
 
-        @keyframes tunnel-spin {
-            0% { transform: rotate(0deg) scale(1); opacity: 0.8; }
-            50% { transform: rotate(180deg) scale(1.1); opacity: 1; }
-            100% { transform: rotate(360deg) scale(1); opacity: 0.8; }
-        }
-
-        @keyframes tunnel-spin-reverse {
-            0% { transform: rotate(0deg) scale(1.2); opacity: 0.6; }
-            50% { transform: rotate(-180deg) scale(1.3); opacity: 0.8; }
-            100% { transform: rotate(-360deg) scale(1.2); opacity: 0.6; }
-        }
-
         @keyframes tunnel-pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 0.9; }
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1.1);
+                opacity: 0.9;
+            }
         }
 
         /* Основной контейнер */
@@ -318,8 +350,7 @@
             margin-right: auto;
         }
 
-        /* Стили для конкретных игр */
-        /* Телепатия */
+        /* Телепатия (порталы) */
         .portals-container {
             display: flex;
             flex-wrap: wrap;
@@ -647,45 +678,9 @@
             100% { transform: scale(1.1); opacity: 1; }
         }
 
-        .vortex-essence[data-color="красный"] {
-            --vortex-color-1: rgba(255, 50, 50, 0.9);
-            --vortex-color-2: rgba(255, 100, 50, 0.9);
-            --vortex-color-3: rgba(255, 150, 50, 0.9);
-        }
-
-        .vortex-essence[data-color="синий"] {
-            --vortex-color-1: rgba(50, 100, 255, 0.9);
-            --vortex-color-2: rgba(50, 150, 255, 0.9);
-            --vortex-color-3: rgba(100, 200, 255, 0.9);
-        }
-
-        .vortex-essence[data-color="зеленый"] {
-            --vortex-color-1: rgba(50, 255, 50, 0.9);
-            --vortex-color-2: rgba(100, 255, 100, 0.9);
-            --vortex-color-3: rgba(150, 255, 150, 0.9);
-        }
-
-        .vortex-essence[data-color="желтый"] {
-            --vortex-color-1: rgba(255, 255, 50, 0.9);
-            --vortex-color-2: rgba(255, 225, 50, 0.9);
-            --vortex-color-3: rgba(255, 200, 50, 0.9);
-        }
-
-        .vortex-essence[data-color="фиолетовый"] {
-            --vortex-color-1: rgba(150, 50, 255, 0.9);
-            --vortex-color-2: rgba(180, 80, 255, 0.9);
-            --vortex-color-3: rgba(200, 120, 255, 0.9);
-        }
-
         @keyframes essence-spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-
-        @keyframes soft-pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
         }
 
         .soft-vortex.active {
@@ -832,6 +827,12 @@
             transform: rotateY(180deg);
         }
 
+        .coin-result {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            height: 24px;
+        }
+
         .coin-buttons {
             display: flex;
             gap: 15px;
@@ -861,12 +862,6 @@
         .coin-btn.active {
             border-color: #FFD700;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        .coin-result {
-            margin-top: 20px;
-            font-size: 1.2rem;
-            height: 24px;
         }
 
         .coin.flipping {
@@ -1494,12 +1489,13 @@
         let lives = 3;
         let safePortal = '';
         let portalsCount = 3;
+        let currentArtifactPosition = -1;
         let isGameActive = true;
         let telekinesisGameActive = false;
         let isCoinFlipping = false;
-        let coinFlipTimeout;
-        let coinResultTimeout;
-        let currentArtifactPosition = -1;
+        let targetNumber = 0;
+        let backgroundMusicPlaying = false;
+        let musicPlayedOnce = false;
         let isMeditating = false;
         let meditationInterval;
         let meditationParticles = [];
@@ -1507,10 +1503,10 @@
         let meditationCycle = 0;
         let meditationSeconds = 0;
         let breathIndicatorAngle = 0;
-        let backgroundMusicPlaying = false;
-        let musicPlayedOnce = false;
+        let coinFlipTimeout;
+        let coinResultTimeout;
 
-        // Элементы для телепатии
+        // Элементы для телепатии (порталы)
         const elements = {
             '▲': 'Огонь',
             '▼': 'Вода',
@@ -1518,14 +1514,6 @@
             '◊': 'Воздух',
             '○': 'Эфир'
         };
-
-        // Аудио элементы
-        const backgroundMusic = new Audio('Opening.mp3');
-        const meditationMusic = new Audio('Meditation.mp3');
-        const clickSound = new Audio('Click.mp3');
-        backgroundMusic.volume = 0.3;
-        meditationMusic.volume = 0.5;
-        clickSound.volume = 0.4;
 
         // Инициализация при загрузке страницы
         window.onload = function() {
@@ -1539,27 +1527,17 @@
             
             // Обработчик кнопки входа
             document.getElementById('login-btn').addEventListener('click', function() {
-                // Анимация параллакса
+                // Анимация параллакса (увеличение и исчезновение)
                 document.getElementById('login-screen').style.opacity = '0';
                 document.getElementById('login-screen').style.transform = 'scale(1.5)';
                 
-                // Воспроизводим музыку один раз
-                if (!musicPlayedOnce) {
-                    backgroundMusic.loop = true;
-                    backgroundMusic.play().then(() => {
-                        musicPlayedOnce = true;
-                        backgroundMusicPlaying = true;
-                    }).catch(e => {
-                        console.log("Автовоспроизведение музыки заблокировано");
-                    });
-                }
-                
-                // Показываем основной интерфейс
+                // Показываем основной интерфейс с плавной анимацией
                 setTimeout(() => {
                     document.getElementById('login-screen').style.display = 'none';
                     const mainContainer = document.getElementById('main-container');
                     mainContainer.style.display = 'block';
                     
+                    // Запускаем анимацию появления
                     setTimeout(() => {
                         mainContainer.classList.add('show');
                     }, 50);
@@ -1569,31 +1547,13 @@
             // Обработчик клика для всех кнопок
             document.querySelectorAll('button').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    clickSound.currentTime = 0;
-                    clickSound.play().catch(e => console.log("Не удалось воспроизвести звук клика"));
+                    // Эмуляция звука клика (так как реальные аудиофайлы недоступны)
+                    console.log("Click sound played");
                 });
             });
-
-            // Инициализация обработчика сообщений
-            document.getElementById('message-button').onclick = function() {
-                document.getElementById('message-box').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                isGameActive = true;
-                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-                
-                if (document.getElementById('color').style.display === 'block') {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                }
-                
-                if (document.getElementById('number').style.display === 'block') {
-                    document.getElementById('accuracy-fill').style.width = '0';
-                }
-            };
         };
 
-        // Звездный фон
+        // Создание звездного фона
         function createStars() {
             const stars = document.getElementById('stars');
             stars.innerHTML = '';
@@ -1920,7 +1880,6 @@
             function stopDrag() {
                 if (isDragging && telekinesisGameActive) {
                     isDragging = false;
-                    
                     object.style.left = '50%';
                     object.style.top = '50%';
                     object.style.transform = 'translate(-50%, -50%)';
@@ -2007,15 +1966,13 @@
             
             const result = Math.random() < 0.5 ? 'орел' : 'решка';
             const isCorrect = guess === result;
-            
-            const finalRotation = result === 'орел' ? 0 : 180;
-            coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
-            
             stats.coin.total++;
             if (isCorrect) {
                 stats.coin.correct++;
             }
-            updateStats();
+            
+            const finalRotation = result === 'орел' ? 0 : 180;
+            coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
             
             coin.classList.add('flipping');
             
@@ -2044,6 +2001,8 @@
                 });
                 
                 isCoinFlipping = false;
+                updateStats();
+                checkAchievements();
                 
                 coinResultTimeout = setTimeout(() => {
                     if (document.getElementById('coin').style.display === 'block') {
@@ -2055,6 +2014,12 @@
         }
 
         // Числовая матрица
+        function initNumberMatrix() {
+            document.getElementById('accuracy-fill').style.width = '0';
+            document.getElementById('number-guess').value = '';
+            document.querySelector('.number-submit').classList.remove('active');
+        }
+
         function checkNumberGuess() {
             if (!isGameActive) return;
             
@@ -2082,12 +2047,6 @@
             document.getElementById('number-guess').value = '';
         }
 
-        function initNumberMatrix() {
-            document.getElementById('accuracy-fill').style.width = '0';
-            document.getElementById('number-guess').value = '';
-            document.querySelector('.number-submit').classList.remove('active');
-        }
-
         // Медитация
         function initMeditation() {
             const wheel = document.getElementById('chakra-wheel');
@@ -2095,9 +2054,6 @@
             const result = document.getElementById('meditation-result');
             const progressBar = document.getElementById('progress-bar');
             const instruction = document.getElementById('meditation-instruction');
-            
-            meditationMusic.pause();
-            meditationMusic.currentTime = 0;
             
             wheel.classList.remove('active');
             progressBar.style.width = '0';
@@ -2135,9 +2091,6 @@
             
             btn.classList.add('active');
             
-            meditationMusic.loop = true;
-            meditationMusic.play().catch(e => console.log("Ошибка воспроизведения медитативной музыки"));
-            
             isMeditating = true;
             btn.textContent = 'Завершить медитацию';
             wheel.classList.add('active');
@@ -2159,8 +2112,6 @@
             
             clearInterval(meditationInterval);
             isMeditating = false;
-            meditationMusic.pause();
-            meditationMusic.currentTime = 0;
             
             const wheel = document.getElementById('chakra-wheel');
             const btn = document.getElementById('meditation-btn');
@@ -2349,35 +2300,7 @@
             requestAnimationFrame(updateParticle);
         }
 
-        // Общие функции
-        function showMessage(text, callback) {
-            isGameActive = false;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-            document.getElementById('message-text').textContent = text;
-            document.getElementById('message-box').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
-            
-            const button = document.getElementById('message-button');
-            button.onclick = function() {
-                document.getElementById('message-box').style.display = 'none';
-                document.getElementById('overlay').style.display = 'none';
-                isGameActive = true;
-                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-                
-                if (document.getElementById('color').style.display === 'block') {
-                    document.querySelectorAll('.game-btn.active').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                }
-                
-                if (document.getElementById('number').style.display === 'block') {
-                    document.getElementById('accuracy-fill').style.width = '0';
-                }
-                
-                if (callback) callback();
-            };
-        }
-
+        // Управление окнами
         function openGame(gameId) {
             document.getElementById('main-container').style.display = 'none';
             const gameWindow = document.getElementById(gameId);
@@ -2387,18 +2310,6 @@
             setTimeout(() => {
                 gameWindow.classList.add('show');
             }, 10);
-
-            if (backgroundMusicPlaying) {
-                backgroundMusic.pause();
-                backgroundMusic.currentTime = 0;
-                backgroundMusicPlaying = false;
-            }
-
-            if (gameId === 'zener') {
-                document.querySelectorAll('.zener-card.active').forEach(card => {
-                    card.classList.remove('active');
-                });
-            }
 
             if (gameId === 'telepathy') {
                 initTelepathy();
@@ -2425,26 +2336,10 @@
         }
 
         function closeGame(gameId) {
-            if (gameId === 'coin') {
-                clearTimeout(coinFlipTimeout);
-                clearTimeout(coinResultTimeout);
-                isCoinFlipping = false;
-                const coin = document.getElementById('coin-element');
-                coin.classList.remove('flipping');
-                coin.style.transform = 'rotateY(0deg)';
-                document.getElementById('coin-result').textContent = '';
-                document.querySelectorAll('.coin-btn').forEach(btn => {
-                    btn.disabled = false;
-                    btn.classList.remove('active');
-                });
-            }
-
-            if (gameId === 'zener') {
-                document.querySelectorAll('.zener-card.active').forEach(card => {
-                    card.classList.remove('active');
-                });
-            }
-
+            clearTimeout(coinFlipTimeout);
+            clearTimeout(coinResultTimeout);
+            isCoinFlipping = false;
+            
             if (gameId === 'number') {
                 document.getElementById('accuracy-fill').style.width = '0';
                 document.getElementById('number-guess').value = '';
@@ -2471,12 +2366,6 @@
             document.getElementById('main-container').style.display = 'block';
 
             telekinesisGameActive = false;
-
-            if (!backgroundMusicPlaying && !musicPlayedOnce) {
-                backgroundMusic.play().catch(e => console.log("Не удалось воспроизвести фоновую музыку"));
-                backgroundMusicPlaying = true;
-                musicPlayedOnce = true;
-            }
         }
 
         function openStats() {
@@ -2505,6 +2394,7 @@
             document.getElementById('main-container').style.display = 'block';
         }
 
+        // Статистика
         function updateStats() {
             document.getElementById('telepathy-stats').textContent = `${stats.telepathy.correct}/${stats.telepathy.total}`;
             document.getElementById('zener-stats').textContent = `${stats.zener.correct}/${stats.zener.total}`;
@@ -2531,6 +2421,7 @@
             updateAchievements();
         }
 
+        // Достижения
         function updateAchievements() {
             const achievementList = document.getElementById('achievement-list');
             const achievementsData = [
@@ -2557,11 +2448,33 @@
             updateAchievements();
         }
 
-        // При закрытии приложения
-        window.addEventListener('beforeunload', function() {
-            backgroundMusic.pause();
-            meditationMusic.pause();
-        });
+        // Сообщения
+        function showMessage(text, callback) {
+            isGameActive = false;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+            document.getElementById('message-text').textContent = text;
+            document.getElementById('message-box').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+            
+            const button = document.getElementById('message-button');
+            button.onclick = function() {
+                document.getElementById('message-box').style.display = 'none';
+                isGameActive = true;
+                document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+                
+                if (document.getElementById('color').style.display === 'block') {
+                    document.querySelectorAll('.game-btn.active').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                }
+                
+                if (document.getElementById('number').style.display === 'block') {
+                    document.getElementById('accuracy-fill').style.width = '0';
+                }
+                
+                if (callback) callback();
+            };
+        }
     </script>
 </body>
 </html>
