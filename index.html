@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-    /* Обновленные стили для урагана */
+    /* Обновленные стили для урагана меньшего размера */
     .hurricane {
         position: absolute;
-        width: 100%;
-        height: 100%;
+        width: 80%;  /* Уменьшили ширину */
+        height: 80%; /* Уменьшили высоту */
+        left: 10%;   /* Центрирование */
+        top: 10%;    /* Центрирование */
         border-radius: 50%;
         opacity: 0.7;
-        filter: blur(40px);
+        filter: blur(30px); /* Уменьшили размытие */
         animation: hurricane-rotate 20s infinite linear;
         z-index: 1;
         transform-origin: center;
@@ -49,7 +51,7 @@
             opacity: 0.5;
         }
         25% {
-            transform: rotate(90deg) scale(1.2);
+            transform: rotate(90deg) scale(1.1); /* Уменьшили масштаб */
             opacity: 0.8;
         }
         50% {
@@ -57,7 +59,7 @@
             opacity: 0.6;
         }
         75% {
-            transform: rotate(270deg) scale(1.1);
+            transform: rotate(270deg) scale(1.05); /* Уменьшили масштаб */
             opacity: 0.9;
         }
         100% {
@@ -65,7 +67,6 @@
             opacity: 0.5;
         }
     }
-
         /* Стили для экрана входа */
         .login-screen {
             position: fixed;
@@ -103,13 +104,13 @@
         }
 
         .login-btn {
-            width: 240px;
-            height: 240px;
+            width: 200px;  /* Увеличили размер кнопки */
+            height: 200px;
             border-radius: 50%;
             background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
             border: 3px solid #8A2BE2;
             color: #E6E6FA;
-            font-size: 2.2rem;
+            font-size: 2rem; /* Увеличили текст */
             cursor: pointer;
             display: flex;
             justify-content: center;
