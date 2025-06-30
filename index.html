@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+.=<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -2689,6 +2689,8 @@ if (gameId === 'zener') {
 function checkZener(guess) {
     if (!isGameActive || document.getElementById('zener-main-card').classList.contains('flipped')) return;
     
+    const clickedBtn = event.currentTarget;
+    
     // Блокируем кнопки
     document.querySelectorAll('.zener-btn').forEach(btn => {
         btn.disabled = true;
@@ -2697,12 +2699,11 @@ function checkZener(guess) {
     // Сбрасываем предыдущий выбор
     document.querySelectorAll('.zener-btn.active').forEach(btn => {
         btn.classList.remove('active');
+        btn.style.transform = 'translateY(0)'; // Сбрасываем трансформацию
     });
     
-    // Добавляем класс active к нажатой кнопке и поднимаем ее
-    const clickedBtn = event.currentTarget;
+    // Добавляем класс active к нажатой кнопке
     clickedBtn.classList.add('active');
-    clickedBtn.style.transform = 'translateY(-5px)';
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2741,20 +2742,12 @@ function checkZener(guess) {
             // Очищаем результат
             resultDiv.textContent = '';
             
-            // Возвращаем кнопку в исходное положение с анимацией
-            clickedBtn.style.transform = 'translateY(0)';
-            clickedBtn.style.transition = 'transform 0.3s ease';
-            
-            // После завершения анимации возврата
-            setTimeout(() => {
-                // Разблокируем кнопки и сбрасываем активное состояние
-                document.querySelectorAll('.zener-btn').forEach(btn => {
-                    btn.disabled = false;
-                    btn.classList.remove('active');
-                    btn.style.transform = '';
-                    btn.style.transition = '';
-                });
-            }, 300);
+            // Разблокируем кнопки и сбрасываем активное состояние
+            document.querySelectorAll('.zener-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('active');
+                btn.style.transform = 'translateY(0)'; // Явно сбрасываем трансформацию
+            });
         }, 500);
     }, 2000);
 }
