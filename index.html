@@ -974,10 +974,11 @@
         cursor: not-allowed;
     }
 
-    .zener-btn.active {
-        border-color: #FFD700;
-        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-    }
+.zener-btn.active {
+    border-color: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: translateY(-5px);
+}
 
     /* Символы карт */
     .zener-circle { color: white; }
@@ -2699,7 +2700,8 @@ function checkZener(guess) {
     });
     
     // Добавляем класс active к нажатой кнопке
-    event.target.classList.add('active');
+    const clickedBtn = event.currentTarget;
+    clickedBtn.classList.add('active');
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2738,11 +2740,14 @@ function checkZener(guess) {
             // Очищаем результат
             resultDiv.textContent = '';
             
-            // Разблокируем кнопки
+            // Разблокируем кнопки и сбрасываем активное состояние
             document.querySelectorAll('.zener-btn').forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('active');
             });
+            
+            // Убедимся, что все кнопки сброшены
+            clickedBtn.classList.remove('active');
         }, 500);
     }, 2000);
 }
