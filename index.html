@@ -948,7 +948,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
+        transition: transform 0.3s ease; /* Добавляем плавный переход */
         position: relative;
         overflow: hidden;
     }
@@ -967,6 +967,7 @@
     .zener-btn:hover {
         background: rgba(153, 50, 204, 0.3);
         transform: translateY(-5px);
+        transition: transform 0.3s ease;
     }
 
     .zener-btn:disabled {
@@ -978,6 +979,7 @@
     border-color: #FFD700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     transform: translateY(-5px);
+    transition: transform 0.3s ease;
 }
 
     /* Символы карт */
@@ -2730,12 +2732,16 @@ function checkZener(guess) {
     updateStats();
     checkAchievements();
     
-    // Сброс через 2 секунды (увеличили время)
+    // Сброс через 2 секунды
     setTimeout(() => {
         // Возвращаем карту в исходное положение
         mainCard.classList.remove('flipped');
         
-        // Ждем еще 500мс перед разблокировкой кнопок
+        // Добавляем анимацию опускания кнопки
+        clickedBtn.style.transition = 'transform 0.3s ease';
+        clickedBtn.style.transform = 'translateY(0)';
+        
+        // Ждем завершения анимации опускания
         setTimeout(() => {
             // Очищаем результат
             resultDiv.textContent = '';
@@ -2744,11 +2750,10 @@ function checkZener(guess) {
             document.querySelectorAll('.zener-btn').forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('active');
+                btn.style.transition = '';
+                btn.style.transform = '';
             });
-            
-            // Убедимся, что все кнопки сброшены
-            clickedBtn.classList.remove('active');
-        }, 500);
+        }, 300); // Время анимации опускания
     }, 2000);
 }
 
