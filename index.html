@@ -948,7 +948,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: transform 0.3s ease; /* Добавляем плавный переход */
+        transition: all 0.3s ease; /* Добавляем плавный переход для всех свойств */
         position: relative;
         overflow: hidden;
     }
@@ -967,7 +967,6 @@
     .zener-btn:hover {
         background: rgba(153, 50, 204, 0.3);
         transform: translateY(-5px);
-        transition: transform 0.3s ease;
     }
 
     .zener-btn:disabled {
@@ -976,10 +975,9 @@
     }
 
 .zener-btn.active {
-    border-color: #FFD700;
+border-color: #FFD700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     transform: translateY(-5px);
-    transition: transform 0.3s ease;
 }
 
     /* Символы карт */
@@ -2701,9 +2699,10 @@ function checkZener(guess) {
         btn.classList.remove('active');
     });
     
-    // Добавляем класс active к нажатой кнопке
+    // Добавляем класс active к нажатой кнопке и поднимаем ее
     const clickedBtn = event.currentTarget;
     clickedBtn.classList.add('active');
+    clickedBtn.style.transform = 'translateY(-5px)';
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2737,23 +2736,26 @@ function checkZener(guess) {
         // Возвращаем карту в исходное положение
         mainCard.classList.remove('flipped');
         
-        // Добавляем анимацию опускания кнопки
-        clickedBtn.style.transition = 'transform 0.3s ease';
-        clickedBtn.style.transform = 'translateY(0)';
-        
-        // Ждем завершения анимации опускания
+        // Ждем еще 500мс перед разблокировкой кнопок
         setTimeout(() => {
             // Очищаем результат
             resultDiv.textContent = '';
             
-            // Разблокируем кнопки и сбрасываем активное состояние
-            document.querySelectorAll('.zener-btn').forEach(btn => {
-                btn.disabled = false;
-                btn.classList.remove('active');
-                btn.style.transition = '';
-                btn.style.transform = '';
-            });
-        }, 300); // Время анимации опускания
+            // Возвращаем кнопку в исходное положение с анимацией
+            clickedBtn.style.transform = 'translateY(0)';
+            clickedBtn.style.transition = 'transform 0.3s ease';
+            
+            // После завершения анимации возврата
+            setTimeout(() => {
+                // Разблокируем кнопки и сбрасываем активное состояние
+                document.querySelectorAll('.zener-btn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('active');
+                    btn.style.transform = '';
+                    btn.style.transition = '';
+                });
+            }, 300);
+        }, 500);
     }, 2000);
 }
 
