@@ -846,95 +846,24 @@
             text-align: center;
         }
 /* Обновленные стили для карт Зенера */
-.zener-btn {
-    width: 60px;
-    height: 90px;
-    border-radius: 8px;
-    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 2px solid #8A2BE2;
-    color: white;
-    font-size: 2rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    perspective: 1000px;
-    transform-style: preserve-3d;
-}
-
-.zener-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(138, 43, 226, 0.3));
-    z-index: 1;
-    border-radius: 6px;
-}
-
-.zener-btn:hover {
-    transform: translateY(-5px) rotateY(5deg);
-    box-shadow: 0 8px 16px rgba(138, 43, 226, 0.4);
-}
-
-.zener-btn.active {
-    border-color: #FFD700;
-    box-shadow: 0 10px 20px rgba(255, 215, 0, 0.5);
-    transform: translateY(-20px) rotateY(10deg);
-}
-
-.zener-btn span {
-    position: relative;
-    z-index: 2;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
-    transition: all 0.3s ease;
-}
-
-/* Символы карт с индивидуальными стилями */
-.zener-circle { 
-    color: #9370DB;
-    text-shadow: 0 0 15px #9370DB;
-}
-.zener-square { 
-    color: #1E90FF;
-    text-shadow: 0 0 15px #1E90FF;
-}
-.zener-waves { 
-    color: #00BFFF;
-    text-shadow: 0 0 15px #00BFFF;
-}
-.zener-cross { 
-    color: #FF6347;
-    text-shadow: 0 0 15px #FF6347;
-}
-.zener-star { 
-    color: #FFD700;
-    text-shadow: 0 0 15px #FFD700;
-}
-
-/* Главная карта */
 .zener-main-card {
     width: 120px;
     height: 180px;
     border-radius: 12px;
-    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 3px solid #8A2BE2;
-    box-shadow: 
-        0 8px 16px rgba(0, 0, 0, 0.3),
-        inset 0 0 10px rgba(138, 43, 226, 0.3);
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+    border: 2px solid #8A2BE2;
+    color: #E6E6FA;
+    font-size: 4rem;
     margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.3),
+        inset 0 0 20px rgba(138, 43, 226, 0.4);
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition: all 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
     cursor: pointer;
     perspective: 1000px;
 }
@@ -947,39 +876,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 9px;
-    font-size: 4rem;
-    font-weight: bold;
-    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    padding: 15px;
+    box-sizing: border-box;
 }
 
 .zener-main-card-front {
-    background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-    border: 3px solid #8A2BE2;
-    color: rgba(255, 255, 255, 0.7);
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+    border: 2px solid #8A2BE2;
+    box-shadow: inset 0 0 30px rgba(138, 43, 226, 0.3);
 }
 
 .zener-main-card-back {
-    background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
+    background: linear-gradient(145deg, #1a1a3a, #2a2a4a);
     transform: rotateY(180deg);
-    border: 3px solid #FFD700;
+    border: 2px solid #FFD700;
     box-shadow: 
-        0 0 20px rgba(255, 215, 0, 0.5),
-        inset 0 0 15px rgba(138, 43, 226, 0.5);
+        inset 0 0 20px rgba(255, 215, 0, 0.3),
+        0 0 30px rgba(255, 215, 0, 0.4);
 }
 
-.zener-main-card-back::before {
-    content: '';
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    right: 5px;
-    bottom: 5px;
-    border: 2px solid rgba(138, 43, 226, 0.5);
-    border-radius: 5px;
-    pointer-events: none;
-}
-/* Символы карт с эффектом свечения */
 .zener-symbol {
     position: absolute;
     width: 60px;
@@ -988,16 +904,72 @@
     align-items: center;
     justify-content: center;
     font-size: 3rem;
-    text-shadow: 0 0 15px currentColor;
+    text-shadow: 0 0 15px rgba(0,0,0,0.7);
     z-index: 2;
-    filter: drop-shadow(0 0 5px currentColor);
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    padding: 10px;
 }
 
-.zener-circle { color: rgba(255,255,255,0.9); }
-.zener-square { color: rgba(200,230,255,0.9); }
-.zener-waves { color: rgba(180,255,180,0.9); }
-.zener-cross { color: rgba(255,200,200,0.9); }
-.zener-star { color: rgba(255,255,150,0.9); }
+.zener-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.zener-btn {
+    width: 70px;
+    height: 100px;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
+    border: 2px solid #8A2BE2;
+    color: white;
+    font-size: 2.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.zener-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 8px;
+}
+
+.zener-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(138, 43, 226, 0.4);
+}
+
+.zener-btn:active {
+    transform: translateY(-2px);
+}
+
+.zener-btn span {
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 0 8px rgba(0,0,0,0.8);
+}
+
+/* Стили для символов */
+.zener-circle { color: #9370DB; }
+.zener-square { color: #1E90FF; }
+.zener-waves { color: #00BFFF; }
+.zener-cross { color: #FF6347; }
+.zener-star { color: #FFD700; }
 
     /* Стили для карт элементов */
     .element-card {
@@ -2693,37 +2665,43 @@ if (gameId === 'zener') {
         `).join('');
     }
 
-// Обновленная функция checkZener
+// Обновленная функция для карт Зенера
 function checkZener(guess) {
     if (!isGameActive || document.getElementById('zener-main-card').classList.contains('flipped')) return;
-    
+
+    // Получаем все кнопки карт
+    const zenerButtons = document.querySelectorAll('.zener-btn');
     const clickedBtn = event.currentTarget;
-    
-    // Анимация "вытягивания" карты
-    document.querySelectorAll('.zener-btn').forEach(btn => {
-        // Сбрасываем все карты в исходное положение
-        btn.style.transform = 'translateY(0) rotateY(0deg)';
-        btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
-        btn.disabled = true;
+
+    // Блокируем все кнопки
+    zenerButtons.forEach(btn => btn.disabled = true);
+
+    // Сбрасываем предыдущий выбор с анимацией
+    zenerButtons.forEach(btn => {
+        if (btn !== clickedBtn) {
+            btn.style.transform = 'translateY(0)';
+            btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+        }
     });
-    
-    // Анимируем выбранную карту
-    clickedBtn.style.transform = 'translateY(-20px) rotateY(10deg)';
-    clickedBtn.style.boxShadow = '0 10px 20px rgba(138, 43, 226, 0.5)';
-    
+
+    // Анимируем нажатую кнопку
+    clickedBtn.style.transform = 'translateY(-10px)';
+    clickedBtn.style.boxShadow = '0 8px 16px rgba(255, 215, 0, 0.6)';
+
+    // Выбираем случайный символ
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
     stats.zener.total++;
-    
-    // Показываем выбранный символ на большой карте
+
+    // Обновляем главную карту
     const cardSymbol = document.getElementById('zener-card-symbol');
     cardSymbol.textContent = target;
     cardSymbol.className = `zener-symbol ${getSymbolClass(target)}`;
-    
-    // Анимация переворота карты
+
+    // Анимация переворота главной карты
     const mainCard = document.getElementById('zener-main-card');
     mainCard.classList.add('flipped');
-    
+
     // Проверяем результат
     const resultDiv = document.getElementById('zener-result');
     if (guess === target) {
@@ -2734,10 +2712,10 @@ function checkZener(guess) {
         resultDiv.textContent = '❌ Неверно';
         resultDiv.style.color = '#F44336';
     }
-    
+
     updateStats();
     checkAchievements();
-    
+
     // Сброс через 2 секунды
     setTimeout(() => {
         mainCard.classList.remove('flipped');
@@ -2745,11 +2723,11 @@ function checkZener(guess) {
         setTimeout(() => {
             resultDiv.textContent = '';
             
-            // Плавный возврат всех карт в исходное положение
-            document.querySelectorAll('.zener-btn').forEach(btn => {
-                btn.style.transform = 'translateY(0) rotateY(0deg)';
-                btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
+            // Плавный сброс всех кнопок
+            zenerButtons.forEach(btn => {
                 btn.disabled = false;
+                btn.style.transform = 'translateY(0)';
+                btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
             });
         }, 500);
     }, 2000);
