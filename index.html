@@ -2674,20 +2674,17 @@ function checkZener(guess) {
     
     const clickedBtn = event.currentTarget;
     
-    // Анимация "вытягивания" для всех карт
+    // Анимация "вытягивания" карты
     document.querySelectorAll('.zener-btn').forEach(btn => {
-        btn.style.transform = 'translateY(5px)'; // Опускаем все карты
-        btn.style.boxShadow = '0 2px 5px rgba(0,0,0,0.2)';
-    });
-    
-    // Поднимаем выбранную карту
-    clickedBtn.style.transform = 'translateY(-15px)';
-    clickedBtn.style.boxShadow = '0 10px 20px rgba(0,0,0,0.3)';
-    
-    // Блокируем кнопки
-    document.querySelectorAll('.zener-btn').forEach(btn => {
+        // Сбрасываем все карты в исходное положение
+        btn.style.transform = 'translateY(0) rotateY(0deg)';
+        btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
         btn.disabled = true;
     });
+    
+    // Анимируем выбранную карту
+    clickedBtn.style.transform = 'translateY(-20px) rotateY(10deg)';
+    clickedBtn.style.boxShadow = '0 10px 20px rgba(138, 43, 226, 0.5)';
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2718,19 +2715,16 @@ function checkZener(guess) {
     
     // Сброс через 2 секунды
     setTimeout(() => {
-        // Возвращаем карту в исходное положение
         mainCard.classList.remove('flipped');
         
-        // Ждем еще 500мс перед разблокировкой кнопок
         setTimeout(() => {
-            // Очищаем результат
             resultDiv.textContent = '';
             
-            // Разблокируем кнопки и возвращаем в исходное положение
+            // Плавный возврат всех карт в исходное положение
             document.querySelectorAll('.zener-btn').forEach(btn => {
+                btn.style.transform = 'translateY(0) rotateY(0deg)';
+                btn.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.3)';
                 btn.disabled = false;
-                btn.style.transform = 'translateY(0)';
-                btn.style.boxShadow = '0 5px 15px rgba(138, 43, 226, 0.5)';
             });
         }, 500);
     }, 2000);
