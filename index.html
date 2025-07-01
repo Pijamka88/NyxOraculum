@@ -845,27 +845,22 @@
             margin-top: 10px;
             text-align: center;
         }
-/* Обновленные стили для карт Зенера */
+/* Стили для карт Зенера */
 .zener-main-card {
-    width: 120px;
-    height: 180px;
+    width: 150px;
+    height: 220px;
     border-radius: 12px;
-    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
-    border: 3px solid #8A2BE2;
-    color: #E6E6FA;
-    font-size: 4rem;
-    margin: 0 auto 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.4),
-        inset 0 0 15px rgba(138, 43, 226, 0.3);
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
-    cursor: pointer;
     perspective: 1000px;
+    margin: 0 auto 25px;
+    cursor: pointer;
+    transition: transform 0.6s;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.zener-main-card.flipped {
+    transform: rotateY(180deg);
 }
 
 .zener-main-card-face {
@@ -873,57 +868,69 @@
     width: 100%;
     height: 100%;
     backface-visibility: hidden;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    padding: 15px;
-    box-sizing: border-box;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .zener-main-card-front {
-    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
-    border: 3px solid #8A2BE2;
-    box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.2);
+    background: linear-gradient(145deg, #2A2141, #1A1A2E);
+    border: 2px solid #8A2BE2;
+    transform: rotateY(0deg);
 }
 
 .zener-main-card-back {
-    background: linear-gradient(145deg, #1a1a3a, #2a2a4a);
+    background: linear-gradient(145deg, #1A1A2E, #2A2141);
+    border: 2px solid #FFD700;
     transform: rotateY(180deg);
-    border: 3px solid #FFD700;
-    box-shadow: 
-        0 0 20px rgba(255, 215, 0, 0.5),
-        inset 0 0 15px rgba(255, 215, 0, 0.3);
 }
 
-.zener-symbol {
+.card-pattern {
     position: absolute;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at center, transparent 60%, rgba(138, 43, 226, 0.1) 100%),
+        repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 1px, transparent 1px, transparent 10px);
+    border-radius: 8px;
+}
+
+.card-question {
+    font-size: 3.5rem;
+    color: #E6E6FA;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.7);
     z-index: 2;
 }
 
-.zener-result {
-    margin: 15px auto;
-    font-size: 1.2rem;
-    min-height: 24px;
-    text-align: center;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
+.zener-symbol {
+    font-size: 4rem;
+    color: #E6E6FA;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+    z-index: 2;
 }
 
+.zener-result-container {
+    display: flex;
+    justify-content: center;
+    margin: 15px 0;
+    min-height: 40px;
+}
+
+.zener-result {
+    font-size: 1.3rem;
+    padding: 8px 20px;
+    border-radius: 20px;
+    background: rgba(26, 26, 46, 0.8);
+    text-align: center;
+}
+
+/* Кнопки карт */
 .zener-buttons {
     display: flex;
     justify-content: center;
-    gap: 15px;
+    gap: 12px;
     margin: 25px 0;
     flex-wrap: wrap;
 }
@@ -931,44 +938,61 @@
 .zener-btn {
     width: 70px;
     height: 100px;
-    border-radius: 10px;
-    background: linear-gradient(145deg, #2a2a4a, #1a1a3a);
-    border: 2px solid #8A2BE2;
-    color: white;
-    font-size: 2.2rem;
+    border: none;
+    background: transparent;
+    perspective: 1000px;
     cursor: pointer;
+    padding: 0;
+    transform-style: preserve-3d;
+    transition: all 0.3s ease;
+}
+
+.zener-btn-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    border-radius: 8px;
+    background: linear-gradient(145deg, #2A2141, #1A1A2E);
+    border: 2px solid #8A2BE2;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0.2, 0.2, 1);
-    position: relative;
-    overflow: hidden;
-    box-shadow: 
-        0 4px 10px rgba(0, 0, 0, 0.3),
-        inset 0 0 10px rgba(138, 43, 226, 0.2);
 }
 
-.zener-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 
-        0 8px 15px rgba(0, 0, 0, 0.4),
-        inset 0 0 15px rgba(138, 43, 226, 0.3);
+.zener-btn:hover .zener-btn-inner {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(138, 43, 226, 0.5);
 }
 
-.zener-btn.active, .zener-btn:active {
-    transform: translateY(-20px);
+.zener-btn.active .zener-btn-inner {
+    transform: translateY(-8px);
     border-color: #FFD700;
-    box-shadow: 
-        0 12px 20px rgba(255, 215, 0, 0.6),
-        inset 0 0 20px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
 }
 
-/* Стили символов */
-.zener-circle { color: #9370DB; }
-.zener-square { color: #1E90FF; }
-.zener-waves { color: #00BFFF; }
-.zener-cross { color: #FF6347; }
-.zener-star { color: #FFD700; }
+.zener-btn span {
+    font-size: 2.5rem;
+    color: #E6E6FA;
+    text-shadow: 0 0 8px rgba(138, 43, 226, 0.7);
+    transition: all 0.3s;
+}
+
+.zener-btn.active span {
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+}
+
+.zener-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.zener-btn:disabled .zener-btn-inner {
+    transform: none !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
 
     /* Стили для карт элементов */
     .element-card {
@@ -1448,20 +1472,46 @@
         <p>Угадайте символ:</p>
         
         <div class="zener-main-card" id="zener-main-card">
-            <div class="zener-main-card-face zener-main-card-front">?</div>
+            <div class="zener-main-card-face zener-main-card-front">
+                <div class="card-pattern"></div>
+                <div class="card-question">?</div>
+            </div>
             <div class="zener-main-card-face zener-main-card-back">
+                <div class="card-pattern"></div>
                 <div class="zener-symbol" id="zener-card-symbol"></div>
             </div>
         </div>
         
-        <div class="zener-result" id="zener-result"></div>
+        <div class="zener-result-container">
+            <div class="zener-result" id="zener-result"></div>
+        </div>
         
         <div class="zener-buttons">
-            <button class="zener-btn" onclick="checkZener('○')"><span>○</span></button>
-            <button class="zener-btn" onclick="checkZener('□')"><span>□</span></button>
-            <button class="zener-btn" onclick="checkZener('～')"><span>～</span></button>
-            <button class="zener-btn" onclick="checkZener('✚')"><span>✚</span></button>
-            <button class="zener-btn" onclick="checkZener('★')"><span>★</span></button>
+            <button class="zener-btn" onclick="checkZener('○')" id="zener-circle">
+                <div class="zener-btn-inner">
+                    <span>○</span>
+                </div>
+            </button>
+            <button class="zener-btn" onclick="checkZener('□')" id="zener-square">
+                <div class="zener-btn-inner">
+                    <span>□</span>
+                </div>
+            </button>
+            <button class="zener-btn" onclick="checkZener('～')" id="zener-waves">
+                <div class="zener-btn-inner">
+                    <span>～</span>
+                </div>
+            </button>
+            <button class="zener-btn" onclick="checkZener('✚')" id="zener-cross">
+                <div class="zener-btn-inner">
+                    <span>✚</span>
+                </div>
+            </button>
+            <button class="zener-btn" onclick="checkZener('★')" id="zener-star">
+                <div class="zener-btn-inner">
+                    <span>★</span>
+                </div>
+            </button>
         </div>
         
         <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
@@ -2638,7 +2688,6 @@ if (gameId === 'zener') {
     }
 
 // Обновленная функция для карт Зенера
-// Обновленная функция checkZener
 function checkZener(guess) {
     if (!isGameActive || document.getElementById('zener-main-card').classList.contains('flipped')) return;
     
@@ -2648,11 +2697,15 @@ function checkZener(guess) {
     // Блокируем все кнопки
     allButtons.forEach(btn => {
         btn.disabled = true;
-        btn.style.transform = 'translateY(0)'; // Сбрасываем трансформацию
     });
     
-    // Поднимаем только выбранную карту
-    clickedBtn.style.transform = 'translateY(-20px)';
+    // Сбрасываем предыдущий выбор
+    allButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Активируем нажатую кнопку
+    clickedBtn.classList.add('active');
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
@@ -2667,15 +2720,15 @@ function checkZener(guess) {
     const mainCard = document.getElementById('zener-main-card');
     mainCard.classList.add('flipped');
     
-    // Проверяем результат
+    // Показываем результат
     const resultDiv = document.getElementById('zener-result');
-    resultDiv.style.textAlign = 'center'; // Центрируем текст результата
-    
     if (guess === target) {
         stats.zener.correct++;
-        resultDiv.innerHTML = '<div style="margin: 10px auto;">✅ Верно!</div>';
+        resultDiv.textContent = '✅ Верно!';
+        resultDiv.style.color = '#4CAF50';
     } else {
-        resultDiv.innerHTML = '<div style="margin: 10px auto;">❌ Неверно</div>';
+        resultDiv.textContent = `❌ Неверно (было: ${target})`;
+        resultDiv.style.color = '#F44336';
     }
     
     updateStats();
@@ -2686,15 +2739,15 @@ function checkZener(guess) {
         // Возвращаем карту в исходное положение
         mainCard.classList.remove('flipped');
         
-        // Ждем еще 500мс перед разблокировкой кнопок
+        // Ждем завершения анимации (еще 500мс)
         setTimeout(() => {
             // Очищаем результат
-            resultDiv.innerHTML = '';
+            resultDiv.textContent = '';
             
-            // Разблокируем кнопки и возвращаем в исходное положение
+            // Разблокируем кнопки и сбрасываем состояния
             allButtons.forEach(btn => {
                 btn.disabled = false;
-                btn.style.transform = 'translateY(0)';
+                btn.classList.remove('active');
             });
         }, 500);
     }, 2000);
