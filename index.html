@@ -849,22 +849,25 @@
 .zener-main-card {
     width: 120px;
     height: 180px;
-    border-radius: 12px;
+    border-radius: 10px;
     background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
     border: 3px solid #8A2BE2;
     color: #E6E6FA;
-    margin: 0 auto 25px;
+    font-size: 4rem;
+    margin: 0 auto 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.4),
-        inset 0 0 15px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transition: transform 0.8s;
     cursor: pointer;
     perspective: 1000px;
+}
+
+.zener-main-card.flipped {
+    transform: rotateY(180deg);
 }
 
 .zener-main-card-face {
@@ -875,94 +878,111 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;
-    padding: 15px;
-    box-sizing: border-box;
+    border-radius: 7px;
 }
 
 .zener-main-card-front {
     background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
     border: 3px solid #8A2BE2;
-    font-size: 3.5rem;
-    text-shadow: 0 0 15px rgba(138, 43, 226, 0.7);
+    box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.3);
 }
 
 .zener-main-card-back {
     background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
     transform: rotateY(180deg);
     border: 3px solid #FFD700;
-    box-shadow: 
-        inset 0 0 20px rgba(255, 215, 0, 0.3),
-        0 0 25px rgba(255, 215, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5),
+                inset 0 0 20px rgba(255, 215, 0, 0.2);
 }
 
-.zener-symbol {
-    font-size: 4rem;
-    text-shadow: 0 0 15px rgba(0,0,0,0.7);
-}
-
-.zener-result {
-    margin: 20px 0;
-    font-size: 1.3rem;
-    min-height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    text-align: center;
-}
-
+/* Обновленные стили для кнопок карт */
 .zener-buttons {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin: 25px 0;
-    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
 }
 
 .zener-btn {
-    width: 65px;
-    height: 95px;
-    border-radius: 10px;
+    width: 60px;
+    height: 90px;
+    border-radius: 8px;
     background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
     border: 2px solid #8A2BE2;
     color: white;
-    font-size: 2.2rem;
+    font-size: 2rem;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    box-shadow: 
-        0 4px 10px rgba(0, 0, 0, 0.3),
-        inset 0 0 10px rgba(138, 43, 226, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.zener-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.2);
+    z-index: 1;
 }
 
 .zener-btn:hover {
     transform: translateY(-5px);
-    box-shadow: 
-        0 8px 20px rgba(0, 0, 0, 0.4),
-        inset 0 0 15px rgba(138, 43, 226, 0.3);
+    box-shadow: 0 8px 16px rgba(138, 43, 226, 0.5);
+}
+
+.zener-btn:active {
+    transform: translateY(0);
 }
 
 .zener-btn.active {
     border-color: #FFD700;
-    box-shadow: 
-        0 0 15px rgba(255, 215, 0, 0.6),
-        inset 0 0 10px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.7),
+                inset 0 0 10px rgba(255, 215, 0, 0.3);
     transform: translateY(-5px);
-    z-index: 2;
 }
 
-/* Стили для символов */
-.zener-circle { color: #9370DB; }
-.zener-square { color: #1E90FF; }
-.zener-waves { color: #00BFFF; }
-.zener-cross { color: #FF6347; }
-.zener-star { color: #FFD700; }
+/* Стили для результата */
+.zener-result {
+    margin: 15px 0;
+    font-size: 1.2rem;
+    min-height: 24px;
+    text-align: center;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+}
 
+/* Символы карт с эффектом свечения */
+.zener-circle { 
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.zener-square { 
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.zener-waves { 
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.zener-cross { 
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
+.zener-star { 
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.7);
+}
     /* Стили для карт элементов */
     .element-card {
         width: 60px;
@@ -1441,46 +1461,20 @@
         <p>Угадайте символ:</p>
         
         <div class="zener-main-card" id="zener-main-card">
-            <div class="zener-main-card-face zener-main-card-front">
-                <div class="card-pattern"></div>
-                <div class="card-question">?</div>
-            </div>
+            <div class="zener-main-card-face zener-main-card-front">?</div>
             <div class="zener-main-card-face zener-main-card-back">
-                <div class="card-pattern"></div>
                 <div class="zener-symbol" id="zener-card-symbol"></div>
             </div>
         </div>
         
-        <div class="zener-result-container">
-            <div class="zener-result" id="zener-result"></div>
-        </div>
+        <div class="zener-result" id="zener-result"></div>
         
         <div class="zener-buttons">
-            <button class="zener-btn" onclick="checkZener('○')" id="zener-circle">
-                <div class="zener-btn-inner">
-                    <span>○</span>
-                </div>
-            </button>
-            <button class="zener-btn" onclick="checkZener('□')" id="zener-square">
-                <div class="zener-btn-inner">
-                    <span>□</span>
-                </div>
-            </button>
-            <button class="zener-btn" onclick="checkZener('～')" id="zener-waves">
-                <div class="zener-btn-inner">
-                    <span>～</span>
-                </div>
-            </button>
-            <button class="zener-btn" onclick="checkZener('✚')" id="zener-cross">
-                <div class="zener-btn-inner">
-                    <span>✚</span>
-                </div>
-            </button>
-            <button class="zener-btn" onclick="checkZener('★')" id="zener-star">
-                <div class="zener-btn-inner">
-                    <span>★</span>
-                </div>
-            </button>
+            <button class="zener-btn" onclick="checkZener('○')" id="zener-circle"><span>○</span></button>
+            <button class="zener-btn" onclick="checkZener('□')" id="zener-square"><span>□</span></button>
+            <button class="zener-btn" onclick="checkZener('～')" id="zener-waves"><span>～</span></button>
+            <button class="zener-btn" onclick="checkZener('✚')" id="zener-cross"><span>✚</span></button>
+            <button class="zener-btn" onclick="checkZener('★')" id="zener-star"><span>★</span></button>
         </div>
         
         <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
@@ -2661,23 +2655,27 @@ function checkZener(guess) {
     if (!isGameActive || document.getElementById('zener-main-card').classList.contains('flipped')) return;
     
     const clickedBtn = event.currentTarget;
-    const allButtons = document.querySelectorAll('.zener-btn');
     
     // Блокируем все кнопки
-    allButtons.forEach(btn => {
+    document.querySelectorAll('.zener-btn').forEach(btn => {
         btn.disabled = true;
+    });
+    
+    // Сбрасываем предыдущий выбор
+    document.querySelectorAll('.zener-btn.active').forEach(btn => {
         btn.classList.remove('active');
         btn.style.transform = 'translateY(0)';
     });
     
-    // Анимируем нажатую кнопку
+    // Активируем нажатую кнопку
     clickedBtn.classList.add('active');
+    clickedBtn.style.transform = 'translateY(-5px)';
     
     const symbols = ['○', '□', '～', '✚', '★'];
     const target = symbols[Math.floor(Math.random() * symbols.length)];
     stats.zener.total++;
     
-    // Показываем выбранный символ на большой карте
+    // Показываем выбранный символ
     const cardSymbol = document.getElementById('zener-card-symbol');
     cardSymbol.textContent = target;
     cardSymbol.className = `zener-symbol ${getSymbolClass(target)}`;
@@ -2688,15 +2686,17 @@ function checkZener(guess) {
     
     // Центрируем сообщение о результате
     const resultDiv = document.getElementById('zener-result');
-    resultDiv.style.textAlign = 'center';
-    resultDiv.style.width = '100%';
-    resultDiv.style.margin = '15px auto';
+    resultDiv.style.display = 'flex';
+    resultDiv.style.justifyContent = 'center';
+    resultDiv.style.alignItems = 'center';
     
     if (guess === target) {
         stats.zener.correct++;
-        resultDiv.innerHTML = '<span style="color:#4CAF50">✅ Верно!</span>';
+        resultDiv.innerHTML = '<span style="display: inline-block;">✅ Верно!</span>';
+        resultDiv.style.color = '#4CAF50';
     } else {
-        resultDiv.innerHTML = '<span style="color:#F44336">❌ Неверно</span>';
+        resultDiv.innerHTML = '<span style="display: inline-block;">❌ Неверно</span>';
+        resultDiv.style.color = '#F44336';
     }
     
     updateStats();
@@ -2707,8 +2707,11 @@ function checkZener(guess) {
         mainCard.classList.remove('flipped');
         
         setTimeout(() => {
-            resultDiv.innerHTML = '';
-            allButtons.forEach(btn => {
+            resultDiv.textContent = '';
+            resultDiv.style.display = '';
+            
+            // Разблокируем и сбрасываем все кнопки
+            document.querySelectorAll('.zener-btn').forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('active');
                 btn.style.transform = 'translateY(0)';
@@ -2717,16 +2720,16 @@ function checkZener(guess) {
     }, 2000);
 }
 
-    function getSymbolClass(symbol) {
-        switch(symbol) {
-            case '○': return 'zener-circle';
-            case '□': return 'zener-square';
-            case '～': return 'zener-waves';
-            case '✚': return 'zener-cross';
-            case '★': return 'zener-star';
-            default: return '';
-        }
+function getSymbolClass(symbol) {
+    switch(symbol) {
+        case '○': return 'zener-circle';
+        case '□': return 'zener-square';
+        case '～': return 'zener-waves';
+        case '✚': return 'zener-cross';
+        case '★': return 'zener-star';
+        default: return '';
     }
+}
 
     // Цветовая интуиция
 function checkColor(guess) {
