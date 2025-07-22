@@ -2814,9 +2814,9 @@ function checkColor(guess) {
                 // Убираем подсветку через дополнительную задержку
                 setTimeout(() => {
                     selectedVortex.classList.remove('correct');
-                }, 500);
+                }, 150);
             });
-        }, 1500);
+        }, 700);
     } else {
         selectedVortex.classList.add('wrong');
         setTimeout(() => {
@@ -2829,9 +2829,9 @@ function checkColor(guess) {
                 // Убираем подсветку через дополнительную задержку
                 setTimeout(() => {
                     selectedVortex.classList.remove('wrong');
-                }, 500);
+                }, 150);
             });
-        }, 1500);
+        }, 700);
     }
     
     updateStats();
