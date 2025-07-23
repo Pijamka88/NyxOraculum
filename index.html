@@ -5,46 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NyxOraculum</title>
     <style>
-        /* Обновленные стили для урагана */
-        .hurricane {
-            position: absolute;
-            width: 80%;
-            height: 80%;
-            left: 10%;
-            top: 10%;
-            border-radius: 50%;
-            opacity: 0.7;
-            filter: blur(30px);
-            animation: hurricane-rotate 20s infinite linear;
-            z-index: 1;
-            transform-origin: center;
-            mix-blend-mode: screen;
-        }
+    /* Обновленные стили для урагана меньшего размера */
+    .hurricane {
+        position: absolute;
+        width: 80%;
+        height: 80%;
+        left: 10%;
+        top: 10%;
+        border-radius: 50%;
+        opacity: 0.7;
+        filter: blur(30px);
+        animation: hurricane-rotate 20s infinite linear;
+        z-index: 1;
+        transform-origin: center;
+        mix-blend-mode: screen;
+    }
 
-        .hurricane:nth-child(1) {
-            background: radial-gradient(circle at 30% 50%, rgba(138, 43, 226, 0.8), transparent 70%);
-            animation-delay: 0s;
-            animation-duration: 25s;
-        }
-        .hurricane:nth-child(2) {
-            background: radial-gradient(circle at 70% 50%, rgba(0, 191, 255, 0.8), transparent 70%);
-            animation-delay: -5s;
-            animation-duration: 30s;
-        }
-        .hurricane:nth-child(3) {
-            background: radial-gradient(circle at 50% 30%, rgba(255, 20, 147, 0.8), transparent 70%);
-            animation-delay: -10s;
-            animation-duration: 35s;
-        }
+    /* Цвета урагана */
+    .hurricane:nth-child(1) {
+        background: radial-gradient(circle at 30% 50%, 
+                    rgba(138, 43, 226, 0.8),
+                    transparent 70%);
+        animation-delay: 0s;
+        animation-duration: 25s;
+    }
+    .hurricane:nth-child(2) {
+        background: radial-gradient(circle at 70% 50%, 
+                    rgba(0, 191, 255, 0.8),
+                    transparent 70%);
+        animation-delay: -5s;
+        animation-duration: 30s;
+    }
+    .hurricane:nth-child(3) {
+        background: radial-gradient(circle at 50% 30%, 
+                    rgba(255, 20, 147, 0.8),
+                    transparent 70%);
+        animation-delay: -10s;
+        animation-duration: 35s;
+    }
 
-        @keyframes hurricane-rotate {
-            0% { transform: rotate(0deg) scale(1); opacity: 0.5; }
-            25% { transform: rotate(90deg) scale(1.1); opacity: 0.8; }
-            50% { transform: rotate(180deg) scale(1); opacity: 0.6; }
-            75% { transform: rotate(270deg) scale(1.05); opacity: 0.9; }
-            100% { transform: rotate(360deg) scale(1); opacity: 0.5; }
+    /* Анимация вращения урагана */
+    @keyframes hurricane-rotate {
+        0% {
+            transform: rotate(0deg) scale(1);
+            opacity: 0.5;
         }
-
+        25% {
+            transform: rotate(90deg) scale(1.1);
+            opacity: 0.8;
+        }
+        50% {
+            transform: rotate(180deg) scale(1);
+            opacity: 0.6;
+        }
+        75% {
+            transform: rotate(270deg) scale(1.05);
+            opacity: 0.9;
+        }
+        100% {
+            transform: rotate(360deg) scale(1);
+            opacity: 0.5;
+        }
+    }
         /* Стили для экрана входа */
         .login-screen {
             position: fixed;
@@ -116,7 +138,64 @@
             transform: scale(0.95);
         }
 
-        /* Основные стили */
+        /* Обновленные стили для монеты */
+        .coin {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            border: 4px solid #B8860B;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5),
+                        inset 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .coin-front {
+            background: linear-gradient(145deg, #FFD700, #B8860B);
+            transform: rotateY(0deg);
+        }
+
+        .coin-back {
+            background: linear-gradient(145deg, #B8860B, #FFD700);
+            transform: rotateY(180deg);
+        }
+
+        /* Обновленные стили для прогресс-бара медитации */
+        .meditation-progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(138, 43, 226, 0.2);
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        /* Остальные стили остаются без изменений */
         body {
             font-family: 'Arial', sans-serif;
             background: radial-gradient(circle, #1A1A2E, #0F0F1A);
@@ -228,26 +307,30 @@
             filter: brightness(0) invert(1);
         }
 
-        .game-window {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
-            border: 2px solid #8A2BE2;
-            z-index: 1000;
-            width: 90%;
-            max-width: 400px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+.game-window {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(26, 26, 46, 0.95);
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    border: 2px solid #8A2BE2;
+    z-index: 1000;
+    width: 90%;
+    max-width: 400px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
 
-        .game-window.show {
-            opacity: 1;
+.game-window.show {
+    opacity: 1;
+}
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .game-window h2 {
@@ -257,323 +340,63 @@
             text-align: center;
         }
 
-        .portals-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-        }
+    .game-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 0 auto;
+        max-width: 350px;
+        flex-wrap: wrap;
+    }
 
-        .portal {
-            width: 110px;
-            height: 140px;
-            position: relative;
-            cursor: pointer;
-            border-radius: 50%;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
+.game-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    box-shadow: 
+        0 0 8px rgba(255, 255, 255, 0.2),
+        inset 0 0 5px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
 
-        .portal::before {
-            content: '';
-            position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 120%;
-            background: conic-gradient(
-                from 0deg,
-                var(--portal-color-1) 0%,
-                var(--portal-color-2) 30%,
-                var(--portal-color-3) 70%,
-                var(--portal-color-1) 100%
-            );
-            border-radius: 50%;
-            animation: vortex-rotate 8s linear infinite;
-            z-index: 0;
-            opacity: 0.7;
-            filter: blur(10px);
-        }
+    .game-btn::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        right: -10px;
+        bottom: -10px;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        opacity: 0.3;
+        border-radius: 50%;
+    }
 
-        @keyframes vortex-rotate {
-            0% { transform: rotate(0deg) scale(1); opacity: 0.7; }
-            50% { transform: rotate(180deg) scale(1.1); opacity: 0.9; }
-            100% { transform: rotate(360deg) scale(1); opacity: 0.7; }
-        }
+    .game-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 
+            0 0 25px rgba(255, 255, 255, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.3);
+    }
 
-        .portal-inner {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, 
-                rgba(20, 20, 30, 0.9) 30%, 
-                rgba(10, 10, 20, 1) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 2;
-            overflow: hidden;
-            box-shadow: 
-                inset 0 0 15px rgba(0, 0, 0, 0.8),
-                0 0 10px rgba(255, 255, 255, 0.1);
-        }
+    .game-btn:active {
+        transform: scale(0.95);
+    }
 
-        .portal-symbol {
-            font-size: 2.8rem;
-            margin-bottom: 8px;
-            text-shadow: 0 0 15px currentColor;
-            transition: all 0.3s ease-out;
-            z-index: 3;
-            position: relative;
-        }
-
-        .portal-name {
-            font-size: 0.9rem;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 4px 12px;
-            border-radius: 15px;
-            transition: all 0.3s ease-out;
-            z-index: 3;
-            position: relative;
-            backdrop-filter: blur(2px);
-        }
-
-        .portal-particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .portal-particle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            border-radius: 50%;
-            background: currentColor;
-            opacity: 0;
-            z-index: 1;
-            animation: portal-particle-spiral 4s infinite linear;
-        }
-
-        @keyframes portal-particle-spiral {
-            0% { 
-                transform: translate(0, 0) scale(1); 
-                opacity: 0; 
-            }
-            10% { opacity: 0.8; }
-            100% { 
-                transform: 
-                    translate(
-                        calc(cos(var(--particle-angle)) * var(--particle-distance)), 
-                        calc(sin(var(--particle-angle)) * var(--particle-distance))
-                    ) 
-                    scale(0.1); 
-                opacity: 0; 
-            }
-        }
-
-        .portal:hover {
-            transform: scale(1.05);
-        }
-
-        .portal:hover .portal-symbol {
-            transform: scale(1.15);
-            text-shadow: 0 0 25px currentColor;
-        }
-
-        .portal:hover .portal-name {
-            background: rgba(0, 0, 0, 0.9);
-            transform: scale(1.05);
-        }
-
-        .portal.active {
-            transform: scale(0.95);
-        }
-
-        .portal.correct {
-            animation: portal-correct-pulse 1.5s infinite;
-        }
-
-        .portal.wrong {
-            animation: portal-wrong-pulse 1.5s infinite;
-        }
-
-        @keyframes portal-correct-pulse {
-            0% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(76, 175, 80, 0.9); }
-            100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
-        }
-
-        @keyframes portal-wrong-pulse {
-            0% { box-shadow: 0 0 10px rgba(244, 67, 54, 0.5); }
-            50% { box-shadow: 0 0 30px rgba(244, 67, 54, 0.9); }
-            100% { box-shadow: 0 0 10px rgba(244, 67, 54, 0.5); }
-        }
-
-        .portal[data-element="▲"] {
-            --portal-color-1: #FF4500;
-            --portal-color-2: #FF8C00;
-            --portal-color-3: #FF6347;
-            color: #FF4500;
-            box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
-        }
-        .portal[data-element="▼"] {
-            --portal-color-1: #1E90FF;
-            --portal-color-2: #00BFFF;
-            --portal-color-3: #87CEFA;
-            color: #1E90FF;
-            box-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
-        }
-        .portal[data-element="■"] {
-            --portal-color-1: #8B4513;
-            --portal-color-2: #A0522D;
-            --portal-color-3: #D2691E;
-            color: #8B4513;
-            box-shadow: 0 0 20px rgba(139, 69, 19, 0.5);
-        }
-        .portal[data-element="◊"] {
-            --portal-color-1: #87CEEB;
-            --portal-color-2: #ADD8E6;
-            --portal-color-3: #B0E0E6;
-            color: #87CEEB;
-            box-shadow: 0 0 20px rgba(135, 206, 235, 0.5);
-        }
-        .portal[data-element="○"] {
-            --portal-color-1: #9370DB;
-            --portal-color-2: #8A2BE2;
-            --portal-color-3: #9932CC;
-            color: #9370DB;
-            box-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
-        }
-
-        .soft-vortex-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin: 30px 0;
-        }
-
-        .soft-vortex {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            background: rgba(30, 30, 50, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 
-                0 0 10px rgba(0, 0, 0, 0.2),
-                inset 0 0 5px rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            backdrop-filter: blur(2px);
-            overflow: hidden;
-        }
-
-        .soft-vortex:hover {
-            transform: scale(1.08);
-            box-shadow: 
-                0 0 20px rgba(0, 0, 0, 0.3),
-                inset 0 0 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .vortex-essence {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                var(--vortex-color-1),
-                var(--vortex-color-2),
-                var(--vortex-color-3),
-                var(--vortex-color-1)
-            );
-            animation: 
-                essence-spin 5s linear infinite,
-                essence-pulse 2s ease-in-out infinite alternate;
-            opacity: 0.9;
-            filter: blur(6px);
-            transform-origin: center;
-        }
-
-        @keyframes essence-pulse {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
-
-        .vortex-essence[data-color="красный"] {
-            --vortex-color-1: rgba(255, 50, 50, 0.9);
-            --vortex-color-2: rgba(255, 100, 50, 0.9);
-            --vortex-color-3: rgba(255, 150, 50, 0.9);
-        }
-
-        .vortex-essence[data-color="синий"] {
-            --vortex-color-1: rgba(50, 100, 255, 0.9);
-            --vortex-color-2: rgba(50, 150, 255, 0.9);
-            --vortex-color-3: rgba(100, 200, 255, 0.9);
-        }
-
-        .vortex-essence[data-color="зеленый"] {
-            --vortex-color-1: rgba(50, 255, 50, 0.9);
-            --vortex-color-2: rgba(100, 255, 100, 0.9);
-            --vortex-color-3: rgba(150, 255, 150, 0.9);
-        }
-
-        .vortex-essence[data-color="желтый"] {
-            --vortex-color-1: rgba(255, 255, 50, 0.9);
-            --vortex-color-2: rgba(255, 225, 50, 0.9);
-            --vortex-color-3: rgba(255, 200, 50, 0.9);
-        }
-
-        .vortex-essence[data-color="фиолетовый"] {
-            --vortex-color-1: rgba(150, 50, 255, 0.9);
-            --vortex-color-2: rgba(180, 80, 255, 0.9);
-            --vortex-color-3: rgba(200, 120, 255, 0.9);
-        }
-
-        @keyframes essence-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes soft-pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .soft-vortex.active {
-            animation: soft-pulse 1.5s infinite;
-        }
-
-        .soft-vortex.correct {
-            animation: none;
-            border-color: rgba(100, 255, 100, 0.5);
-            box-shadow: 
-                0 0 25px rgba(76, 175, 80, 0.5),
-                inset 0 0 10px rgba(100, 255, 100, 0.3);
-        }
-
-        .soft-vortex.wrong {
-            animation: none;
-            border-color: rgba(255, 100, 100, 0.5);
-            box-shadow: 
-                0 0 25px rgba(244, 67, 54, 0.5),
-                inset 0 0 10px rgba(255, 100, 100, 0.3);
-        }
-
-        /* Остальные стили остаются без изменений */
+    .game-btn.active {
+        border-color: #FFD700;
+        box-shadow: 
+            0 0 30px rgba(255, 215, 0, 0.7),
+            inset 0 0 20px rgba(255, 215, 0, 0.3);
+    }
         .telekinesis-container {
             width: 100%;
             height: 300px;
@@ -826,44 +649,6 @@
             height: 24px;
         }
 
-        .coin {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            position: relative;
-            transform-style: preserve-3d;
-            perspective: 1000px;
-            border: 4px solid #B8860B;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5),
-                        inset 0 0 10px rgba(0, 0, 0, 0.3);
-        }
-
-        .coin-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
-
-        .coin-front {
-            background: linear-gradient(145deg, #FFD700, #B8860B);
-            transform: rotateY(0deg);
-        }
-
-        .coin-back {
-            background: linear-gradient(145deg, #B8860B, #FFD700);
-            transform: rotateY(180deg);
-        }
-
         .coin.flipping {
             animation: flip-coin 2.5s cubic-bezier(0.4, 0.2, 0.2, 1) forwards;
         }
@@ -1061,167 +846,564 @@
             text-align: center;
         }
 
-        .zener-main-card {
-            width: 120px;
-            height: 180px;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-            border: 3px solid #8A2BE2;
-            color: #E6E6FA;
-            font-size: 4rem;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.8s;
-            cursor: pointer;
-            perspective: 1000px;
-        }
+    /* Обновленные стили для карт Зенера */
+    .zener-main-card {
+        width: 120px;
+        height: 180px;
+        border-radius: 10px;
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 3px solid #8A2BE2;
+        color: #E6E6FA;
+        font-size: 4rem;
+        margin: 0 auto 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.8s;
+        cursor: pointer;
+        perspective: 1000px;
+    }
 
-        .zener-main-card.flipped {
-            transform: rotateY(180deg);
-        }
+    .zener-main-card.flipped {
+        transform: rotateY(180deg);
+    }
 
-        .zener-main-card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 7px;
-        }
+    .zener-main-card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+    }
 
-        .zener-main-card-front {
-            background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
-            border: 3px solid #8A2BE2;
-            box-shadow: inset 0 0 15px rgba(138, 43, 226, 0.3);
-        }
+    .zener-main-card-front {
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 3px solid #8A2BE2;
+        box-shadow: inset 0 0 15px rgba(138, 43, 226, 0.3);
+    }
 
-        .zener-main-card-back {
-            background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
-            transform: rotateY(180deg);
-            border: 3px solid #FFD700;
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-        }
+    .zener-main-card-back {
+        background: linear-gradient(145deg, #0F0F1A, #1A1A2E);
+        transform: rotateY(180deg);
+        border: 3px solid #FFD700;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+    }
 
-        .zener-main-card-back::before {
-            content: '';
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
-            border: 2px solid rgba(138, 43, 226, 0.5);
-            border-radius: 5px;
-            pointer-events: none;
-            box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.3);
-        }
+    .zener-main-card-back::before {
+        content: '';
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border: 2px solid rgba(138, 43, 226, 0.5);
+        border-radius: 5px;
+        pointer-events: none;
+        box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.3);
+    }
 
-        .zener-symbol {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            z-index: 2;
-        }
+    .zener-symbol {
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        z-index: 2;
+    }
 
-        .zener-result {
-            margin-top: 15px;
-            font-size: 1.2rem;
-            min-height: 24px;
-            text-align: center;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .zener-result {
+        margin-top: 15px;
+        font-size: 1.2rem;
+        min-height: 24px;
+        text-align: center;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        .zener-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0;
-        }
+    .zener-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+    }
 
-        .zener-btn {
-            width: 60px;
-            height: 90px;
-            border-radius: 8px;
-            background: rgba(138, 43, 226, 0.2);
-            border: 2px solid #8A2BE2;
-            color: white;
-            font-size: 2rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
+    .zener-btn {
+        width: 60px;
+        height: 90px;
+        border-radius: 8px;
+        background: rgba(138, 43, 226, 0.2);
+        border: 2px solid #8A2BE2;
+        color: white;
+        font-size: 2rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
 
-        .zener-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1;
-        }
+    .zener-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.3);
+        z-index: 1;
+    }
 
-        .zener-btn:hover {
-            background: rgba(153, 50, 204, 0.3);
-            transform: translateY(-5px);
-        }
+    .zener-btn:hover {
+        background: rgba(153, 50, 204, 0.3);
+        transform: translateY(-5px);
+    }
 
-        .zener-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
+    .zener-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 
-        .zener-btn.active {
-            border-color: #FFD700;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            transform: translateY(-5px);
-        }
+    .zener-btn.active {
+        border-color: #FFD700;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        transform: translateY(-5px);
+    }
 
-        .zener-circle { 
-            color: #9370DB;
-            text-shadow: 0 0 10px #9370DB;
-        }
-        .zener-square { 
-            color: #1E90FF;
-            text-shadow: 0 0 10px #1E90FF;
-        }
-        .zener-waves { 
-            color: #00BFFF;
-            text-shadow: 0 0 10px #00BFFF;
-        }
-        .zener-cross { 
-            color: #FF4500;
-            text-shadow: 0 0 10px #FF4500;
-        }
-        .zener-star { 
-            color: #FFD700;
-            text-shadow: 0 0 10px #FFD700;
-        }
+    /* Символы карт */
+    .zener-circle { 
+        color: #9370DB;
+        text-shadow: 0 0 10px #9370DB;
+    }
+    .zener-square { 
+        color: #1E90FF;
+        text-shadow: 0 0 10px #1E90FF;
+    }
+    .zener-waves { 
+        color: #00BFFF;
+        text-shadow: 0 0 10px #00BFFF;
+    }
+    .zener-cross { 
+        color: #FF4500;
+        text-shadow: 0 0 10px #FF4500;
+    }
+    .zener-star { 
+        color: #FFD700;
+        text-shadow: 0 0 10px #FFD700;
+    }
 
-        .zener-btn span {
-            position: relative;
-            z-index: 2;
-            text-shadow: 0 0 5px rgba(0,0,0,0.7);
+    .zener-btn span {
+        position: relative;
+        z-index: 2;
+        text-shadow: 0 0 5px rgba(0,0,0,0.7);
+    }
+
+    /* Стили для карт элементов */
+    .element-card {
+        width: 60px;
+        height: 90px;
+        border-radius: 8px;
+        background: linear-gradient(145deg, #1A1A2E, #0F0F1A);
+        border: 2px solid #8A2BE2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .element-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(138, 43, 226, 0.5);
+    }
+
+    .element-card.missing {
+        background: rgba(138, 43, 226, 0.1);
+        border: 2px dashed #8A2BE2;
+    }
+
+    .elements-sequence {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .element-options {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+
+    .element-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        background: rgba(138, 43, 226, 0.2);
+        border: 2px solid #8A2BE2;
+        font-size: 1.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s;
+        color: white;
+    }
+
+    .element-btn:hover {
+        background: rgba(153, 50, 204, 0.3);
+    }
+
+    .element-btn.active {
+        border-color: #FFD700;
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .sequence-info {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    /* Стили для порталов */
+    .portals-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .portal {
+        width: 110px;
+        height: 140px;
+        position: relative;
+        cursor: pointer;
+        border-radius: 50%;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .portal::before {
+        content: '';
+        position: absolute;
+        top: -10%;
+        left: -10%;
+        width: 120%;
+        height: 120%;
+        background: conic-gradient(
+            from 0deg,
+            var(--portal-color-1) 0%,
+            var(--portal-color-2) 30%,
+            var(--portal-color-3) 70%,
+            var(--portal-color-1) 100%
+        );
+        border-radius: 50%;
+        animation: vortex-rotate 8s linear infinite;
+        z-index: 0;
+        opacity: 0.7;
+        filter: blur(10px);
+    }
+
+    @keyframes vortex-rotate {
+        0% { transform: rotate(0deg) scale(1); opacity: 0.7; }
+        50% { transform: rotate(180deg) scale(1.1); opacity: 0.9; }
+        100% { transform: rotate(360deg) scale(1); opacity: 0.7; }
+    }
+
+    .portal-inner {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        right: 5px;
+        bottom: 5px;
+        border-radius: 50%;
+        background: radial-gradient(circle at center, 
+            rgba(20, 20, 30, 0.9) 30%, 
+            rgba(10, 10, 20, 1) 100%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        z-index: 2;
+        overflow: hidden;
+        box-shadow: 
+            inset 0 0 15px rgba(0, 0, 0, 0.8),
+            0 0 10px rgba(255, 255, 255, 0.1);
+    }
+
+    .portal-symbol {
+        font-size: 2.8rem;
+        margin-bottom: 8px;
+        text-shadow: 0 0 15px currentColor;
+        transition: all 0.3s ease-out;
+        z-index: 3;
+        position: relative;
+    }
+
+    .portal-name {
+        font-size: 0.9rem;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 4px 12px;
+        border-radius: 15px;
+        transition: all 0.3s ease-out;
+        z-index: 3;
+        position: relative;
+        backdrop-filter: blur(2px);
+    }
+
+    .portal-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .portal-particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: currentColor;
+        opacity: 0;
+        z-index: 1;
+        animation: portal-particle-spiral 4s infinite linear;
+    }
+
+    @keyframes portal-particle-spiral {
+        0% { 
+            transform: translate(0, 0) scale(1); 
+            opacity: 0; 
         }
+        10% { opacity: 0.8; }
+        100% { 
+            transform: 
+                translate(
+                    calc(cos(var(--particle-angle)) * var(--particle-distance)), 
+                    calc(sin(var(--particle-angle)) * var(--particle-distance))
+                ) 
+                scale(0.1); 
+            opacity: 0; 
+        }
+    }
+
+    .portal:hover {
+        transform: scale(1.05);
+    }
+
+    .portal:hover .portal-symbol {
+        transform: scale(1.15);
+        text-shadow: 0 0 25px currentColor;
+    }
+
+    .portal:hover .portal-name {
+        background: rgba(0, 0, 0, 0.9);
+        transform: scale(1.05);
+    }
+
+    .portal.active {
+        transform: scale(0.95);
+    }
+
+    .portal.correct {
+        animation: portal-correct-pulse 1.5s infinite;
+    }
+
+    .portal.wrong {
+        animation: portal-wrong-pulse 1.5s infinite;
+    }
+
+    @keyframes portal-correct-pulse {
+        0% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
+        50% { box-shadow: 0 0 30px rgba(76, 175, 80, 0.9); }
+        100% { box-shadow: 0 0 10px rgba(76, 175, 80, 0.5); }
+    }
+
+    @keyframes portal-wrong-pulse {
+        0% { box-shadow: 0 0 10px rgba(244, 67, 54, 0.5); }
+        50% { box-shadow: 0 0 30px rgba(244, 67, 54, 0.9); }
+        100% { box-shadow: 0 0 10px rgba(244, 67, 54, 0.5); }
+    }
+
+    /* Цвета элементов с индивидуальными тенями */
+    .portal[data-element="▲"] {
+        --portal-color-1: #FF4500;
+        --portal-color-2: #FF8C00;
+        --portal-color-3: #FF6347;
+        color: #FF4500;
+        box-shadow: 0 0 20px rgba(255, 69, 0, 0.5);
+    }
+    .portal[data-element="▼"] {
+        --portal-color-1: #1E90FF;
+        --portal-color-2: #00BFFF;
+        --portal-color-3: #87CEFA;
+        color: #1E90FF;
+        box-shadow: 0 0 20px rgba(30, 144, 255, 0.5);
+    }
+    .portal[data-element="■"] {
+        --portal-color-1: #8B4513;
+        --portal-color-2: #A0522D;
+        --portal-color-3: #D2691E;
+        color: #8B4513;
+        box-shadow: 0 0 20px rgba(139, 69, 19, 0.5);
+    }
+    .portal[data-element="◊"] {
+        --portal-color-1: #87CEEB;
+        --portal-color-2: #ADD8E6;
+        --portal-color-3: #B0E0E6;
+        color: #87CEEB;
+        box-shadow: 0 0 20px rgba(135, 206, 235, 0.5);
+    }
+    .portal[data-element="○"] {
+        --portal-color-1: #9370DB;
+        --portal-color-2: #8A2BE2;
+        --portal-color-3: #9932CC;
+        color: #9370DB;
+        box-shadow: 0 0 20px rgba(147, 112, 219, 0.5);
+    }
+    /* Основные стили */
+    .soft-vortex-container {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    /* Мягкие контейнеры для вихрей */
+    .soft-vortex {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background: rgba(30, 30, 50, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 
+            0 0 10px rgba(0, 0, 0, 0.2),
+            inset 0 0 5px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        backdrop-filter: blur(2px);
+        overflow: hidden;
+    }
+
+    .soft-vortex:hover {
+        transform: scale(1.08);
+        box-shadow: 
+            0 0 20px rgba(0, 0, 0, 0.3),
+            inset 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    /* Чистая вихревая энергия */
+    .vortex-essence {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        background: conic-gradient(
+            from 0deg,
+            var(--vortex-color-1),
+            var(--vortex-color-2),
+            var(--vortex-color-3),
+            var(--vortex-color-1)
+        );
+        animation: 
+            essence-spin 5s linear infinite,
+            essence-pulse 2s ease-in-out infinite alternate;
+        opacity: 0.9;
+        filter: blur(6px);
+        transform-origin: center;
+    }
+
+    /* Новая анимация пульсации */
+    @keyframes essence-pulse {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Обновленные цветовые схемы с более яркими цветами */
+    .vortex-essence[data-color="красный"] {
+        --vortex-color-1: rgba(255, 50, 50, 0.9);
+        --vortex-color-2: rgba(255, 100, 50, 0.9);
+        --vortex-color-3: rgba(255, 150, 50, 0.9);
+    }
+
+    .vortex-essence[data-color="синий"] {
+        --vortex-color-1: rgba(50, 100, 255, 0.9);
+        --vortex-color-2: rgba(50, 150, 255, 0.9);
+        --vortex-color-3: rgba(100, 200, 255, 0.9);
+    }
+
+    .vortex-essence[data-color="зеленый"] {
+        --vortex-color-1: rgba(50, 255, 50, 0.9);
+        --vortex-color-2: rgba(100, 255, 100, 0.9);
+        --vortex-color-3: rgba(150, 255, 150, 0.9);
+    }
+
+    .vortex-essence[data-color="желтый"] {
+        --vortex-color-1: rgba(255, 255, 50, 0.9);
+        --vortex-color-2: rgba(255, 225, 50, 0.9);
+        --vortex-color-3: rgba(255, 200, 50, 0.9);
+    }
+
+    .vortex-essence[data-color="фиолетовый"] {
+        --vortex-color-1: rgba(150, 50, 255, 0.9);
+        --vortex-color-2: rgba(180, 80, 255, 0.9);
+        --vortex-color-3: rgba(200, 120, 255, 0.9);
+    }
+
+    /* Анимации */
+    @keyframes essence-spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes soft-pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    /* Состояния */
+    .soft-vortex.active {
+        animation: soft-pulse 1.5s infinite;
+    }
+
+    .soft-vortex.correct {
+        animation: none;
+        border-color: rgba(100, 255, 100, 0.5);
+        box-shadow: 
+            0 0 25px rgba(76, 175, 80, 0.5),
+            inset 0 0 10px rgba(100, 255, 100, 0.3);
+    }
+
+    .soft-vortex.wrong {
+        animation: none;
+        border-color: rgba(255, 100, 100, 0.5);
+        box-shadow: 
+            0 0 25px rgba(244, 67, 54, 0.5),
+            inset 0 0 10px rgba(255, 100, 100, 0.3);
+    }
     </style>
 </head>
 <body>
@@ -1233,14 +1415,15 @@
     <div class="login-screen" id="login-screen">
         <h1 class="login-title">NyxOraculum</h1>
 
-        <div class="login-btn-container">
-            <!-- Элементы урагана -->
-            <div class="hurricane"></div>
-            <div class="hurricane"></div>
-            <div class="hurricane"></div>
-            
-            <button class="login-btn" id="login-btn">ВОЙТИ</button>
-        </div>
+<div class="login-btn-container">
+    <!-- Элементы урагана -->
+    <div class="hurricane"></div>
+    <div class="hurricane"></div>
+    <div class="hurricane"></div>
+    
+    <button class="login-btn" id="login-btn">ВОЙТИ</button>
+</div>
+
     </div>
 
     <div class="container" id="main-container">
@@ -1288,66 +1471,66 @@
     </div>
 
     <!-- Игры -->
-    <div id="telepathy" class="game-window">
-        <div class="game-content active">
-            <h2>Телепатия: Портал выбора</h2>
-            <p>Выберите безопасный портал для перехода:</p>
-            <div class="sequence-info" id="sequence-info">Уровень 1 | Энергия: ✧✧✧</div>
-            <div class="portals-container" id="portals-container"></div>
-            <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
-        </div>
+<div id="telepathy" class="game-window">
+    <div class="game-content active">
+        <h2>Телепатия: Портал выбора</h2>
+        <p>Выберите безопасный портал для перехода:</p>
+        <div class="sequence-info" id="sequence-info">Уровень 1 | Энергия: ✧✧✧</div>
+        <div class="portals-container" id="portals-container"></div>
+        <button class="btn close-btn" onclick="closeGame('telepathy')">Закрыть</button>
     </div>
+</div>
 
-    <div id="zener" class="game-window">
-        <div class="game-content active">
-            <h2>Карты Зенера</h2>
-            <p>Угадайте символ:</p>
-            
-            <div class="zener-main-card" id="zener-main-card">
-                <div class="zener-main-card-face zener-main-card-front">?</div>
-                <div class="zener-main-card-face zener-main-card-back">
-                    <div class="zener-symbol" id="zener-card-symbol"></div>
-                </div>
+<div id="zener" class="game-window">
+    <div class="game-content active">
+        <h2>Карты Зенера</h2>
+        <p>Угадайте символ:</p>
+        
+        <div class="zener-main-card" id="zener-main-card">
+            <div class="zener-main-card-face zener-main-card-front">?</div>
+            <div class="zener-main-card-face zener-main-card-back">
+                <div class="zener-symbol" id="zener-card-symbol"></div>
             </div>
-            
-            <div class="zener-result" id="zener-result"></div>
-            
-            <div class="zener-buttons">
-                <button class="zener-btn" onclick="checkZener('○')" id="zener-circle"><span>○</span></button>
-                <button class="zener-btn" onclick="checkZener('□')" id="zener-square"><span>□</span></button>
-                <button class="zener-btn" onclick="checkZener('～')" id="zener-waves"><span>～</span></button>
-                <button class="zener-btn" onclick="checkZener('✚')" id="zener-cross"><span>✚</span></button>
-                <button class="zener-btn" onclick="checkZener('★')" id="zener-star"><span>★</span></button>
-            </div>
-            
-            <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
         </div>
+        
+        <div class="zener-result" id="zener-result"></div>
+        
+        <div class="zener-buttons">
+            <button class="zener-btn" onclick="checkZener('○')" id="zener-circle"><span>○</span></button>
+            <button class="zener-btn" onclick="checkZener('□')" id="zener-square"><span>□</span></button>
+            <button class="zener-btn" onclick="checkZener('～')" id="zener-waves"><span>～</span></button>
+            <button class="zener-btn" onclick="checkZener('✚')" id="zener-cross"><span>✚</span></button>
+            <button class="zener-btn" onclick="checkZener('★')" id="zener-star"><span>★</span></button>
+        </div>
+        
+        <button class="btn close-btn" onclick="closeGame('zener')">Закрыть</button>
     </div>
+</div>
 
-    <div id="color" class="game-window">
-        <div class="game-content active">
-            <h2>Цветовая интуиция</h2>
-            <p>Почувствуйте энергетический вихрь и угадайте его цвет:</p>
-            <div class="soft-vortex-container">
-                <div class="soft-vortex" onclick="checkColor('красный')">
-                    <div class="vortex-essence" data-color="красный"></div>
-                </div>
-                <div class="soft-vortex" onclick="checkColor('синий')">
-                    <div class="vortex-essence" data-color="синий"></div>
-                </div>
-                <div class="soft-vortex" onclick="checkColor('зеленый')">
-                    <div class="vortex-essence" data-color="зеленый"></div>
-                </div>
-                <div class="soft-vortex" onclick="checkColor('желтый')">
-                    <div class="vortex-essence" data-color="желтый"></div>
-                </div>
-                <div class="soft-vortex" onclick="checkColor('фиолетовый')">
-                    <div class="vortex-essence" data-color="фиолетовый"></div>
-                </div>
+<div id="color" class="game-window">
+    <div class="game-content active">
+        <h2>Цветовая интуиция</h2>
+        <p>Почувствуйте энергетический вихрь и угадайте его цвет:</p>
+        <div class="soft-vortex-container">
+            <div class="soft-vortex" onclick="checkColor('красный')">
+                <div class="vortex-essence" data-color="красный"></div>
             </div>
-            <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
+            <div class="soft-vortex" onclick="checkColor('синий')">
+                <div class="vortex-essence" data-color="синий"></div>
+            </div>
+            <div class="soft-vortex" onclick="checkColor('зеленый')">
+                <div class="vortex-essence" data-color="зеленый"></div>
+            </div>
+            <div class="soft-vortex" onclick="checkColor('желтый')">
+                <div class="vortex-essence" data-color="желтый"></div>
+            </div>
+            <div class="soft-vortex" onclick="checkColor('фиолетовый')">
+                <div class="vortex-essence" data-color="фиолетовый"></div>
+            </div>
         </div>
+        <button class="btn close-btn" onclick="closeGame('color')">Закрыть</button>
     </div>
+</div>
 
     <div id="telekinesis" class="game-window">
         <div class="game-content active">
@@ -1370,6 +1553,7 @@
         </div>
     </div>
 
+    <!-- Обновленная игра "Орел и решка" -->
     <div id="coin" class="game-window">
         <div class="game-content active">
             <h2>Орел и решка</h2>
@@ -1381,14 +1565,15 @@
                 </div>
                 <div class="coin-result" id="coin-result"></div>
                 <div class="coin-buttons">
-                    <button class="coin-btn" onclick="flipCoin('орел')">Орел</button>
-                    <button class="coin-btn" onclick="flipCoin('решка')">Решка</button>
+                    <button class="coin-btn" onclick="flipCoin(this, 'орел')">Орел</button>
+                    <button class="coin-btn" onclick="flipCoin(this, 'решка')">Решка</button>
                 </div>
             </div>
             <button class="btn close-btn" onclick="closeGame('coin')">Закрыть</button>
         </div>
     </div>
 
+    <!-- Игра "Числовая матрица" -->
     <div id="number" class="game-window">
         <div class="game-content active">
             <h2>Числовая матрица</h2>
@@ -1404,6 +1589,7 @@
         </div>
     </div>
 
+    <!-- Игра "Медитация-визуализация" -->
     <div id="meditation" class="game-window">
         <div class="game-content active">
             <h2>Медитация-визуализация</h2>
@@ -1524,15 +1710,89 @@
     let energy = 3;
     let safePortal = '';
     let portalsCount = 3;
+    let currentArtifactPosition = -1;
+    let isGameActive = true;
+    let telekinesisGameActive = false;
+    let isCoinFlipping = false;
+    let musicPlayedOnce = false;
+    let isMeditating = false;
+    let meditationInterval;
+    let meditationParticles = [];
+    let meditationPhase = 'inhale';
+    let meditationCycle = 0;
+    let meditationSeconds = 0;
+    let breathIndicatorAngle = 0;
 
-    // Инициализация игры телепатии
+    // Статистика и достижения
+    let stats = {
+        telepathy: { correct: 0, total: 0 },
+        zener: { correct: 0, total: 0 },
+        color: { correct: 0, total: 0 },
+        telekinesis: { success: 0 },
+        dowsing: { found: 0, attempts: 0 },
+        coin: { correct: 0, total: 0 },
+        number: { accuracy: 0, total: 0 },
+        meditation: { success: 0 }
+    };
+
+    // Инициализация при загрузке страницы
+    window.onload = function() {
+        createStars();
+        initMeditation();
+        
+        setTimeout(() => {
+            document.querySelector('.login-title').style.opacity = '1';
+            document.querySelector('.login-title').style.transform = 'translateY(0)';
+        }, 100);
+        
+        document.getElementById('login-btn').addEventListener('click', function() {
+            document.getElementById('login-screen').style.opacity = '0';
+            document.getElementById('login-screen').style.transform = 'scale(1.5)';
+            
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                const mainContainer = document.getElementById('main-container');
+                mainContainer.style.display = 'block';
+                
+                setTimeout(() => {
+                    mainContainer.classList.add('show');
+                }, 50);
+            }, 800);
+        });
+    };
+
+    // Показать сообщение
+    function showMessage(text, callback) {
+        isGameActive = false;
+        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
+        document.getElementById('message-text').textContent = text;
+        document.getElementById('message-box').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+        
+        const button = document.getElementById('message-button');
+        button.onclick = function() {
+            document.getElementById('message-box').style.display = 'none';
+            isGameActive = true;
+            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
+            
+            if (document.getElementById('color').style.display === 'block') {
+                document.querySelectorAll('.soft-vortex').forEach(v => {
+                    v.classList.remove('active', 'correct', 'wrong');
+                    v.style.pointerEvents = 'auto';
+                });
+            }
+            
+            if (callback) callback();
+        };
+    }
+
+    // Телепатия
     function initTelepathy() {
         currentLevel = 1;
         energy = 3;
         generatePortals();
     }
 
-    // Генерация порталов
     function generatePortals() {
         const container = document.getElementById('portals-container');
         container.innerHTML = '';
@@ -1570,7 +1830,6 @@
             };
             container.appendChild(portal);
 
-            // Создаем частицы с эффектом спирали
             const particlesContainer = document.getElementById(`particles-${index}`);
             for (let i = 0; i < 15; i++) {
                 const particle = document.createElement('div');
@@ -1638,92 +1897,7 @@
         document.getElementById('sequence-info').textContent = `Уровень ${currentLevel} | Энергия: ${energyText}`;
     }
 
-    // Статистика и достижения
-    let stats = {
-        telepathy: { correct: 0, total: 0 },
-        zener: { correct: 0, total: 0 },
-        color: { correct: 0, total: 0 },
-        telekinesis: { success: 0 },
-        dowsing: { found: 0, attempts: 0 },
-        coin: { correct: 0, total: 0 },
-        number: { accuracy: 0, total: 0 },
-        meditation: { success: 0 }
-    };
-
-    let achievements = [];
-    let currentArtifactPosition = -1;
-    let isGameActive = true;
-    let telekinesisGameActive = false;
-    let isCoinFlipping = false;
-    let backgroundMusicPlaying = false;
-    let musicPlayedOnce = false;
-    let isMeditating = false;
-    let meditationInterval;
-    let meditationParticles = [];
-    let meditationPhase = 'inhale';
-    let meditationCycle = 0;
-    let meditationSeconds = 0;
-    let breathIndicatorAngle = 0;
-
-    // Инициализация при загрузке страницы
-    window.onload = function() {
-        createStars();
-        initMeditation();
-        
-        // Показываем элементы экрана входа с анимацией
-        setTimeout(() => {
-            document.querySelector('.login-title').style.opacity = '1';
-            document.querySelector('.login-title').style.transform = 'translateY(0)';
-        }, 100);
-        
-        // Обработчик кнопки входа
-        document.getElementById('login-btn').addEventListener('click', function() {
-            document.getElementById('login-screen').style.opacity = '0';
-            document.getElementById('login-screen').style.transform = 'scale(1.5)';
-            
-            setTimeout(() => {
-                document.getElementById('login-screen').style.display = 'none';
-                const mainContainer = document.getElementById('main-container');
-                mainContainer.style.display = 'block';
-                
-                setTimeout(() => {
-                    mainContainer.classList.add('show');
-                }, 50);
-            }, 800);
-        });
-    };
-
-    // Показать сообщение
-    function showMessage(text, callback) {
-        isGameActive = false;
-        document.querySelectorAll('.game-content').forEach(el => el.classList.remove('active'));
-        document.getElementById('message-text').textContent = text;
-        document.getElementById('message-box').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-        
-        const button = document.getElementById('message-button');
-        button.onclick = function() {
-            document.getElementById('message-box').style.display = 'none';
-            isGameActive = true;
-            document.querySelectorAll('.game-content').forEach(el => el.classList.add('active'));
-            
-            // Сброс активных кнопок в цветовой интуиции
-            if (document.getElementById('color').style.display === 'block') {
-                document.querySelectorAll('.game-btn.active').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-            }
-            
-            // Сброс прогресс-бара в числовой матрице
-            if (document.getElementById('number').style.display === 'block') {
-                document.getElementById('accuracy-fill').style.width = '0';
-            }
-            
-            if (callback) callback();
-        };
-    }
-
-    // Инициализация телекинеза
+    // Телекинез
     function initTelekinesis() {
         const area = document.getElementById('telekinesis-area');
         const object = document.getElementById('telekinesis-object');
@@ -1732,12 +1906,10 @@
         let startX, startY, startLeft, startTop;
         telekinesisGameActive = true;
 
-        // Сброс позиции объекта
         object.style.left = '50%';
         object.style.top = '50%';
         object.style.transform = 'translate(-50%, -50%)';
 
-        // Позиция цели
         const rect = area.getBoundingClientRect();
         let targetX, targetY;
         
@@ -1752,12 +1924,10 @@
         target.style.left = targetX + 'px';
         target.style.top = targetY + 'px';
 
-        // Для мыши
         object.addEventListener('mousedown', startDrag);
         document.addEventListener('mousemove', drag);
         document.addEventListener('mouseup', stopDrag);
 
-        // Для сенсорных устройств
         object.addEventListener('touchstart', startDrag);
         document.addEventListener('touchmove', drag);
         document.addEventListener('touchend', stopDrag);
@@ -1800,7 +1970,6 @@
             let newLeft = startLeft + (clientX - startX);
             let newTop = startTop + (clientY - startY);
             
-            // Ограничения по границам области
             newLeft = Math.max(0, Math.min(rect.width - object.offsetWidth, newLeft));
             newTop = Math.max(0, Math.min(rect.height - object.offsetHeight, newTop));
             
@@ -1808,15 +1977,12 @@
             object.style.top = newTop + 'px';
             object.style.transform = 'translate(0, 0)';
 
-            // Проверка столкновения
             checkCollision(object, target);
         }
 
         function stopDrag() {
             if (isDragging && telekinesisGameActive) {
                 isDragging = false;
-                
-                // Возвращение в центр
                 object.style.left = '50%';
                 object.style.top = '50%';
                 object.style.transform = 'translate(-50%, -50%)';
@@ -1827,7 +1993,6 @@
             const rect1 = obj1.getBoundingClientRect();
             const rect2 = obj2.getBoundingClientRect();
             
-            // Простое обнаружение столкновения
             const collision = !(
                 rect1.right < rect2.left || 
                 rect1.left > rect2.right || 
@@ -1845,17 +2010,15 @@
         }
     }
 
-    // Инициализация биолокации
+    // Биолокация
     function initDowsing() {
         const grid = document.getElementById('dowsing-grid');
         grid.innerHTML = '';
         
-        // Случайное положение артефакта
         currentArtifactPosition = Math.floor(Math.random() * 16);
         stats.dowsing.attempts++;
         updateStats();
         
-        // Создаем 16 ячеек
         for (let i = 0; i < 16; i++) {
             const cell = document.createElement('div');
             cell.className = 'dowsing-cell';
@@ -1887,51 +2050,41 @@
         }
     }
 
-    // Игра "Орел и решка"
+    // Орел и решка
     let coinFlipTimeout;
     let coinResultTimeout;
 
-    function flipCoin(guess) {
+    function flipCoin(button, guess) {
         if (!isGameActive || isCoinFlipping) return;
         
-        // Добавляем класс active к нажатой кнопке
         const buttons = document.querySelectorAll('.coin-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
-        event.target.classList.add('active');
+        button.classList.add('active');
         
         isCoinFlipping = true;
         const coin = document.getElementById('coin-element');
         const resultDiv = document.getElementById('coin-result');
         resultDiv.textContent = '';
         
-        // Отключаем кнопки на время анимации
-        document.querySelectorAll('.coin-btn').forEach(btn => {
+        buttons.forEach(btn => {
             btn.disabled = true;
         });
         
-        // Определяем результат заранее
         const result = Math.random() < 0.5 ? 'орел' : 'решка';
         const isCorrect = guess === result;
         
-        // Устанавливаем конечное вращение
         const finalRotation = result === 'орел' ? 0 : 180;
         coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
         
-        // Обновляем статистику
         stats.coin.total++;
-        if (isCorrect) {
-            stats.coin.correct++;
-        }
+        if (isCorrect) stats.coin.correct++;
         updateStats();
         
-        // Запускаем анимацию
         coin.classList.add('flipping');
         
-        // Очищаем предыдущие таймеры
         clearTimeout(coinFlipTimeout);
         clearTimeout(coinResultTimeout);
         
-        // После завершения анимации показываем результат
         coinFlipTimeout = setTimeout(() => {
             if (document.getElementById('coin').style.display === 'none') {
                 isCoinFlipping = false;
@@ -1941,7 +2094,6 @@
             coin.classList.remove('flipping');
             coin.style.transform = `rotateY(${finalRotation}deg)`;
             
-            // Показываем результат
             if (isCorrect) {
                 resultDiv.textContent = '✅ Верно!';
                 resultDiv.style.color = '#4CAF50';
@@ -1950,14 +2102,12 @@
                 resultDiv.style.color = '#F44336';
             }
             
-            // Включаем кнопки обратно
-            document.querySelectorAll('.coin-btn').forEach(btn => {
+            buttons.forEach(btn => {
                 btn.disabled = false;
             });
             
             isCoinFlipping = false;
             
-            // Через 1.5 секунды сбрасываем анимацию
             coinResultTimeout = setTimeout(() => {
                 if (document.getElementById('coin').style.display === 'block') {
                     resultDiv.textContent = '';
@@ -1967,11 +2117,10 @@
         }, 2500);
     }
 
-    // Игра "Числовая матрица"
+    // Числовая матрица
     function checkNumberGuess() {
         if (!isGameActive) return;
         
-        // Добавляем класс active к кнопке
         const button = document.querySelector('.number-submit');
         button.classList.add('active');
         setTimeout(() => button.classList.remove('active'), 300);
@@ -1996,6 +2145,12 @@
         document.getElementById('number-guess').value = '';
     }
 
+    function initNumberMatrix() {
+        document.getElementById('accuracy-fill').style.width = '0';
+        document.getElementById('number-guess').value = '';
+        document.querySelector('.number-submit').classList.remove('active');
+    }
+
     // Медитация
     function initMeditation() {
         const wheel = document.getElementById('chakra-wheel');
@@ -2004,7 +2159,6 @@
         const progressBar = document.getElementById('progress-bar');
         const instruction = document.getElementById('meditation-instruction');
         
-        // Полный сброс состояния
         wheel.classList.remove('active');
         progressBar.style.width = '0';
         progressBar.style.background = 'rgba(138, 43, 226, 0.2)';
@@ -2020,7 +2174,6 @@
         meditationSeconds = 0;
         breathIndicatorAngle = 0;
         
-        // Очистка частиц
         document.querySelectorAll('.energy-particle').forEach(el => el.remove());
         meditationParticles = [];
     }
@@ -2038,8 +2191,8 @@
         
         const wheel = document.getElementById('chakra-wheel');
         const btn = document.getElementById('meditation-btn');
+        const progressBar = document.getElementById('progress-bar');
         
-        // Добавляем класс active к кнопке
         btn.classList.add('active');
         
         isMeditating = true;
@@ -2049,11 +2202,9 @@
         meditationCycle = 0;
         meditationSeconds = 0;
         
-        // Настройка прогресс-бара
-        document.getElementById('progress-bar').style.width = '0';
-        document.getElementById('progress-bar').style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
+        progressBar.style.width = '0';
+        progressBar.style.background = 'linear-gradient(90deg, rgba(76, 175, 80, 0.8), rgba(139, 195, 74, 0.8))';
         
-        // Запуск анимации
         createEnergyParticles();
         updateBreathIndicator();
         meditationInterval = setInterval(updateMeditation, 1000);
@@ -2069,6 +2220,10 @@
         const wheel = document.getElementById('chakra-wheel');
         const btn = document.getElementById('meditation-btn');
         const result = document.getElementById('meditation-result');
+        const progressBar = document.getElementById('progress-bar');
+        
+        progressBar.style.width = '0';
+        progressBar.style.background = 'rgba(138, 43, 226, 0.2)';
         
         btn.disabled = true;
         wheel.classList.remove('active');
@@ -2102,12 +2257,10 @@
                 progress = Math.min(100, (meditationSeconds / 4) * 100);
                 phaseComplete = meditationSeconds >= 4;
                 break;
-                
             case 'hold':
                 progress = Math.min(100, (meditationSeconds / 7) * 100);
                 phaseComplete = meditationSeconds >= 7;
                 break;
-                
             case 'exhale':
                 progress = Math.min(100, (meditationSeconds / 8) * 100);
                 phaseComplete = meditationSeconds >= 8;
@@ -2126,13 +2279,11 @@
                         progressBar.style.width = '0';
                         progressBar.style.background = 'linear-gradient(90deg, rgba(255, 193, 7, 0.8), rgba(255, 235, 59, 0.8))';
                         break;
-                        
                     case 'hold':
                         meditationPhase = 'exhale';
                         progressBar.style.width = '0';
                         progressBar.style.background = 'linear-gradient(90deg, rgba(244, 67, 54, 0.8), rgba(255, 152, 0, 0.8))';
                         break;
-                        
                     case 'exhale':
                         meditationPhase = 'inhale';
                         meditationCycle++;
@@ -2190,7 +2341,6 @@
         const particle = document.createElement('div');
         particle.className = 'energy-particle';
         
-        // Случайная позиция вокруг чакры
         const angle = Math.random() * Math.PI * 2;
         const distance = 100 + Math.random() * 50;
         const x = 100 + Math.cos(angle) * distance;
@@ -2199,7 +2349,6 @@
         particle.style.left = `${x}px`;
         particle.style.top = `${y}px`;
         
-        // Случайный размер и цвет
         const size = 4 + Math.random() * 4;
         particle.style.width = `${size}px`;
         particle.style.height = `${size}px`;
@@ -2258,7 +2407,6 @@
         gameWindow.style.display = 'block';
         document.getElementById('overlay').style.display = 'block';
         
-        // Плавное появление
         setTimeout(() => {
             gameWindow.classList.add('show');
         }, 10);
@@ -2270,43 +2418,60 @@
         } else if (gameId === 'dowsing') {
             initDowsing();
         } else if (gameId === 'number') {
-            document.getElementById('accuracy-fill').style.width = '0';
-            document.getElementById('number-guess').value = '';
+            initNumberMatrix();
+        } else if (gameId === 'meditation') {
+            initMeditation();
         } else if (gameId === 'coin') {
-            // Сброс состояния монеты
             const coin = document.getElementById('coin-element');
             coin.classList.remove('flipping');
             coin.style.transform = 'rotateY(0deg)';
             document.getElementById('coin-result').textContent = '';
             isCoinFlipping = false;
             
-            // Включение кнопок
             document.querySelectorAll('.coin-btn').forEach(btn => {
                 btn.disabled = false;
                 btn.classList.remove('active');
             });
-        } else if (gameId === 'meditation') {
-            initMeditation();
         }
     }
 
     // Закрытие игры
     function closeGame(gameId) {
-        // Остановка всех процессов игры "Орел и решка"
         if (gameId === 'coin') {
             clearTimeout(coinFlipTimeout);
             clearTimeout(coinResultTimeout);
             isCoinFlipping = false;
+            const coin = document.getElementById('coin-element');
+            coin.classList.remove('flipping');
+            coin.style.transform = 'rotateY(0deg)';
+            document.getElementById('coin-result').textContent = '';
+            document.querySelectorAll('.coin-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.classList.remove('active');
+            });
         }
 
-        // Сброс прогресс-бара в числовой матрице
         if (gameId === 'number') {
             document.getElementById('accuracy-fill').style.width = '0';
             document.getElementById('number-guess').value = '';
             document.querySelector('.number-submit').classList.remove('active');
         }
 
-        // Закрытие окна игры
+        if (gameId === 'telepathy' || gameId === 'zener' || gameId === 'color') {
+            document.querySelectorAll('.game-btn.active').forEach(btn => {
+                btn.classList.remove('active');
+            });
+        }
+
+        if (gameId === 'meditation') {
+            if (isMeditating) {
+                stopMeditation(false);
+            } else {
+                const btn = document.getElementById('meditation-btn');
+                btn.classList.remove('active');
+            }
+        }
+
         document.getElementById(gameId).style.display = 'none';
         document.getElementById('overlay').style.display = 'none';
         document.getElementById('main-container').style.display = 'block';
@@ -2401,34 +2566,28 @@
         
         const clickedBtn = event.currentTarget;
         
-        // Блокируем кнопки
         document.querySelectorAll('.zener-btn').forEach(btn => {
             btn.disabled = true;
         });
         
-        // Сбрасываем предыдущий выбор
         document.querySelectorAll('.zener-btn.active').forEach(btn => {
             btn.classList.remove('active');
             btn.style.transform = 'translateY(0)';
         });
         
-        // Добавляем класс active к нажатой кнопке
         clickedBtn.classList.add('active');
         
         const symbols = ['○', '□', '～', '✚', '★'];
         const target = symbols[Math.floor(Math.random() * symbols.length)];
         stats.zener.total++;
         
-        // Показываем выбранный символ на большой карте
         const cardSymbol = document.getElementById('zener-card-symbol');
         cardSymbol.textContent = target;
         cardSymbol.className = `zener-symbol ${getSymbolClass(target)}`;
         
-        // Анимация переворота карты
         const mainCard = document.getElementById('zener-main-card');
         mainCard.classList.add('flipped');
         
-        // Проверяем результат
         const resultDiv = document.getElementById('zener-result');
         if (guess === target) {
             stats.zener.correct++;
@@ -2442,7 +2601,6 @@
         updateStats();
         checkAchievements();
         
-        // Сброс через 2 секунды
         setTimeout(() => {
             mainCard.classList.remove('flipped');
             
@@ -2473,12 +2631,10 @@
     function checkColor(guess) {
         if (!isGameActive) return;
         
-        // Сброс только активного состояния
         document.querySelectorAll('.soft-vortex').forEach(v => {
             v.classList.remove('active');
         });
         
-        // Активация выбранного вихря
         const selectedVortex = event.currentTarget;
         selectedVortex.classList.add('active');
         
@@ -2486,7 +2642,6 @@
         const target = colors[Math.floor(Math.random() * colors.length)];
         stats.color.total++;
         
-        // Блокировка на время анимации
         document.querySelectorAll('.soft-vortex').forEach(v => {
             v.style.pointerEvents = 'none';
         });
